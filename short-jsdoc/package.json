@@ -1,0 +1,15 @@
+{
+	"name": "short-jsdoc"
+,	"version": "0.1.0"
+,	"description": "jsdoc personal initiative"
+
+,	"devDependencies": {
+		"browserify-shim": "*",
+		"grunt": "*",
+    	"grunt-contrib-jst": "~0.5.1",
+		"grunt-browserify":"*",
+		"grunt-contrib-watch": "*",
+		"grunt-contrib-connect":"*",
+  		"matchdep": "*"
+	}
+}

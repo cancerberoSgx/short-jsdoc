@@ -1,0 +1,44 @@
+<html>
+<head>
+
+<!-- not UI related dependencies -->
+<script src="../lib/esprima.js" type="text/javascript"></script>
+<script src="../lib/underscore.js" type="text/javascript"></script>
+
+<script src="../lib/js-indentator/jsindentator.js" type="text/javascript"></script>
+<script src="../lib/js-indentator/style_clean.js" type="text/javascript"></script>
+<script src="../src/JsDocMaker.js" type="text/javascript"></script>
+
+<!-- HTML UI dependencies external -->
+<script src="jquery/jquery-2.0.3.min.js" type="text/javascript"></script>
+<script src="backbone/backbone.js" type="text/javascript"></script>
+<script src="bootstrap/js/bootstrap.min.js" type="text/javascript"></script>
+<link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+<link href="bootstrap/css/bootstrap-responsive.css" rel="stylesheet">
+
+
+<!-- UI dependencies internal -->
+<script src="../src/Application.js" type="text/javascript"></script>
+<script src="../src/JsDocRouter.js" type="text/javascript"></script>
+<script src="../src/AbstractView.js" type="text/javascript"></script>
+<script src="../src/IndexView.js" type="text/javascript"></script>
+<script src="../src/ClassView.js" type="text/javascript"></script>
+<script src="template-output.js" type="text/javascript"></script>
+
+</head>
+
+<body>
+
+<script>
+jQuery.getJSON('data.json').done(function(data)
+{
+	var app = new Application(data); 
+	app.start();
+}); 
+</script>
+
+
+
+</body>
+</html>
+

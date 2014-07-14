@@ -1,0 +1,16 @@
+<% var data = this.application.data; %>
+<h3>Modules</h3>
+
+<ul>
+<% _(data.modules).each(function(moduleBody, moduleName) { %>
+	<li><a href="module/<%= moduleName %>"><%= moduleName %></a></li>
+<% }); %>
+</ul>
+
+<h3>Classes</h3>
+
+<ul>
+<% _(data.classes).each(function(classBody, className) { %>
+	<li><a href="#class/<%= className %>"><%= className %></a></li>
+<% }); %>
+</ul>

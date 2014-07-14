@@ -1,0 +1,58 @@
+{
+	"meta": {
+		"title": "JsDoc Example"
+	}
+,	"classes": {
+		"Living": {
+			"annotation": "class", 
+			"name": "Living", 
+			"text": " Any living thing.", 
+			"children": [], 
+			"fileName": "singleFile", 
+			"module": "Life"
+		}, 
+		"Tree": {
+			"annotation": "class", 
+			"name": "Tree", 
+			"text": " A tree is a living thing that contains some leafs and grow.", 
+			"fileName": "singleFile", 
+			"methods": {
+				"growLeaf": {
+					"annotation": "method", 
+					"name": "growLeaf", 
+					"text": " makes the given leaf to gro a little more.", 
+					"children": [{
+						"annotation": "param", 
+						"type": "{Leaf}", 
+						"name": "leaf", 
+						"text": "", 
+						"theRestString": ""
+					}], 
+					"fileName": "singleFile"
+				}
+			}
+		}, 
+		"Apple": {
+			"annotation": "class", 
+			"name": "Apple", 
+			"text": " a sweet fruit", 
+			"children": [{
+				"annotation": "module", 
+				"name": "Life", 
+				"text": "", 
+				"theRestString": ""
+			}], 
+			"fileName": "singleFile", 
+			"module": "Life", 
+			"extends": "Fruit"
+		}
+	}, 
+	"modules": {
+		"Life": {
+			"annotation": "module", 
+			"name": "Life", 
+			"text": ".", 
+			"theRestString": " @class Tree A tree is a living thing that contains some leafs and grow."
+		}
+	}
+}
