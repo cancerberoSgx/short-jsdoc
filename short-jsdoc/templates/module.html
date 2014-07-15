@@ -1,0 +1,11 @@
+<h2 class="module-title">Module <%= this.jsdoc.name%></h2>
+
+<h3>Classes</h3>
+
+<ul class="classes">
+<% _(this.classes).each(function(c) { %>
+	<li>
+		<a href="#method/<%= c.name %>">Method <%= c.name %></a>		
+	</li>
+<% }); %>
+</ul>

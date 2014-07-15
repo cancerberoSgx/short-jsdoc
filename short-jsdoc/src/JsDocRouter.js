@@ -3,7 +3,10 @@ var JsDocRouter = Backbone.Router.extend({
 	routes: {
 		"class/:class": "showClass"
 	,	"module/:module": "showModule"
+	,	'actions/:action': 'doAction'
 	,	"index": "showIndex"
+	,	"parse": "showParse"
+	,	"search": "showSearch"
 	}
 
 ,	initialize: function(application) 
@@ -11,14 +14,28 @@ var JsDocRouter = Backbone.Router.extend({
 		this.application=application;
 	}
 
-,	showClass: function(className) 
+,	showView: function(view, resourceName)
 	{
-		var view = new ClassView(this.application, className);
-		this.application.showView(view); 
+		resourceName = resourceName||'Resource'; 
+		if(view.resourceNotFound)
+		{
+			this.application.showErrorView(resourceName+' '+className+' not found!'); 
+		}
+		else
+		{
+			this.application.showView(view); 
+		}
 	}
 
-,	showModule: function(module) {
-
+,	showModule: function(moduleName) {
+		var view = new ModuleView(this.application, moduleName);
+		this.showView(view); 
+	}
+	
+,	showClass: function(className) 
+	{ 
+		var view = new ClassView(this.application, className);
+		this.showView(view); 
 	}
 	
 ,	showIndex: function() 
@@ -27,4 +44,15 @@ var JsDocRouter = Backbone.Router.extend({
 		this.application.showView(view); 
 	}
 
+,	showParse: function() 
+	{
+		var view = new ParseView(this.application);
+		this.application.showView(view); 
+	}
+
+,	showSearch: function() 
+	{
+		var view = new ParseView(this.application);
+		this.application.showView(view); 
+	}
 });

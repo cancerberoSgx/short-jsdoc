@@ -3,7 +3,7 @@
 
 <ul>
 <% _(data.modules).each(function(moduleBody, moduleName) { %>
-	<li><a href="module/<%= moduleName %>"><%= moduleName %></a></li>
+	<li><a href="#module/<%= moduleName %>"><%= moduleName %></a></li>
 <% }); %>
 </ul>
 
@@ -14,3 +14,5 @@
 	<li><a href="#class/<%= className %>"><%= className %></a></li>
 <% }); %>
 </ul>
+
+<a href="#parse"><b>Parse</b> your own code! --></a>

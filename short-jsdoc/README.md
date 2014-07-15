@@ -26,3 +26,10 @@ libs/js-indentator/*.js
 Thanks to the project js-indentator I'm now able to parse and define my own jsdocs rules. The js-indentator example jsdocgenerator1 was designed with these ideas originally and is working well and simple.What is missed from that is getting the output class information json and rendering all that in a nice html5 application. This is what this project try to do.
 
 This project maintains its own js-indentator implementation JsDocMaker. 
+
+
+
+## TODO: ideas
+search for class, modules, methods, methods that return or accept a type. subclasses of..., classes overriding a method...
+
+TODO (syntax): - if you don't put @module in your @class then it will be assigned to last declared module. but @class can declare @module in itself. It is not the same for @method and @class ownership. and the reason is that in general this try to be file agnostic and few classes tend to be declared in a single file and several methods tend to be declared in a single file. 

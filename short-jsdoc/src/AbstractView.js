@@ -1,12 +1,14 @@
 var AbstractView = Backbone.View.extend({
 
 	tagName: "div"
-// ,	className: "class-view"
-,	events: {}
 
-// ,	template: 'class'
+,	initialize: function(application) 
+	{
+		this.application = application;
+		// this.resourceNotFound = false;
+	}
 
-,	printHTMLElement: function(text, classAttribute, tag) {
+,	printTag: function(text, classAttribute, tag) {
 		tag = tag || 'span'; 
 		classAttribute = classAttribute ||'';
 		if(text)
@@ -15,15 +17,5 @@ var AbstractView = Backbone.View.extend({
 		}
 		return '';
 	}
-
-// ,	initialize: function(application, className) 
-// 	{
-// 		this.application = application;
-// 		// this.className = className;
-// 		this.jsdoc = this.application.data.classes[className]; 
-// 	}
-
-// ,	render: function() {
-// 	}
 
 });

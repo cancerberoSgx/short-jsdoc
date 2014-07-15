@@ -20,22 +20,48 @@ var Application = function(data)
 _(Application.prototype).extend({
 
 	start: function()
-	{
+	{		
 		this.router = new JsDocRouter(this);
 		Backbone.history.start();
-		var navigateTo = Backbone.history.getHash()||'index'; 
+		var navigateTo = Backbone.history.getHash() || 'index'; 
 		Backbone.history.navigate(navigateTo, {trigger: true});
 	}
 
 ,	showView: function(view)
 	{
+		this.currentView = view;
 		var template = shortjsdoc[view.template]; 
 		if(template)
 		{			
 			var html = template.apply(view, []); 
 			view.$el.html(html);
 			this.$containerEl.empty().append(view.$el); 
-		}
+		}		
 	}
-		
+,	refreshWithNewModel: function(data)
+	{
+		this.data = data; 
+		Backbone.history.navigate('#index', {trigger: true}); 
+		this.showView(this.currentView);
+	}
+
+,	showErrorView: function(s) 
+	{
+		this.$containerEl.empty().append('<h1>'+s+'</h1>')
+	}
+
+// ,	uninstall: function()
+// 	{
+// 		this.$containerEl.remove();
+// 		Backbone.history.stop(); 
+// 	}
+
 });
+
+//@method start an application loading it with given data. @static
+//@param data the output of passing jsindentator JsDocMaker. 
+Application.start = function(data)
+{
+	var app = new Application(data); 
+	app.start();
+}; 

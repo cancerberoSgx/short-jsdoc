@@ -1,19 +1,16 @@
 var ModuleView = AbstractView.extend({
 
-	// tagName: "div"
-,	className: "module-view"
-// ,	events: {}
+	className: "module"
 
 ,	template: 'module'
 
 ,	initialize: function(application, moduleName) 
 	{
 		this.application = application;
-		// this.moduleName = moduleName;
 		this.jsdoc = this.application.data.modules[moduleName]; 
-	}
-
-,	render: function() {
+		this.classes = _( _(this.application.data.classes).values() ).filter(function(c){
+			return c.module === moduleName; 
+		}); 
 	}
 
 });

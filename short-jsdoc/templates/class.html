@@ -1,13 +1,17 @@
-<% var className = this.jsdoc.name; %>
-<h2 class="class-title">Class <a class="class-title" href="class/<%= className%>"><%= className %></a></h2>
+
+<h2 class="class-title">Class <a class="class-title" href="class/<%= this.jsdoc.name%>"><%= this.jsdoc.name %></a></h2>
+
+<% if (this.jsdoc.extends) { %>
+<h3>Extends <a href="#class/<%= this.jsdoc.extends%>"><%= this.jsdoc.extends%></a></h3>
+<% } %>
 
 <p class="class-text"><%= this.jsdoc.text %></p>
 
-<h3>Methods</h3>
+<h3 class='methods'>Methods</h3>
 <ul>
 <% _(this.jsdoc.methods).each(function(method, methodName) { %>
 	<li>
-		<a href="method/<%= methodName %>">Method <%= methodName %></a>
+		<a class='method' href="method/<%= methodName %>">Method <%= methodName %></a>
 		
 	</li>
 <% }); %>
