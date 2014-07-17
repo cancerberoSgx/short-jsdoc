@@ -21,7 +21,7 @@ __p += '\n\n<p class="class-text">' +
 ((__t = ( this.jsdoc.text )) == null ? '' : __t) +
 '</p>\n\n<h3 class=\'methods\'>Methods</h3>\n<ul>\n';
  _(this.jsdoc.methods).each(function(method, methodName) { ;
-__p += '\n\t<li>\n\t\t<a class=\'method\' href="method/' +
+__p += '\n\t<li>\n\t\t<a class=\'method\' href="#method/' +
 ((__t = ( methodName )) == null ? '' : __t) +
 '">Method ' +
 ((__t = ( methodName )) == null ? '' : __t) +
@@ -57,7 +57,7 @@ __p += '\n\t<li><a href="#class/' +
 ((__t = ( className )) == null ? '' : __t) +
 '</a></li>\n';
  }); ;
-__p += '\n</ul>\n\n<a href="#parse"><b>Parse</b> your own code! --></a>';
+__p += '\n</ul>\n\n<a href="#parse"><b>Parse</b> your own code! --></a>\n\n\n\n<p>(devel)<a href="../test/SpecRunner.html">Specs</a></p>';
 
 }
 return __p
@@ -82,9 +82,9 @@ __p += '<h2 class="module-title">Module ' +
 ((__t = ( this.jsdoc.name)) == null ? '' : __t) +
 '</h2>\n\n<h3>Classes</h3>\n\n<ul class="classes">\n';
  _(this.classes).each(function(c) { ;
-__p += '\n\t<li>\n\t\t<a href="#method/' +
+__p += '\n\t<li>\n\t\t<a href="#class/' +
 ((__t = ( c.name )) == null ? '' : __t) +
-'">Method ' +
+'">' +
 ((__t = ( c.name )) == null ? '' : __t) +
 '</a>\t\t\n\t</li>\n';
  }); ;

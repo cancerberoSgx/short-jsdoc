@@ -3,7 +3,7 @@ var JsDocRouter = Backbone.Router.extend({
 	routes: {
 		"class/:class": "showClass"
 	,	"module/:module": "showModule"
-	,	'actions/:action': 'doAction'
+	// ,	'actions/:action': 'doAction'
 	,	"index": "showIndex"
 	,	"parse": "showParse"
 	,	"search": "showSearch"
@@ -19,7 +19,7 @@ var JsDocRouter = Backbone.Router.extend({
 		resourceName = resourceName||'Resource'; 
 		if(view.resourceNotFound)
 		{
-			this.application.showErrorView(resourceName+' '+className+' not found!'); 
+			this.application.showErrorView(resourceName+' '+resourceName+' not found!'); 
 		}
 		else
 		{

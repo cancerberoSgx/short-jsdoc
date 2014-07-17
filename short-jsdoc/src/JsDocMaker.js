@@ -5,10 +5,6 @@
 
 (function() {
 
-	//http://stackoverflow.com/questions/498970/how-do-i-trim-a-string-in-javascript
-	var stringFullTrim = function(s){return s.replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,'').replace(/\s+/g,' ');};
-
-
 	//@class jsDocMaker
 	//@constructor JsDocMaker
 	var JsDocMaker = function()
@@ -18,6 +14,10 @@
 		this.methodAnnotationRegexp = /(\s+@method)/gi;
 		this.propertyAnnotationRegexp = /(\s+@property)/gi;
 	}; 
+
+
+
+	//PARSING AND PREPROCESSING
 
 	//@method parse	@return {Array} array of class description - with methods, and methods containing params. 
 	JsDocMaker.prototype.parse = function(comments, fileName)
@@ -134,18 +134,6 @@
 		};
 	}; 
 
-	JsDocMaker.prototype.splitAndPreserve = function(string, replace)
-	{
-		var marker = '_%_%_';
-		var splitted = string.replace(replace, marker+'$1');
-		if(splitted.length<2)
-		{
-			return null; //TODO: notify error?
-		}
-		splitted = splitted.split(marker);
-		return splitted; 
-	}; 
-	
 	// @method unifyLineComments unify adjacents Line comment nodes into one in the ns.syntax.coments generated after visiting. 
 	JsDocMaker.prototype.unifyLineComments = function()
 	{
@@ -163,17 +151,34 @@
 		}
 	}; 
 
-	//@method postProccess so the data is already parsed but we want to normalize some children like @extend and @module to be properties of the unit instead children.
+
+
+
+
+	//POST PROCESSING
+
+
+
+	// @method postProccess so the data is already parsed but we want to normalize some 
+	// children like @extend and @module to be properties of the unit instead children.
+	// Also we enforce explicit  parent reference, this is a class must reference its 
+	// parent module and a method muest reference its parent class. Also related to this 
+	// is the fullname property that will return an unique full name in the format 
+	// '$MODULE.$CLASS.$METHOD'. We assume that a module contains unique named classes and 
+	// that classes contain unique named properties and methods. 
+	JsDocMaker.DEFAULT_CLASS = 'Object'; 
+	JsDocMaker.DEFAULT_MODULE = '__DefaultModule'; 
 	JsDocMaker.prototype.postProccess = function()
 	{
 		var self = this;
+
+		// do some work for classes
 		_(self.data.classes).each(function(c, name)
 		{
 			var module = _(c.children||[]).find(function(child)
 			{
 				return child.annotation === 'module'; 
-			}); 
-
+			});
 			if (module)
 			{
 				c.module = module.name; 
@@ -188,8 +193,12 @@
 					self.data.modules[module.name].text = self.data.modules[module.name].text || module.text; 
 				}
 			}
+			else //all classes must have a module 
+			{
+				c.module = JsDocMaker.DEFAULT_MODULE; 
+			}
 
-			//similar for @extend
+			// set class.extends property
 			var extend = _(c.children||[]).find(function(child)
 			{
 				return child.annotation === 'extend' || child.annotation === 'extends'; 
@@ -199,22 +208,66 @@
 				c.extends = extend.name; 
 				c.children = _(c.children).without(extend);
 			}
+			else // All classes must extend something
+			{
+				c.extends = JsDocMaker.DEFAULT_CLASS; 
+			}
 		}); 
+
+		// now do som ework for methods
+		// _(self.data.methods).each(function(m, name)
+		// {
+		// 	var class = _(m.children||[]).find(function(child)
+		// 	{
+		// 		return child.annotation === 'module'; 
+		// 	});
+		// 	if (module)
+		// 	{
+
+		// });
 	}; 
 
+
+
+
+	//UTILITIES
+
+	JsDocMaker.prototype.splitAndPreserve = function(string, replace)
+	{
+		var marker = '_%_%_';
+		var splitted = string.replace(replace, marker+'$1');
+		if(splitted.length<2)
+		{
+			return null; //TODO: notify error?
+		}
+		splitted = splitted.split(marker);
+		return splitted; 
+	}; 
+	
 	JsDocMaker.prototype.error = function(msg)
 	{
 		console.error('Error detected: ' + msg); 
 		throw msg;
 	}; 
+	
+	var stringFullTrim = function(s){return s.replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,'').replace(/\s+/g,' ');};//http://stackoverflow.com/questions/498970/how-do-i-trim-a-string-in-javascript
+
+
+
+
+
+
+
+
+
+	// INSTALL AS A PLUGIN IN JS-INDENTATOR
+
 	var maker = new JsDocMaker();
 
-
-	// now, create a js-indentator installable !!
 	var ns = jsindentator;
 	if(!ns.styles) ns.styles={}; 
 	var impl = ns.styles.jsdocgenerator1 = {};
-	_.extend(impl, ns.styles.clean);//we extends from a base that support all the language so we do a full ast iteration. 
+	_.extend(impl, ns.styles.clean);//we extend from a base class that support all the language so we do a full ast iteration. 
 	_.extend(impl, {
 		postRender: function()
 		{
