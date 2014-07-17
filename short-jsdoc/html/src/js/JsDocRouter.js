@@ -3,7 +3,7 @@ var JsDocRouter = Backbone.Router.extend({
 	routes: {
 		"class/:class": "showClass"
 	,	"module/:module": "showModule"
-	,	"method/:module": "showModule"
+	,	"method/:method": "showMethod"
 	// ,	'actions/:action': 'doAction'
 	,	"index": "showIndex"
 	,	"parse": "showParse"
@@ -28,7 +28,8 @@ var JsDocRouter = Backbone.Router.extend({
 		}
 	}
 
-,	showModule: function(moduleName) {
+,	showModule: function(moduleName) 
+	{
 		var view = new ModuleView(this.application, moduleName);
 		this.showView(view); 
 	}
@@ -36,6 +37,12 @@ var JsDocRouter = Backbone.Router.extend({
 ,	showClass: function(className) 
 	{ 
 		var view = new ClassView(this.application, className);
+		this.showView(view); 
+	}
+
+,	showMethod: function(method)
+	{
+		var view = new MethodView(this.application, method);
 		this.showView(view); 
 	}
 	

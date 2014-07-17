@@ -168,6 +168,7 @@
 	// that classes contain unique named properties and methods. 
 	JsDocMaker.DEFAULT_CLASS = 'Object'; 
 	JsDocMaker.DEFAULT_MODULE = '__DefaultModule'; 
+	JsDocMaker.ABSOLUTE_NAME_SEPARATOR = '.'; 
 	JsDocMaker.prototype.postProccess = function()
 	{
 		var self = this;
@@ -198,6 +199,8 @@
 				c.module = JsDocMaker.DEFAULT_MODULE; 
 			}
 
+			c.absoluteName = c.module+JsDocMaker.ABSOLUTE_NAME_SEPARATOR+c.name; 
+
 			// set class.extends property
 			var extend = _(c.children||[]).find(function(child)
 			{
@@ -213,8 +216,7 @@
 				c.extends = JsDocMaker.DEFAULT_CLASS; 
 			}
 
-
-			//create a param property for each method
+			// create a param property for each method
 			_(c.methods).each(function(method, name)
 			{
 				var params = _(method.children||[]).filter(function(child)
@@ -223,9 +225,15 @@
 					return child.annotation === 'param'; 
 				}); 
 				method.params = params; 
+				method.ownerClass = c.absoluteName;
+				method.absoluteName = c.absoluteName+JsDocMaker.ABSOLUTE_NAME_SEPARATOR+method.name; 
 			});
+
+			self.data.classes[c.absoluteName] = c; 
+			delete self.data.classes[c.name]; 
 		
 		}); 
+
 
 		// now do some work for methods: add a 'ownerClass'  property that references the class and a 'pàrams' property with the parameter object {name, type, text}
 		// _(self.data.methods).each(function(m, name)
@@ -286,7 +294,10 @@
 		{
 			maker.parse(ns.syntax.comments, 'singleFile.js');
 			impl.jsdocClasses = maker.data; 
+			
+console.log(JSON.stringify(impl.jsdocClasses));
 		}
 	}); 
+	ns.styles.jsdocgenerator1.jsMakerInstance = maker;
 
 })();

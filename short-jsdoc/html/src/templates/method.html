@@ -1,0 +1,9 @@
+<h2>Method <a href="#method/<%= this.jsdoc.name%>"></a></h2>
+<h3>Of class <a href="#class/<%= this.jsdoc.ownerClass %>"><%= this.jsdoc.ownerClass%></a></h3>
+<h3>Parameters</h3>
+<ul>
+<% _(this.jsdoc.params).each(function(param){ %>
+<li><%= param.name%></li>
+
+<% }); %>
+</ul>

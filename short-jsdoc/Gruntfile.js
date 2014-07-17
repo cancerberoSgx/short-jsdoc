@@ -14,7 +14,7 @@ module.exports = function (grunt) {
 		// 	tasks : [ /*'browserify', */'yuidoc' ]
 		// }
 		jst : {
-			files : 'templates/**/*.html',
+			files : 'html/src/templates/**/*.html',
 			tasks : [ 'jst']
 		}
 	}
@@ -41,7 +41,7 @@ module.exports = function (grunt) {
 				namespace : 'shortjsdoc'
 			},
 			files : {
-				'html/template-output.js': 'templates/*.html'
+				'html/template-output.js': 'html/src/templates/*.html'
 			}
 		}
 	}

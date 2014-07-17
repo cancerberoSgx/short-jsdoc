@@ -1,21 +1,20 @@
 {
-	"meta": {
-		"title": "JsDoc Example"
-	}
-,	"classes": {
-		"Living": {
+	"classes": {
+		"Life.Living": {
 			"annotation": "class", 
 			"name": "Living", 
 			"text": " Any living thing.", 
 			"children": [], 
-			"fileName": "singleFile", 
-			"module": "Life"
+			"fileName": "singleFile.js", 
+			"module": "Life", 
+			"absoluteName": "Life.Living", 
+			"extends": "Object"
 		}, 
-		"Tree": {
+		"__DefaultModule.Tree": {
 			"annotation": "class", 
 			"name": "Tree", 
 			"text": " A tree is a living thing that contains some leafs and grow.", 
-			"fileName": "singleFile", 
+			"fileName": "singleFile.js", 
 			"methods": {
 				"growLeaf": {
 					"annotation": "method", 
@@ -28,11 +27,23 @@
 						"text": "", 
 						"theRestString": ""
 					}], 
-					"fileName": "singleFile"
+					"fileName": "singleFile.js", 
+					"params": [{
+						"annotation": "param", 
+						"type": "{Leaf}", 
+						"name": "leaf", 
+						"text": "", 
+						"theRestString": ""
+					}], 
+					"ownerClass": "Tree", 
+					"absoluteName": "__DefaultModule.Tree.growLeaf"
 				}
-			}
+			}, 
+			"module": "__DefaultModule", 
+			"absoluteName": "__DefaultModule.Tree", 
+			"extends": "Object"
 		}, 
-		"Apple": {
+		"Life.Apple": {
 			"annotation": "class", 
 			"name": "Apple", 
 			"text": " a sweet fruit", 
@@ -42,9 +53,57 @@
 				"text": "", 
 				"theRestString": ""
 			}], 
-			"fileName": "singleFile", 
+			"fileName": "singleFile.js", 
 			"module": "Life", 
+			"absoluteName": "Life.Apple", 
 			"extends": "Fruit"
+		}, 
+		"Mineral.Rock": {
+			"annotation": "class", 
+			"name": "Rock", 
+			"text": "", 
+			"children": [{
+				"annotation": "method", 
+				"name": "doShadow", 
+				"text": "", 
+				"theRestString": " @param {Rectangle} shadowSize @return {Shadow} the new Shadow"
+			}, {
+				"annotation": "param", 
+				"type": "{Rectangle}", 
+				"name": "shadowSize", 
+				"text": "", 
+				"theRestString": " @return {Shadow} the new Shadow"
+			}, {
+				"annotation": "return", 
+				"type": "{Shadow}", 
+				"name": "the", 
+				"text": " new Shadow", 
+				"theRestString": ""
+			}], 
+			"fileName": "singleFile.js", 
+			"module": "Mineral", 
+			"absoluteName": "Mineral.Rock", 
+			"extends": "Object"
+		}, 
+		"Ideal.Shadow": {
+			"annotation": "class", 
+			"name": "Shadow", 
+			"text": "", 
+			"children": [], 
+			"fileName": "singleFile.js", 
+			"module": "Ideal", 
+			"absoluteName": "Ideal.Shadow", 
+			"extends": "Object"
+		}, 
+		"Ideal.Good": {
+			"annotation": "class", 
+			"name": "Good", 
+			"text": "", 
+			"children": [], 
+			"fileName": "singleFile.js", 
+			"module": "Ideal", 
+			"absoluteName": "Ideal.Good", 
+			"extends": "Object"
 		}
 	}, 
 	"modules": {
@@ -53,6 +112,18 @@
 			"name": "Life", 
 			"text": ".", 
 			"theRestString": " @class Tree A tree is a living thing that contains some leafs and grow."
+		}, 
+		"Mineral": {
+			"annotation": "module", 
+			"name": "Mineral", 
+			"text": "", 
+			"theRestString": " @method doShadow @param {Rectangle} shadowSize @return {Shadow} the new Shadow"
+		}, 
+		"Ideal": {
+			"annotation": "module", 
+			"name": "Ideal", 
+			"text": "", 
+			"theRestString": " @class Good @module Ideal"
 		}
 	}
 }

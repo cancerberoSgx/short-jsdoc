@@ -10,8 +10,8 @@
 <h3>Classes</h3>
 
 <ul>
-<% _(data.classes).each(function(classBody, className) { %>
-	<li><a href="#class/<%= className %>"><%= className %></a></li>
+<% _(data.classes).each(function(c) { %>
+	<li><a href="#class/<%= c.absoluteName %>"><%= c.name %></a></li>
 <% }); %>
 </ul>
 
