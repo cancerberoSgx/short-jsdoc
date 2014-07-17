@@ -3,6 +3,7 @@ var JsDocRouter = Backbone.Router.extend({
 	routes: {
 		"class/:class": "showClass"
 	,	"module/:module": "showModule"
+	,	"method/:module": "showModule"
 	// ,	'actions/:action': 'doAction'
 	,	"index": "showIndex"
 	,	"parse": "showParse"

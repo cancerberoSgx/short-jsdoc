@@ -212,9 +212,22 @@
 			{
 				c.extends = JsDocMaker.DEFAULT_CLASS; 
 			}
+
+
+			//create a param property for each method
+			_(c.methods).each(function(method, name)
+			{
+				var params = _(method.children||[]).filter(function(child)
+				{
+					child.text = stringFullTrim(child.text||''); 
+					return child.annotation === 'param'; 
+				}); 
+				method.params = params; 
+			});
+		
 		}); 
 
-		// now do som ework for methods
+		// now do some work for methods: add a 'ownerClass'  property that references the class and a 'pàrams' property with the parameter object {name, type, text}
 		// _(self.data.methods).each(function(m, name)
 		// {
 		// 	var class = _(m.children||[]).find(function(child)
