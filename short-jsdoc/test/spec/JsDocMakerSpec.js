@@ -43,12 +43,13 @@ describe("JsDocMaker", function()
 			var Apple = jsdoc.classes['livingThings.Apple']; 
 			expect(Apple.methods.beEatenBy).toBeDefined();
 			expect(Apple.methods.beEatenBy.absoluteName).toBe('livingThings.Apple.beEatenBy');
-			debugger;
+			// debugger;
 		});			
 
 		it("method's params", function() 
 		{
 			var Apple = jsdoc.classes['livingThings.Apple']; 
+			
 			expect(Apple.methods.beEatenBy.params.length).toBe(2);
 			expect(Apple.methods.beEatenBy.params[0].name).toBe('mouth');
 			expect(Apple.methods.beEatenBy.params[0].type).toBe('{Mouth}');
@@ -58,6 +59,29 @@ describe("JsDocMaker", function()
 			expect(Apple.methods.beEatenBy.params[1].type).toBe('{Int}');
 		});
 	});
+
+
+
+	describe("line comments are unified", function() {
+
+		it("should be able to parse some javascript code", function() 
+		{
+			var jsdoc = parseCode(
+				'//@class Monkey @extend Animal @module livingThings2' + '\n' +
+				'//@method eat way of feeding' + '\n' +
+				'//@param {Int} amount' + '\n' +
+				'//@param {Food} food what is eaten' + '\n' +
+				'//@return {Energy} the total energy generated afte rthe proccess' + '\n' +
+				''
+			); 
+			expect(jsdoc.modules.livingThings2).toBeDefined();
+			var Monkey = jsdoc.classes['livingThings2.Monkey']; 
+			expect(Monkey).toBeDefined();
+			expect(Monkey.absoluteName).toBe('livingThings2.Monkey');
+			expect(Monkey.name).toBe('Monkey');
+		});
+	}); 
+
 
 });
 

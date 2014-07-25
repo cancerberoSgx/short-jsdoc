@@ -10,9 +10,9 @@
 	var JsDocMaker = function()
 	{
 		this.annotationRegexp = /(\s+@\w+)/gi;
-		this.classAnnotationRegexp = /(\s+@class)/gi;
-		this.methodAnnotationRegexp = /(\s+@method)/gi;
-		this.propertyAnnotationRegexp = /(\s+@property)/gi;
+		// this.classAnnotationRegexp = /(\s+@class)/gi;
+		// this.methodAnnotationRegexp = /(\s+@method)/gi;
+		// this.propertyAnnotationRegexp = /(\s+@property)/gi;
 	}; 
 
 
@@ -36,37 +36,55 @@
 
 		_(this.comments).each(function(node)
 		{
-			//TODO: let the user mark some comment block somehow to let the parser to ignore it.
-			var parsed_array = self.parseUnit(node.value); 
-			_(parsed_array).each(function(parsed)
+			// var a = (node.value || '').split(/((?:@class)|(?:@method)|(?:@param))/gi);
+			// var regex = /((?:@class)|(?:@method)|(?:@param))/gi; 
+			var regex = /((?:@class)|(?:@method))/gi
+			var a = self.splitAndPreserve(node.value || '', regex); 
+			a = _(a).filter(function(v){return stringFullTrim(v);}); //delete empties and trim
+			
+			_(a).each(function(value)
 			{
-				parsed.fileName = fileName;
-				delete parsed.theRestString; 
+				//TODO: let the user mark some comment block somehow to let the parser to ignore it.			
+				var parsed_array = self.parseUnit(value); 
+				console.log('PARSED UNIT', parsed_array)
+				_(parsed_array).each(function(parsed)
+				{
+					parsed.fileName = fileName;
+					delete parsed.theRestString; 
 
-				if(parsed.annotation==='class')
-				{
-					if(!classes[parsed.name])
+					if(parsed.annotation==='class')
 					{
-						classes[parsed.name] = parsed; 
+						if(!classes[parsed.name])
+						{
+							classes[parsed.name] = parsed; 
+						}
+						if(currentModule)
+						{
+							parsed.module = currentModule.name; 
+						}
+						currentClass = classes[parsed.name]; 
 					}
-					if(currentModule)
+					else if(parsed.annotation==='method' && currentClass)
 					{
-						parsed.module = currentModule.name; 
+						currentClass.methods = currentClass.methods || {};
+						currentClass.methods[parsed.name] = parsed;
+						currentMethod = parsed;
 					}
-					currentClass = classes[parsed.name]; 
-				}
-				else if(parsed.annotation==='method' && currentClass)
-				{
-					currentClass.methods = currentClass.methods || {};
-					currentClass.methods[parsed.name] = parsed;
-					currentMethod = parsed;
-				}
-				else if(parsed.annotation==='param' && currentClass)
-				{
-					currentMethod.params = currentMethod.params || {};
-					currentMethod.params[parsed.name] = parsed; 
-				}	
-			}); 
+					else if(parsed.annotation==='param' && currentClass)
+					{
+						if(!currentMethod)
+						{
+							// debugger;
+							self.error('param before method: ', parsed);
+						}
+						else
+						{						
+							currentMethod.params = currentMethod.params || {};
+							currentMethod.params[parsed.name] = parsed; 
+						}
+					}	
+				}); 
+			}); 		
 			
 		}); 
 		this.postProccess();
@@ -75,12 +93,14 @@
 	// @method {Unit} parseUnit parse a simple substring like '@annotation {Type} a text' into an object {annotation, type, text} object.
 	// syntax: @method {String} methodName blabla @return {Number} blabla @param {Object} p1 blabla
 	JsDocMaker.prototype.parseUnitRegexp = /\s*@(\w+)\s*(\{\w+\}){0,1}\s*(\w+){0,1}(.*)\s*/; 
-	
 	JsDocMaker.prototype.parseUnit = function(str)
 	{
-
 		// TODO: split str into major units and then do the parsing
 		var parsed = this.parseUnitSimple(str); 
+		// if(!parsed)
+		// {
+		// 	debugger;
+		// }
 		var ret = [parsed];
 		if(parsed.theRestString)
 		{
@@ -253,6 +273,9 @@
 
 	//UTILITIES
 
+	// @method splitAndPreserve search for given regexp and split the given string but preserving the matches
+	// @param {Regexp} regexp must contain a capturing group (like /(\s+@\w+)/gi)
+	// @return {Array of string}
 	JsDocMaker.prototype.splitAndPreserve = function(string, replace)
 	{
 		var marker = '_%_%_';

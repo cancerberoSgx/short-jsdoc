@@ -30,6 +30,9 @@ This project maintains its own js-indentator implementation JsDocMaker.
 
 
 ## TODO: ideas
-search for class, modules, methods, methods that return or accept a type. subclasses of..., classes overriding a method...
+ * asd
+ * search for class, modules, methods, methods that return or accept a type. subclasses of..., classes overriding a method... 
+ * class hierarc in classview
+ * support generic types a la Java:  @return {Array<Person>} the persons in this city @return {Object<String, Person>} persons by name map
+ * TODO (syntax): - if you don't put @module in your @class then it will be assigned to last declared module. but @class can declare @module in itself. It is not the same for @method and @class ownership. and the reason is that in general this try to be file agnostic and few classes tend to be declared in a single file and several methods tend to be declared in a single file. 
 
-TODO (syntax): - if you don't put @module in your @class then it will be assigned to last declared module. but @class can declare @module in itself. It is not the same for @method and @class ownership. and the reason is that in general this try to be file agnostic and few classes tend to be declared in a single file and several methods tend to be declared in a single file. 
