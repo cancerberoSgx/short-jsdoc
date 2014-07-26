@@ -18,4 +18,9 @@ var AbstractView = Backbone.View.extend({
 		return '';
 	}
 
+,	simpleName: function(name)
+	{
+		return this.application.maker.simpleName(name);
+	}
+
 });

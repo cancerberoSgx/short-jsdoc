@@ -21,7 +21,7 @@ __p += '\n\n<p class="class-text">' +
 ((__t = ( this.jsdoc.text )) == null ? '' : __t) +
 '</p>\n\n<h3 class=\'methods\'>Methods</h3>\n<ul>\n';
  _(this.jsdoc.methods).each(function(method) { ;
-__p += '\n\t<li>\n\t\t<a class=\'method\' href="#method/' +
+__p += '\n\t<li class="method">\n\t\t<a class=\'method-name\' href="#method/' +
 ((__t = ( method.absoluteName )) == null ? '' : __t) +
 '">Method ' +
 ((__t = ( method.name )) == null ? '' : __t) +
@@ -69,15 +69,19 @@ var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
 __p += '<h2>Method <a href="#method/' +
+((__t = ( this.jsdoc.absoluteName)) == null ? '' : __t) +
+'">' +
 ((__t = ( this.jsdoc.name)) == null ? '' : __t) +
-'"></a></h2>\n<h3>Of class <a href="#class/' +
+'</a></h2>\n\n<h3>Of class <a href="#class/' +
 ((__t = ( this.jsdoc.ownerClass )) == null ? '' : __t) +
 '">' +
-((__t = ( this.jsdoc.ownerClass)) == null ? '' : __t) +
+((__t = ( this.simpleName(this.jsdoc.ownerClass) )) == null ? '' : __t) +
 '</a></h3>\n<h3>Parameters</h3>\n<ul>\n';
  _(this.jsdoc.params).each(function(param){ ;
-__p += '\n<li>' +
+__p += '\n<li>name: ' +
 ((__t = ( param.name)) == null ? '' : __t) +
+', type: ' +
+((__t = ( param.type)) == null ? '' : __t) +
 '</li>\n\n';
  }); ;
 __p += '\n</ul>';

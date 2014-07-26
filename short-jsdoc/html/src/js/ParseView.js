@@ -14,6 +14,7 @@ var ParseView = AbstractView.extend({
 		var maker = this.application.maker;
 		maker.parseFile(code, 'textarea');
 		this.application.refreshWithNewModel(maker.data);
+		console.log(JSON.stringify(maker.data)); 
 	}
 
 });

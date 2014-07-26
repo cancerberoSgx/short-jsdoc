@@ -10,8 +10,8 @@
 <h3 class='methods'>Methods</h3>
 <ul>
 <% _(this.jsdoc.methods).each(function(method) { %>
-	<li>
-		<a class='method' href="#method/<%= method.absoluteName %>">Method <%= method.name %></a>
+	<li class="method">
+		<a class='method-name' href="#method/<%= method.absoluteName %>">Method <%= method.name %></a>
 		
 	</li>
 <% }); %>

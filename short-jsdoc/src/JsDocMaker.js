@@ -49,7 +49,7 @@
 		{
 			// var a = (node.value || '').split(/((?:@class)|(?:@method)|(?:@param))/gi);
 			// var regex = /((?:@class)|(?:@method)|(?:@param))/gi; 
-			var regex = /((?:@class)|(?:@method))/gi
+			var regex = /((?:@class)|(?:@method))/gi; 
 			var a = self.splitAndPreserve(node.value || '', regex); 
 			a = _(a).filter(function(v){return stringFullTrim(v);}); //delete empties and trim
 			
@@ -57,7 +57,7 @@
 			{
 				//TODO: let the user mark some comment block somehow to let the parser to ignore it.			
 				var parsed_array = self.parseUnit(value); 
-				console.log('PARSED UNIT', parsed_array)
+				// console.log('PARSED UNIT', parsed_array)
 				_(parsed_array).each(function(parsed)
 				{
 					parsed.fileName = fileName;
@@ -95,7 +95,7 @@
 						}
 					}	
 				}); 
-			}); 		
+			});
 			
 		}); 
 		this.postProccess();
@@ -128,11 +128,12 @@
 					parsed.children = parsed.children || []; 
 					parsed.children.push(child); 
 				}
-				// if(child.annotation === 'module' || child.annotation === 'extends'|| child.annotation === 'extend')
-				// {
-				// 	delete child.text; 
-				// 	delete child.theRestString; 
-				// }
+				/*
+				if(child.annotation === 'module' || child.annotation === 'extends'|| child.annotation === 'extend')
+				{
+					delete child.text; 
+					delete child.theRestString; 
+				}*/
 				s = child.theRestString; 
 			}
 		}
@@ -239,7 +240,7 @@
 			}); 
 			if(extend)
 			{
-				c.extends = extend.name; 
+				c.extends = self.resolveAbsoluteClassName(extend.name, c); 
 				c.children = _(c.children).without(extend);
 			}
 			else // All classes must extend something
@@ -247,39 +248,89 @@
 				c.extends = JsDocMaker.DEFAULT_CLASS; 
 			}
 
-			// create a param property for each method
 			_(c.methods).each(function(method, name)
 			{
+				// param property
 				var params = _(method.children||[]).filter(function(child)
 				{
 					child.text = stringFullTrim(child.text||''); 
 					return child.annotation === 'param'; 
 				}); 
 				method.params = params; 
+
 				method.ownerClass = c.absoluteName;
 				method.absoluteName = c.absoluteName+JsDocMaker.ABSOLUTE_NAME_SEPARATOR+method.name; 
 			});
 
 			self.data.classes[c.absoluteName] = c; 
-			delete self.data.classes[c.name]; 
-		
+			delete self.data.classes[c.name];
 		}); 
 
-
-		// now do some work for methods: add a 'ownerClass'  property that references the class and a 'pàrams' property with the parameter object {name, type, text}
-		// _(self.data.methods).each(function(m, name)
-		// {
-		// 	var class = _(m.children||[]).find(function(child)
-		// 	{
-		// 		return child.annotation === 'module'; 
-		// 	});
-		// 	if (module)
-		// 	{
-
-		// });
+	//resolve type binding - each object containing a type will be added with TypeBinding property
 	}; 
 
 
+
+
+
+
+	// BINDING
+	//@method byndType 
+	
+	//@return {TypeBinding} 
+
+	//@class TypeBinding a datatype with an association between types names in source code and parsed class nodes. 
+	//It support generic types (recursive)
+	//@property params
+
+	//@class JsDocMaker
+	JsDocMaker.prototype.buildTypeBinding = function(baseModule, baseClass)
+	{
+
+	}; 
+	//@method resolveAbsoluteClassName 
+	//@param {String} name
+	//@param {Object} baseClass the parsed base class object from where to start looking for.
+	// @return {String}an absolute class name starting searching from passing baseClass module and then globally and then matching nativetypes.
+	JsDocMaker.prototype.resolveAbsoluteClassName = function(name, baseClass)
+	{
+		return name; 
+	}; 
+
+	// @method simpleName @param {String} name @return {String}
+	JsDocMaker.prototype.simpleName = function(name)
+	{
+		var a = name.split(JsDocMaker.ABSOLUTE_NAME_SEPARATOR);
+		return a[a.length-1]; 
+	}; 
+
+
+
+	// NATIVE TYPES LINKING
+
+	// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String
+	JsDocMaker.NATIVE_TYPES = ['String', 'Object', 'Array', 'Date', 'Regex']; 
+	JsDocMaker.prototype.getNativeTypeUrl = function(name)
+	{
+		return 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/' + name; 
+	}; 
+
+
+
+	//MODIFIERS - like static, private, final
+	JsDocMaker.MODIFIERS = ['static', 'private', 'final']; 
+	//@method installModifiers sets the property modifiers to the node according its children
+	JsDocMaker.prototype.installModifiers = function(node)
+	{
+		node.modifiers = node.modifiers || []; 
+		_(node.children).each(function(child)
+		{
+			if(_(JsDocMaker.MODIFIERS).contains(child.annotation))
+			{
+				node.modifiers.push(child.annotation); 
+			}
+		});
+	}; 
 
 
 	//UTILITIES
@@ -316,23 +367,23 @@
 
 
 	// INSTALL AS A PLUGIN IN JS-INDENTATOR
+/*
+	var maker = new JsDocMaker();
 
-// 	var maker = new JsDocMaker();
-
-// 	var ns = jsindentator;
-// 	if(!ns.styles) ns.styles={}; 
-// 	var impl = ns.styles.jsdocgenerator1 = {};
-// 	_.extend(impl, ns.styles.clean);//we extend from a base class that support all the language so we do a full ast iteration. 
-// 	_.extend(impl, {
-// 		postRender: function()
-// 		{
-// 			maker.parse(ns.syntax.comments, 'singleFile.js');
-// 			impl.jsdocClasses = maker.data; 
+	var ns = jsindentator;
+	if(!ns.styles) ns.styles={}; 
+	var impl = ns.styles.jsdocgenerator1 = {};
+	_.extend(impl, ns.styles.clean);//we extend from a base class that support all the language so we do a full ast iteration. 
+	_.extend(impl, {
+		postRender: function()
+		{
+			maker.parse(ns.syntax.comments, 'singleFile.js');
+			impl.jsdocClasses = maker.data; 
 			
-// console.log(JSON.stringify(impl.jsdocClasses));
-// 		}
-// 	}); 
-// 	ns.styles.jsdocgenerator1.jsMakerInstance = maker;
-
+console.log(JSON.stringify(impl.jsdocClasses));
+		}
+	}); 
+	ns.styles.jsdocgenerator1.jsMakerInstance = maker;
+*/
 
 })(this);
