@@ -1,18 +1,17 @@
 {
 	"name": "short-jsdoc"
 ,	"version": "0.1.0"
-,	"description": "jsdoc personal initiative"
+,	"description": "short and simple jsdoc Object Oriented syntax format and implementation"
+,	"author": "Sebastián Gurin"
 
 ,	"devDependencies": {
-		"browserify-shim": "*",
 		"grunt": "*",
-    	"grunt-contrib-jst": "~0.5.1",
-		"grunt-browserify":"*",
+    	"grunt-contrib-jst": "*",
 		"grunt-contrib-watch": "*",
 		"grunt-contrib-connect":"*",
   		"matchdep": "*",
 
-		"underscore": "~1.5.1",
-		"esprima": "~1.0.3"
+		"underscore": "*",
+		"esprima": "*"
 	}
 }

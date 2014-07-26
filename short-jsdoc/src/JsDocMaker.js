@@ -281,9 +281,11 @@
 
 	//@class TypeBinding a datatype with an association between types names in source code and parsed class nodes. 
 	//It support generic types (recursive)
-	//@property params
-
+	//@property {TypeBinding} type
+	//@property {Array<TypeBinding>} params - the generic types params array. For example the params for {Map<String,Apple>} is [StringBynding]
+	//@property {String} nativeTypeUrl - if this is a native type - this 
 	//@class JsDocMaker
+	
 	JsDocMaker.prototype.buildTypeBinding = function(baseModule, baseClass)
 	{
 
@@ -303,8 +305,6 @@
 		var a = name.split(JsDocMaker.ABSOLUTE_NAME_SEPARATOR);
 		return a[a.length-1]; 
 	}; 
-
-
 
 	// NATIVE TYPES LINKING
 

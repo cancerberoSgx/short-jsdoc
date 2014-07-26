@@ -1,5 +1,32 @@
-## About the Project
-jsdoc tools like yuidocs or jsdocs are disliked by some JavaScript programmers because they require long comment formats using /** */ and strict syntax. For example in Yui Doc yoiu have to add endlines to the comments to work, for example ```/**@class Apple*/``` doesn't work. 
+## Installing 
+
+this project neds an simple initial installation:
+
+{{{
+    cd short-jsdoc
+    npm install
+}}}
+
+## generating documentation for a project in filesystem
+
+{{{
+    cd short-jsdoc/src
+    node shortjsdoc.js /home/me/myproject /home/me/myproject/jsdocoutput
+}}}
+
+This will generate a new folder myproject/jsdocoutput with a ready to use html application that shows the project classes.
+
+## Running development web demo
+
+{{{
+    grunt run
+    firefox http://localhost:8080/html
+}}}
+
+
+## Motivation
+
+jsdoc tools like yuidocs or jsdocs are disliked by some JavaScript programmers because they require long comment formats using /\*\* \*/ and strict syntax. For example in Yui Doc yoiu have to add endlines to the comments to work, for example /\*\* @class Apple\*/ doesn't work. 
 
 Many JavaScripters like their code clean - self explained - so long jsdocs comments go against this. 
 
@@ -12,20 +39,24 @@ The typical scenario would be the following. Imagine that you have a big project
 sayHi: function(user){}
 }}}
 
-In this situation migrating to jsdocs will imply changing the comments to ```/** */``` syntax and in general cut+paste the existent documentation sentences to the right location. 
+In this situation migrating to jsdocs will imply changing the comments to /\*\* \*/ syntax and in general cut+paste the existent documentation sentences to the right location. 
 
 Wouldn't be best if jsdocs annotations could be just written to those existent comments?
 
 ## Files
-This project includes the following files from js-indentator (maintained in that other project):
+This project includes the following files
 
-libs/js-indentator/*.js
+html/ folder for a generic html5 application for displaying a project jsdocs. Based on jquery,backbone,underscore and bootstrap3
+
+/src/JsDocMaker.js - the main engine that is based on sprima and underscore. It will parse some source code and generate a json object with class information. For example, the html5 application will consume this data.
+
+/src/shortjsdoc.js - a nodejs based application to use in the desktop - just pass it a folder and it will generate a ready to use html5 application and json data showing the project classes.
 
 ## Project Origins
 
-Thanks to the project js-indentator I'm now able to parse and define my own jsdocs rules. The js-indentator example jsdocgenerator1 was designed with these ideas originally and is working well and simple.What is missed from that is getting the output class information json and rendering all that in a nice html5 application. This is what this project try to do.
+Thanks to the project js-indentator I'm now able to parse and define my own jsdocs rules ad learned a lot. The js-indentator example jsdocgenerator1 was designed with these ideas originally and is working well and simple.
 
-This project maintains its own js-indentator implementation JsDocMaker. 
+What is missed from that is getting the output class information json and rendering all that in a nice html5 application. And of course support the desktop for parsing an entire project. This is what this project try to do.
 
 
 
