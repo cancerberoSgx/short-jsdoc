@@ -3,11 +3,11 @@
 //this is a js-indentator implementation for extracting jsdocs information 
 //extract comments and use the postRender method to only dump jsdoc related information
 
-(function() {
+(function(GLOBAL) {
 
 	//@class jsDocMaker
 	//@constructor JsDocMaker
-	var JsDocMaker = function()
+	var JsDocMaker = GLOBAL.JsDocMaker = function()
 	{
 		this.annotationRegexp = /(\s+@\w+)/gi;
 		// this.classAnnotationRegexp = /(\s+@class)/gi;
@@ -18,6 +18,17 @@
 
 
 	//PARSING AND PREPROCESSING
+
+	JsDocMaker.prototype.parseFile = function(source, fileName)
+	{
+		this.syntax = esprima.parse(source, {
+			raw: true
+		,	range: true
+		,	comment: true		
+		});
+		return this.parse(this.syntax.comments, fileName);
+	}; 
+
 
 	//@method parse	@return {Array} array of class description - with methods, and methods containing params. 
 	JsDocMaker.prototype.parse = function(comments, fileName)
@@ -97,10 +108,10 @@
 	{
 		// TODO: split str into major units and then do the parsing
 		var parsed = this.parseUnitSimple(str); 
-		// if(!parsed)
-		// {
-		// 	debugger;
-		// }
+		if(!parsed)
+		{
+			return null;
+		}
 		var ret = [parsed];
 		if(parsed.theRestString)
 		{
@@ -306,21 +317,22 @@
 
 	// INSTALL AS A PLUGIN IN JS-INDENTATOR
 
-	var maker = new JsDocMaker();
+// 	var maker = new JsDocMaker();
 
-	var ns = jsindentator;
-	if(!ns.styles) ns.styles={}; 
-	var impl = ns.styles.jsdocgenerator1 = {};
-	_.extend(impl, ns.styles.clean);//we extend from a base class that support all the language so we do a full ast iteration. 
-	_.extend(impl, {
-		postRender: function()
-		{
-			maker.parse(ns.syntax.comments, 'singleFile.js');
-			impl.jsdocClasses = maker.data; 
+// 	var ns = jsindentator;
+// 	if(!ns.styles) ns.styles={}; 
+// 	var impl = ns.styles.jsdocgenerator1 = {};
+// 	_.extend(impl, ns.styles.clean);//we extend from a base class that support all the language so we do a full ast iteration. 
+// 	_.extend(impl, {
+// 		postRender: function()
+// 		{
+// 			maker.parse(ns.syntax.comments, 'singleFile.js');
+// 			impl.jsdocClasses = maker.data; 
 			
-console.log(JSON.stringify(impl.jsdocClasses));
-		}
-	}); 
-	ns.styles.jsdocgenerator1.jsMakerInstance = maker;
+// console.log(JSON.stringify(impl.jsdocClasses));
+// 		}
+// 	}); 
+// 	ns.styles.jsdocgenerator1.jsMakerInstance = maker;
 
-})();
+
+})(this);

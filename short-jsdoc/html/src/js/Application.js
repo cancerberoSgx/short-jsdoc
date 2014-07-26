@@ -7,8 +7,10 @@
 //@constructor Application @param {Object} data
 var Application = function(data)
 {
-	this.parser = jsindentator.styles.shortJsDoc; 
+	// this.parser = jsindentator.styles.shortJsDoc; 
 	this.data = data; 
+
+	this.maker = new JsDocMaker();
 
 	if(jQuery('#mainContainer').size()===0)
 	{

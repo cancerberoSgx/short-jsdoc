@@ -1,30 +1,17 @@
-function parseCode (code)
-{
-	jsindentator.setStyle(jsindentator.styles.jsdocgenerator1);
-	var result = jsindentator.main(code, {});
-	if(result instanceof Error) 
-	{
-		expect('ERROR: Given javascript couldn\'t be parsed!, reason: '+result).toBe(false); 
-	}
-	var jsdoc = jsindentator.styles.jsdocgenerator1.jsdocClasses; 
-	return jsdoc;
-}; 
-
 describe("JsDocMaker", function() 
 {
 
 	describe("Basic jsdoc parser", function() 
 	{
-		var jsdoc; 
+		var jsdoc, maker; 
 
 		beforeEach(function() 
 		{
-			ns.styles.jsdocgenerator1.jsMakerInstance.data=null; //reset the parser
-	 		jsdoc = parseCode(
-				'//@class Apple @extend Fruit @module livingThings\n'+
-				'/*@method beEatenBy apples have this privilege @param {Mouth} mouth the mouth to be used @param {Int} amount */'
-			); 
-			console.log('seba', jsdoc.classes['livingThings.Apple'].methods.beEatenBy.absoluteName)
+			var code = '//@class Apple @extend Fruit @module livingThings\n'+
+				'/*@method beEatenBy apples have this privilege @param {Mouth} mouth the mouth to be used @param {Int} amount */';
+			maker = new JsDocMaker();
+			maker.parseFile(code, 'textarea'); 
+			jsdoc = maker.data;
 		});
 
 		it("classes and modules", function() 
@@ -62,18 +49,25 @@ describe("JsDocMaker", function()
 
 
 
-	describe("line comments are unified", function() {
+	describe("line comments are unified", function() 
+	{
+		var jsdoc, maker; 
 
-		it("should be able to parse some javascript code", function() 
+		beforeEach(function() 
 		{
-			var jsdoc = parseCode(
-				'//@class Monkey @extend Animal @module livingThings2' + '\n' +
+			var code = '//@class Monkey @extend Animal @module livingThings2' + '\n' +
 				'//@method eat way of feeding' + '\n' +
 				'//@param {Int} amount' + '\n' +
 				'//@param {Food} food what is eaten' + '\n' +
 				'//@return {Energy} the total energy generated afte rthe proccess' + '\n' +
-				''
-			); 
+				''; 
+			maker = new JsDocMaker();
+			maker.parseFile(code, 'textarea'); 
+			jsdoc = maker.data;
+		});
+
+		it("should be able to parse some javascript code", function() 
+		{
 			expect(jsdoc.modules.livingThings2).toBeDefined();
 			var Monkey = jsdoc.classes['livingThings2.Monkey']; 
 			expect(Monkey).toBeDefined();

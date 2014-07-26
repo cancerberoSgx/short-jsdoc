@@ -10,6 +10,9 @@
 		"grunt-browserify":"*",
 		"grunt-contrib-watch": "*",
 		"grunt-contrib-connect":"*",
-  		"matchdep": "*"
+  		"matchdep": "*",
+
+		"underscore": "~1.5.1",
+		"esprima": "~1.0.3"
 	}
 }
