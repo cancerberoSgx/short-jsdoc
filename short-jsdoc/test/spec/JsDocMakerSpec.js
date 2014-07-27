@@ -20,9 +20,12 @@ describe("JsDocMaker", function()
 			var Apple = jsdoc.classes['livingThings.Apple']; 
 			expect(Apple).toBeDefined();
 
-			expect(Apple.module).toBe('livingThings');
-			expect(Apple.extends).toBe('Fruit');
+			expect(Apple.module.name).toBe('livingThings');
 			expect(Apple.absoluteName).toBe('livingThings.Apple');
+
+			//extends is not binded because we never declared the parent class
+			expect(Apple.extends.name).toBe('Fruit');
+			expect(Apple.extends.error).toBe('NAME_NOT_FOUND');
 		});
 
 		it("methods", function() 
@@ -49,13 +52,16 @@ describe("JsDocMaker", function()
 
 
 
-	describe("line comments are unified", function() 
+	describe("extends binds the types", function() 
 	{
 		var jsdoc, maker; 
 
 		beforeEach(function() 
 		{
-			var code = '//@class Monkey @extend Animal @module livingThings2' + '\n' +
+			var code = 
+				'//@class Animal @module livingThings2' + '\n' +
+				'//@method run @param {int} amount in kilometers' + '\n' +
+				'//@class Monkey @extend Animal @module livingThings2' + '\n' +
 				'//@method eat way of feeding' + '\n' +
 				'//@param {Int} amount' + '\n' +
 				'//@param {Food} food what is eaten' + '\n' +
@@ -73,6 +79,12 @@ describe("JsDocMaker", function()
 			expect(Monkey).toBeDefined();
 			expect(Monkey.absoluteName).toBe('livingThings2.Monkey');
 			expect(Monkey.name).toBe('Monkey');
+
+
+			expect(Monkey.extends.name).toBe('Animal');
+			expect(Monkey.extends.absoluteName).toBe('livingThings2.Animal');
+			expect(Monkey.extends.name).toBe('Animal');
+			expect(Monkey.extends.methods.run.params.length).toBe(1);
 		});
 	}); 
 

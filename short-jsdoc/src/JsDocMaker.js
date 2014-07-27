@@ -214,7 +214,7 @@
 			});
 			if (module)
 			{
-				c.module = module.name; 
+				c.module = module; //sg 
 				c.children = _(c.children).without(module);
 				if(!self.data.modules[module.name])
 				{
@@ -228,11 +228,18 @@
 			}
 			else //all classes must have a module 
 			{
-				c.module = JsDocMaker.DEFAULT_MODULE; 
+				c.module = {name: JsDocMaker.DEFAULT_MODULE}; //sg
 			}
 
-			c.absoluteName = c.module+JsDocMaker.ABSOLUTE_NAME_SEPARATOR+c.name; 
+			c.absoluteName = c.module.name + JsDocMaker.ABSOLUTE_NAME_SEPARATOR+c.name; //sg		
 
+			self.data.classes[c.absoluteName] = c; 
+			delete self.data.classes[c.name];
+		}); 
+
+
+		_(self.data.classes).each(function(c, name)
+		{
 			// set class.extends property
 			var extend = _(c.children||[]).find(function(child)
 			{
@@ -240,12 +247,13 @@
 			}); 
 			if(extend)
 			{
-				c.extends = self.resolveAbsoluteClassName(extend.name, c); 
+				// c.extends = self.resolveAbsoluteClassName(extend.name, c); 
+				c.extends = self.bindClass(extend.name, c);
 				c.children = _(c.children).without(extend);
 			}
 			else // All classes must extend something
 			{
-				c.extends = JsDocMaker.DEFAULT_CLASS; 
+				c.extends = {error: 'NAME_NOT_FOUND', name: JsDocMaker.DEFAULT_CLASS}; 
 			}
 
 			_(c.methods).each(function(method, name)
@@ -261,10 +269,8 @@
 				method.ownerClass = c.absoluteName;
 				method.absoluteName = c.absoluteName+JsDocMaker.ABSOLUTE_NAME_SEPARATOR+method.name; 
 			});
-
-			self.data.classes[c.absoluteName] = c; 
-			delete self.data.classes[c.name];
-		}); 
+		});
+		
 
 	//resolve type binding - each object containing a type will be added with TypeBinding property
 	}; 
@@ -284,11 +290,33 @@
 	//@property {TypeBinding} type
 	//@property {Array<TypeBinding>} params - the generic types params array. For example the params for {Map<String,Apple>} is [StringBynding]
 	//@property {String} nativeTypeUrl - if this is a native type - this 
-	//@class JsDocMaker
-	
-	JsDocMaker.prototype.buildTypeBinding = function(baseModule, baseClass)
-	{
 
+
+	//@class JsDocMaker
+	//@method
+	//TODO: using a internal map this could be done faster
+	JsDocMaker.prototype.bindClass = function(name, baseClass)
+	{
+		//search all classes that matches the name
+		var classesWithName = _(_(this.data.classes).values()).filter(function(c)
+		{
+			return endsWith(c.name, name); 
+		});
+		//search classes of the module
+		var moduleClasses = _(classesWithName).filter(function(c)
+		{
+			return startsWith(c.module.name, baseClass.module.name); 
+		}); 
+
+		var c = moduleClasses.length ? moduleClasses[0] : classesWithName[0]; 
+		if(!c)
+		{
+			return {error: 'NAME_NOT_FOUND', name: name}; 
+		}
+		else
+		{
+			return c;
+		}
 	}; 
 	//@method resolveAbsoluteClassName 
 	//@param {String} name
@@ -355,9 +383,21 @@
 		console.error('Error detected: ' + msg); 
 		throw msg;
 	}; 
-	
-	var stringFullTrim = function(s){return s.replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,'').replace(/\s+/g,' ');};//http://stackoverflow.com/questions/498970/how-do-i-trim-a-string-in-javascript
 
+	var stringFullTrim = function(s)
+	{
+		return s.replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,'').replace(/\s+/g,' ');
+	};
+
+	var endsWith = function(str, suffix) 
+	{
+		return str.indexOf(suffix, str.length - suffix.length) !== -1;
+	}; 
+
+	var startsWith = function(s, prefix)
+	{
+		return s.indexOf(prefix)===0;
+	}; 
 
 
 
