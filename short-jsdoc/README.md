@@ -65,7 +65,7 @@ The parser depends on esprima and underscore. Can run on the browser or nodejs.
 The html5 web application is built with underscore, jquery, bootstrap and backbone.
 
 ## TODO: ideas
- * asd
+ * currently we are ttaking ALL the comments - but we shoul donly take comments adjacent to comments that contain some annotation. 
  * search for class, modules, methods, methods that return or accept a type. subclasses of..., classes overriding a method... 
  * class hierarc in classview
  * support generic types a la Java:  @return {Array<Person>} the persons in this city @return {Object<String, Person>} persons by name map

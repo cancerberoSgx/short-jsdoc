@@ -10,9 +10,6 @@
 	var JsDocMaker = GLOBAL.JsDocMaker = function()
 	{
 		this.annotationRegexp = /(\s+@\w+)/gi;
-		// this.classAnnotationRegexp = /(\s+@class)/gi;
-		// this.methodAnnotationRegexp = /(\s+@method)/gi;
-		// this.propertyAnnotationRegexp = /(\s+@property)/gi;
 	}; 
 
 
@@ -38,12 +35,14 @@
 		this.data.classes = this.data.classes || {}; 
 		this.data.modules = this.data.modules || {}; 
 
-		//we do the parsing block by block, firstunify adjacents line comments in 1	
+		//we do the parsing block by block, first unify adjacents line comments in 1	
 		this.unifyLineComments();
 
-		var self = this;
-		var classes = this.data.classes; 
-		var currentClass = null, currentMethod = null, currentModule = null;
+		var self = this
+		,	classes = this.data.classes
+		,	currentClass = null
+		,	currentMethod = null
+		,	currentModule = null;
 
 		_(this.comments).each(function(node)
 		{
@@ -51,7 +50,10 @@
 			// var regex = /((?:@class)|(?:@method)|(?:@param))/gi; 
 			var regex = /((?:@class)|(?:@method))/gi; 
 			var a = self.splitAndPreserve(node.value || '', regex); 
-			a = _(a).filter(function(v){return stringFullTrim(v);}); //delete empties and trim
+			a = _(a).filter(function(v)  //delete empties and trim
+			{
+				return JsDocMaker.stringFullTrim(v);
+			});
 			
 			_(a).each(function(value)
 			{
@@ -79,6 +81,11 @@
 						currentClass.methods = currentClass.methods || {};
 						currentClass.methods[parsed.name] = parsed;
 						currentMethod = parsed;
+					}
+					else if(parsed.annotation==='property' && currentClass)
+					{
+						currentClass.properties = currentClass.properties || {};
+						currentClass.properties[parsed.name] = parsed;
 					}
 					else if(parsed.annotation==='param' && currentClass)
 					{
@@ -144,7 +151,7 @@
 		{
 			return null;
 		}
-		str = stringFullTrim(str); 
+		str = JsDocMaker.stringFullTrim(str); 
 		var result = this.parseUnitRegexp.exec(str);
 		if(!result || result.length<4)
 		{
@@ -180,6 +187,13 @@
 			i++;
 		}
 	}; 
+
+	//@method fixUnamedAnnotations - our regexp format expect an anotation with a name. So for enabling unamed annotations we do this dirty fix, this is add a name to 
+	//precondition
+	JsDocMaker.prototype.fixUnamedAnnotations = function()
+	{
+
+	}
 
 
 
@@ -243,7 +257,7 @@
 		//at this points we have all our modules and classes - now we normalize extend, methods and params and also do the type binding. 
 		_(self.data.classes).each(function(c, name)
 		{
-			// set class.extends property
+			//set class.extends property
 			var extend = _(c.children||[]).find(function(child)
 			{
 				return child.annotation === 'extend' || child.annotation === 'extends'; 
@@ -258,38 +272,48 @@
 				c.extends = {error: 'NAME_NOT_FOUND', name: JsDocMaker.DEFAULT_CLASS}; 
 			}
 
+			//setup methods
 			_(c.methods).each(function(method, name)
 			{
 				// param property
 				var params = _(method.children||[]).filter(function(child)
 				{
-					child.text = stringFullTrim(child.text||''); 
+					child.text = JsDocMaker.stringFullTrim(child.text||''); 
 					return child.annotation === 'param'; 
 				}); 
 				method.params = params; 
 
 				method.ownerClass = c.absoluteName;
-				method.absoluteName = c.absoluteName+JsDocMaker.ABSOLUTE_NAME_SEPARATOR+method.name; 
+				method.absoluteName = c.absoluteName + JsDocMaker.ABSOLUTE_NAME_SEPARATOR + method.name; 
 
 				_(method.params).each(function(param)
 				{
 					if(_(param.type).isString())
 					{
-						param.type = self.bindType(param.type, c);						
+						param.type = self.bindType(param.type, c) || param.type;						
 					}					
 				}); 
 
 				self.installModifiers(method); 
+			});
+
+			//setup properties
+			_(c.properties).each(function(prop, name)
+			{
+				prop.ownerClass = c.absoluteName;
+				prop.absoluteName = c.absoluteName + JsDocMaker.ABSOLUTE_NAME_SEPARATOR + prop.name; 
+				self.installModifiers(prop); 
+				if(_(prop.type).isString())
+				{
+					prop.type = self.bindType(prop.type, c) || prop.type;
+				}	
 			});
 		});
 	};
 
 
 
-	// BINDING
-	//@method byndType 
-	
-	//@return {TypeBinding} 
+	// BINDING / post processing
 
 	//@class TypeBinding a datatype with an association between types names in source code and parsed class nodes. 
 	//It support generic types (recursive)
@@ -299,7 +323,7 @@
 
 
 	//@class JsDocMaker
-	//@class bindType @return {TypeBinding} or nulll in case the given type cannot be parsed
+	//@method bindType @return {TypeBinding} or nulll in case the given type cannot be parsed
 	//TODO: support multiple generics and generics anidation like in
 	JsDocMaker.prototype.bindType = function(typeString, baseClass)
 	{
@@ -307,14 +331,18 @@
 		{
 			return null;
 		}
-		typeString = stringFullTrim(typeString); 
+		//first remove the '{}'
+		typeString = JsDocMaker.stringFullTrim(typeString); 
 		var inner = /^{([^}]+)}$/.exec(typeString);
 		if(!inner || inner.length<2)
 		{
 			return null;
 		}
-		//TODO : support generics and complex anidation like in Map<String,Array<Apple>>
 		var className = inner[1]; 
+
+
+		//TODO : support generics w complex anidation like in Map<String,Array<Apple>>
+
 		return this.bindClass(className, baseClass);
 	}; 
 
@@ -325,12 +353,12 @@
 		//search all classes that matches the name
 		var classesWithName = _(_(this.data.classes).values()).filter(function(c)
 		{
-			return endsWith(c.name, name); 
+			return JsDocMaker.stringEndsWith(c.name, name); 
 		});
 		//search classes of the module
 		var moduleClasses = _(classesWithName).filter(function(c)
 		{
-			return startsWith(c.module.name, baseClass.module.name); 
+			return JsDocMaker.startsWith(c.module.name, baseClass.module.name); 
 		}); 
 
 		var c = moduleClasses.length ? moduleClasses[0] : classesWithName[0]; 
@@ -344,14 +372,6 @@
 			return c;
 		}
 	}; 
-	//@method resolveAbsoluteClassName 
-	//@param {String} name
-	//@param {Object} baseClass the parsed base class object from where to start looking for.
-	// @return {String}an absolute class name starting searching from passing baseClass module and then globally and then matching nativetypes.
-	// JsDocMaker.prototype.resolveAbsoluteClassName = function(name, baseClass)
-	// {
-	// 	return name; 
-	// }; 
 
 	// @method simpleName @param {String} name @return {String}
 	JsDocMaker.prototype.simpleName = function(name)
@@ -360,7 +380,8 @@
 		return a[a.length-1]; 
 	}; 
 
-	// NATIVE TYPES LINKING
+
+	// NATIVE TYPES LINKING / post processing
 
 	// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String
 	JsDocMaker.NATIVE_TYPES = ['String', 'Object', 'Array', 'Date', 'Regex']; 
@@ -410,17 +431,18 @@
 		throw msg;
 	}; 
 
-	var stringFullTrim = function(s)
+	//@method stringFullTrim @param {String} s @static
+	JsDocMaker.stringFullTrim = function(s)
 	{
 		return (s||'').replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,'').replace(/\s+/g,' ');
 	};
-
-	var endsWith = function(str, suffix) 
+	//@method stringEndsWith @static
+	JsDocMaker.stringEndsWith = function(str, suffix) 
 	{
 		return (str||'').indexOf(suffix, str.length - suffix.length) !== -1;
 	}; 
-
-	var startsWith = function(s, prefix)
+	//@method stringEndsWith @static
+	JsDocMaker.startsWith = function(s, prefix)
 	{
 		return (s||'').indexOf(prefix)===0;
 	}; 

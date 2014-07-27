@@ -7,8 +7,10 @@ describe("JsDocMaker", function()
 
 		beforeEach(function() 
 		{
-			var code = '//@class Apple @extend Fruit @module livingThings\n'+
-				'/*@method beEatenBy apples have this privilege @param {Mouth} mouth the mouth to be used @param {Int} amount */';
+			var code = '//@class Apple @extend Fruit @module livingThings'+'\n'+
+				'/*@method beEatenBy apples have this privilege @param {Mouth} mouth the mouth to be used @param {Int} amount */' + '\n' +
+				'//@property {Color} color the main color of this fruit'+'\n'+
+				'';
 			maker = new JsDocMaker();
 			maker.parseFile(code, 'textarea');
 			maker.postProccess();
@@ -35,8 +37,14 @@ describe("JsDocMaker", function()
 			var Apple = jsdoc.classes['livingThings.Apple']; 
 			expect(Apple.methods.beEatenBy).toBeDefined();
 			expect(Apple.methods.beEatenBy.absoluteName).toBe('livingThings.Apple.beEatenBy');
-			// debugger;
-		});			
+		});
+
+		it("properties", function() 
+		{
+			var Apple = jsdoc.classes['livingThings.Apple']; 
+			expect(Apple.properties.color.name).toBe('color');
+			expect(Apple.properties.color.type.name).toBe('Color');
+		});		
 
 		it("method's params", function() 
 		{
