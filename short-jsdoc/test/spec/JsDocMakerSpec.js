@@ -101,7 +101,21 @@ describe("JsDocMaker", function()
 			expect(_(Monkey.extends.methods.run.modifiers).contains('static')).toBe(true);
 			
 		});
-	}); 
+
+
+		it("parseType", function() 
+		{
+			var parsed = JsDocMaker.parseType('Map<String,Array<Apple>>'); 
+			expect(parsed.name).toBe('Map'); 
+			expect(parsed.params[0]).toBe('String'); 
+			expect(parsed.params[1].name).toBe('Array'); 
+			expect(parsed.params[1].params[0]).toBe('Apple'); 
+		}); 
+
+
+	});
+
+
 
 
 });
@@ -109,3 +123,77 @@ describe("JsDocMaker", function()
 
 
 
+
+
+		// if(!text)
+		// {
+		// 	return;
+		// }
+		// // 
+		// // while ( (result = regex.exec(text)) ) {
+
+		// var name, params;
+		// if(text.indexOf('<') !== -1)
+		// {
+		// 	name = text.substring(0, text.indexOf('<')); 
+		// 	params = text.substring(text.indexOf('<'), text.length); 
+		// }
+		// else
+		// {
+		// 	name = 	text;
+		// }
+		// node.name=name;
+		
+		// if(params)
+		// {
+		// 	var b = /<(\w+)>/gi.exec(params)
+		// 	console.log(params, b)
+		// 	// params = params.split(',')
+
+		// }
+		// console.log(name, params); 
+
+
+
+		// if(params)
+		// {
+
+		// }
+		// var a = text.split('<'); 
+		// console.log(a)
+		// if(!a || !a.length)
+		// {
+		// 	return;
+		// }
+		// node.name = a[0];
+		// var paramString = a.length>1 ? a[1] : undefined;
+		// if(!paramString||paramString.length<2)
+		// {
+		// 	return;
+		// }
+		// paramString = paramString.substring(0,paramString.length-1); 
+
+// console.log(node.name, paramString); 
+		// JsDocMaker.parseTypeText(paramString); 
+		// var params = 
+		// debugger;
+
+		// while ( (result = regex.exec(text)) )
+		// {
+		// 	var paramsPart = result[0].split('<'); 
+		// 	if(result.length === 2) //don't have params
+		// 	{
+
+		// 	}
+		// 	else if(result.length === 3) //have params
+		// 	{
+
+		// 	}
+
+		// 	console.log(result.length, result); 
+		// 	// if(result.length<2)
+		// 	// {
+		// 	// 	break;
+		// 	// }
+		// 	// text = result[1]; //text.replace(/<([\w]+)>/gi, '$1');
+		// }

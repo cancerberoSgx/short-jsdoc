@@ -2,26 +2,21 @@
 
 this project neds an simple initial installation:
 
-{{{
     cd short-jsdoc
     npm install
-}}}
 
 ## generating documentation for a project in filesystem
 
-{{{
     cd short-jsdoc/src
     node shortjsdoc.js /home/me/myproject /home/me/myproject/jsdocoutput
-}}}
+
 
 This will generate a new folder myproject/jsdocoutput with a ready to use html application that shows the project classes.
 
 ## Running development web demo
 
-{{{
     grunt run
     firefox http://localhost:8080/html
-}}}
 
 
 ## Motivation
@@ -34,10 +29,9 @@ This project, short-jsdoc target this problem by supporting a syntax based on js
 
 The typical scenario would be the following. Imagine that you have a big project with classes and methods already well commented using line comments like this:
 
-{{{
-//says hi to the passed user bla bla bla.
-sayHi: function(user){}
-}}}
+    //says hi to the passed user bla bla bla.
+    sayHi: function(user){}
+
 
 In this situation migrating to jsdocs will imply changing the comments to /\*\* \*/ syntax and in general cut+paste the existent documentation sentences to the right location. 
 

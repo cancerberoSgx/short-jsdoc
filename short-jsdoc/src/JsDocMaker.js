@@ -373,6 +373,18 @@
 		}
 	}; 
 
+
+	//@method parseType parse a type string like 'Map<String,Array<Apple>>' and return an object like {name: 'Map',params:['String',{name: 'Array',params:['Apple']}]} 
+	//It depends on type parser file typeParser.js @static
+	JsDocMaker.parseType = function(s)
+	{
+		var parsed = ShortJsDocTypeParser.parse(s);
+		var obj = eval('(' + parsed + ')'); 
+		return obj; 
+	}; 
+	
+	
+
 	// @method simpleName @param {String} name @return {String}
 	JsDocMaker.prototype.simpleName = function(name)
 	{

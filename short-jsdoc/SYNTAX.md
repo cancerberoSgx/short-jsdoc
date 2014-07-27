@@ -7,9 +7,9 @@ Concepts supported @class @method @param @property @module @extend
 Syntax reduction
 we define a Simple unit syntax that all annotations match and this is - 
 
-```@annotation {Type} name some_description_text```
+    @annotation {Type} name some_description_text
 
-{Type} is optional and also ```some_description_text```. 
+{Type} is optional and also some_description_text. 
 
 So ALL units are parsed using this same pattern. Major Units like @class
 
