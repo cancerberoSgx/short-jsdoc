@@ -12,9 +12,9 @@ __p += '\n<h2 class="class-title">Class <a class="class-title" href="class/' +
 '</a></h2>\n\n';
  if (this.jsdoc.extends) { ;
 __p += '\n<h3>Extends <a href="#class/' +
-((__t = ( this.jsdoc.extends)) == null ? '' : __t) +
+((__t = ( this.jsdoc.extends.name)) == null ? '' : __t) +
 '">' +
-((__t = ( this.jsdoc.extends)) == null ? '' : __t) +
+((__t = ( this.jsdoc.extends.name)) == null ? '' : __t) +
 '</a></h3>\n';
  } ;
 __p += '\n\n<p class="class-text">' +

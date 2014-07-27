@@ -58,7 +58,11 @@ Thanks to the project js-indentator I'm now able to parse and define my own jsdo
 
 What is missed from that is getting the output class information json and rendering all that in a nice html5 application. And of course support the desktop for parsing an entire project. This is what this project try to do.
 
+##Dependencies 
 
+The parser depends on esprima and underscore. Can run on the browser or nodejs.
+
+The html5 web application is built with underscore, jquery, bootstrap and backbone.
 
 ## TODO: ideas
  * asd

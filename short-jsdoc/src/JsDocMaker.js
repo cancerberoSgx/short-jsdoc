@@ -56,8 +56,7 @@
 			_(a).each(function(value)
 			{
 				//TODO: let the user mark some comment block somehow to let the parser to ignore it.			
-				var parsed_array = self.parseUnit(value); 
-				// console.log('PARSED UNIT', parsed_array)
+				var parsed_array = self.parseUnit(value);
 				_(parsed_array).each(function(parsed)
 				{
 					parsed.fileName = fileName;
@@ -98,7 +97,6 @@
 			});
 			
 		}); 
-		this.postProccess();
 	};
 
 	// @method {Unit} parseUnit parse a simple substring like '@annotation {Type} a text' into an object {annotation, type, text} object.
@@ -236,8 +234,13 @@
 			self.data.classes[c.absoluteName] = c; 
 			delete self.data.classes[c.name];
 		}); 
+	}; 
 
-
+	//@method postProccessBinding precondion: call postProccess() first. We separated the post proccessing in two because we shouln't do JSON.stringify() after we bind types because of recursive loops. 
+	JsDocMaker.prototype.postProccessBinding = function()
+	{
+		var self = this;
+		//at this points we have all our modules and classes - now we normalize extend, methods and params and also do the type binding. 
 		_(self.data.classes).each(function(c, name)
 		{
 			// set class.extends property
@@ -247,7 +250,6 @@
 			}); 
 			if(extend)
 			{
-				// c.extends = self.resolveAbsoluteClassName(extend.name, c); 
 				c.extends = self.bindClass(extend.name, c);
 				c.children = _(c.children).without(extend);
 			}
@@ -268,15 +270,17 @@
 
 				method.ownerClass = c.absoluteName;
 				method.absoluteName = c.absoluteName+JsDocMaker.ABSOLUTE_NAME_SEPARATOR+method.name; 
+
+				_(method.params).each(function(param)
+				{
+					if(_(param.type).isString())
+					{
+						param.type = self.bindType(param.type, c);						
+					}					
+				}); 
 			});
 		});
-		
-
-	//resolve type binding - each object containing a type will be added with TypeBinding property
-	}; 
-
-
-
+	};
 
 
 
@@ -293,7 +297,26 @@
 
 
 	//@class JsDocMaker
-	//@method
+	//@class bindType @return {TypeBinding} or nulll in case the given type cannot be parsed
+	//TODO: support multiple generics and generics anidation like in
+	JsDocMaker.prototype.bindType = function(typeString, baseClass)
+	{
+		if(!typeString || !baseClass)
+		{
+			return null;
+		}
+		typeString = stringFullTrim(typeString); 
+		var inner = /^{([^}]+)}$/.exec(typeString);
+		if(!inner || inner.length<2)
+		{
+			return null;
+		}
+		//TODO : support generics and complex anidation like in Map<String,Array<Apple>>
+		var className = inner[1]; 
+		return this.bindClass(className, baseClass);
+	}; 
+
+	//@method bindClass @param {String}name @param {Object} baseClass
 	//TODO: using a internal map this could be done faster
 	JsDocMaker.prototype.bindClass = function(name, baseClass)
 	{
@@ -311,6 +334,7 @@
 		var c = moduleClasses.length ? moduleClasses[0] : classesWithName[0]; 
 		if(!c)
 		{
+			//TODO: look at native types
 			return {error: 'NAME_NOT_FOUND', name: name}; 
 		}
 		else
@@ -322,10 +346,10 @@
 	//@param {String} name
 	//@param {Object} baseClass the parsed base class object from where to start looking for.
 	// @return {String}an absolute class name starting searching from passing baseClass module and then globally and then matching nativetypes.
-	JsDocMaker.prototype.resolveAbsoluteClassName = function(name, baseClass)
-	{
-		return name; 
-	}; 
+	// JsDocMaker.prototype.resolveAbsoluteClassName = function(name, baseClass)
+	// {
+	// 	return name; 
+	// }; 
 
 	// @method simpleName @param {String} name @return {String}
 	JsDocMaker.prototype.simpleName = function(name)
@@ -386,17 +410,17 @@
 
 	var stringFullTrim = function(s)
 	{
-		return s.replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,'').replace(/\s+/g,' ');
+		return (s||'').replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,'').replace(/\s+/g,' ');
 	};
 
 	var endsWith = function(str, suffix) 
 	{
-		return str.indexOf(suffix, str.length - suffix.length) !== -1;
+		return (str||'').indexOf(suffix, str.length - suffix.length) !== -1;
 	}; 
 
 	var startsWith = function(s, prefix)
 	{
-		return s.indexOf(prefix)===0;
+		return (s||'').indexOf(prefix)===0;
 	}; 
 
 

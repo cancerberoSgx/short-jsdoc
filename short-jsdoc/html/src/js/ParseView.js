@@ -12,9 +12,12 @@ var ParseView = AbstractView.extend({
 	{
 		var code = this.$('[data-type="inputcode"]').val();
 		var maker = this.application.maker;
-		maker.parseFile(code, 'textarea');
+		maker.parseFile(code, 'textarea');		
+		maker.postProccess();
+		 console.log(JSON.stringify(maker.data));
+		maker.postProccessBinding();
 		this.application.refreshWithNewModel(maker.data);
-		console.log(JSON.stringify(maker.data)); 
+		// 
 	}
 
 });

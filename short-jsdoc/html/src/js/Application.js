@@ -11,6 +11,8 @@ var Application = function(data)
 	this.data = data; 
 
 	this.maker = new JsDocMaker();
+	this.maker.data=data;
+	this.maker.postProccessBinding();
 
 	if(jQuery('#mainContainer').size()===0)
 	{
