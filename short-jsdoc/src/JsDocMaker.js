@@ -101,7 +101,7 @@
 
 	// @method {Unit} parseUnit parse a simple substring like '@annotation {Type} a text' into an object {annotation, type, text} object.
 	// syntax: @method {String} methodName blabla @return {Number} blabla @param {Object} p1 blabla
-	JsDocMaker.prototype.parseUnitRegexp = /\s*@(\w+)\s*(\{\w+\}){0,1}\s*(\w+){0,1}(.*)\s*/; 
+	JsDocMaker.prototype.parseUnitRegexp = /\s*@(\w+)\s*(\{\w+\}){0,1}\s*([\w]+){0,1}(.*)\s*/; 
 	JsDocMaker.prototype.parseUnit = function(str)
 	{
 		// TODO: split str into major units and then do the parsing
@@ -278,6 +278,8 @@
 						param.type = self.bindType(param.type, c);						
 					}					
 				}); 
+
+				self.installModifiers(method); 
 			});
 		});
 	};

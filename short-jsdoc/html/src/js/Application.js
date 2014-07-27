@@ -7,12 +7,20 @@
 //@constructor Application @param {Object} data
 var Application = function(data)
 {
+	this.templates = shortjsdoc; //global variable given b templates.js
+
 	// this.parser = jsindentator.styles.shortJsDoc; 
 	this.data = data; 
 
 	this.maker = new JsDocMaker();
 	this.maker.data=data;
 	this.maker.postProccessBinding();
+
+	if(jQuery('#mainHeader').size()===0)
+	{
+		jQuery('body').append('<div id="mainHeader"></div>'); 
+	}
+	this.$mainHeader = jQuery('#mainHeader'); 
 
 	if(jQuery('#mainContainer').size()===0)
 	{
@@ -34,13 +42,19 @@ _(Application.prototype).extend({
 ,	showView: function(view)
 	{
 		this.currentView = view;
-		var template = shortjsdoc[view.template]; 
+		var template = this.templates[view.template]; 
 		if(template)
 		{			
 			var html = template.apply(view, []); 
 			view.$el.html(html);
 			this.$containerEl.empty().append(view.$el); 
-		}		
+		}
+		this.updateHeader();
+	}
+
+,	updateHeader: function()
+	{
+
 	}
 ,	refreshWithNewModel: function(data)
 	{
@@ -53,12 +67,6 @@ _(Application.prototype).extend({
 	{
 		this.$containerEl.empty().append('<h1>'+s+'</h1>')
 	}
-
-// ,	uninstall: function()
-// 	{
-// 		this.$containerEl.remove();
-// 		Backbone.history.stop(); 
-// 	}
 
 });
 

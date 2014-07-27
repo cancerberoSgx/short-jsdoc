@@ -63,7 +63,7 @@ describe("JsDocMaker", function()
 		{
 			var code = 
 				'//@class Animal @module livingThings2' + '\n' +
-				'//@method run @param {int} amount in kilometers @private' + '\n' +
+				'//@method run @param {int} amount in kilometers @final and @static' + '\n' + //TODO: i need to add an 'and' word here for not breaking th regexp.
 				'//@class Monkey @extend Animal @module livingThings2' + '\n' +
 				'//@method eat way of feeding' + '\n' +
 				'//@param {Int} amount' + '\n' +
@@ -89,6 +89,9 @@ describe("JsDocMaker", function()
 			expect(Monkey.extends.absoluteName).toBe('livingThings2.Animal');
 			expect(Monkey.extends.name).toBe('Animal');
 			expect(Monkey.extends.methods.run.params.length).toBe(1);
+			expect(_(Monkey.extends.methods.run.modifiers).contains('final')).toBe(true);
+			expect(_(Monkey.extends.methods.run.modifiers).contains('static')).toBe(true);
+			
 		});
 	}); 
 
