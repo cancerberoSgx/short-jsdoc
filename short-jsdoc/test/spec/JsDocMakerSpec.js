@@ -144,6 +144,7 @@ describe("JsDocMaker", function()
 
 			var propType = jsdoc.classes['office.Machine'].properties.eye.type;
 			expect(propType.name).toBe('Array'); 
+			expect(propType.nativeTypeUrl.indexOf('http')===0).toBe(true); 
 			expect(propType.params[0].name).toBe('Eye'); 
 			expect(propType.params[0].text).toBe('a reutilizable eye'); 
 		});

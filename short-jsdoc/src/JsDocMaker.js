@@ -139,12 +139,6 @@ JsDocMaker.prototype.parseUnit = function(str)
 				parsed.children = parsed.children || []; 
 				parsed.children.push(child); 
 			}
-			/*
-			if(child.annotation === 'module' || child.annotation === 'extends'|| child.annotation === 'extend')
-			{
-				delete child.text; 
-				delete child.theRestString; 
-			}*/
 			s = child.theRestString; 
 		}
 	}
@@ -424,7 +418,17 @@ JsDocMaker.prototype.bindClass = function(name, baseClass)
 	if(!c)
 	{
 		//TODO: look at native types
-		return {error: 'NAME_NOT_FOUND', name: name}; 
+		var nativeType = JsDocMaker.getNativeTypeUrl(name);
+		var o = {name:name}; 
+		if(nativeType)
+		{
+			o.nativeTypeUrl = nativeType; 
+		}
+		else
+		{
+			o.error = 'NAME_NOT_FOUND'; 
+		}
+		return o;		
 	}
 	else
 	{
@@ -455,10 +459,16 @@ JsDocMaker.prototype.simpleName = function(name)
 // NATIVE TYPES LINKING / post processing
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String
-JsDocMaker.NATIVE_TYPES = ['String', 'Object', 'Array', 'Date', 'Regex']; 
-JsDocMaker.prototype.getNativeTypeUrl = function(name)
+JsDocMaker.NATIVE_TYPES = ['String', 'Object', 'Array', 'Date', 'Regex', 'Function', 
+	'Boolean', 'Error', 'TypeError', 'Number']; 
+
+//@method getNativeTypeUrl @static @returns an url if given name match a native types or undefined otherwise
+JsDocMaker.getNativeTypeUrl = function(name)
 {
-	return 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/' + name; 
+	if(_(JsDocMaker.NATIVE_TYPES).contains(name))
+	{
+		return 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/' + name; 	
+	}
 }; 
 
 
@@ -486,6 +496,7 @@ JsDocMaker.prototype.installModifiers = function(node)
 // @return {Array of string}
 JsDocMaker.prototype.splitAndPreserve = function(string, replace)
 {
+	string = string || '';
 	var marker = '_%_%_';
 	var splitted = string.replace(replace, marker+'$1');
 	if(splitted.length<2)
@@ -510,12 +521,14 @@ JsDocMaker.stringFullTrim = function(s)
 //@method stringEndsWith @static
 JsDocMaker.stringEndsWith = function(str, suffix) 
 {
-	return (str||'').indexOf(suffix, str.length - suffix.length) !== -1;
+	str = str || '';
+	return str.indexOf(suffix, str.length - suffix.length) !== -1;
 }; 
 //@method stringEndsWith @static
 JsDocMaker.startsWith = function(s, prefix)
 {
-	return (s||'').indexOf(prefix)===0;
+	s = s || '';
+	return s.indexOf(prefix)===0;
 }; 
 
 
