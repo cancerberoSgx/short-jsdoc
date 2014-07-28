@@ -7,7 +7,8 @@ describe("JsDocMaker", function()
 
 		beforeEach(function() 
 		{
-			var code = '//@class Apple @extend Fruit @module livingThings'+'\n'+
+			var code = 
+				'//@class Apple @extend Fruit @module livingThings'+'\n'+
 				'/*@method beEatenBy apples have this privilege @param {Mouth} mouth the mouth to be used @param {Int} amount */' + '\n' +
 				'//@property {Color} color the main color of this fruit'+'\n'+
 				'';

@@ -9,6 +9,7 @@
     	"grunt-contrib-jst": "*",
 		"grunt-contrib-watch": "*",
 		"grunt-contrib-connect":"*",
+		"grunt-contrib-concat":"*",
   		"matchdep": "*",
 
 		"underscore": "*",

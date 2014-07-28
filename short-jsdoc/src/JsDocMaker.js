@@ -17,14 +17,25 @@ var JsDocMaker = GLOBAL.JsDocMaker = function()
 
 //PARSING AND PREPROCESSING
 
+//@method parseFile @return {Object} the parsed object @param {String} source @param {String} filename
 JsDocMaker.prototype.parseFile = function(source, fileName)
 {
+	//@property {Object<String,Object>} parsedFiles
+	this.parsedFiles = this.parsedFiles || {}; 
+
 	this.syntax = esprima.parse(source, {
 		raw: true
 	,	range: true
 	,	comment: true		
 	});
-	return this.parse(this.syntax.comments, fileName);
+	var parsed = this.parse(this.syntax.comments, fileName);
+
+	this.parsedFiles[source] = {
+		syntax: this.syntax
+	,	parsed: parsed
+	}; 
+
+	return parsed; 
 }; 
 
 
@@ -355,6 +366,9 @@ JsDocMaker.prototype.parseTypeString = function(typeString, baseClass)
 		var type = null;
 		try
 		{
+
+			console.log('this.bindParsedType')
+
 			type = JsDocMaker.parseType(typeString);
 			var type_binded = this.bindParsedType(type, baseClass);
 			return type_binded;
@@ -467,7 +481,7 @@ JsDocMaker.getNativeTypeUrl = function(name)
 {
 	if(_(JsDocMaker.NATIVE_TYPES).contains(name))
 	{
-		return 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/' + name; 	
+		return 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/' + name;
 	}
 }; 
 

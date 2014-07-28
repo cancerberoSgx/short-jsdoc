@@ -2,6 +2,8 @@ module.exports = function (grunt) {
 
 	require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
+	var concat_files = ['src/typeParser.js', 'src/JsDocMaker.js', 'src/shortjsdoc-main.js'];
+
 	grunt.initConfig({
 
 	//WARNING - in linux for watch to work i have to do the following: 
@@ -13,9 +15,15 @@ module.exports = function (grunt) {
 		// 	// files : './src/*.js',
 		// 	tasks : [ /*'browserify', */'yuidoc' ]
 		// }
+
 		jst : {
-			files : 'html/src/templates/**/*.html',
-			tasks : [ 'jst']
+			files : 'html/src/templates/**/*.html'
+		,	tasks : [ 'jst']
+		}
+
+	,	concat: {
+			files : concat_files
+		,	tasks : [ 'concat']
 		}
 	}
 	
@@ -44,6 +52,17 @@ module.exports = function (grunt) {
 				'html/template-output.js': 'html/src/templates/*.html'
 			}
 		}
+	}
+
+	// we concat to generate the nodejs application
+,	concat: {
+		options: {
+			separator: ';',
+		},
+		dist: {
+			src: concat_files,
+			dest: 'src/shortjsdoc.js',
+		},
 	}
 
 	});
