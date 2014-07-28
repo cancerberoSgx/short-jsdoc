@@ -71,7 +71,7 @@ describe("JsDocMaker", function()
 		{
 			var code = 
 				'//@class Animal @module livingThings2' + '\n' +
-				'//@method run @param {int} amount in kilometers @final and @static' + '\n' + //TODO: i need to add an 'and' word here for not breaking th regexp.
+				'//@method run @param {int} amount in kilometers @final @static' + '\n' + 
 				'//@class Monkey @extend Animal @module livingThings2' + '\n' +
 				'//@method eat way of feeding' + '\n' +
 				'//@param {Int} amount' + '\n' +
@@ -112,88 +112,43 @@ describe("JsDocMaker", function()
 			expect(parsed.params[1].params[0]).toBe('Apple'); 
 		}); 
 
-
 	});
 
 
+	describe("extends binds the types with generics", function() 
+	{
+		var jsdoc, maker; 
 
+		beforeEach(function() 
+		{
+			var code = 
+				'//@class Machine @module office' + '\n' +
+				'//@method calculate @param {Object<String,Array<Number>>} environment @final @static' + '\n' + 
+				'//@property {Array<Eye>} eye' + '\n' +
+				'//@class Eye a reutilizable eye @module office' + '\n' +
+				''; 
+			maker = new JsDocMaker();
+			maker.parseFile(code, 'genericstest1'); 
+			maker.postProccess();
+			maker.postProccessBinding();
+			jsdoc = maker.data;
+		});
+
+		it("should be able to parse some javascript code", function() 
+		{
+			var paramType = jsdoc.classes['office.Machine'].methods.calculate.params[0].type; 
+			expect(paramType.name).toBe('Object'); 
+			expect(paramType.params[0].name).toBe('String'); 
+			expect(paramType.params[1].name).toBe('Array'); 
+			expect(paramType.params[1].params[0].name).toBe('Number'); 
+
+			var propType = jsdoc.classes['office.Machine'].properties.eye.type;
+			expect(propType.name).toBe('Array'); 
+			expect(propType.params[0].name).toBe('Eye'); 
+			expect(propType.params[0].text).toBe('a reutilizable eye'); 
+		});
+
+	});
 
 });
 
-
-
-
-
-
-		// if(!text)
-		// {
-		// 	return;
-		// }
-		// // 
-		// // while ( (result = regex.exec(text)) ) {
-
-		// var name, params;
-		// if(text.indexOf('<') !== -1)
-		// {
-		// 	name = text.substring(0, text.indexOf('<')); 
-		// 	params = text.substring(text.indexOf('<'), text.length); 
-		// }
-		// else
-		// {
-		// 	name = 	text;
-		// }
-		// node.name=name;
-		
-		// if(params)
-		// {
-		// 	var b = /<(\w+)>/gi.exec(params)
-		// 	console.log(params, b)
-		// 	// params = params.split(',')
-
-		// }
-		// console.log(name, params); 
-
-
-
-		// if(params)
-		// {
-
-		// }
-		// var a = text.split('<'); 
-		// console.log(a)
-		// if(!a || !a.length)
-		// {
-		// 	return;
-		// }
-		// node.name = a[0];
-		// var paramString = a.length>1 ? a[1] : undefined;
-		// if(!paramString||paramString.length<2)
-		// {
-		// 	return;
-		// }
-		// paramString = paramString.substring(0,paramString.length-1); 
-
-// console.log(node.name, paramString); 
-		// JsDocMaker.parseTypeText(paramString); 
-		// var params = 
-		// debugger;
-
-		// while ( (result = regex.exec(text)) )
-		// {
-		// 	var paramsPart = result[0].split('<'); 
-		// 	if(result.length === 2) //don't have params
-		// 	{
-
-		// 	}
-		// 	else if(result.length === 3) //have params
-		// 	{
-
-		// 	}
-
-		// 	console.log(result.length, result); 
-		// 	// if(result.length<2)
-		// 	// {
-		// 	// 	break;
-		// 	// }
-		// 	// text = result[1]; //text.replace(/<([\w]+)>/gi, '$1');
-		// }
