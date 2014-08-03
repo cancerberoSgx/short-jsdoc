@@ -10,11 +10,11 @@ module.exports = function (grunt) {
 	//echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
 
 	watch : {
-		// browserify : {
-		// 	files : 'src/**/*.js',
-		// 	// files : './src/*.js',
-		// 	tasks : [ /*'browserify', */'yuidoc' ]
-		// }
+// browserify : {
+//	files : 'src/**/*.js',
+//	// files : './src/*.js',
+//	tasks : [ /*'browserify', */'yuidoc' ]
+// }
 
 		jst : {
 			files : 'html/src/templates/**/*.html'
@@ -24,6 +24,11 @@ module.exports = function (grunt) {
 	,	concat: {
 			files : concat_files
 		,	tasks : [ 'concat']
+		}
+
+	,	less: {
+			files : 'html/src/styles/**/*.less'
+		,	tasks : [ 'less']
 		}
 	}
 	
@@ -63,6 +68,14 @@ module.exports = function (grunt) {
 			src: concat_files,
 			dest: 'src/shortjsdoc.js',
 		},
+	}
+
+,	less: {
+		development: {
+			files: {
+				"html/src/styles/styles.css": "html/src/styles/main.less"
+			}
+		}
 	}
 
 	});

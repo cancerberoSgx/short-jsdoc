@@ -9,7 +9,7 @@ var ModuleView = AbstractView.extend({
 		this.application = application;
 		this.jsdoc = this.application.data.modules[moduleName]; 
 		this.classes = _( _(this.application.data.classes).values() ).filter(function(c){
-			return c.module === moduleName; 
+			return c.module.name === moduleName; 
 		}); 
 	}
 

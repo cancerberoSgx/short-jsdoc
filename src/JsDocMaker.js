@@ -20,20 +20,25 @@ var JsDocMaker = GLOBAL.JsDocMaker = function()
 //@method parseFile @return {Object} the parsed object @param {String} source @param {String} filename
 JsDocMaker.prototype.parseFile = function(source, fileName)
 {
-	//@property {Object<String,Object>} parsedFiles
-	this.parsedFiles = this.parsedFiles || {}; 
+	//@prope rty {Object<String,Object>} parsedFiles
+	// this.parsedFiles = this.parsedFiles || {}; 
 
 	this.syntax = esprima.parse(source, {
 		raw: true
 	,	range: true
 	,	comment: true		
 	});
+
+	// _(this.syntax.comments).each(function(comment)
+	// {
+
+	// });
 	var parsed = this.parse(this.syntax.comments, fileName);
 
-	this.parsedFiles[source] = {
-		syntax: this.syntax
-	,	parsed: parsed
-	}; 
+	// this.parsedFiles[source] = {
+	// 	syntax: this.syntax
+	// ,	parsed: parsed
+	// }; 
 
 	return parsed; 
 }; 

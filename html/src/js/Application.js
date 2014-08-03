@@ -54,7 +54,11 @@ _(Application.prototype).extend({
 
 ,	updateHeader: function()
 	{
-
+		if(!this.headerView)
+		{
+			this.headerView = new HeaderView(this); 
+			this.headerView.render();
+		}
 	}
 ,	refreshWithNewModel: function(data)
 	{

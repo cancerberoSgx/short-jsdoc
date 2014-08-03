@@ -11,6 +11,7 @@
 		"grunt-contrib-connect":"*",
 		"grunt-contrib-concat":"*",
   		"matchdep": "*",
+  		"grunt-contrib-less": "*",
 
 		"underscore": "*",
 		"esprima": "*"

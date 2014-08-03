@@ -419,20 +419,25 @@ var JsDocMaker = GLOBAL.JsDocMaker = function()
 //@method parseFile @return {Object} the parsed object @param {String} source @param {String} filename
 JsDocMaker.prototype.parseFile = function(source, fileName)
 {
-	//@property {Object<String,Object>} parsedFiles
-	this.parsedFiles = this.parsedFiles || {}; 
+	//@prope rty {Object<String,Object>} parsedFiles
+	// this.parsedFiles = this.parsedFiles || {}; 
 
 	this.syntax = esprima.parse(source, {
 		raw: true
 	,	range: true
 	,	comment: true		
 	});
+
+	// _(this.syntax.comments).each(function(comment)
+	// {
+
+	// });
 	var parsed = this.parse(this.syntax.comments, fileName);
 
-	this.parsedFiles[source] = {
-		syntax: this.syntax
-	,	parsed: parsed
-	}; 
+	// this.parsedFiles[source] = {
+	// 	syntax: this.syntax
+	// ,	parsed: parsed
+	// }; 
 
 	return parsed; 
 }; 
@@ -952,10 +957,8 @@ JsDocMaker.startsWith = function(s, prefix)
 
 var fs = require('fs')
 ,	path = require('path')
-// ,	process = require('process')
 ,	esprima = require('esprima')
 ,	_ = require('underscore'); 
-
 
 var JsDocMaker = this.JsDocMaker;
 var ShortJsDocTypeParser = this.ShortJsDocTypeParser; 
@@ -964,77 +967,59 @@ var ShortJsDoc = function()
 {
 	this.maker = new JsDocMaker();
 }; 
-
-ShortJsDoc.prototype.error = function (m)
-{
-	console.log(m + '\nUSAGE:\n\tnode short'); 
-	process.exit(1);
-}; 
-
-
-ShortJsDoc.prototype.main = function main()
-{
-	if(process.argv.length < 3)
+_(ShortJsDoc.prototype).extend({
+	error: function (m)
 	{
-		error('more parameters required'); 
+		console.log(m + '\nUSAGE:\n\tnode short'); 
+		process.exit(1);
 	}
-	var inputDir = process.argv[2]; 
-
-	this.sources = this.buildSources(inputDir); 
-	this.parsedSources = this.parseSources();
-
-	var jsdoc = this.maker.data;
-
-	this.maker.postProccess();
-	// this.maker.postProccessBinding();
-	
-	console.log(JSON.stringify(jsdoc)); 
-}; 
-
-ShortJsDoc.prototype.parseSources = function()
-{
-	for (file in this.sources) 
+,	main: function main()
 	{
-		this.maker.parseFile(this.sources[file], file);
-		// console.log('MAKER', this.maker.data)
-	}
-};
-
-ShortJsDoc.prototype.buildSources = function buildSources(inputDir)
-{	
-	var map = {};
-	ShortJsDoc.folderWalk(inputDir, function(error, file)
-	{
-		if(!error && file && JsDocMaker.stringEndsWith(file, '.js'))
-		{			
-			var src = fs.readFileSync(file, 'utf8'); 
-			map[file] = src; 
+		if(process.argv.length < 3)
+		{
+			error('more parameters required'); 
 		}
-	}); 
-	return map;
-}; 
+		var inputDir = process.argv[2]; 
 
-// test
-/*
-var code = 
-	'//@class Machine @module office' + '\n' +
-	'//@method calculate @param {Object<String,Array<Number>>} environment @final @static' + '\n' + 
-	'//@property {Array<Eye>} eye' + '\n' +
-	'//@class Eye a reutilizable eye @module office' + '\n' +
-	''; 
-var maker = new JsDocMaker();
-maker.parseFile(code, 'genericstest1'); 
-// maker.postProccess();
-// maker.postProccessBinding();
-// jsdoc = maker.data;
+		this.sources = this.buildSources(inputDir); 
+		this.parsedSources = this.parseSources();
 
-console.log(JSON.stringify(maker.data)); 
-*/
+		var jsdoc = this.maker.data;
 
+		this.maker.postProccess();
+		// this.maker.postProccessBinding();
+		
+		console.log(JSON.stringify(jsdoc)); 
+	}
+,	parseSources: function()
+	{
+		var buffer = [];
+		for (file in this.sources) 
+		{
+			buffer.push(this.sources[file]);
+			// console.log('MAKER', this.maker.data)
+		}
+		this.maker.parseFile(buffer.join(''), 'ALL.js');
+	}
+
+,	buildSources: function buildSources(inputDir)
+	{	
+		var map = {};
+		ShortJsDoc.folderWalk(inputDir, function(error, file)
+		{
+			if(!error && file && JsDocMaker.stringEndsWith(file, '.js'))
+			{			
+				var src = fs.readFileSync(file, 'utf8'); 
+				map[file] = src; 
+			}
+		}); 
+		return map;
+	}
+});
 
 
 //UTILITIES
-// General function for walking a folder recusively and sync
+// @method folderWalk General function for walking a folder recusively and sync @static 
 ShortJsDoc.folderWalk = function (dir, action) {
 	// Assert that it's a function
 	if (typeof action !== "function")
@@ -1075,15 +1060,3 @@ ShortJsDoc.folderWalk = function (dir, action) {
 
 var tool = new ShortJsDoc();
 tool.main();
-
-
-/*
-var loadJavaScript = function(file)
-{
-  var src = fs.readFileSync(path.join(__dirname, file),'utf8'); 
-  eval(src); 
-  console.log(path.join(__dirname, file)); 
-};
-loadJavaScript('../src/typeParser.js');
-loadJavaScript('../src/JsDocMaker.js'); 
-*/
