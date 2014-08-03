@@ -28,7 +28,8 @@ __p += '\n\t<li class="method">\n\t\t<a class=\'method-name\' href="#method/' +
 '</a>\n\t\t\n\t</li>\n';
  }); ;
 __p += '\n</ul>\n\n' +
-((__t = ( JSON.stringify(this.jsdoc) )) == null ? '' : __t);
+((__t = ( JSON.stringify(this.jsdoc) )) == null ? '' : __t) +
+' ';
 
 }
 return __p
@@ -67,7 +68,7 @@ __p += '\n\t<li><a href="#class/' +
 ((__t = ( c.name )) == null ? '' : __t) +
 '</a></li>\n';
  }); ;
-__p += '\n</ul>\n\n<p><a href="#parse"><b>Parse</b> your own code! --></a></p>\n\n<p>(devel)<a href="../test/SpecRunner.html">Specs</a></p>';
+__p += '\n</ul>\n\n<p><a href="#parse"><b>Parse</b> your own code! --></a></p>\n\n<p>(devel)<a href="../test/SpecRunner.html">Specs</a></p> ';
 
 }
 return __p
@@ -78,21 +79,26 @@ obj || (obj = {});
 var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
-__p += '<h2>Method <a href="#method/' +
-((__t = ( this.jsdoc.absoluteName)) == null ? '' : __t) +
+__p += '<h2>Method <a href="' +
+((__t = ( this.makeLink(this.jsdoc) )) == null ? '' : __t) +
 '">' +
 ((__t = ( this.jsdoc.name)) == null ? '' : __t) +
 '</a></h2>\n\n<h3>Of class <a href="#class/' +
 ((__t = ( this.jsdoc.ownerClass )) == null ? '' : __t) +
 '">' +
 ((__t = ( this.simpleName(this.jsdoc.ownerClass) )) == null ? '' : __t) +
-'</a></h3>\n<h3>Parameters</h3>\n<ul>\n';
- _(this.jsdoc.params).each(function(param){ ;
-__p += '\n<li>name: ' +
+'</a></h3>\n<h3>Parameters</h3>\n\n<ul>\n';
+ var self = this, buffer = [];
+_(this.jsdoc.params).each(function(param){
+	var context = {type: param.type, typeTemplate: self.printType, buffer: buffer}; 
+	self.printType(context); 
+	var typeOutput = buffer.join(''); 
+;
+__p += '\n\t<li>name: ' +
 ((__t = ( param.name)) == null ? '' : __t) +
 ', type: ' +
-((__t = ( param.type)) == null ? '' : __t) +
-'</li>\n\n';
+((__t = ( typeOutput )) == null ? '' : __t) +
+'</li>\n';
  }); ;
 __p += '\n</ul>';
 

@@ -18,4 +18,6 @@ var MethodView = AbstractView.extend({
 		}
 	}
 
+
 });
+

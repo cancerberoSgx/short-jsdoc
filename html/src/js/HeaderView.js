@@ -8,9 +8,9 @@ var HeaderView = AbstractView.extend({
 	{
 		this.application = application;
 	}
+	
 ,	render: function()
 	{
-		// this.$el = this.application.$mainHeader; 
 		var template = this.application.templates[this.template]; 
 
 		var html = template.apply(this, []); 
@@ -22,7 +22,6 @@ var HeaderView = AbstractView.extend({
 
 ,	installTypeAhead: function()
 	{
-
 		this.classes = this.application.data.classes;
 		this.modules = this.application.data.modules;
 
@@ -33,7 +32,6 @@ var HeaderView = AbstractView.extend({
 		},	{
 			name: 'jsdoc',
 			displayKey: 'value',
-			// source: substringMatcher(states)
 			source: this.substringMatcher()
 		});
 
@@ -46,10 +44,12 @@ var HeaderView = AbstractView.extend({
 
 ,	handleSearchSelection: function(event, object, dataset)
 	{
-		
+		var href = this.makeLink(object.node);
+		Backbone.history.navigate(href, {trigger: true}); 
 	}
 
-,	substringMatcher: function(strs) {
+,	substringMatcher: function(strs) 
+	{
 		var self = this;
 		return function findMatches(q, cb) 
 		{

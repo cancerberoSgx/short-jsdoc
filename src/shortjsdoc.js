@@ -770,9 +770,6 @@ JsDocMaker.prototype.parseTypeString = function(typeString, baseClass)
 		var type = null;
 		try
 		{
-
-			console.log('this.bindParsedType')
-
 			type = JsDocMaker.parseType(typeString);
 			var type_binded = this.bindParsedType(type, baseClass);
 			return type_binded;

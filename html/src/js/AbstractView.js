@@ -23,4 +23,44 @@ var AbstractView = Backbone.View.extend({
 		return this.application.maker.simpleName(name);
 	}
 
+,	makeLink: function(node)
+	{
+		if(node.annotation==='method')
+		{
+			return '#method/' + node.absoluteName; 
+		}
+		else if(node.annotation==='class')
+		{
+			return '#class/' + node.absoluteName; 
+		}
+		else if(node.annotation==='module')
+		{
+			return '#module/' + node.name; 
+		}
+	}
+	
+,	printType: function(context)
+	{
+		var self = this;
+		var href = context.type.nativeTypeUrl || '#class/'+context.type.absoluteName; 
+		context.buffer.push('<a href="'+href+'">'+context.type.name+'</a>');
+
+		if(context.type.params) 
+		{ 
+			context.buffer.push('&lt;');
+
+			for (var i = 0; i < (context.type.params||[]).length; i++) {
+				var param = context.type.params[i]; 
+				self.printType({ //recurse!
+					type:param
+				,	buffer: context.buffer
+				});
+				if(i<context.type.params.length-1)
+				{
+					context.buffer.push(','); 
+				}
+			}
+			context.buffer.push('>'); 
+		} 
+	}
 });
