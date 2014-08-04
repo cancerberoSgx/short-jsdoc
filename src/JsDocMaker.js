@@ -31,15 +31,15 @@ JsDocMaker.prototype.parseFile = function(source, fileName)
 
 	// _(this.syntax.comments).each(function(comment)
 	// {
-
 	// });
 	var parsed = this.parse(this.syntax.comments, fileName);
 
-	// this.parsedFiles[source] = {
-	// 	syntax: this.syntax
-	// ,	parsed: parsed
-	// }; 
-
+	/*
+	this.parsedFiles[source] = {
+		syntax: this.syntax
+	,	parsed: parsed
+	}; 
+	*/
 	return parsed; 
 }; 
 
@@ -279,25 +279,26 @@ JsDocMaker.prototype.postProccessBinding = function()
 	//at this points we have all our modules and classes - now we normalize extend, methods and params and also do the type binding. 
 	_(self.data.classes).each(function(c, name)
 	{
-		//set class.extends property
+		//class.extends property
 		var extend = _(c.children||[]).find(function(child)
 		{
 			return child.annotation === 'extend' || child.annotation === 'extends'; 
 		}); 
-		if(extend)
+
+		if(!extend) // All classes must extend something
+		{
+			extend = c.extends = self.bindClass(JsDocMaker.DEFAULT_CLASS, c) || {error: 'NAME_NOT_FOUND', name: JsDocMaker.DEFAULT_CLASS};
+		}
+		else 
 		{
 			c.extends = self.bindClass(extend.name, c);
-			c.children = _(c.children).without(extend);
-		}
-		else // All classes must extend something
-		{
-			c.extends = {error: 'NAME_NOT_FOUND', name: JsDocMaker.DEFAULT_CLASS}; 
+			c.children = _(c.children).without(extend);			
 		}
 
 		//setup methods
 		_(c.methods).each(function(method, name)
 		{
-			// param property
+			//method.param property
 			var params = _(method.children||[]).filter(function(child)
 			{
 				child.text = JsDocMaker.stringFullTrim(child.text||''); 
@@ -312,9 +313,22 @@ JsDocMaker.prototype.postProccessBinding = function()
 			{
 				if(_(param.type).isString())
 				{
+					param.typeOriginalString = param.type; 
 					param.type = self.parseTypeString(param.type, c) || param.type;						
 				}					
 			}); 
+
+			//method.returns property
+			var returns = _(method.children||[]).filter(function(child)
+			{
+				child.text = JsDocMaker.stringFullTrim(child.text||''); 
+				return child.annotation === 'returns' || child.annotation === 'return'; 
+			}); 
+			method.returns = returns.length ? returns[0] : {name:'',type:''};
+			if(_(method.returns.type).isString())
+			{
+				method.returns.type = self.parseTypeString(method.returns.type, c) || method.returns.type;						
+			}
 
 			self.installModifiers(method); 
 		});

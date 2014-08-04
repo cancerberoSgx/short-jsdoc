@@ -2,19 +2,31 @@
 <h2 class="class-title">Class <a class="class-title" href="class/<%= this.jsdoc.name%>"><%= this.jsdoc.name %></a></h2>
 
 <% if (this.jsdoc.extends) { %>
-<h3>Extends <a href="#class/<%= this.jsdoc.extends.name%>"><%= this.jsdoc.extends.name%></a></h3>
+<h3>Extends <%= this.printTypeAsString(this.jsdoc.extends)%></h3>
 <% } %>
 
 <p class="class-text"><%= this.jsdoc.text %></p>
 
 <h3 class='methods'>Methods</h3>
 <ul>
-<% _(this.jsdoc.methods).each(function(method) { %>
+<% 
+var self = this; 
+var orderedMethods = this.jsdoc.methods
+_(this.jsdoc.methods).each(function(method) { %>
 	<li class="method">
 		<a class='method-name' href="#method/<%= method.absoluteName %>">Method <%= method.name %></a>
-		
+		<% if(method.params) { %>
+		<h4 class="params-title">Parameters</h4>
+		<ol class="params">
+			<% _(method.params).each(function(param){ %>
+			<li class="param">
+				<span class="param-name"><%= param.name %></span>
+				<span class="param-type"><%= self.printTypeAsString(param.type) %></span> 
+			</li>
+			<% }); %>
+		</ol>
+		<% } %>
+
 	</li>
 <% }); %>
 </ul>
-
-<%= JSON.stringify(this.jsdoc) %> 

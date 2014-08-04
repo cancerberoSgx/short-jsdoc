@@ -31,6 +31,8 @@ var AbstractView = Backbone.View.extend({
 		}
 		else if(node.annotation==='class')
 		{
+			// if(node.)
+			debugger;
 			return '#class/' + node.absoluteName; 
 		}
 		else if(node.annotation==='module')
@@ -62,5 +64,14 @@ var AbstractView = Backbone.View.extend({
 			}
 			context.buffer.push('>'); 
 		} 
+	}
+
+,	printTypeAsString: function(type)
+	{
+		var buffer = [];
+		var context = {type: type, typeTemplate: this.printType, buffer: buffer}; 
+		this.printType(context); 
+		var typeOutput = buffer.join(''); 
+		return typeOutput; 
 	}
 });

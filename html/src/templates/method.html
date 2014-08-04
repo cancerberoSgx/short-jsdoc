@@ -6,10 +6,19 @@
 <ul>
 <% var self = this, buffer = [];
 _(this.jsdoc.params).each(function(param){
-	var context = {type: param.type, typeTemplate: self.printType, buffer: buffer}; 
-	self.printType(context); 
-	var typeOutput = buffer.join(''); 
 %>
-	<li>name: <%= param.name%>, type: <%= typeOutput %></li>
+	<li>
+		name: <%= param.name%>, type: <%= self.printTypeAsString(param.type) %>
+		<span class="param-text"><%= param.text %></span>
+	</li>
+
 <% }); %>
 </ul>
+
+<% if (this.jsdoc.returns) { %>
+<h3 class="returns-title">Returns</h3>
+<%= self.printTypeAsString(this.jsdoc.returns.type) %>
+<% if(this.jsdoc.returns.text){ %>
+<p class="returns-text"><%= this.jsdoc.returns.text%></p>
+<% } %>
+<% }%>

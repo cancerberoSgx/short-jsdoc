@@ -18,6 +18,9 @@ This will generate a new folder myproject/jsdocoutput with a ready to use html a
     grunt run
     firefox http://localhost:8080/html
 
+#Online HTML5 project demo. 
+
+The following is an html5 demo of a project using short-jsdoc: [Online Demo](http://cancerberosgx.github.io/short-jsdoc/html)
 
 ## Motivation
 

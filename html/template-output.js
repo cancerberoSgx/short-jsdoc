@@ -11,25 +11,36 @@ __p += '\n<h2 class="class-title">Class <a class="class-title" href="class/' +
 ((__t = ( this.jsdoc.name )) == null ? '' : __t) +
 '</a></h2>\n\n';
  if (this.jsdoc.extends) { ;
-__p += '\n<h3>Extends <a href="#class/' +
-((__t = ( this.jsdoc.extends.name)) == null ? '' : __t) +
-'">' +
-((__t = ( this.jsdoc.extends.name)) == null ? '' : __t) +
-'</a></h3>\n';
+__p += '\n<h3>Extends ' +
+((__t = ( this.printTypeAsString(this.jsdoc.extends))) == null ? '' : __t) +
+'</h3>\n';
  } ;
 __p += '\n\n<p class="class-text">' +
 ((__t = ( this.jsdoc.text )) == null ? '' : __t) +
 '</p>\n\n<h3 class=\'methods\'>Methods</h3>\n<ul>\n';
- _(this.jsdoc.methods).each(function(method) { ;
+ 
+var self = this; 
+var orderedMethods = this.jsdoc.methods
+_(this.jsdoc.methods).each(function(method) { ;
 __p += '\n\t<li class="method">\n\t\t<a class=\'method-name\' href="#method/' +
 ((__t = ( method.absoluteName )) == null ? '' : __t) +
 '">Method ' +
 ((__t = ( method.name )) == null ? '' : __t) +
-'</a>\n\t\t\n\t</li>\n';
+'</a>\n\t\t';
+ if(method.params) { ;
+__p += '\n\t\t<h4 class="params-title">Parameters</h4>\n\t\t<ol class="params">\n\t\t\t';
+ _(method.params).each(function(param){ ;
+__p += '\n\t\t\t<li class="param">\n\t\t\t\t<span class="param-name">' +
+((__t = ( param.name )) == null ? '' : __t) +
+'</span>\n\t\t\t\t<span class="param-type">' +
+((__t = ( self.printTypeAsString(param.type) )) == null ? '' : __t) +
+'</span> \n\t\t\t</li>\n\t\t\t';
  }); ;
-__p += '\n</ul>\n\n' +
-((__t = ( JSON.stringify(this.jsdoc) )) == null ? '' : __t) +
-' ';
+__p += '\n\t\t</ol>\n\t\t';
+ } ;
+__p += '\n\n\t</li>\n';
+ }); ;
+__p += '\n</ul>\n';
 
 }
 return __p
@@ -39,7 +50,7 @@ this["shortjsdoc"]["header"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<header class="main-header container-fluid">\n\n\t<span class="col-lg-4 col-md-4 col-sm-4 col-xs-12">\n\n\t\t<span class="dropdown">\n\t\t\t<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">\n\t\t\tshort-jsdoc demo\n\t\t\t<span class="caret"></span>\n\t\t\t</button>\n\t\t\t<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">\n\t\t\t\t<li role="presentation"><a role="menuitem" tabindex="-1" href="https://github.com/cancerberoSgx/short-jsdoc">short-jsdoc home page</a></li>\n\t\t\t\t<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Another action</a></li>\n\t\t\t\t<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Something else here</a></li>\n\t\t\t\t<li role="presentation" class="divider"></li>\n\t\t\t\t<li role="presentation"><a role="menuitem" tabindex="-1" href="#">Separated link</a></li>\n\t\t\t</ul>\n\t\t</span>\t\t\n\t</span>\n\n\t<span class="col-lg-8 col-md-8 col-sm-8 col-xs-12">\n\t\t<span class="main-search pull-right">\n\t\t\tSearch <input class="typeahead1">\n\t\t</span>\t\t\n\t</span>\n\n</header>';
+__p += '<header class="main-header container-fluid">\n\n\t<span class="col-lg-4 col-md-4 col-sm-4 col-xs-12">\n\n\t\t<span class="dropdown">\n\t\t\t<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">\n\t\t\tshort-jsdoc demo\n\t\t\t<span class="caret"></span>\n\t\t\t</button>\n\t\t\t<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">\n\t\t\t\t<li role="presentation"><a role="menuitem" tabindex="-1" href="#index">Index</a></li>\n\t\t\t\t<li role="presentation" class="divider"></li>\n\t\t\t\t<li role="presentation"><a role="menuitem" tabindex="-1" href="https://github.com/cancerberoSgx/short-jsdoc">short-jsdoc home page</a></li>\n\t\t\t</ul>\n\t\t</span>\t\t\n\t</span>\n\n\t<span class="col-lg-8 col-md-8 col-sm-8 col-xs-12">\n\t\t<span class="main-search pull-right">\n\t\t\tSearch <input class="typeahead1">\n\t\t</span>\t\t\n\t</span>\n\n</header>';
 
 }
 return __p
@@ -90,17 +101,28 @@ __p += '<h2>Method <a href="' +
 '</a></h3>\n<h3>Parameters</h3>\n\n<ul>\n';
  var self = this, buffer = [];
 _(this.jsdoc.params).each(function(param){
-	var context = {type: param.type, typeTemplate: self.printType, buffer: buffer}; 
-	self.printType(context); 
-	var typeOutput = buffer.join(''); 
 ;
-__p += '\n\t<li>name: ' +
+__p += '\n\t<li>\n\t\tname: ' +
 ((__t = ( param.name)) == null ? '' : __t) +
 ', type: ' +
-((__t = ( typeOutput )) == null ? '' : __t) +
-'</li>\n';
+((__t = ( self.printTypeAsString(param.type) )) == null ? '' : __t) +
+'\n\t\t<span class="param-text">' +
+((__t = ( param.text )) == null ? '' : __t) +
+'</span>\n\t</li>\n\n';
  }); ;
-__p += '\n</ul>';
+__p += '\n</ul>\n\n';
+ if (this.jsdoc.returns) { ;
+__p += '\n<h3 class="returns-title">Returns</h3>\n' +
+((__t = ( self.printTypeAsString(this.jsdoc.returns.type) )) == null ? '' : __t) +
+'\n';
+ if(this.jsdoc.returns.text){ ;
+__p += '\n<p class="returns-text">' +
+((__t = ( this.jsdoc.returns.text)) == null ? '' : __t) +
+'</p>\n';
+ } ;
+__p += '\n';
+ };
+
 
 }
 return __p
