@@ -32,6 +32,7 @@ JsDocMaker.prototype.parseFile = function(source, fileName)
 	// _(this.syntax.comments).each(function(comment)
 	// {
 	// });
+
 	var parsed = this.parse(this.syntax.comments, fileName);
 
 	/*
@@ -70,7 +71,7 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 	{
 		// var a = (node.value || '').split(/((?:@class)|(?:@method)|(?:@param))/gi);
 		// var regex = /((?:@class)|(?:@method)|(?:@param))/gi; 
-		var regex = /((?:@class)|(?:@method))/gi; 
+		var regex = /((?:@class)|(?:@method)|(?:@property)|(?:@method))/gi; 
 		var a = self.splitAndPreserve(node.value || '', regex); 
 		a = _(a).filter(function(v)  //delete empties and trim
 		{
@@ -88,11 +89,21 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 
 				if(parsed.annotation==='class')
 				{
-					if(!classes[parsed.name])
+					if (!classes[parsed.name])
 					{
 						classes[parsed.name] = parsed; 
 					}
-					if(currentModule)
+
+					var class_module = _(parsed.children).filter(function(c)
+					{
+						return c.annotation==='module'; 
+					}); 
+					// console.log('class_module', class_module)
+					if (class_module && class_module.length)
+					{
+						currentModule = class_module[0]; 
+					}
+					if (currentModule)
 					{
 						parsed.module = currentModule.name; 
 					}

@@ -431,6 +431,7 @@ JsDocMaker.prototype.parseFile = function(source, fileName)
 	// _(this.syntax.comments).each(function(comment)
 	// {
 	// });
+
 	var parsed = this.parse(this.syntax.comments, fileName);
 
 	/*
@@ -469,7 +470,7 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 	{
 		// var a = (node.value || '').split(/((?:@class)|(?:@method)|(?:@param))/gi);
 		// var regex = /((?:@class)|(?:@method)|(?:@param))/gi; 
-		var regex = /((?:@class)|(?:@method))/gi; 
+		var regex = /((?:@class)|(?:@method)|(?:@property)|(?:@method))/gi; 
 		var a = self.splitAndPreserve(node.value || '', regex); 
 		a = _(a).filter(function(v)  //delete empties and trim
 		{
@@ -487,11 +488,21 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 
 				if(parsed.annotation==='class')
 				{
-					if(!classes[parsed.name])
+					if (!classes[parsed.name])
 					{
 						classes[parsed.name] = parsed; 
 					}
-					if(currentModule)
+
+					var class_module = _(parsed.children).filter(function(c)
+					{
+						return c.annotation==='module'; 
+					}); 
+					// console.log('class_module', class_module)
+					if (class_module && class_module.length)
+					{
+						currentModule = class_module[0]; 
+					}
+					if (currentModule)
 					{
 						parsed.module = currentModule.name; 
 					}
@@ -978,12 +989,15 @@ var ShortJsDoc = function()
 {
 	this.maker = new JsDocMaker();
 }; 
+
 _(ShortJsDoc.prototype).extend({
+
 	error: function (m)
 	{
-		console.log(m + '\nUSAGE:\n\tnode short'); 
+		console.log(m + '\nUSAGE:\n\tnode src/shortjsdoc.js home/my-js-project/ > html/data.json'); 
 		process.exit(1);
 	}
+
 ,	main: function main()
 	{
 		if(process.argv.length < 3)
@@ -1000,8 +1014,9 @@ _(ShortJsDoc.prototype).extend({
 		this.maker.postProccess();
 		// this.maker.postProccessBinding();
 		
-		console.log(JSON.stringify(jsdoc)); 
+		console.log(JSON.stringify(jsdoc, null, 4)); 
 	}
+
 ,	parseSources: function()
 	{
 		var buffer = [];
@@ -1026,6 +1041,7 @@ _(ShortJsDoc.prototype).extend({
 		}); 
 		return map;
 	}
+
 });
 
 

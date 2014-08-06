@@ -13,12 +13,15 @@ var ShortJsDoc = function()
 {
 	this.maker = new JsDocMaker();
 }; 
+
 _(ShortJsDoc.prototype).extend({
+
 	error: function (m)
 	{
-		console.log(m + '\nUSAGE:\n\tnode short'); 
+		console.log(m + '\nUSAGE:\n\tnode src/shortjsdoc.js home/my-js-project/ > html/data.json'); 
 		process.exit(1);
 	}
+
 ,	main: function main()
 	{
 		if(process.argv.length < 3)
@@ -35,8 +38,9 @@ _(ShortJsDoc.prototype).extend({
 		this.maker.postProccess();
 		// this.maker.postProccessBinding();
 		
-		console.log(JSON.stringify(jsdoc)); 
+		console.log(JSON.stringify(jsdoc, null, 4)); 
 	}
+
 ,	parseSources: function()
 	{
 		var buffer = [];
@@ -61,6 +65,7 @@ _(ShortJsDoc.prototype).extend({
 		}); 
 		return map;
 	}
+
 });
 
 

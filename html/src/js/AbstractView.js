@@ -23,22 +23,26 @@ var AbstractView = Backbone.View.extend({
 		return this.application.maker.simpleName(name);
 	}
 
-,	makeLink: function(node)
+	//@method makeLink @param {boolean} htmlAnchors will output anchor elements html
+,	makeLink: function(node, htmlAnchors)
 	{
+		var s = htmlAnchors?'<a href="':'';
 		if(node.annotation==='method')
 		{
-			return '#method/' + node.absoluteName; 
+			
+			s += '#method/' + node.absoluteName; 
 		}
 		else if(node.annotation==='class')
 		{
-			// if(node.)
-			debugger;
-			return '#class/' + node.absoluteName; 
+			s += '#class/' + node.absoluteName; 
 		}
 		else if(node.annotation==='module')
 		{
-			return '#module/' + node.name; 
+			s += '#module/' + node.name; 
 		}
+
+		s += htmlAnchors?('">'+node.name+'</a>'):'';
+		return s;
 	}
 	
 ,	printType: function(context)

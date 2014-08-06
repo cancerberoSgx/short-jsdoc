@@ -1,8 +1,15 @@
+<% 
+var self = this; 
+%>
 
 <h2 class="class-title">Class <a class="class-title" href="class/<%= this.jsdoc.name%>"><%= this.jsdoc.name %></a></h2>
 
+<h3 class="class-module-title">Module 
+	<%= this.makeLink(this.jsdoc.module) %>
+	<a href="#module/<%= this.jsdoc.module.name%>"><%= this.jsdoc.module.name%></a></h3>
+
 <% if (this.jsdoc.extends) { %>
-<h3>Extends <%= this.printTypeAsString(this.jsdoc.extends)%></h3>
+<h3 class="class-extends-title">Extends <%= this.printTypeAsString(this.jsdoc.extends)%></h3>
 <% } %>
 
 <p class="class-text"><%= this.jsdoc.text %></p>
@@ -10,8 +17,7 @@
 <h3 class='methods'>Methods</h3>
 <ul>
 <% 
-var self = this; 
-var orderedMethods = this.jsdoc.methods
+//var orderedMethods = this.jsdoc.methods
 _(this.jsdoc.methods).each(function(method) { %>
 	<li class="method">
 		<a class='method-name' href="#method/<%= method.absoluteName %>">Method <%= method.name %></a>
@@ -27,6 +33,20 @@ _(this.jsdoc.methods).each(function(method) { %>
 		</ol>
 		<% } %>
 
+	</li>
+<% }); %>
+</ul>
+
+
+
+<h3 class='methods'>Properties</h3>
+<ul>
+<% 
+var self = this; 
+_(this.jsdoc.properties).each(function(p) { %>
+	<li class="property">
+		<a class='property-name' href="#property/<%= p.absoluteName %>"><%= p.name %></a>
+		<span class="property-type"><%= self.printTypeAsString(p.type) %></span> 
 	</li>
 <% }); %>
 </ul>

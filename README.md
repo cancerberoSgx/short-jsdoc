@@ -1,3 +1,25 @@
+#About
+
+##Online HTML5 project demo. 
+
+[Online Example Demo](http://cancerberosgx.github.io/short-jsdoc/html)]
+
+Features: flexible comment syntax, simplycity, heavy support for Types and Types generics.
+
+## Motivation
+
+Often in the JavaScript world, jsdocs comments are added as-a-feature in an existing source that already is commented. This project try to target those who in general just need to add some @annotations to an existing js sources to define some OO model. Annotations supported are @module @class @property @method @param @method @extend @return @static @private
+
+This project's core is a JavaScript code parser that will extract jsdoc AST-like data from code comments. It is heavily inspired on Java's and emphasis on types, this is type binding and support type generics syntax
+
+    // like in @returns {Array<Apple>} all the fruits of this tree
+
+The other important part of the project is an html5 application that shows this information in a navigable and responsive site.
+
+At last there is a little nodejs tool for the end-user to extract its code jsdocs and generate this html5 application showing it.
+
+#Using it
+
 ## Installing 
 
 this project neds an simple initial installation:
@@ -7,22 +29,18 @@ this project neds an simple initial installation:
 
 ## generating documentation for a project in filesystem
 
-    cd short-jsdoc/src
-    node shortjsdoc.js /home/me/myproject /home/me/myproject/jsdocoutput
+    cd short-jsdoc
+    node src/shortjsdoc.js /home/my-js-project/ > html/data.json
+    cp html /home/my-js-project/apidocs
 
-
-This will generate a new folder myproject/jsdocoutput with a ready to use html application that shows the project classes.
+This will generate the ready to use html application /home/my-js-project/apidocs/index.html showing your project's classes. If you need to debug it use grunt run - feel free to put-copy this full project in your apidocs forlder. 
 
 ## Running development web demo
 
     grunt run
     firefox http://localhost:8080/html
 
-#Online HTML5 project demo. 
-
-The following is an html5 demo of a project using short-jsdoc: [Online Demo](http://cancerberosgx.github.io/short-jsdoc/html)
-
-## Motivation
+## Motivation 1: short simple and flexible jsdoc syntax
 
 jsdoc tools like yuidocs or jsdocs are disliked by some JavaScript programmers because they require long comment formats using /\*\* \*/ and strict syntax. For example in Yui Doc yoiu have to add endlines to the comments to work, for example /\*\* @class Apple\*/ doesn't work. 
 
@@ -38,9 +56,11 @@ The typical scenario would be the following. Imagine that you have a big project
 
 In this situation migrating to jsdocs will imply changing the comments to /\*\* \*/ syntax and in general cut+paste the existent documentation sentences to the right location. 
 
-Wouldn't be best if jsdocs annotations could be just written to those existent comments?
+Wouldn't be best if jsdocs annotations could be just written to those existent comments - using any comment format the same of the project's? The truth is that in JavaScript world jsdocs comments are added as-a-feature in an existing source that already is commented. So short-jsdoc try to target those who in general just need to add some @annotations to an existing js source to define some OO model. 
 
-## Files
+## Motivation 2: define and implement a simple AST for comment annotations. 
+
+# Files
 This project includes the following files
 
 html/ folder for a generic html5 application for displaying a project jsdocs. Based on jquery,backbone,underscore and bootstrap3
@@ -49,22 +69,10 @@ html/ folder for a generic html5 application for displaying a project jsdocs. Ba
 
 /src/shortjsdoc.js - a nodejs based application to use in the desktop - just pass it a folder and it will generate a ready to use html5 application and json data showing the project classes.
 
-## Project Origins
+The js-indentator example jsdocgenerator1 was designed with these ideas originally and is working well and simple.
 
-Thanks to the project js-indentator I'm now able to parse and define my own jsdocs rules ad learned a lot. The js-indentator example jsdocgenerator1 was designed with these ideas originally and is working well and simple.
+# Dependencies 
 
-What is missed from that is getting the output class information json and rendering all that in a nice html5 application. And of course support the desktop for parsing an entire project. This is what this project try to do.
-
-##Dependencies 
-
-The parser depends on esprima and underscore. Can run on the browser or nodejs.
+The parser depends on esprima and underscore. Can run on the browser or nodejs. For extracting jsdocs from project in filesystem then you need nodejs.
 
 The html5 web application is built with underscore, jquery, bootstrap and backbone.
-
-## TODO: ideas
- * currently we are ttaking ALL the comments - but we shoul donly take comments adjacent to comments that contain some annotation. 
- * search for class, modules, methods, methods that return or accept a type. subclasses of..., classes overriding a method... 
- * class hierarc in classview
- * support generic types a la Java:  @return {Array<Person>} the persons in this city @return {Object<String, Person>} persons by name map
- * TODO (syntax): - if you don't put @module in your @class then it will be assigned to last declared module. but @class can declare @module in itself. It is not the same for @method and @class ownership. and the reason is that in general this try to be file agnostic and few classes tend to be declared in a single file and several methods tend to be declared in a single file. 
-

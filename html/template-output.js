@@ -5,13 +5,23 @@ obj || (obj = {});
 var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
-__p += '\n<h2 class="class-title">Class <a class="class-title" href="class/' +
+
+ 
+var self = this; 
+;
+__p += '\n\n<h2 class="class-title">Class <a class="class-title" href="class/' +
 ((__t = ( this.jsdoc.name)) == null ? '' : __t) +
 '">' +
 ((__t = ( this.jsdoc.name )) == null ? '' : __t) +
-'</a></h2>\n\n';
+'</a></h2>\n\n<h3 class="class-module-title">Module \n\t' +
+((__t = ( this.makeLink(this.jsdoc.module) )) == null ? '' : __t) +
+'\n\t<a href="#module/' +
+((__t = ( this.jsdoc.module.name)) == null ? '' : __t) +
+'">' +
+((__t = ( this.jsdoc.module.name)) == null ? '' : __t) +
+'</a></h3>\n\n';
  if (this.jsdoc.extends) { ;
-__p += '\n<h3>Extends ' +
+__p += '\n<h3 class="class-extends-title">Extends ' +
 ((__t = ( this.printTypeAsString(this.jsdoc.extends))) == null ? '' : __t) +
 '</h3>\n';
  } ;
@@ -19,8 +29,7 @@ __p += '\n\n<p class="class-text">' +
 ((__t = ( this.jsdoc.text )) == null ? '' : __t) +
 '</p>\n\n<h3 class=\'methods\'>Methods</h3>\n<ul>\n';
  
-var self = this; 
-var orderedMethods = this.jsdoc.methods
+//var orderedMethods = this.jsdoc.methods
 _(this.jsdoc.methods).each(function(method) { ;
 __p += '\n\t<li class="method">\n\t\t<a class=\'method-name\' href="#method/' +
 ((__t = ( method.absoluteName )) == null ? '' : __t) +
@@ -40,6 +49,18 @@ __p += '\n\t\t</ol>\n\t\t';
  } ;
 __p += '\n\n\t</li>\n';
  }); ;
+__p += '\n</ul>\n\n\n\n<h3 class=\'methods\'>Properties</h3>\n<ul>\n';
+ 
+var self = this; 
+_(this.jsdoc.properties).each(function(p) { ;
+__p += '\n\t<li class="property">\n\t\t<a class=\'property-name\' href="#property/' +
+((__t = ( p.absoluteName )) == null ? '' : __t) +
+'">' +
+((__t = ( p.name )) == null ? '' : __t) +
+'</a>\n\t\t<span class="property-type">' +
+((__t = ( self.printTypeAsString(p.type) )) == null ? '' : __t) +
+'</span> \n\t</li>\n';
+ }); ;
 __p += '\n</ul>\n';
 
 }
@@ -51,6 +72,16 @@ obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
 __p += '<header class="main-header container-fluid">\n\n\t<span class="col-lg-4 col-md-4 col-sm-4 col-xs-12">\n\n\t\t<span class="dropdown">\n\t\t\t<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">\n\t\t\tshort-jsdoc demo\n\t\t\t<span class="caret"></span>\n\t\t\t</button>\n\t\t\t<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">\n\t\t\t\t<li role="presentation"><a role="menuitem" tabindex="-1" href="#index">Index</a></li>\n\t\t\t\t<li role="presentation" class="divider"></li>\n\t\t\t\t<li role="presentation"><a role="menuitem" tabindex="-1" href="https://github.com/cancerberoSgx/short-jsdoc">short-jsdoc home page</a></li>\n\t\t\t</ul>\n\t\t</span>\t\t\n\t</span>\n\n\t<span class="col-lg-8 col-md-8 col-sm-8 col-xs-12">\n\t\t<span class="main-search pull-right">\n\t\t\tSearch <input class="typeahead1">\n\t\t</span>\t\t\n\t</span>\n\n</header>';
+
+}
+return __p
+};
+
+this["shortjsdoc"]["hierarchy"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += 'hierarchy.html';
 
 }
 return __p
