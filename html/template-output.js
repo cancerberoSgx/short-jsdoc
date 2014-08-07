@@ -81,7 +81,9 @@ this["shortjsdoc"]["hierarchy"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += 'hierarchy.html';
+__p += '\n<h2>Class Hierarchy for <a href="">' +
+((__t = ( '' )) == null ? '' : __t) +
+' </h2>\n\n';
 
 }
 return __p

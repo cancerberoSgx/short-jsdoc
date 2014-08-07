@@ -48,40 +48,58 @@ var HeaderView = AbstractView.extend({
 		Backbone.history.navigate(href, {trigger: true}); 
 	}
 
-,	substringMatcher: function(strs) 
+,	search: function(q)
 	{
-		var self = this;
-		return function findMatches(q, cb) 
+		var self=this,matches = []
+
+		// regex used to determine if a string contains the substring `q`
+		,	substrRegex = new RegExp(q, 'i');
+
+		// iterate through the pool of strings and for any string that
+		// contains the substring `q`, add it to the `matches` array
+		_(self.classes).each(function (c)
 		{
-			var matches, substrRegex;
-			// an array that will be populated with substring matches
-			matches = [];
-
-			// regex used to determine if a string contains the substring `q`
-			substrRegex = new RegExp(q, 'i');
-
-			// iterate through the pool of strings and for any string that
-			// contains the substring `q`, add it to the `matches` array
-			_(self.classes).each(function (c)
+			if (substrRegex.test(c.name)) 
 			{
-				if (substrRegex.test(c.name)) 
-				{
-					matches.push({ value: c.name, node: c });
-				}
-				_(c.methods).each(function (m)
-				{
-					matches.push({ value: m.name, node: m });
-				}); 
-			}); 
-
-			_(self.modules).each(function (m)
+				matches.push({ value: c.name, node: c });
+			}
+			_(c.methods).each(function (m)
 			{
 				if (substrRegex.test(m.name)) 
 				{
 					matches.push({ value: m.name, node: m });
 				}
+				
 			}); 
+		}); 
 
+		_(self.modules).each(function (m)
+		{
+			if (substrRegex.test(m.name)) 
+			{
+				matches.push({ value: m.name, node: m });
+			}
+		}); 
+
+		return matches;
+
+		//TODO: reorder matches since modules that match best are at last.
+		// _(matches).sortBy(function(val)
+		// {
+		// 	if(_(val.name).indexOf())
+		// });
+
+		// console.log(matches);
+	}
+
+,	substringMatcher: function() 
+	{
+		var self = this;
+		return function findMatches(q, cb) 
+		{
+			var matches;
+			// an array that will be populated with substring matches
+			matches = self.search(q);			
 			cb(matches);
 		};
 	}

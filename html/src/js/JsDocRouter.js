@@ -1,13 +1,14 @@
 var JsDocRouter = Backbone.Router.extend({
 
 	routes: {
-		"class/:class": "showClass"
-	,	"module/:module": "showModule"
-	,	"method/:method": "showMethod"
+		'class/:class': 'showClass'
+	,	'classHierarchy/:class': 'showClass'
+	,	'module/:module': 'showModule'
+	,	'method/:method': 'showMethod'
 	// ,	'actions/:action': 'doAction'
-	,	"index": "showIndex"
-	,	"parse": "showParse"
-	,	"search": "showSearch"
+	,	'index': 'showIndex'
+	,	'parse': 'showParse'
+	,	'search': 'showSearch'
 	}
 
 ,	initialize: function(application) 
@@ -37,6 +38,7 @@ var JsDocRouter = Backbone.Router.extend({
 ,	showClass: function(className) 
 	{ 
 		var view = new ClassView(this.application, className);
+		// debugger;
 		this.showView(view); 
 	}
 
