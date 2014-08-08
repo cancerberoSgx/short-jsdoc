@@ -11,6 +11,7 @@ describe("JsDocMaker", function()
 				'//@class Apple @extend Fruit @module livingThings'+'\n'+
 				'/*@method beEatenBy apples have this privilege @param {Mouth} mouth the mouth to be used @param {Int} amount */' + '\n' +
 				'//@property {Color} color the main color of this fruit'+'\n'+
+				'//@class Lion the lion class is on living things'+'\n'+
 				'';
 			maker = new JsDocMaker();
 			maker.parseFile(code, 'textarea');
@@ -31,6 +32,10 @@ describe("JsDocMaker", function()
 			//extends is not binded because we never declared the parent class
 			expect(Apple.extends.name).toBe('Fruit');
 			expect(Apple.extends.error).toBe('NAME_NOT_FOUND');
+
+			var Lion = jsdoc.classes['livingThings.Lion']; 
+			expect(Lion).toBeDefined();
+			expect(Lion.module.name).toBe('livingThings'); 
 		});
 
 		it("methods", function() 

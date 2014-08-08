@@ -77,18 +77,6 @@ __p += '<header class="main-header container-fluid">\n\n\t<span class="col-lg-4 
 return __p
 };
 
-this["shortjsdoc"]["hierarchy"] = function(obj) {
-obj || (obj = {});
-var __t, __p = '', __e = _.escape;
-with (obj) {
-__p += '\n<h2>Class Hierarchy for <a href="">' +
-((__t = ( '' )) == null ? '' : __t) +
-' </h2>\n\n';
-
-}
-return __p
-};
-
 this["shortjsdoc"]["index"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape, __j = Array.prototype.join;

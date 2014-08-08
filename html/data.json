@@ -12,6 +12,7 @@
                 "text": "",
                 "theRestString": ""
             },
+            "absoluteName": "ideal.BaseObject",
             "properties": {
                 "creationDate": {
                     "annotation": "property",
@@ -41,17 +42,20 @@
                     "text": "the owners, a map by owner id",
                     "fileName": "ALL.js"
                 }
-            },
-            "absoluteName": "ideal.BaseObject"
+            }
         },
-        "__DefaultModule.ObjectPool": {
+        "ideal.ObjectPool": {
             "annotation": "class",
             "name": "ObjectPool",
             "text": "",
             "fileName": "ALL.js",
             "module": {
-                "name": "__DefaultModule"
+                "annotation": "module",
+                "name": "ideal",
+                "text": "",
+                "theRestString": ""
             },
+            "absoluteName": "ideal.ObjectPool",
             "methods": {
                 "loadObjects": {
                     "annotation": "method",
@@ -95,10 +99,9 @@
                     ],
                     "fileName": "ALL.js"
                 }
-            },
-            "absoluteName": "__DefaultModule.ObjectPool"
+            }
         },
-        "__DefaultModule.Thing": {
+        "ideal.Thing": {
             "annotation": "class",
             "name": "Thing",
             "text": "",
@@ -112,8 +115,12 @@
             ],
             "fileName": "ALL.js",
             "module": {
-                "name": "__DefaultModule"
+                "annotation": "module",
+                "name": "ideal",
+                "text": "",
+                "theRestString": ""
             },
+            "absoluteName": "ideal.Thing",
             "properties": {
                 "importance": {
                     "annotation": "property",
@@ -122,10 +129,9 @@
                     "text": "",
                     "fileName": "ALL.js"
                 }
-            },
-            "absoluteName": "__DefaultModule.Thing"
+            }
         },
-        "__DefaultModule.Action": {
+        "ideal.Action": {
             "annotation": "class",
             "name": "Action",
             "text": "",
@@ -139,9 +145,12 @@
             ],
             "fileName": "ALL.js",
             "module": {
-                "name": "__DefaultModule"
+                "annotation": "module",
+                "name": "ideal",
+                "text": "",
+                "theRestString": ""
             },
-            "absoluteName": "__DefaultModule.Action"
+            "absoluteName": "ideal.Action"
         },
         "life.Living": {
             "annotation": "class",
@@ -162,6 +171,7 @@
                 "text": "",
                 "theRestString": " @extends Thing"
             },
+            "absoluteName": "life.Living",
             "methods": {
                 "breath": {
                     "annotation": "method",
@@ -178,10 +188,9 @@
                     ],
                     "fileName": "ALL.js"
                 }
-            },
-            "absoluteName": "life.Living"
+            }
         },
-        "__DefaultModule.Animal": {
+        "life.Animal": {
             "annotation": "class",
             "name": "Animal",
             "text": "",
@@ -195,8 +204,12 @@
             ],
             "fileName": "ALL.js",
             "module": {
-                "name": "__DefaultModule"
+                "annotation": "module",
+                "name": "life",
+                "text": "",
+                "theRestString": " @extends Thing"
             },
+            "absoluteName": "life.Animal",
             "methods": {
                 "eat": {
                     "annotation": "method",
@@ -219,10 +232,9 @@
                     ],
                     "fileName": "ALL.js"
                 }
-            },
-            "absoluteName": "__DefaultModule.Animal"
+            }
         },
-        "__DefaultModule.Person": {
+        "life.Person": {
             "annotation": "class",
             "name": "Person",
             "text": "",
@@ -236,8 +248,12 @@
             ],
             "fileName": "ALL.js",
             "module": {
-                "name": "__DefaultModule"
+                "annotation": "module",
+                "name": "life",
+                "text": "",
+                "theRestString": " @extends Thing"
             },
+            "absoluteName": "life.Person",
             "methods": {
                 "walk": {
                     "annotation": "method",
@@ -253,8 +269,7 @@
                     ],
                     "fileName": "ALL.js"
                 }
-            },
-            "absoluteName": "__DefaultModule.Person"
+            }
         }
     },
     "modules": {

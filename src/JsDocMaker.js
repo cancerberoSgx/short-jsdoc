@@ -15,6 +15,9 @@ var JsDocMaker = GLOBAL.JsDocMaker = function()
 
 
 
+
+
+
 //PARSING AND PREPROCESSING
 
 //@method parseFile @return {Object} the parsed object @param {String} source @param {String} filename
@@ -89,38 +92,39 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 
 				if(parsed.annotation==='class')
 				{
-					if (!classes[parsed.name])
-					{
-						classes[parsed.name] = parsed; 
-					}
-
-					var class_module = _(parsed.children).filter(function(c)
+					var class_module = _(parsed.children).find(function(c)
 					{
 						return c.annotation==='module'; 
-					}); 
-					// console.log('class_module', class_module)
-					if (class_module && class_module.length)
+					}); 					
+					if (class_module)
 					{
-						currentModule = class_module[0]; 
+						currentModule = class_module; 
 					}
-					if (currentModule)
+					if (!currentModule)
 					{
-						parsed.module = currentModule.name; 
+						currentModule = {name: JsDocMaker.DEFAULT_MODULE};
 					}
-					currentClass = classes[parsed.name]; 
+
+					parsed.module = currentModule
+					parsed.absoluteName = currentModule.name + JsDocMaker.ABSOLUTE_NAME_SEPARATOR + parsed.name;
+
+					self.data.classes[parsed.absoluteName] = parsed; 
+					delete self.data.classes[parsed.name];
+
+					currentClass = parsed; 
 				}
-				else if(parsed.annotation==='method' && currentClass)
+				else if (parsed.annotation === 'method' && currentClass)
 				{
 					currentClass.methods = currentClass.methods || {};
 					currentClass.methods[parsed.name] = parsed;
 					currentMethod = parsed;
 				}
-				else if(parsed.annotation==='property' && currentClass)
+				else if(parsed.annotation === 'property' && currentClass)
 				{
 					currentClass.properties = currentClass.properties || {};
 					currentClass.properties[parsed.name] = parsed;
 				}
-				else if(parsed.annotation==='param' && currentClass)
+				else if(parsed.annotation === 'param' && currentClass)
 				{
 					if(!currentMethod)
 					{
@@ -133,6 +137,7 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 						currentMethod.params[parsed.name] = parsed; 
 					}
 				}	
+
 			}); 
 		});
 		
@@ -232,6 +237,8 @@ JsDocMaker.prototype.fixUnamedAnnotations = function()
 
 
 
+
+
 //POST PROCESSING
 
 
@@ -271,15 +278,11 @@ JsDocMaker.prototype.postProccess = function()
 				self.data.modules[module.name].text = self.data.modules[module.name].text || module.text; 
 			}
 		}
-		else //all classes must have a module 
-		{
-			c.module = {name: JsDocMaker.DEFAULT_MODULE}; //sg
-		}
+		// else //all classes must have a module 
+		// {
+		// 	c.module = {name: JsDocMaker.DEFAULT_MODULE}; //sg
+		// }
 
-		c.absoluteName = c.module.name + JsDocMaker.ABSOLUTE_NAME_SEPARATOR+c.name; //sg		
-
-		self.data.classes[c.absoluteName] = c; 
-		delete self.data.classes[c.name];
 	}); 
 }; 
 
