@@ -1,3 +1,5 @@
+//@class AbstractView @extend Backbone.View
+
 var AbstractView = Backbone.View.extend({
 
 	tagName: "div"

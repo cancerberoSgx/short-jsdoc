@@ -425,15 +425,14 @@ JsDocMaker.prototype.parseFile = function(source, fileName)
 	//@prope rty {Object<String,Object>} parsedFiles
 	// this.parsedFiles = this.parsedFiles || {}; 
 
+	// @property {EsprimaSyntax} the Sprima Syntax object of the current pased file.	
 	this.syntax = esprima.parse(source, {
 		raw: true
 	,	range: true
 	,	comment: true		
 	});
 
-	// _(this.syntax.comments).each(function(comment)
-	// {
-	// });
+	// _(this.syntax.comments).each(function(comment) {});
 
 	var parsed = this.parse(this.syntax.comments, fileName);
 
@@ -494,7 +493,7 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 					var class_module = _(parsed.children).find(function(c)
 					{
 						return c.annotation==='module'; 
-					}); 					
+					});
 					if (class_module)
 					{
 						currentModule = class_module; 
@@ -504,7 +503,7 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 						currentModule = {name: JsDocMaker.DEFAULT_MODULE};
 					}
 
-					parsed.module = currentModule
+					parsed.module = currentModule; 
 					parsed.absoluteName = currentModule.name + JsDocMaker.ABSOLUTE_NAME_SEPARATOR + parsed.name;
 
 					self.data.classes[parsed.absoluteName] = parsed; 
@@ -576,6 +575,7 @@ JsDocMaker.prototype.parseUnit = function(str)
 	return ret; 
 }; 
 
+//@method parseUnitSimple
 JsDocMaker.prototype.parseUnitSimple = function(str) 
 {	
 	if(!str)
@@ -677,11 +677,6 @@ JsDocMaker.prototype.postProccess = function()
 				self.data.modules[module.name].text = self.data.modules[module.name].text || module.text; 
 			}
 		}
-		// else //all classes must have a module 
-		// {
-		// 	c.module = {name: JsDocMaker.DEFAULT_MODULE}; //sg
-		// }
-
 	}); 
 }; 
 
@@ -738,6 +733,10 @@ JsDocMaker.prototype.postProccessBinding = function()
 				return child.annotation === 'returns' || child.annotation === 'return'; 
 			}); 
 			method.returns = returns.length ? returns[0] : {name:'',type:''};
+
+			//because @returns doesn't have a name it breaks our simple grammar, so we merge the name with ts text.
+			method.returns.text = method.returns.name + ' ' + method.returns.text; 
+
 			if(_(method.returns.type).isString())
 			{
 				method.returns.type = self.parseTypeString(method.returns.type, c) || method.returns.type;						
@@ -788,10 +787,6 @@ JsDocMaker.prototype.parseTypeString = function(typeString, baseClass)
 		return null;
 	}
 	typeString = inner[1]; 
-
-
-
-	//TODO : support generics w complex anidation like in Map<String,Array<Apple>>
 
 	if(typeString.indexOf('<')!==-1)
 	{
@@ -916,7 +911,9 @@ JsDocMaker.getNativeTypeUrl = function(name)
 
 
 
+
 //MODIFIERS - like static, private, final
+
 JsDocMaker.MODIFIERS = ['static', 'private', 'final']; 
 //@method installModifiers sets the property modifiers to the node according its children
 JsDocMaker.prototype.installModifiers = function(node)
@@ -930,6 +927,10 @@ JsDocMaker.prototype.installModifiers = function(node)
 		}
 	});
 }; 
+
+
+
+
 
 
 //UTILITIES

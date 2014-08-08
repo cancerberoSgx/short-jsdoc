@@ -1,6 +1,5 @@
 describe("JsDocMaker", function() 
 {
-
 	describe("Basic jsdoc parser", function() 
 	{
 		var jsdoc, maker; 
@@ -9,7 +8,7 @@ describe("JsDocMaker", function()
 		{
 			var code = 
 				'//@class Apple @extend Fruit @module livingThings'+'\n'+
-				'/*@method beEatenBy apples have this privilege @param {Mouth} mouth the mouth to be used @param {Int} amount */' + '\n' +
+				'/*@method beEatenBy apples have this privilege @param {Mouth} mouth the mouth to be used @param {Int} amount @return {String} the bla*/' + '\n' +
 				'//@property {Color} color the main color of this fruit'+'\n'+
 				'//@class Lion the lion class is on living things'+'\n'+
 				'';
@@ -20,11 +19,19 @@ describe("JsDocMaker", function()
 			jsdoc = maker.data;
 		});
 
+		var Apple, Lion; 
+		it("init", function() 
+		{
+			Apple = jsdoc.classes['livingThings.Apple']; 
+			expect(Apple).toBeDefined();
+			
+			Lion = jsdoc.classes['livingThings.Lion']; 
+			expect(Lion).toBeDefined();
+		});
+
 		it("classes and modules", function() 
 		{
 			expect(jsdoc.modules.livingThings).toBeDefined();
-			var Apple = jsdoc.classes['livingThings.Apple']; 
-			expect(Apple).toBeDefined();
 
 			expect(Apple.module.name).toBe('livingThings');
 			expect(Apple.absoluteName).toBe('livingThings.Apple');
@@ -33,29 +40,23 @@ describe("JsDocMaker", function()
 			expect(Apple.extends.name).toBe('Fruit');
 			expect(Apple.extends.error).toBe('NAME_NOT_FOUND');
 
-			var Lion = jsdoc.classes['livingThings.Lion']; 
-			expect(Lion).toBeDefined();
 			expect(Lion.module.name).toBe('livingThings'); 
 		});
 
 		it("methods", function() 
 		{
-			var Apple = jsdoc.classes['livingThings.Apple']; 
 			expect(Apple.methods.beEatenBy).toBeDefined();
 			expect(Apple.methods.beEatenBy.absoluteName).toBe('livingThings.Apple.beEatenBy');
 		});
 
 		it("properties", function() 
 		{
-			var Apple = jsdoc.classes['livingThings.Apple']; 
 			expect(Apple.properties.color.name).toBe('color');
 			expect(Apple.properties.color.type.name).toBe('Color');
 		});		
 
 		it("method's params", function() 
 		{
-			var Apple = jsdoc.classes['livingThings.Apple']; 
-			
 			expect(Apple.methods.beEatenBy.params.length).toBe(2);
 			expect(Apple.methods.beEatenBy.params[0].name).toBe('mouth');
 			expect(Apple.methods.beEatenBy.params[0].type.name).toBe('Mouth');
@@ -65,11 +66,17 @@ describe("JsDocMaker", function()
 			expect(Apple.methods.beEatenBy.params[1].name).toBe('amount');
 			expect(Apple.methods.beEatenBy.params[1].type.name).toBe('Int');
 		});
+
+		it("method's return", function() 
+		{
+			expect(Apple.methods.beEatenBy.returns.type.name).toBe('String');
+			expect(Apple.methods.beEatenBy.returns.text).toBe('the bla');
+		});
 	});
 
 
 
-	describe("extends binds the types", function() 
+	describe("type binding & generics", function() 
 	{
 		var jsdoc, maker; 
 
@@ -107,21 +114,10 @@ describe("JsDocMaker", function()
 			expect(_(Monkey.extends.methods.run.modifiers).contains('static')).toBe(true);
 			
 		});
-
-
-		it("parseType", function() 
-		{
-			var parsed = JsDocMaker.parseType('Map<String,Array<Apple>>'); 
-			expect(parsed.name).toBe('Map'); 
-			expect(parsed.params[0]).toBe('String'); 
-			expect(parsed.params[1].name).toBe('Array'); 
-			expect(parsed.params[1].params[0]).toBe('Apple'); 
-		}); 
-
 	});
 
 
-	describe("extends binds the types with generics", function() 
+	describe("type binding with generics", function() 
 	{
 		var jsdoc, maker; 
 
@@ -131,7 +127,7 @@ describe("JsDocMaker", function()
 				'//@class Machine @module office' + '\n' +
 				'//@method calculate @param {Object<String,Array<Number>>} environment @final @static' + '\n' + 
 				'//@property {Array<Eye>} eye' + '\n' +
-				'//@class Eye a reutilizable eye @module office' + '\n' +
+				'//@class Eye a reutilizable eye' + '\n' +
 				''; 
 			maker = new JsDocMaker();
 			maker.parseFile(code, 'genericstest1'); 
