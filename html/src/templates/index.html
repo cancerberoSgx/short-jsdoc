@@ -1,19 +1,9 @@
 <% var data = this.application.data; %>
-<h3>Modules</h3>
 
-<ul>
-<% _(data.modules).each(function(moduleBody, moduleName) { %>
-	<li><a href="#module/<%= moduleName %>"><%= moduleName %></a></li>
-<% }); %>
-</ul>
+<%= this.application.templates['modules'].apply(this, arguments) %>
 
-<h3>Classes</h3>
 
-<ul>
-<% _(data.classes).each(function(c) { %>
-	<li><a href="#class/<%= c.absoluteName %>"><%= c.name %></a></li>
-<% }); %>
-</ul>
+<%= this.application.templates['classes'].apply(this, arguments) %>
 
 <p><a href="#parse"><b>Parse</b> your own code! --></a></p>
 

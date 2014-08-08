@@ -14,7 +14,6 @@ var ClassView = AbstractView.extend({
 			return;
 		}
 		this.hierarchy = this.computeHierarchy();
-		debugger;
 	}
 
 ,	computeHierarchy: function()
@@ -24,8 +23,7 @@ var ClassView = AbstractView.extend({
 		do 
 		{
 			hierarchy = [c].concat(hierarchy);
-			debugger;
-			if(c.extends && c.extends.name===JsDocMaker.DEFAULT_CLASS)
+			if(c.name===this.jsdoc.name)
 			{
 				break;
 			}

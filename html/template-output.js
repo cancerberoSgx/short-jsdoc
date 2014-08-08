@@ -67,6 +67,27 @@ __p += '\n</ul>\n';
 return __p
 };
 
+this["shortjsdoc"]["classes"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+
+ var data = this.application.data; ;
+__p += '\n\n<h3><a href="#classes">Classes</a></h3>\n<ul>\n';
+ _(data.classes).each(function(c) { ;
+__p += '\n\t<li><a href="#class/' +
+((__t = ( c.absoluteName )) == null ? '' : __t) +
+'">' +
+((__t = ( c.name )) == null ? '' : __t) +
+'</a></li>\n';
+ }); ;
+__p += '\n</ul>';
+
+}
+return __p
+};
+
 this["shortjsdoc"]["header"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
@@ -84,23 +105,11 @@ function print() { __p += __j.call(arguments, '') }
 with (obj) {
 
  var data = this.application.data; ;
-__p += '\n<h3>Modules</h3>\n\n<ul>\n';
- _(data.modules).each(function(moduleBody, moduleName) { ;
-__p += '\n\t<li><a href="#module/' +
-((__t = ( moduleName )) == null ? '' : __t) +
-'">' +
-((__t = ( moduleName )) == null ? '' : __t) +
-'</a></li>\n';
- }); ;
-__p += '\n</ul>\n\n<h3>Classes</h3>\n\n<ul>\n';
- _(data.classes).each(function(c) { ;
-__p += '\n\t<li><a href="#class/' +
-((__t = ( c.absoluteName )) == null ? '' : __t) +
-'">' +
-((__t = ( c.name )) == null ? '' : __t) +
-'</a></li>\n';
- }); ;
-__p += '\n</ul>\n\n<p><a href="#parse"><b>Parse</b> your own code! --></a></p>\n\n<p>(devel)<a href="../test/SpecRunner.html">Specs</a></p> ';
+__p += '\n\n' +
+((__t = ( this.application.templates['modules'].apply(this, arguments) )) == null ? '' : __t) +
+'\n\n\n' +
+((__t = ( this.application.templates['classes'].apply(this, arguments) )) == null ? '' : __t) +
+'\n\n<p><a href="#parse"><b>Parse</b> your own code! --></a></p>\n\n<p>(devel)<a href="../test/SpecRunner.html">Specs</a></p> ';
 
 }
 return __p
@@ -165,6 +174,27 @@ __p += '\n\t<li>\n\t\t<a href="#class/' +
 '</a>\t\t\n\t</li>\n';
  }); ;
 __p += '\n</ul>';
+
+}
+return __p
+};
+
+this["shortjsdoc"]["modules"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+__p += '<h3><a href="#modules">Modules</a></h3>\n\n';
+ var data = this.application.data; ;
+__p += '\n<ul>\n';
+ _(data.modules).each(function(moduleBody, moduleName) { ;
+__p += '\n\t<li><a href="#module/' +
+((__t = ( moduleName )) == null ? '' : __t) +
+'">' +
+((__t = ( moduleName )) == null ? '' : __t) +
+'</a></li>\n';
+ }); ;
+__p += '\n</ul>\n';
 
 }
 return __p

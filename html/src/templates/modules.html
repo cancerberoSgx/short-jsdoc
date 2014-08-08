@@ -1,0 +1,8 @@
+<h3><a href="#modules">Modules</a></h3>
+
+<% var data = this.application.data; %>
+<ul>
+<% _(data.modules).each(function(moduleBody, moduleName) { %>
+	<li><a href="#module/<%= moduleName %>"><%= moduleName %></a></li>
+<% }); %>
+</ul>
