@@ -2,9 +2,14 @@
 
 ##Online HTML5 project demo. 
 
-[Online Example Demo](http://cancerberosgx.github.io/short-jsdoc/html)]
+[Online Example Demo](http://cancerberosgx.github.io/short-jsdoc/html)
 
 Features: flexible comment syntax, simplycity, heavy support for Types and Types generics.
+
+##License
+
+short-jsdoc is open sourced under the [MIT License](https://github.com/cancerberoSgx/short-jsdoc/blob/master/LICENSE). 
+
 
 ## Motivation
 
@@ -18,7 +23,8 @@ The other important part of the project is an html5 application that shows this 
 
 At last there is a little nodejs tool for the end-user to extract its code jsdocs and generate this html5 application showing it.
 
-#Using it
+
+# Using it
 
 ## Installing 
 

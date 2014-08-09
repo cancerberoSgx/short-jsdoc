@@ -408,7 +408,10 @@ LIST_OF_NAMES
 //@class jsDocMaker
 //@constructor JsDocMaker
 var JsDocMaker = GLOBAL.JsDocMaker = function()
-{
+{	
+	//@property {Object<String,String>} customNativeTypes name to url map that the user can modify to register new native types b givin its url.
+	this.customNativeTypes = this.customNativeTypes || {};
+
 	this.annotationRegexp = /(\s+@\w+)/gi;
 }; 
 
@@ -422,8 +425,8 @@ var JsDocMaker = GLOBAL.JsDocMaker = function()
 //@method parseFile @return {Object} the parsed object @param {String} source @param {String} filename
 JsDocMaker.prototype.parseFile = function(source, fileName)
 {
-	//@prope rty {Object<String,Object>} parsedFiles
-	// this.parsedFiles = this.parsedFiles || {}; 
+	this.data = this.data || {}; 
+	this.data.source = source;
 
 	// @property {EsprimaSyntax} the Sprima Syntax object of the current pased file.	
 	this.syntax = esprima.parse(source, {
@@ -436,12 +439,6 @@ JsDocMaker.prototype.parseFile = function(source, fileName)
 
 	var parsed = this.parse(this.syntax.comments, fileName);
 
-	/*
-	this.parsedFiles[source] = {
-		syntax: this.syntax
-	,	parsed: parsed
-	}; 
-	*/
 	return parsed; 
 }; 
 
@@ -485,7 +482,9 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 			var parsed_array = self.parseUnit(value);
 			_(parsed_array).each(function(parsed)
 			{
+				parsed.commentRange = node.range;
 				parsed.fileName = fileName;
+
 				delete parsed.theRestString; 
 
 				if(parsed.annotation==='class')
@@ -695,7 +694,7 @@ JsDocMaker.prototype.postProccessBinding = function()
 
 		if(!extend) // All classes must extend something
 		{
-			extend = c.extends = self.bindClass(JsDocMaker.DEFAULT_CLASS, c) || {error: 'NAME_NOT_FOUND', name: JsDocMaker.DEFAULT_CLASS};
+			extend = c.extends = (self.bindClass(JsDocMaker.DEFAULT_CLASS, c) || {error: 'NAME_NOT_FOUND', name: JsDocMaker.DEFAULT_CLASS});
 		}
 		else 
 		{
@@ -844,7 +843,7 @@ JsDocMaker.prototype.bindClass = function(name, baseClass)
 	//search all classes that matches the name
 	var classesWithName = _(_(this.data.classes).values()).filter(function(c)
 	{
-		return JsDocMaker.stringEndsWith(c.name, name); 
+		return c.name===name;//JsDocMaker.stringEndsWith(c.name, name); 
 	});
 	//search classes of the module
 	var moduleClasses = _(classesWithName).filter(function(c)
@@ -856,7 +855,7 @@ JsDocMaker.prototype.bindClass = function(name, baseClass)
 	if(!c)
 	{
 		//TODO: look at native types
-		var nativeType = JsDocMaker.getNativeTypeUrl(name);
+		var nativeType = this.getNativeTypeUrl(name);
 		var o = {name:name}; 
 		if(nativeType)
 		{
@@ -874,7 +873,6 @@ JsDocMaker.prototype.bindClass = function(name, baseClass)
 	}
 }; 
 
-
 //@method parseType parse a type string like 'Map<String,Array<Apple>>' and return an object like {name: 'Map',params:['String',{name: 'Array',params:['Apple']}]} 
 //It depends on type parser file typeParser.js @static
 JsDocMaker.parseType = function(s)
@@ -884,8 +882,6 @@ JsDocMaker.parseType = function(s)
 	return obj; 
 }; 
 
-
-
 // @method simpleName @param {String} name @return {String}
 JsDocMaker.prototype.simpleName = function(name)
 {
@@ -894,26 +890,43 @@ JsDocMaker.prototype.simpleName = function(name)
 }; 
 
 
+
+
+
+
 // NATIVE TYPES LINKING / post processing
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String
 JsDocMaker.NATIVE_TYPES = ['String', 'Object', 'Array', 'Date', 'Regex', 'Function', 
 	'Boolean', 'Error', 'TypeError', 'Number']; 
 
-//@method getNativeTypeUrl @static @returns an url if given name match a native types or undefined otherwise
-JsDocMaker.getNativeTypeUrl = function(name)
+//@method getNativeTypeUrl @returns {String}an url if given name match a native types or undefined otherwise
+JsDocMaker.prototype.getNativeTypeUrl = function(name)
 {
 	if(_(JsDocMaker.NATIVE_TYPES).contains(name))
 	{
 		return 'https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/' + name;
 	}
+
+	var customTypeUrl;
+	_(this.customNativeTypes).each(function(val, key)
+	{
+		if(key===name)
+		{
+			//TODO: support wildcard like $(name) for inserting the name in the given url dynamically
+			customTypeUrl = val;
+		}
+	});
+	return customTypeUrl;
 }; 
+
 
 
 
 
 //MODIFIERS - like static, private, final
 
+//@property {Array<String>}MODIFIERS @static
 JsDocMaker.MODIFIERS = ['static', 'private', 'final']; 
 //@method installModifiers sets the property modifiers to the node according its children
 JsDocMaker.prototype.installModifiers = function(node)

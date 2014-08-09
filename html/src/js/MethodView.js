@@ -15,7 +15,11 @@ var MethodView = AbstractView.extend({
 		if(!this.jsdoc)
 		{
 			this.resourceNotFound = true;
+			return;
 		}
+
+		this.jsdoc.textHtml = this.getTextHtml(this.jsdoc.text);
+		
 	}
 
 

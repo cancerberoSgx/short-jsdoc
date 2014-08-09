@@ -2,11 +2,9 @@
 var self = this; 
 %>
 
-<h2 class="class-title">Class <a class="class-title" href="class/<%= this.jsdoc.name%>"><%= this.jsdoc.name %></a></h2>
+<h2 class="class-title">Class <%= this.makeLink(this.jsdoc, true) %></h2>
 
-<h3 class="class-module-title">Module 
-	<%= this.makeLink(this.jsdoc.module) %>
-	<a href="#module/<%= this.jsdoc.module.name%>"><%= this.jsdoc.module.name%></a></h3>
+<h3 class="class-module-title">Module <%= this.makeLink(this.jsdoc.module, true) %></h3>
 
 <% if (this.jsdoc.extends) { %>
 <h3 class="class-extends-title">Extends <%= this.printTypeAsString(this.jsdoc.extends)%></h3>
@@ -17,10 +15,9 @@ var self = this;
 <h3 class='methods'>Methods</h3>
 <ul>
 <% 
-//var orderedMethods = this.jsdoc.methods
 _(this.jsdoc.methods).each(function(method) { %>
 	<li class="method">
-		<a class='method-name' href="#method/<%= method.absoluteName %>">Method <%= method.name %></a>
+		<%= self.makeLink(method, true)%>
 		<% if(method.params) { %>
 		<h4 class="params-title">Parameters</h4>
 		<ol class="params">
@@ -33,6 +30,8 @@ _(this.jsdoc.methods).each(function(method) { %>
 		</ol>
 		<% } %>
 
+		<h4 class="returns-title">Returns <%= self.printTypeAsString(method.returns.type) %></h4>
+		<div class="returns-text"><%= method.returns.text || ''%></div>
 	</li>
 <% }); %>
 </ul>
@@ -50,3 +49,5 @@ _(this.jsdoc.properties).each(function(p) { %>
 	</li>
 <% }); %>
 </ul>
+
+<%= this.application.templates.sources.apply(this, arguments) %>

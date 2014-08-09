@@ -1,6 +1,15 @@
 <h2>Method <a href="<%= this.makeLink(this.jsdoc) %>"><%= this.jsdoc.name%></a></h2>
 
-<h3>Of class <a href="#class/<%= this.jsdoc.ownerClass %>"><%= this.simpleName(this.jsdoc.ownerClass) %></a></h3>
+<h3>Of class <a href="#class/<%= this.jsdoc.ownerClass %>">
+	<%= this.simpleName(this.jsdoc.ownerClass) %></a>
+</h3>
+
+<% if (this.jsdoc.text) { %>
+<div class="method-text">
+	<%= this.jsdoc.textHtml %>
+</div>
+<% } %>
+
 <h3>Parameters</h3>
 
 <ul>
@@ -18,7 +27,9 @@ _(this.jsdoc.params).each(function(param){
 <% if (this.jsdoc.returns) { %>
 <h3 class="returns-title">Returns</h3>
 <%= self.printTypeAsString(this.jsdoc.returns.type) %>
+
 <% if(this.jsdoc.returns.text){ %>
 <p class="returns-text"><%= this.jsdoc.returns.text%></p>
 <% } %>
+
 <% }%>

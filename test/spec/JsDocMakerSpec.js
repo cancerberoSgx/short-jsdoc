@@ -2,11 +2,12 @@ describe("JsDocMaker", function()
 {
 	describe("Basic jsdoc parser", function() 
 	{
-		var jsdoc, maker; 
+		var jsdoc, maker, Apple, Lion, Lemon; 
 
 		beforeEach(function() 
 		{
 			var code = 
+				'//@class Lemon'+'\n'+
 				'//@class Apple @extend Fruit @module livingThings'+'\n'+
 				'/*@method beEatenBy apples have this privilege @param {Mouth} mouth the mouth to be used @param {Int} amount @return {String} the bla*/' + '\n' +
 				'//@property {Color} color the main color of this fruit'+'\n'+
@@ -19,7 +20,6 @@ describe("JsDocMaker", function()
 			jsdoc = maker.data;
 		});
 
-		var Apple, Lion; 
 		it("init", function() 
 		{
 			Apple = jsdoc.classes['livingThings.Apple']; 
@@ -27,10 +27,15 @@ describe("JsDocMaker", function()
 			
 			Lion = jsdoc.classes['livingThings.Lion']; 
 			expect(Lion).toBeDefined();
+
+			Lemon = jsdoc.classes['__DefaultModule.Lemon']; 
+			expect(Lemon).toBeDefined();
 		});
 
 		it("classes and modules", function() 
 		{
+			expect(Lemon.extends.name).toBe('Object');
+
 			expect(jsdoc.modules.livingThings).toBeDefined();
 
 			expect(Apple.module.name).toBe('livingThings');
@@ -117,7 +122,7 @@ describe("JsDocMaker", function()
 	});
 
 
-	describe("type binding with generics", function() 
+	describe("custom native types", function() 
 	{
 		var jsdoc, maker; 
 
@@ -125,32 +130,34 @@ describe("JsDocMaker", function()
 		{
 			var code = 
 				'//@class Machine @module office' + '\n' +
-				'//@method calculate @param {Object<String,Array<Number>>} environment @final @static' + '\n' + 
-				'//@property {Array<Eye>} eye' + '\n' +
+				'//@method calculate @param {Object<String,Array<HomeFinance>>} finances' + '\n' + 
+				'//@property {Bag<Eye>} eye' + '\n' +
 				'//@class Eye a reutilizable eye' + '\n' +
 				''; 
 			maker = new JsDocMaker();
+
+			//before parsing we register the custom native types Bag and HomeFinance. Just give an url.
+			_(maker.customNativeTypes).extend({
+				Bag: 'http://mylang.com/api/Bag'
+			,	HomeFinance: 'http://mylang.com/api/HomeFinance'
+			}); 
+
 			maker.parseFile(code, 'genericstest1'); 
 			maker.postProccess();
 			maker.postProccessBinding();
 			jsdoc = maker.data;
 		});
 
-		it("should be able to parse some javascript code", function() 
+		it("custom natives should be binded", function() 
 		{
-			var paramType = jsdoc.classes['office.Machine'].methods.calculate.params[0].type; 
-			expect(paramType.name).toBe('Object'); 
-			expect(paramType.params[0].name).toBe('String'); 
-			expect(paramType.params[1].name).toBe('Array'); 
-			expect(paramType.params[1].params[0].name).toBe('Number'); 
-
-			var propType = jsdoc.classes['office.Machine'].properties.eye.type;
-			expect(propType.name).toBe('Array'); 
-			expect(propType.nativeTypeUrl.indexOf('http')===0).toBe(true); 
-			expect(propType.params[0].name).toBe('Eye'); 
-			expect(propType.params[0].text).toBe('a reutilizable eye'); 
+			var Machine = jsdoc.classes['office.Machine'];
+			var param1 = Machine.methods.calculate.params[0].type.params[1].params[0];
+			expect(param1.name).toBe('HomeFinance');
+			expect(param1.nativeTypeUrl).toBe('http://mylang.com/api/HomeFinance');
+			var param2 = Machine.properties.eye.type; 
+			expect(param2.name).toBe('Bag');
+			expect(param2.nativeTypeUrl).toBe('http://mylang.com/api/Bag');
 		});
-
 	});
 
 });

@@ -1,6 +1,7 @@
 
 # TODO: ideas
  * currently we are ttaking ALL the comments - but we shoul donly take comments adjacent to comments that contain some annotation. 
+ * @class @constructor
  * search for class, modules, methods, methods that return or accept a type. subclasses of..., classes overriding a method... be able to find the classes that uses a certain class in a property or parameter or return type...
  * 
  * class hierarc in classview

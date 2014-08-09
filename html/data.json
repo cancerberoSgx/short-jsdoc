@@ -1,10 +1,15 @@
 {
+    "source": "//@class BaseObject @module ideal\n//@property {Date} creationDate\n//@property {String} name\n//@property {String} description\n//@property {Object<String,User>} owners the owners, a map by owner id\n\n//@class ObjectPool\n//@method loadObjects @param {Array<String>} objects_ids @return {Object<String,BaseObject>}\n//@method getOwners this method is useful for *blabla* blabla _blabla_ bab\n/*@param {Array<String>} objects_ids @return {Object<String,Object<String,User>>}*/\n\n//@class Thing @extends BaseObject\n//@property {Number} importance\n\n/** @class Action @extends BaseObject *///@class Living @module life @extends Thing\n//@method breath @param {Number} size\n\n//@class Animal @extends Living\n//@method eat @param {Array<Food>} food @return {Array<Energy>}\n\n//@class Person @extends Animal\n//@method walk @return {Action}",
     "classes": {
         "ideal.BaseObject": {
             "annotation": "class",
             "name": "BaseObject",
             "text": "",
             "children": [],
+            "commentRange": [
+                0,
+                33
+            ],
             "fileName": "ALL.js",
             "module": {
                 "annotation": "module",
@@ -19,6 +24,10 @@
                     "type": "{Date}",
                     "name": "creationDate",
                     "text": "",
+                    "commentRange": [
+                        0,
+                        33
+                    ],
                     "fileName": "ALL.js"
                 },
                 "name": {
@@ -26,6 +35,10 @@
                     "type": "{String}",
                     "name": "name",
                     "text": "",
+                    "commentRange": [
+                        66,
+                        91
+                    ],
                     "fileName": "ALL.js"
                 },
                 "description": {
@@ -33,6 +46,10 @@
                     "type": "{String}",
                     "name": "description",
                     "text": "",
+                    "commentRange": [
+                        66,
+                        91
+                    ],
                     "fileName": "ALL.js"
                 },
                 "owners": {
@@ -40,6 +57,10 @@
                     "type": "{Object<String,User>}",
                     "name": "owners",
                     "text": "the owners, a map by owner id",
+                    "commentRange": [
+                        125,
+                        195
+                    ],
                     "fileName": "ALL.js"
                 }
             }
@@ -48,6 +69,10 @@
             "annotation": "class",
             "name": "ObjectPool",
             "text": "",
+            "commentRange": [
+                125,
+                195
+            ],
             "fileName": "ALL.js",
             "module": {
                 "annotation": "module",
@@ -76,28 +101,42 @@
                             "theRestString": ""
                         }
                     ],
+                    "commentRange": [
+                        217,
+                        309
+                    ],
                     "fileName": "ALL.js"
                 },
                 "getOwners": {
                     "annotation": "method",
                     "name": "getOwners",
-                    "text": "",
-                    "children": [
-                        {
+                    "text": "this method is useful for *blabla* blabla _blabla_ bab",
+                    "commentRange": [
+                        217,
+                        309
+                    ],
+                    "fileName": "ALL.js",
+                    "params": {
+                        "objects_ids": {
                             "annotation": "param",
                             "type": "{Array<String>}",
                             "name": "objects_ids",
                             "text": "",
-                            "theRestString": " @return {Object<String,Object<String,User>>}"
-                        },
-                        {
-                            "annotation": "return",
-                            "type": "{Object<String,Object<String,User>>}",
-                            "text": "",
-                            "theRestString": ""
+                            "children": [
+                                {
+                                    "annotation": "return",
+                                    "type": "{Object<String,Object<String,User>>}",
+                                    "text": "",
+                                    "theRestString": ""
+                                }
+                            ],
+                            "commentRange": [
+                                385,
+                                468
+                            ],
+                            "fileName": "ALL.js"
                         }
-                    ],
-                    "fileName": "ALL.js"
+                    }
                 }
             }
         },
@@ -113,6 +152,10 @@
                     "theRestString": ""
                 }
             ],
+            "commentRange": [
+                470,
+                504
+            ],
             "fileName": "ALL.js",
             "module": {
                 "annotation": "module",
@@ -127,6 +170,10 @@
                     "type": "{Number}",
                     "name": "importance",
                     "text": "",
+                    "commentRange": [
+                        470,
+                        504
+                    ],
                     "fileName": "ALL.js"
                 }
             }
@@ -142,6 +189,10 @@
                     "text": "",
                     "theRestString": ""
                 }
+            ],
+            "commentRange": [
+                538,
+                578
             ],
             "fileName": "ALL.js",
             "module": {
@@ -163,6 +214,10 @@
                     "text": "",
                     "theRestString": ""
                 }
+            ],
+            "commentRange": [
+                578,
+                621
             ],
             "fileName": "ALL.js",
             "module": {
@@ -186,6 +241,10 @@
                             "theRestString": ""
                         }
                     ],
+                    "commentRange": [
+                        578,
+                        621
+                    ],
                     "fileName": "ALL.js"
                 }
             }
@@ -201,6 +260,10 @@
                     "text": "",
                     "theRestString": ""
                 }
+            ],
+            "commentRange": [
+                661,
+                692
             ],
             "fileName": "ALL.js",
             "module": {
@@ -230,6 +293,10 @@
                             "theRestString": ""
                         }
                     ],
+                    "commentRange": [
+                        661,
+                        692
+                    ],
                     "fileName": "ALL.js"
                 }
             }
@@ -245,6 +312,10 @@
                     "text": "",
                     "theRestString": ""
                 }
+            ],
+            "commentRange": [
+                758,
+                789
             ],
             "fileName": "ALL.js",
             "module": {
@@ -266,6 +337,10 @@
                             "text": "",
                             "theRestString": ""
                         }
+                    ],
+                    "commentRange": [
+                        758,
+                        789
                     ],
                     "fileName": "ALL.js"
                 }

@@ -9,17 +9,11 @@ with (obj) {
  
 var self = this; 
 ;
-__p += '\n\n<h2 class="class-title">Class <a class="class-title" href="class/' +
-((__t = ( this.jsdoc.name)) == null ? '' : __t) +
-'">' +
-((__t = ( this.jsdoc.name )) == null ? '' : __t) +
-'</a></h2>\n\n<h3 class="class-module-title">Module \n\t' +
-((__t = ( this.makeLink(this.jsdoc.module) )) == null ? '' : __t) +
-'\n\t<a href="#module/' +
-((__t = ( this.jsdoc.module.name)) == null ? '' : __t) +
-'">' +
-((__t = ( this.jsdoc.module.name)) == null ? '' : __t) +
-'</a></h3>\n\n';
+__p += '\n\n<h2 class="class-title">Class ' +
+((__t = ( this.makeLink(this.jsdoc, true) )) == null ? '' : __t) +
+'</h2>\n\n<h3 class="class-module-title">Module ' +
+((__t = ( this.makeLink(this.jsdoc.module, true) )) == null ? '' : __t) +
+'</h3>\n\n';
  if (this.jsdoc.extends) { ;
 __p += '\n<h3 class="class-extends-title">Extends ' +
 ((__t = ( this.printTypeAsString(this.jsdoc.extends))) == null ? '' : __t) +
@@ -29,13 +23,10 @@ __p += '\n\n<p class="class-text">' +
 ((__t = ( this.jsdoc.text )) == null ? '' : __t) +
 '</p>\n\n<h3 class=\'methods\'>Methods</h3>\n<ul>\n';
  
-//var orderedMethods = this.jsdoc.methods
 _(this.jsdoc.methods).each(function(method) { ;
-__p += '\n\t<li class="method">\n\t\t<a class=\'method-name\' href="#method/' +
-((__t = ( method.absoluteName )) == null ? '' : __t) +
-'">Method ' +
-((__t = ( method.name )) == null ? '' : __t) +
-'</a>\n\t\t';
+__p += '\n\t<li class="method">\n\t\t' +
+((__t = ( self.makeLink(method, true))) == null ? '' : __t) +
+'\n\t\t';
  if(method.params) { ;
 __p += '\n\t\t<h4 class="params-title">Parameters</h4>\n\t\t<ol class="params">\n\t\t\t';
  _(method.params).each(function(param){ ;
@@ -47,7 +38,11 @@ __p += '\n\t\t\t<li class="param">\n\t\t\t\t<span class="param-name">' +
  }); ;
 __p += '\n\t\t</ol>\n\t\t';
  } ;
-__p += '\n\n\t</li>\n';
+__p += '\n\n\t\t<h4 class="returns-title">Returns ' +
+((__t = ( self.printTypeAsString(method.returns.type) )) == null ? '' : __t) +
+'</h4>\n\t\t<div class="returns-text">' +
+((__t = ( method.returns.text || '')) == null ? '' : __t) +
+'</div>\n\t</li>\n';
  }); ;
 __p += '\n</ul>\n\n\n\n<h3 class=\'methods\'>Properties</h3>\n<ul>\n';
  
@@ -61,7 +56,8 @@ __p += '\n\t<li class="property">\n\t\t<a class=\'property-name\' href="#propert
 ((__t = ( self.printTypeAsString(p.type) )) == null ? '' : __t) +
 '</span> \n\t</li>\n';
  }); ;
-__p += '\n</ul>\n';
+__p += '\n</ul>\n\n' +
+((__t = ( this.application.templates.sources.apply(this, arguments) )) == null ? '' : __t);
 
 }
 return __p
@@ -126,9 +122,15 @@ __p += '<h2>Method <a href="' +
 ((__t = ( this.jsdoc.name)) == null ? '' : __t) +
 '</a></h2>\n\n<h3>Of class <a href="#class/' +
 ((__t = ( this.jsdoc.ownerClass )) == null ? '' : __t) +
-'">' +
+'">\n\t' +
 ((__t = ( this.simpleName(this.jsdoc.ownerClass) )) == null ? '' : __t) +
-'</a></h3>\n<h3>Parameters</h3>\n\n<ul>\n';
+'</a>\n</h3>\n\n';
+ if (this.jsdoc.text) { ;
+__p += '\n<div class="method-text">\n\t' +
+((__t = ( this.jsdoc.textHtml )) == null ? '' : __t) +
+'\n</div>\n';
+ } ;
+__p += '\n\n<h3>Parameters</h3>\n\n<ul>\n';
  var self = this, buffer = [];
 _(this.jsdoc.params).each(function(param){
 ;
@@ -144,13 +146,13 @@ __p += '\n</ul>\n\n';
  if (this.jsdoc.returns) { ;
 __p += '\n<h3 class="returns-title">Returns</h3>\n' +
 ((__t = ( self.printTypeAsString(this.jsdoc.returns.type) )) == null ? '' : __t) +
-'\n';
+'\n\n';
  if(this.jsdoc.returns.text){ ;
 __p += '\n<p class="returns-text">' +
 ((__t = ( this.jsdoc.returns.text)) == null ? '' : __t) +
 '</p>\n';
  } ;
-__p += '\n';
+__p += '\n\n';
  };
 
 
@@ -205,6 +207,24 @@ obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
 __p += '<h2>Parse your code online!</h2>\n<p>Please paste your commeted code in the following area and it will be loaded automatically. </p>\n<textarea data-type="inputcode">\n//@class Living Any living thing. @module Life. \n//@class Tree A tree is a living thing that contains some leafs and grow. \n//@extends Living @module Life \nfunction Tree(){}\n/**@method growLeaf makes the given leaf to gro a little more. @param {Leaf} leaf*/\nTree.prototype.growLeaf = function(leaf){}\n/*@class Apple a sweet fruit @module Life @extend Fruit grows in trees and can be eaten @module Life */ \nfunction Apple(){}\n\n//@class Rock @module Mineral\n//@method doShadow @param {Rectangle} shadowSize @return {Shadow} the new Shadow\n\n//@class Shadow @module Ideal\n//@class Good @module Ideal\n</textarea>\n<button data-action="inputcode_doit">do it</button>\n';
+
+}
+return __p
+};
+
+this["shortjsdoc"]["sources"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+__p += '<h3>Sources</h3>\n';
+ 
+var source = this.application.maker.data.source; 
+var sourceSubset = String.prototype.substring.apply(source, this.jsdoc.range);
+;
+__p += '\n<pre>' +
+__e( sourceSubset) +
+'</pre>';
 
 }
 return __p
