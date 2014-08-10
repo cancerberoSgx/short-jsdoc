@@ -9,5 +9,4 @@ var AbstractView = Backbone.View.extend({
 		this.application = application;
 		// this.resourceNotFound = false;
 	}
-
 });
