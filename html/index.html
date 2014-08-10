@@ -31,6 +31,10 @@
 <script src="src/js/ParseView.js" type="text/javascript"></script>
 <script src="src/js/HeaderView.js" type="text/javascript"></script>
 
+<!-- prettify for nice sources -->
+<link href="lib/prettify/prettify.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript" src="lib/prettify/prettify.js"></script>
+
 
 <script src="template-output.js" type="text/javascript"></script>
 
@@ -41,7 +45,6 @@
 <body>
 
 <script>
-
 jQuery.getJSON('data.json').done(function(data)
 {
 	Application.start(data); 

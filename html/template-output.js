@@ -222,7 +222,7 @@ __p += '<h3>Sources</h3>\n';
 var source = this.application.maker.data.source; 
 var sourceSubset = String.prototype.substring.apply(source, this.jsdoc.range);
 ;
-__p += '\n<pre>' +
+__p += '\n<pre class="prettyprint lang-js">' +
 __e( sourceSubset) +
 '</pre>';
 

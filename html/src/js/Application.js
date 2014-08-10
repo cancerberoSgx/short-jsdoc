@@ -53,6 +53,10 @@ _(Application.prototype).extend({
 			this.$containerEl.empty().append(view.$el); 
 		}
 		this.updateHeader();
+		if(typeof prettyPrint !== 'undefined') 
+		{
+			prettyPrint(); 
+		}
 	}
 
 ,	updateHeader: function()
