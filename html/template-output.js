@@ -211,55 +211,6 @@ __p += '<h2>Parse your code online!</h2>\n<p>Please paste your commeted code in 
 return __p
 };
 
-this["shortjsdoc"]["property"] = function(obj) {
-obj || (obj = {});
-var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
-function print() { __p += __j.call(arguments, '') }
-with (obj) {
-__p += '\n<h2>property <a href="' +
-((__t = ( this.makeLink(this.jsdoc) )) == null ? '' : __t) +
-'">' +
-((__t = ( this.jsdoc.name)) == null ? '' : __t) +
-'</a></h2>\n\n<h3>Of class <a href="#class/' +
-((__t = ( this.jsdoc.ownerClass )) == null ? '' : __t) +
-'">\n\t' +
-((__t = ( this.simpleName(this.jsdoc.ownerClass) )) == null ? '' : __t) +
-'</a>\n</h3>\n\n';
- if (this.jsdoc.text) { ;
-__p += '\n<div class="method-text">\n\t' +
-((__t = ( this.jsdoc.textHtml )) == null ? '' : __t) +
-'\n</div>\n';
- } ;
-__p += '\n\n<h3>Parameters</h3>\n\n<ul>\n';
- var self = this, buffer = [];
-_(this.jsdoc.params).each(function(param){
-;
-__p += '\n\t<li>\n\t\tname: ' +
-((__t = ( param.name)) == null ? '' : __t) +
-', type: ' +
-((__t = ( self.printTypeAsString(param.type) )) == null ? '' : __t) +
-'\n\t\t<span class="param-text">' +
-((__t = ( param.text )) == null ? '' : __t) +
-'</span>\n\t</li>\n\n';
- }); ;
-__p += '\n</ul>\n\n';
- if (this.jsdoc.returns) { ;
-__p += '\n<h3 class="returns-title">Returns</h3>\n' +
-((__t = ( self.printTypeAsString(this.jsdoc.returns.type) )) == null ? '' : __t) +
-'\n\n';
- if(this.jsdoc.returns.text){ ;
-__p += '\n<p class="returns-text">' +
-((__t = ( this.jsdoc.returns.text)) == null ? '' : __t) +
-'</p>\n';
- } ;
-__p += '\n\n';
- };
-__p += '\n\n\n<div data-type="sources"></div>';
-
-}
-return __p
-};
-
 this["shortjsdoc"]["sources"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
