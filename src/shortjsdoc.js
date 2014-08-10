@@ -1072,7 +1072,7 @@ _(ShortJsDoc.prototype).extend({
 			buffer.push(this.sources[file]);
 			// console.log('MAKER', this.maker.data)
 		}
-		this.maker.parseFile(buffer.join(''), 'ALL.js');
+		this.maker.parseFile(buffer.join('\n\n'), 'ALL.js');
 	}
 
 ,	buildSources: function buildSources(inputDir)

@@ -87,7 +87,7 @@ this["shortjsdoc"]["header"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<header class="main-header container-fluid">\n\n\t<span class="col-lg-4 col-md-4 col-sm-4 col-xs-12">\n\n\t\t<span class="dropdown">\n\t\t\t<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">\n\t\t\tshort-jsdoc demo\n\t\t\t<span class="caret"></span>\n\t\t\t</button>\n\t\t\t<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">\n\t\t\t\t<li role="presentation"><a role="menuitem" tabindex="-1" href="#index">Index</a></li>\n\t\t\t\t<li role="presentation" class="divider"></li>\n\t\t\t\t<li role="presentation"><a role="menuitem" tabindex="-1" href="https://github.com/cancerberoSgx/short-jsdoc">short-jsdoc home page</a></li>\n\t\t\t</ul>\n\t\t</span>\t\t\n\t</span>\n\n\t<span class="col-lg-8 col-md-8 col-sm-8 col-xs-12">\n\t\t<span class="main-search pull-right">\n\t\t\tSearch <input class="typeahead1">\n\t\t</span>\t\t\n\t</span>\n\n</header>';
+__p += '<header class="main-header container-fluid">\n\n\t<span class="col-lg-4 col-md-4 col-sm-4 col-xs-12">\n\n\t\t<span class="dropdown">\n\t\t\t<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">\n\t\t\tshort-jsdoc demo\n\t\t\t<span class="caret"></span>\n\t\t\t</button>\n\t\t\t<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">\n\t\t\t\t<li role="presentation"><a role="menuitem" tabindex="-1" href="#index">Index</a></li>\n\t\t\t\t<li role="presentation" class="divider"></li>\n\t\t\t\t<li role="presentation"><a role="menuitem" tabindex="-1" href="https://github.com/cancerberoSgx/short-jsdoc">short-jsdoc home page</a></li>\n\t\t\t</ul>\n\t\t</span>\t\t\n\t</span>\n\n\t<span class="col-lg-8 col-md-8 col-sm-8 col-xs-12">\n\t\t<span class="main-search pull-right">\n\t\t<a role="menuitem" tabindex="-1" href="#index">Index</a>\n\t\t\tSearch <input class="typeahead1">\n\t\t</span>\t\t\n\t</span>\n\n</header>';
 
 }
 return __p
@@ -211,11 +211,38 @@ __p += '<h2>Parse your code online!</h2>\n<p>Please paste your commeted code in 
 return __p
 };
 
+this["shortjsdoc"]["property"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+__p += '<h2>Property <a href="' +
+((__t = ( this.makeLink(this.jsdoc) )) == null ? '' : __t) +
+'">' +
+((__t = ( this.jsdoc.name)) == null ? '' : __t) +
+'</a></h2>\n\n<h3>Of class <a href="#class/' +
+((__t = ( this.jsdoc.ownerClass )) == null ? '' : __t) +
+'">\n\t' +
+((__t = ( this.simpleName(this.jsdoc.ownerClass) )) == null ? '' : __t) +
+'</a>\n</h3>\n\n';
+ if (this.jsdoc.text) { ;
+__p += '\n<div class="method-text">\n\t' +
+((__t = ( this.jsdoc.textHtml )) == null ? '' : __t) +
+'\n</div>\n';
+ } ;
+__p += '\n\n\n<h3 class="returns-type">Type</h3>\n' +
+((__t = ( this.printTypeAsString(this.jsdoc.type) )) == null ? '' : __t) +
+'\n\n\n<div data-type="sources"></div>';
+
+}
+return __p
+};
+
 this["shortjsdoc"]["sources"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '\n\n<h3>Sources <button data-type="goto-source" class="btn btn-link pull-right">goto def</button></h3>\n\n<pre class="prettyprint linenums">' +
+__p += '<h3>Sources <button data-type="goto-source" class="btn btn-link ">goto def</button></h3>\n\n<pre class="prettyprint linenums">' +
 __e( this.sourceSubset ) +
 '</pre>';
 

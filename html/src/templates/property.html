@@ -1,0 +1,18 @@
+<h2>Property <a href="<%= this.makeLink(this.jsdoc) %>"><%= this.jsdoc.name%></a></h2>
+
+<h3>Of class <a href="#class/<%= this.jsdoc.ownerClass %>">
+	<%= this.simpleName(this.jsdoc.ownerClass) %></a>
+</h3>
+
+<% if (this.jsdoc.text) { %>
+<div class="method-text">
+	<%= this.jsdoc.textHtml %>
+</div>
+<% } %>
+
+
+<h3 class="returns-type">Type</h3>
+<%= this.printTypeAsString(this.jsdoc.type) %>
+
+
+<div data-type="sources"></div>

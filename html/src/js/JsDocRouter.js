@@ -5,6 +5,7 @@ var JsDocRouter = Backbone.Router.extend({
 	,	'classHierarchy/:class': 'showClass'
 	,	'module/:module': 'showModule'
 	,	'method/:method': 'showMethod'
+	,	'property/:property': 'showProperty'
 
 	,	'index': 'showIndex'
 	,	'modules': 'showModules'
@@ -50,6 +51,11 @@ var JsDocRouter = Backbone.Router.extend({
 		this.showView(view); 
 	}
 
+,	showProperty: function(property)
+	{
+		var view = new PropertyView(this.application, property);
+		this.showView(view); 
+	}
 
 ,	showModules: function()
 	{

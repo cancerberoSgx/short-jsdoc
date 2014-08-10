@@ -18,6 +18,7 @@ describe("JsDocMaker", function()
 			maker.postProccess();
 			maker.postProccessBinding();
 			jsdoc = maker.data;
+			debugger;
 		});
 
 		it("init", function() 
