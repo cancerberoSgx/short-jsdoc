@@ -405,14 +405,14 @@ LIST_OF_NAMES
 (function(GLOBAL) 
 {
 
-//@class jsDocMaker
+//@class JsDocMaker
 //@constructor JsDocMaker
 var JsDocMaker = GLOBAL.JsDocMaker = function()
 {	
 	//@property {Object<String,String>} customNativeTypes name to url map that the user can modify to register new native types b givin its url.
 	this.customNativeTypes = this.customNativeTypes || {};
-
 	this.annotationRegexp = /(\s+@\w+)/gi;
+	this.parseUnitRegexp = /\s*@(\w+)\s*(\{[\w<>,]+\}){0,1}\s*([\w]+){0,1}(.*)\s*/; 
 }; 
 
 
@@ -470,16 +470,16 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 		// var a = (node.value || '').split(/((?:@class)|(?:@method)|(?:@param))/gi);
 		// var regex = /((?:@class)|(?:@method)|(?:@param))/gi; 
 		var regex = /((?:@class)|(?:@method)|(?:@property)|(?:@method))/gi; 
-		var a = self.splitAndPreserve(node.value || '', regex); 
+		var a = JsDocMaker.splitAndPreserve(node.value || '', regex); 
 		a = _(a).filter(function(v)  //delete empties and trim
 		{
-			return JsDocMaker.stringFullTrim(v);
+			return JsDocMaker.stringTrim(v);
 		});
 		
 		_(a).each(function(value)
 		{
 			//TODO: let the user mark some comment block somehow to let the parser to ignore it.			
-			var parsed_array = self.parseUnit(value);
+			var parsed_array = self.parseUnit(value, node);
 			_(parsed_array).each(function(parsed)
 			{
 				parsed.commentRange = node.range;
@@ -525,7 +525,6 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 				{
 					if(!currentMethod)
 					{
-						// debugger;
 						self.error('param before method: ', parsed);
 					}
 					else
@@ -543,11 +542,10 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 
 // @method {Unit} parseUnit parse a simple substring like '@annotation {Type} a text' into an object {annotation, type, text} object.
 // syntax: @method {String} methodName blabla @return {Number} blabla @param {Object} p1 blabla
-JsDocMaker.prototype.parseUnitRegexp = /\s*@(\w+)\s*(\{[\w<>,]+\}){0,1}\s*([\w]+){0,1}(.*)\s*/; 
-JsDocMaker.prototype.parseUnit = function(str)
+JsDocMaker.prototype.parseUnit = function(str, comment)
 {
 	// TODO: split str into major units and then do the parsing
-	var parsed = this.parseUnitSimple(str); 
+	var parsed = this.parseUnitSimple(str, comment); 
 	if(!parsed)
 	{
 		return null;
@@ -557,7 +555,7 @@ JsDocMaker.prototype.parseUnit = function(str)
 	{
 		var s = parsed.theRestString; 
 		var child;
-		while((child = this.parseUnitSimple(s)))
+		while((child = this.parseUnitSimple(s, comment)))
 		{
 			if(child.annotation === 'class') {
 				ret.push(child); 
@@ -575,30 +573,43 @@ JsDocMaker.prototype.parseUnit = function(str)
 }; 
 
 //@method parseUnitSimple
-JsDocMaker.prototype.parseUnitSimple = function(str) 
+JsDocMaker.prototype.parseUnitSimple = function(str, comment) 
 {	
 	if(!str)
 	{
 		return null;
 	}
-	str = JsDocMaker.stringFullTrim(str); 
-	var result = this.parseUnitRegexp.exec(str);
+	var result;
+
+	if(comment.type==='Line')
+	{
+		str = JsDocMaker.stringFullTrim(str); 
+		result = this.parseUnitRegexp.exec(str);
+	}
+	else
+	{
+		str = JsDocMaker.stringTrim(str); 
+		//TODO: I have to put this regexp inline here - if not the second time I call exec on the instance it won't match :-??
+		result = /\s*@(\w+)\s*(\{[\w<>,]+\}){0,1}\s*([\w]+){0,1}([.\s\w\W]*)/gmi.exec(str); 
+	}
+	
 	if(!result || result.length<4)
 	{
-		return null;  //TODO: notify error?
+		return null;  
 	}
 	var text = result[4] || '';
 		
-	var splitted = this.splitAndPreserve(text, this.annotationRegexp) || [''];  
+	var splitted = JsDocMaker.splitAndPreserve(text, this.annotationRegexp) || [''];  
 	text = splitted[0]; 
 	splitted.splice(0,1); 
-	return {
+	var ret = {
 		annotation: result[1]
 	,	type: result[2]
 	,	name: result[3]
-	,	text: JsDocMaker.stringFullTrim(text||'')
-	,	theRestString: splitted.join('')
+	,	text: JsDocMaker.stringTrim(text||'')
+	,	theRestString: JsDocMaker.stringTrim(splitted.join(''))
 	};
+	return ret;
 }; 
 
 // @method unifyLineComments unify adjacents Line comment nodes into one in the ns.syntax.coments generated after visiting. 
@@ -708,7 +719,7 @@ JsDocMaker.prototype.postProccessBinding = function()
 			//method.param property
 			var params = _(method.children||[]).filter(function(child)
 			{
-				child.text = JsDocMaker.stringFullTrim(child.text||''); 
+				child.text = JsDocMaker.stringTrim(child.text||''); 
 				return child.annotation === 'param'; 
 			}); 
 			method.params = params; 
@@ -728,7 +739,7 @@ JsDocMaker.prototype.postProccessBinding = function()
 			//method.returns property
 			var returns = _(method.children||[]).filter(function(child)
 			{
-				child.text = JsDocMaker.stringFullTrim(child.text||''); 
+				child.text = JsDocMaker.stringTrim(child.text||''); 
 				return child.annotation === 'returns' || child.annotation === 'return'; 
 			}); 
 			method.returns = returns.length ? returns[0] : {name:'',type:''};
@@ -951,7 +962,8 @@ JsDocMaker.prototype.installModifiers = function(node)
 // @method splitAndPreserve search for given regexp and split the given string but preserving the matches
 // @param {Regexp} regexp must contain a capturing group (like /(\s+@\w+)/gi)
 // @return {Array of string}
-JsDocMaker.prototype.splitAndPreserve = function(string, replace)
+// @static
+JsDocMaker.splitAndPreserve = function(string, replace)
 {
 	string = string || '';
 	var marker = '_%_%_';
@@ -963,7 +975,7 @@ JsDocMaker.prototype.splitAndPreserve = function(string, replace)
 	splitted = splitted.split(marker);
 	return splitted; 
 }; 
-
+//@mmethod error @param {String}msg
 JsDocMaker.prototype.error = function(msg)
 {
 	console.error('Error detected: ' + msg); 
@@ -974,6 +986,24 @@ JsDocMaker.prototype.error = function(msg)
 JsDocMaker.stringFullTrim = function(s)
 {
 	return (s||'').replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,'').replace(/\s+/g,' ');
+};
+//@method stringTrim @param {String} s @static
+JsDocMaker.stringTrim = function(str)
+{
+	var whitespace = ' \n\r\t\f\x0b\xa0\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u200b\u2028\u2029\u3000';
+	for (var i = 0; i < str.length; i++) {
+		if (whitespace.indexOf(str.charAt(i)) === -1) {
+			str = str.substring(i);
+			break;
+		}
+	}
+	for (i = str.length - 1; i >= 0; i--) {
+		if (whitespace.indexOf(str.charAt(i)) === -1) {
+			str = str.substring(0, i + 1);
+			break;
+		}
+	}
+	return whitespace.indexOf(str.charAt(0)) === -1 ? str : '';
 };
 //@method stringEndsWith @static
 JsDocMaker.stringEndsWith = function(str, suffix) 
