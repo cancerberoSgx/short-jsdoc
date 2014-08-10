@@ -103,3 +103,9 @@
   margin: 0;
 }
 */
+.linenums > li {
+  margin-left: 15px;
+}
+.selectedJsDocLine {
+  border: 3px solid pink;
+}

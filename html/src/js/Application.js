@@ -45,18 +45,13 @@ _(Application.prototype).extend({
 ,	showView: function(view)
 	{
 		this.currentView = view;
-		var template = this.templates[view.template]; 
-		if(template)
-		{			
-			var html = template.apply(view, []); 
-			view.$el.html(html);
-			this.$containerEl.empty().append(view.$el); 
-		}
+		view.renderIn(this.$containerEl);
+
+		
+
 		this.updateHeader();
-		if(typeof prettyPrint !== 'undefined') 
-		{
-			prettyPrint(); 
-		}
+		
+		view.afterRender(); 
 	}
 
 ,	updateHeader: function()
@@ -67,6 +62,7 @@ _(Application.prototype).extend({
 			this.headerView.render();
 		}
 	}
+	
 ,	refreshWithNewModel: function(data)
 	{
 		this.data = data; 

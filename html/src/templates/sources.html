@@ -1,6 +1,5 @@
-<h3>Sources</h3>
-<% 
-var source = this.application.maker.data.source; 
-var sourceSubset = String.prototype.substring.apply(source, this.jsdoc.range);
-%>
-<pre class="prettyprint lang-js"><%- sourceSubset%></pre>
+
+
+<h3>Sources <button data-type="goto-source" class="btn btn-link pull-right">goto def</button></h3>
+
+<pre class="prettyprint linenums"><%- this.sourceSubset %></pre>

@@ -9,4 +9,22 @@ var AbstractView = Backbone.View.extend({
 		this.application = application;
 		// this.resourceNotFound = false;
 	}
+
+,	renderIn: function($parent)
+	{
+		var template = this.application.templates[this.template]; 
+		if(template)
+		{			
+			var html = template.apply(this, []); 
+			this.$el.html(html);
+			$parent.empty().append(this.$el); 
+		}
+		this.afterRender();
+	}
+
+	// @method afterRender called b the application jsut after this view is shown.
+,	afterRender: function()
+	{
+
+	}
 });

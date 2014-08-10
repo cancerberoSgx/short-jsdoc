@@ -18,10 +18,12 @@ var MethodView = AbstractView.extend({
 			return;
 		}
 
-		this.jsdoc.textHtml = this.getTextHtml(this.jsdoc.text);
-		
+		this.jsdoc.textHtml = this.getTextHtml(this.jsdoc);		
 	}
 
-
+,	afterRender: function()
+	{
+		this.renderSource(this.jsdoc, this.$('[data-type="sources"]')); 
+	}
 });
 

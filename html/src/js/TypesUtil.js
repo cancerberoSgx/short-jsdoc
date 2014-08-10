@@ -77,13 +77,27 @@ _(AbstractView.prototype).extend({
 	}
 
 	//@method getTextHtml depends on lib/marked/
-,	getTextHtml: function(text)
+,	getTextHtml: function(node)
 	{
-		if(!text)
+		if(!node || !node.text)
 		{
 			return '';
 		}
-		if(this.application.textFormat === 'markdown')
+		var text = node.text
+		,	type = this.application.textFormat
+		,	html = _(node.children).find(function(c){return c.annotation==='html'; })
+		,	markdown = _(node.children).find(function(c){return c.annotation==='markdown'; });
+		
+		if(html)
+		{
+			type = 'html'; 
+		}
+		if(markdown)
+		{
+			type = 'markdown'; 
+		}
+
+		if(type === 'markdown')
 		{
 			return marked(text); 
 		}
@@ -93,5 +107,10 @@ _(AbstractView.prototype).extend({
 		}
 	}
 
-
+,	renderSource: function(jsdoc, $container)
+	{
+		var view = new SourcesView(this.application, jsdoc); 
+		view.renderIn($container); 
+		// this.application.templates.sources.apply(this, arguments)	
+	}
 });

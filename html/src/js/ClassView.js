@@ -32,4 +32,8 @@ var ClassView = AbstractView.extend({
 		return hierarchy;
 	}
 
+,	afterRender: function()
+	{
+		this.renderSource(this.jsdoc, this.$('[data-type="sources"]')); 
+	}
 });
