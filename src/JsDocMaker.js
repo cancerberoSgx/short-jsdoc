@@ -92,20 +92,10 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 
 				if(parsed.annotation==='class') //allow classes without modules - asignated to a defulat module
 				{
-					// var class_module = _(parsed.children).find(function(c)
-					// {
-					// 	return c.annotation==='module'; 
-					// });
-					// if (class_module)
-					// {
-					// 	currentModule = class_module; 
-					// }
-
 					if (!currentModule)
 					{
 						currentModule = {name: JsDocMaker.DEFAULT_MODULE};
 					}
-
 					parsed.module = currentModule; 
 					parsed.absoluteName = currentModule.name + JsDocMaker.ABSOLUTE_NAME_SEPARATOR + parsed.name;
 
@@ -134,18 +124,6 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 				{					
 					currentModule = parsed;
 					self.data.modules[currentModule.name] = self.data.modules[currentModule.name] || currentModule; 
-					// if(!self.data.modules[currentModule.name])
-					// {
-					// 	self.data.modules[currentModule.name]
-					// }
-					// debugger;
-					// if(currentClass && currentClass.absoluteName.indexOf(JsDocMaker.DEFAULT_MODULE)!==-1)
-					// {
-					// 	currentClass.module = currentModule;
-					// 	delete self.data.classes[currentClass.absoluteName];					
-					// 	currentClass.absoluteName = currentModule.name + JsDocMaker.ABSOLUTE_NAME_SEPARATOR + parsed.name;
-					// 	self.data.classes[currentClass.absoluteName] = currentClass; 
-					// }
 				}
 				else if(parsed.annotation === 'param' && currentClass)
 				{
@@ -218,7 +196,6 @@ JsDocMaker.prototype.parseUnitSimple = function(str, comment)
 		//TODO: I have to put this regexp inline here - if not the second time I call exec on the instance it won't match :-??
 		result = /\s*@(\w+)\s*(\{[\w<>,]+\}){0,1}\s*([\w]+){0,1}([.\s\w\W]*)/gmi.exec(str); 
 	}
-	
 	if(!result || result.length<4)
 	{
 		return null;  
@@ -242,16 +219,24 @@ JsDocMaker.prototype.parseUnitSimple = function(str, comment)
 JsDocMaker.prototype.unifyLineComments = function()
 {
 	var i = 0;
+	
+	//@property {String} lineCommentSeparator used to separate each Line comment type text
+	this.lineCommentSeparator = this.lineCommentSeparator || ' '; 
+
 	while(i < this.comments.length - 1)
 	{
 		var c = this.comments[i]
 		,	next = this.comments[i+1]; 
 		if(c.type==='Line' && next.type==='Line')
 		{
-			c.value += ' ' + next.value; 
+			c.value += ' ' + this.lineCommentSeparator + ' ' + next.value; 
+			// c.value += ' ' + next.value; //this works!
 			this.comments.splice(i+1, 1); 
 		}
-		i++;
+		else
+		{
+			i++;
+		}
 	}
 }; 
 

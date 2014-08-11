@@ -12,3 +12,6 @@
  * support two types of format for returns types, @return and @method {ReturnType} methodName
  * when navigating to class/ it will show the classes view. same for modules .index.html shoulod print those with links
  * TODO: let the user mark some comment block somehow to let the parser to ignore it.
+ * issue, this text doesnt work:
+ //@class A
+ //Some text for class A

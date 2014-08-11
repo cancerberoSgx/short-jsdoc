@@ -32,8 +32,8 @@
                     "name": "name",
                     "text": "",
                     "commentRange": [
-                        66,
-                        91
+                        0,
+                        33
                     ],
                     "fileName": "ALL.js"
                 },
@@ -43,8 +43,8 @@
                     "name": "description",
                     "text": "",
                     "commentRange": [
-                        66,
-                        91
+                        0,
+                        33
                     ],
                     "fileName": "ALL.js"
                 },
@@ -54,8 +54,8 @@
                     "name": "owners",
                     "text": "the owners, a map by owner id",
                     "commentRange": [
-                        125,
-                        195
+                        0,
+                        33
                     ],
                     "fileName": "ALL.js"
                 }
@@ -66,8 +66,8 @@
             "name": "ObjectPool",
             "text": "",
             "commentRange": [
-                125,
-                195
+                0,
+                33
             ],
             "fileName": "ALL.js",
             "module": {
@@ -102,8 +102,8 @@
                         }
                     ],
                     "commentRange": [
-                        267,
-                        359
+                        0,
+                        33
                     ],
                     "fileName": "ALL.js"
                 },
@@ -112,8 +112,8 @@
                     "name": "getOwners",
                     "text": "this method is useful for *blabla* blabla _blabla_ bab",
                     "commentRange": [
-                        267,
-                        359
+                        0,
+                        33
                     ],
                     "fileName": "ALL.js",
                     "params": {
@@ -266,8 +266,8 @@
                 }
             ],
             "commentRange": [
-                782,
-                813
+                699,
+                742
             ],
             "fileName": "ALL.js",
             "module": {
@@ -310,8 +310,8 @@
                         }
                     ],
                     "commentRange": [
-                        782,
-                        813
+                        699,
+                        742
                     ],
                     "fileName": "ALL.js"
                 }
@@ -330,8 +330,8 @@
                 }
             ],
             "commentRange": [
-                879,
-                910
+                699,
+                742
             ],
             "fileName": "ALL.js",
             "module": {
@@ -367,8 +367,8 @@
                         }
                     ],
                     "commentRange": [
-                        879,
-                        910
+                        699,
+                        742
                     ],
                     "fileName": "ALL.js"
                 },
@@ -462,8 +462,8 @@
                         }
                     ],
                     "commentRange": [
-                        1398,
-                        1459
+                        1333,
+                        1367
                     ],
                     "fileName": "ALL.js"
                 }
@@ -482,8 +482,8 @@
                 }
             ],
             "commentRange": [
-                1398,
-                1459
+                1333,
+                1367
             ],
             "fileName": "ALL.js",
             "module": {
@@ -504,8 +504,8 @@
                     "name": "isBoba",
                     "text": "en general devuelve true",
                     "commentRange": [
-                        1492,
-                        1546
+                        1333,
+                        1367
                     ],
                     "fileName": "ALL.js"
                 }
@@ -516,8 +516,8 @@
             "name": "Explicacion",
             "text": "",
             "commentRange": [
-                1492,
-                1546
+                1333,
+                1367
             ],
             "fileName": "ALL.js",
             "module": {
@@ -538,8 +538,8 @@
                     "name": "sabiondo",
                     "text": "",
                     "commentRange": [
-                        1570,
-                        1601
+                        1333,
+                        1367
                     ],
                     "fileName": "ALL.js"
                 },
@@ -549,8 +549,8 @@
                     "name": "burro",
                     "text": "",
                     "commentRange": [
-                        1570,
-                        1601
+                        1333,
+                        1367
                     ],
                     "fileName": "ALL.js"
                 },
@@ -560,8 +560,8 @@
                     "name": "entendimiento",
                     "text": "",
                     "commentRange": [
-                        1630,
-                        1665
+                        1333,
+                        1367
                     ],
                     "fileName": "ALL.js"
                 }

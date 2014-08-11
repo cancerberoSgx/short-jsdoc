@@ -131,15 +131,11 @@ describe("JsDocMaker", function()
 		beforeEach(function() 
 		{
 			var code = 
+				'//@module office' + '\n' +	
 
-				'//@module office' + '\n' +		
-				// '//@class Machine' + '\n' +
-				'//@class Machine TODO some text documenting the machine here please' + '\n' +
-
-				// '//@module office' + '\n' +	
-				// '//@class Machine TODO some text documenting the machine here please @module office' + '\n' +
-				
-
+				// '//@class Machine TODO some text documenting the machine here please' + '\n' +
+				'//@class Machine' + '\n' +
+				'//TODO some text documenting the machine here please' + '\n' +
 
 				'//@method calculate @param {Object<String,Array<HomeFinance>>} finances' + '\n' + 
 				'//@property {Bag<Eye>} eye' + '\n' +
@@ -213,11 +209,35 @@ describe("JsDocMaker", function()
 			expect(Apple.text.indexOf('\n\n\tvar a = {a:1};')>0).toBe(true); 
 			
 		});
+	});
 
-		it("classes and modules", function() 
+	describe("lineCommentSeparator configurable property", function() 
+	{
+		var jsdoc, maker, C1; 
+
+		beforeEach(function() 
 		{
+			var code = 
+				'//@module m1'+'\n'+
+				'//@class C1'+'\n'+
+				'//Some C1 class text'+'\n'+
+				'//Some other C1 class text'+'\n'+
+				'';
+			maker = new JsDocMaker();
+			maker.lineCommentSeparator = '888898888';
+			maker.parseFile(code, 'file1');
+			maker.postProccess();
+			maker.postProccessBinding();
+			jsdoc = maker.data;
+		});
+
+		it("user can replace the strings between adjacent Line Comments", function() 
+		{
+			C1 = jsdoc.classes['m1.C1']; 
+			expect(C1.text).toBe("888898888 Some C1 class text 888898888 Some other C1 class text");
 		});
 	});
+
 
 });
 
