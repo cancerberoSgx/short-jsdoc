@@ -403,8 +403,11 @@ LIST_OF_NAMES
 (function(GLOBAL) 
 {
 
-//@class JsDocMaker
-//Main jsdoc parser utility. It accepts a valid js source code String
+// @class JsDocMaker
+// Main jsdoc parser utility. It accepts a valid js source code String and returns a JavaScript object with a jsdoc AST, this is an object
+// with classes and modules array that users can use to easily access jsdocs information, for example, parsed.classes.Apple.methods.getColor
+// use the parseFile method for this! This will return the AST, if you want to perform more enrichment and type binding, then use 
+// postProccess and postProccessBinding methods after.
 //@constructor JsDocMaker
 var JsDocMaker = GLOBAL.JsDocMaker = function()
 {	
@@ -468,7 +471,7 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 	{
 		// var a = (node.value || '').split(/((?:@class)|(?:@method)|(?:@param))/gi);
 		// var regex = /((?:@class)|(?:@method)|(?:@param))/gi; 
-		var regex = /((?:@class)|(?:@method)|(?:@property)|(?:@method))/gi; 
+		var regex = /((?:@class)|(?:@method)|(?:@property)|(?:@method)|(?:@module))/gi; 
 		var a = JsDocMaker.splitAndPreserve(node.value || '', regex); 
 		a = _(a).filter(function(v)  //delete empties and trim
 		{
@@ -486,16 +489,17 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 
 				delete parsed.theRestString; 
 
-				if(parsed.annotation==='class')
+				if(parsed.annotation==='class') //allow classes without modules - asignated to a defulat module
 				{
-					var class_module = _(parsed.children).find(function(c)
-					{
-						return c.annotation==='module'; 
-					});
-					if (class_module)
-					{
-						currentModule = class_module; 
-					}
+					// var class_module = _(parsed.children).find(function(c)
+					// {
+					// 	return c.annotation==='module'; 
+					// });
+					// if (class_module)
+					// {
+					// 	currentModule = class_module; 
+					// }
+
 					if (!currentModule)
 					{
 						currentModule = {name: JsDocMaker.DEFAULT_MODULE};
@@ -519,11 +523,28 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 				{
 					currentClass.properties = currentClass.properties || {};
 					currentClass.properties[parsed.name] = parsed;
-				}				
+				}
 				else if(parsed.annotation === 'event' && currentClass)
 				{
 					currentClass.events = currentClass.events || {};
 					currentClass.properties[parsed.name] = parsed;
+				}				
+				else if(parsed.annotation === 'module')
+				{					
+					currentModule = parsed;
+					self.data.modules[currentModule.name] = self.data.modules[currentModule.name] || currentModule; 
+					// if(!self.data.modules[currentModule.name])
+					// {
+					// 	self.data.modules[currentModule.name]
+					// }
+					// debugger;
+					// if(currentClass && currentClass.absoluteName.indexOf(JsDocMaker.DEFAULT_MODULE)!==-1)
+					// {
+					// 	currentClass.module = currentModule;
+					// 	delete self.data.classes[currentClass.absoluteName];					
+					// 	currentClass.absoluteName = currentModule.name + JsDocMaker.ABSOLUTE_NAME_SEPARATOR + parsed.name;
+					// 	self.data.classes[currentClass.absoluteName] = currentClass; 
+					// }
 				}
 				else if(parsed.annotation === 'param' && currentClass)
 				{

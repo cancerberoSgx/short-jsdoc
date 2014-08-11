@@ -8,7 +8,9 @@ describe("JsDocMaker", function()
 		{
 			var code = 
 				'//@class Lemon'+'\n'+
-				'//@class Apple @extend Fruit @module livingThings'+'\n'+
+				'//@module livingThings'+'\n'+
+				
+				'//@class Apple @extend Fruit '+'\n'+
 				'/*@method beEatenBy apples have this privilege @param {Mouth} mouth the mouth to be used @param {Int} amount @return {String} the bla*/' + '\n' +
 				'//@property {Color} color the main color of this fruit'+'\n'+
 				'//@class Lion the lion class is on living things'+'\n'+
@@ -18,12 +20,11 @@ describe("JsDocMaker", function()
 			maker.postProccess();
 			maker.postProccessBinding();
 			jsdoc = maker.data;
-			debugger;
 		});
 
 		it("init", function() 
 		{
-			Apple = jsdoc.classes['livingThings.Apple']; 
+			Apple = jsdoc.classes['livingThings.Apple'];
 			expect(Apple).toBeDefined();
 			
 			Lion = jsdoc.classes['livingThings.Lion']; 
@@ -36,7 +37,6 @@ describe("JsDocMaker", function()
 		it("classes and modules", function() 
 		{
 			expect(Lemon.extends.name).toBe('Object');
-
 			expect(jsdoc.modules.livingThings).toBeDefined();
 
 			expect(Apple.module.name).toBe('livingThings');
@@ -89,7 +89,8 @@ describe("JsDocMaker", function()
 		beforeEach(function() 
 		{
 			var code = 
-				'//@class Animal @module livingThings2' + '\n' +
+				'//@module livingThings2' + '\n' +
+				'//@class Animal ' + '\n' +
 				'//@method run @param {int} amount in kilometers @final @static' + '\n' + 
 				'//@class Monkey @extend Animal @module livingThings2' + '\n' +
 				'//@method eat way of feeding' + '\n' +
@@ -130,11 +131,20 @@ describe("JsDocMaker", function()
 		beforeEach(function() 
 		{
 			var code = 
-				'//@class Machine @module office' + '\n' +
+
+				'//@module office' + '\n' +		
+				// '//@class Machine' + '\n' +
+				'//@class Machine TODO some text documenting the machine here please' + '\n' +
+
+				// '//@module office' + '\n' +	
+				// '//@class Machine TODO some text documenting the machine here please @module office' + '\n' +
+				
+
+
 				'//@method calculate @param {Object<String,Array<HomeFinance>>} finances' + '\n' + 
 				'//@property {Bag<Eye>} eye' + '\n' +
-				'//@class Eye a reutilizable eye' + '\n' +
-				''; 
+				'//@class Eye a reutilizable eye' + '\n' +	
+				'';
 			maker = new JsDocMaker();
 
 			//before parsing we register the custom native types Bag and HomeFinance. Just give an url.
@@ -152,6 +162,8 @@ describe("JsDocMaker", function()
 		it("custom natives should be binded", function() 
 		{
 			var Machine = jsdoc.classes['office.Machine'];
+			// debugger;
+			expect(Machine.text).toBe('TODO some text documenting the machine here please');
 			var param1 = Machine.methods.calculate.params[0].type.params[1].params[0];
 			expect(param1.name).toBe('HomeFinance');
 			expect(param1.nativeTypeUrl).toBe('http://mylang.com/api/HomeFinance');
@@ -196,7 +208,7 @@ describe("JsDocMaker", function()
 		{
 			Apple = jsdoc.classes['__DefaultModule.Apple']; 
 			expect(Apple).toBeDefined();
-			expect(Apple.text.indexOf('\n\tsome')>0).toBe(true); 			
+			expect(Apple.text.indexOf('\n\tsome')>0).toBe(true);
 			expect(Apple.text.indexOf('\n\t\tindentation')>0).toBe(true); 
 			expect(Apple.text.indexOf('\n\n\tvar a = {a:1};')>0).toBe(true); 
 			

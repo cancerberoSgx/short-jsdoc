@@ -1,23 +1,19 @@
 {
     "source": "//@class BaseObject @module ideal\n//@property {Date} creationDate\n//@property {String} name\n//@property {String} description\n//@property {Object<String,User>} owners the owners, a map by owner id\nfunction BaseObject(){};\n\n//@class ObjectPool\nfunction ObjectPool(){};\n//@method loadObjects @param {Array<String>} objects_ids @return {Object<String,BaseObject>}\nObjectPool.prototype.getOwners = function(objects_ids){return null;}\n//@method getOwners this method is useful for *blabla* blabla _blabla_ bab\n/*@param {Array<String>} objects_ids @return {Object<String,Object<String,User>>}*/\n\n//@class Thing @extends BaseObject\n//@property {Number} importance\n\n/** @class Action @extends BaseObject */\n\n//@class Living @module life @extends Thing\n//@method breath @param {Number} size\n\n//@class Animal @extends Living\n//@method eat @param {Array<Food>} food @return {Array<Energy>}\n\n//@class Person @extends Animal\n//@method walk @return {Action}\n/*@method crossStreet\n\nThis try to be a markdown [text](http://google.com)\n\nAnother paragraph\n\n\tvar someMarkup = {\n\t\ta: 1\n\t,\tn: 2\n\t,\tg: function (e)\n\t\t{\n\t\t\treturn 1;\n\t\t}\n\t};\n\nand some final text with a list\n\n1. First ordered list item\n2. Another item\n  * Unordered sub-list. \n1. Actual numbers don't matter, just that it's a number\n  1. Ordered sub-list\n  2. hello\n4. And another item.\n*/\n\n// @class Persona @module problem1\n\n// @class Yo @extend Persona\n// @method explicar @param {Nati} nati @returns {Explicacion}\n\n// @class Nati @extend Persona\n// @property {boolean} isBoba en general devuelve true\n\n// @class Explicacion\n// @property {Persona} sabiondo\n// @property {Persona}burro\n// @property {Number} entendimiento\n\nvar a = 1;",
     "classes": {
-        "ideal.BaseObject": {
+        "__DefaultModule.BaseObject": {
             "annotation": "class",
             "name": "BaseObject",
             "text": "",
-            "children": [],
             "commentRange": [
                 0,
                 33
             ],
             "fileName": "ALL.js",
             "module": {
-                "annotation": "module",
-                "name": "ideal",
-                "text": "",
-                "theRestString": ""
+                "name": "__DefaultModule"
             },
-            "absoluteName": "ideal.BaseObject",
+            "absoluteName": "__DefaultModule.BaseObject",
             "properties": {
                 "creationDate": {
                     "annotation": "property",
@@ -78,7 +74,11 @@
                 "annotation": "module",
                 "name": "ideal",
                 "text": "",
-                "theRestString": ""
+                "commentRange": [
+                    0,
+                    33
+                ],
+                "fileName": "ALL.js"
             },
             "absoluteName": "ideal.ObjectPool",
             "methods": {
@@ -161,7 +161,11 @@
                 "annotation": "module",
                 "name": "ideal",
                 "text": "",
-                "theRestString": ""
+                "commentRange": [
+                    0,
+                    33
+                ],
+                "fileName": "ALL.js"
             },
             "absoluteName": "ideal.Thing",
             "properties": {
@@ -199,22 +203,18 @@
                 "annotation": "module",
                 "name": "ideal",
                 "text": "",
-                "theRestString": ""
+                "commentRange": [
+                    0,
+                    33
+                ],
+                "fileName": "ALL.js"
             },
             "absoluteName": "ideal.Action"
         },
-        "life.Living": {
+        "ideal.Living": {
             "annotation": "class",
             "name": "Living",
             "text": "",
-            "children": [
-                {
-                    "annotation": "extends",
-                    "name": "Thing",
-                    "text": "",
-                    "theRestString": ""
-                }
-            ],
             "commentRange": [
                 699,
                 742
@@ -222,11 +222,15 @@
             "fileName": "ALL.js",
             "module": {
                 "annotation": "module",
-                "name": "life",
+                "name": "ideal",
                 "text": "",
-                "theRestString": "@extends Thing"
+                "commentRange": [
+                    0,
+                    33
+                ],
+                "fileName": "ALL.js"
             },
-            "absoluteName": "life.Living",
+            "absoluteName": "ideal.Living",
             "methods": {
                 "breath": {
                     "annotation": "method",
@@ -270,7 +274,19 @@
                 "annotation": "module",
                 "name": "life",
                 "text": "",
-                "theRestString": "@extends Thing"
+                "children": [
+                    {
+                        "annotation": "extends",
+                        "name": "Thing",
+                        "text": "",
+                        "theRestString": ""
+                    }
+                ],
+                "commentRange": [
+                    699,
+                    742
+                ],
+                "fileName": "ALL.js"
             },
             "absoluteName": "life.Animal",
             "methods": {
@@ -322,7 +338,19 @@
                 "annotation": "module",
                 "name": "life",
                 "text": "",
-                "theRestString": "@extends Thing"
+                "children": [
+                    {
+                        "annotation": "extends",
+                        "name": "Thing",
+                        "text": "",
+                        "theRestString": ""
+                    }
+                ],
+                "commentRange": [
+                    699,
+                    742
+                ],
+                "fileName": "ALL.js"
             },
             "absoluteName": "life.Person",
             "methods": {
@@ -356,11 +384,10 @@
                 }
             }
         },
-        "problem1.Persona": {
+        "life.Persona": {
             "annotation": "class",
             "name": "Persona",
             "text": "",
-            "children": [],
             "commentRange": [
                 1333,
                 1367
@@ -368,11 +395,23 @@
             "fileName": "ALL.js",
             "module": {
                 "annotation": "module",
-                "name": "problem1",
+                "name": "life",
                 "text": "",
-                "theRestString": ""
+                "children": [
+                    {
+                        "annotation": "extends",
+                        "name": "Thing",
+                        "text": "",
+                        "theRestString": ""
+                    }
+                ],
+                "commentRange": [
+                    699,
+                    742
+                ],
+                "fileName": "ALL.js"
             },
-            "absoluteName": "problem1.Persona"
+            "absoluteName": "life.Persona"
         },
         "problem1.Yo": {
             "annotation": "class",
@@ -395,7 +434,11 @@
                 "annotation": "module",
                 "name": "problem1",
                 "text": "",
-                "theRestString": ""
+                "commentRange": [
+                    1333,
+                    1367
+                ],
+                "fileName": "ALL.js"
             },
             "absoluteName": "problem1.Yo",
             "methods": {
@@ -447,7 +490,11 @@
                 "annotation": "module",
                 "name": "problem1",
                 "text": "",
-                "theRestString": ""
+                "commentRange": [
+                    1333,
+                    1367
+                ],
+                "fileName": "ALL.js"
             },
             "absoluteName": "problem1.Nati",
             "properties": {
@@ -477,7 +524,11 @@
                 "annotation": "module",
                 "name": "problem1",
                 "text": "",
-                "theRestString": ""
+                "commentRange": [
+                    1333,
+                    1367
+                ],
+                "fileName": "ALL.js"
             },
             "absoluteName": "problem1.Explicacion",
             "properties": {
@@ -522,19 +573,39 @@
             "annotation": "module",
             "name": "ideal",
             "text": "",
-            "theRestString": ""
+            "commentRange": [
+                0,
+                33
+            ],
+            "fileName": "ALL.js"
         },
         "life": {
             "annotation": "module",
             "name": "life",
             "text": "",
-            "theRestString": "@extends Thing"
+            "children": [
+                {
+                    "annotation": "extends",
+                    "name": "Thing",
+                    "text": "",
+                    "theRestString": ""
+                }
+            ],
+            "commentRange": [
+                699,
+                742
+            ],
+            "fileName": "ALL.js"
         },
         "problem1": {
             "annotation": "module",
             "name": "problem1",
             "text": "",
-            "theRestString": ""
+            "commentRange": [
+                1333,
+                1367
+            ],
+            "fileName": "ALL.js"
         }
     }
 }
