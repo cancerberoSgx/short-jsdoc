@@ -16,14 +16,16 @@ var Application = function(data)
 	this.data = data; 
 
 	this.maker = new JsDocMaker();
-	this.maker.data=data;
+	this.maker.data = data;
 	this.maker.postProccessBinding();
 
-	if(jQuery('#mainHeader').size()===0)
-	{
-		jQuery('body').append('<div id="mainHeader"></div>'); 
-	}
-	this.$mainHeader = jQuery('#mainHeader'); 
+	// jQuery('body').addClass('container-fluid');
+
+	// if(jQuery('#mainHeader').size()===0)
+	// {
+	// 	jQuery('body').append('<div id="mainHeader"></div>'); 
+	// }
+	// this.$mainHeader = jQuery('#mainHeader'); 
 
 	if(jQuery('#mainContainer').size()===0)
 	{
@@ -44,23 +46,11 @@ _(Application.prototype).extend({
 
 ,	showView: function(view)
 	{
+		this.applicationView = this.applicationView || new ApplicationView(this); 
 		this.currentView = view;
-		view.renderIn(this.$containerEl);
-
-		
-
-		this.updateHeader();
-		
-		view.afterRender(); 
-	}
-
-,	updateHeader: function()
-	{
-		if(!this.headerView)
-		{
-			this.headerView = new HeaderView(this); 
-			this.headerView.render();
-		}
+		this.$containerEl.empty();
+		this.applicationView.renderIn(this.$containerEl);
+		// view.afterRender(); 
 	}
 	
 ,	refreshWithNewModel: function(data)

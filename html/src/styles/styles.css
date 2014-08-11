@@ -109,3 +109,6 @@
 .selectedJsDocLine {
   border: 3px solid pink;
 }
+.row {
+  margin-left: 0;
+}

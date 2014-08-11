@@ -1,12 +1,11 @@
 /*jshint laxcomma:true, evil:true*/
 
-//this is a js-indentator implementation for extracting jsdocs information 
-//extract comments and use the postRender method to only dump jsdoc related information
 
 (function(GLOBAL) 
 {
 
 //@class JsDocMaker
+//Main jsdoc parser utility. It accepts a valid js source code String
 //@constructor JsDocMaker
 var JsDocMaker = GLOBAL.JsDocMaker = function()
 {	
@@ -120,6 +119,11 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 				else if(parsed.annotation === 'property' && currentClass)
 				{
 					currentClass.properties = currentClass.properties || {};
+					currentClass.properties[parsed.name] = parsed;
+				}				
+				else if(parsed.annotation === 'event' && currentClass)
+				{
+					currentClass.events = currentClass.events || {};
 					currentClass.properties[parsed.name] = parsed;
 				}
 				else if(parsed.annotation === 'param' && currentClass)

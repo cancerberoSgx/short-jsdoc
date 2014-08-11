@@ -9,13 +9,14 @@ var HeaderView = AbstractView.extend({
 		this.application = application;
 	}
 	
-,	render: function()
+,	renderIn: function()
 	{
-		var template = this.application.templates[this.template]; 
-
-		var html = template.apply(this, []); 
-		this.$el.html(html);
-		this.application.$mainHeader.empty().append(this.$el); 
+		AbstractView.prototype.renderIn.apply(this, arguments); 
+		
+		// var template = this.application.templates[this.template]; 
+		// var html = template.apply(this, []); 
+		// this.$el.html(html);
+		// this.application.$mainHeader.empty().append(this.$el); 
 
 		this.installTypeAhead();
 	}

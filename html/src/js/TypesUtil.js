@@ -23,6 +23,10 @@ _(AbstractView.prototype).extend({
 	//@method makeLink @param {boolean} htmlAnchors will output anchor elements html
 ,	makeLink: function(node, htmlAnchors)
 	{
+		// if (!node || !node.type) // no type for this node. This isn't undefined ! This means we just simply doesn't have the information.
+		// {
+		// 	return '';
+		// }
 		var s = htmlAnchors?'<a href="':'';
 		if(node.annotation==='method')
 		{			
@@ -40,6 +44,7 @@ _(AbstractView.prototype).extend({
 		s += htmlAnchors?('">'+node.name+'</a>'):'';
 		return s;
 	}
+	
 	//@method printType @param {Object}context
 ,	printType: function(context)
 	{

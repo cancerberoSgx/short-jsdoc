@@ -1,7 +1,7 @@
 // @class Persona @module problem1
 
 // @class Yo @extend Persona
-// @method explicar @param {Nati} nati @returns Explicacion
+// @method explicar @param {Nati} nati @returns {Explicacion}
 
 // @class Nati @extend Persona
 // @property {boolean} isBoba en general devuelve true
