@@ -471,7 +471,7 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 	{
 		// var a = (node.value || '').split(/((?:@class)|(?:@method)|(?:@param))/gi);
 		// var regex = /((?:@class)|(?:@method)|(?:@param))/gi; 
-		var regex = /((?:@class)|(?:@method)|(?:@property)|(?:@method)|(?:@module))/gi; 
+		var regex = /((?:@class)|(?:@method)|(?:@property)|(?:@method)|(?:@module)|(?:@event)|(?:@constructor))/gi; 
 		var a = JsDocMaker.splitAndPreserve(node.value || '', regex); 
 		a = _(a).filter(function(v)  //delete empties and trim
 		{
@@ -517,7 +517,7 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 				else if(parsed.annotation === 'event' && currentClass)
 				{
 					currentClass.events = currentClass.events || {};
-					currentClass.properties[parsed.name] = parsed;
+					currentClass.events[parsed.name] = parsed;
 				}				
 				else if(parsed.annotation === 'module')
 				{					

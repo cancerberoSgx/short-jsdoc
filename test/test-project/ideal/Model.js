@@ -1,4 +1,5 @@
-//@class BaseObject @module ideal
+//@module ideal
+//@class BaseObject 
 //@property {Date} creationDate
 //@property {String} name
 //@property {String} description
@@ -11,6 +12,8 @@ function ObjectPool(){};
 ObjectPool.prototype.getOwners = function(objects_ids){return null;}
 //@method getOwners this method is useful for *blabla* blabla _blabla_ bab
 /*@param {Array<String>} objects_ids @return {Object<String,Object<String,User>>}*/
+
+//@event objectCreated event fired when an object is created in this pool.
 
 //@class Thing @extends BaseObject
 //@property {Number} importance

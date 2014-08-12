@@ -14,6 +14,7 @@ describe("JsDocMaker", function()
 				'/*@method beEatenBy apples have this privilege @param {Mouth} mouth the mouth to be used @param {Int} amount @return {String} the bla*/' + '\n' +
 				'//@property {Color} color the main color of this fruit'+'\n'+
 				'//@class Lion the lion class is on living things'+'\n'+
+				'//@event angry triggered when the lion gets angry'+'\n'+
 				'';
 			maker = new JsDocMaker();
 			maker.parseFile(code, 'textarea');
@@ -59,7 +60,14 @@ describe("JsDocMaker", function()
 		{
 			expect(Apple.properties.color.name).toBe('color');
 			expect(Apple.properties.color.type.name).toBe('Color');
-		});		
+			expect(Apple.properties.color.text).toBe('the main color of this fruit');
+		});	
+
+		it("events", function() 
+		{
+			expect(Lion.events.angry.name).toBe('angry');
+			expect(Lion.events.angry.text).toBe('triggered when the lion gets angry');
+		});	
 
 		it("method's params", function() 
 		{

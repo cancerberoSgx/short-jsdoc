@@ -1,4 +1,5 @@
-//@class Living @module life @extends Thing
+//@module life 
+//@class Living @extends Thing
 //@method breath @param {Number} size
 
 //@class Animal @extends Living

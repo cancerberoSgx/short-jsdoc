@@ -1,4 +1,5 @@
-// @class Persona @module problem1
+// @module problem1
+// @class Persona
 
 // @class Yo @extend Persona
 // @method explicar @param {Nati} nati @returns {Explicacion}

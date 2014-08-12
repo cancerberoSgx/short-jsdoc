@@ -1,19 +1,26 @@
 {
-    "source": "//@class BaseObject @module ideal\n//@property {Date} creationDate\n//@property {String} name\n//@property {String} description\n//@property {Object<String,User>} owners the owners, a map by owner id\nfunction BaseObject(){};\n\n//@class ObjectPool\nfunction ObjectPool(){};\n//@method loadObjects @param {Array<String>} objects_ids @return {Object<String,BaseObject>}\nObjectPool.prototype.getOwners = function(objects_ids){return null;}\n//@method getOwners this method is useful for *blabla* blabla _blabla_ bab\n/*@param {Array<String>} objects_ids @return {Object<String,Object<String,User>>}*/\n\n//@class Thing @extends BaseObject\n//@property {Number} importance\n\n/** @class Action @extends BaseObject */\n\n//@class Living @module life @extends Thing\n//@method breath @param {Number} size\n\n//@class Animal @extends Living\n//@method eat @param {Array<Food>} food @return {Array<Energy>}\n\n//@class Person @extends Animal\n//@method walk @return {Action}\n/*@method crossStreet\n\nThis try to be a markdown [text](http://google.com)\n\nAnother paragraph\n\n\tvar someMarkup = {\n\t\ta: 1\n\t,\tn: 2\n\t,\tg: function (e)\n\t\t{\n\t\t\treturn 1;\n\t\t}\n\t};\n\nand some final text with a list\n\n1. First ordered list item\n2. Another item\n  * Unordered sub-list. \n1. Actual numbers don't matter, just that it's a number\n  1. Ordered sub-list\n  2. hello\n4. And another item.\n*/\n\n// @class Persona @module problem1\n\n// @class Yo @extend Persona\n// @method explicar @param {Nati} nati @returns {Explicacion}\n\n// @class Nati @extend Persona\n// @property {boolean} isBoba en general devuelve true\n\n// @class Explicacion\n// @property {Persona} sabiondo\n// @property {Persona}burro\n// @property {Number} entendimiento\n\nvar a = 1;",
+    "source": "//@module ideal\n//@class BaseObject \n//@property {Date} creationDate\n//@property {String} name\n//@property {String} description\n//@property {Object<String,User>} owners the owners, a map by owner id\nfunction BaseObject(){};\n\n//@class ObjectPool\nfunction ObjectPool(){};\n//@method loadObjects @param {Array<String>} objects_ids @return {Object<String,BaseObject>}\nObjectPool.prototype.getOwners = function(objects_ids){return null;}\n//@method getOwners this method is useful for *blabla* blabla _blabla_ bab\n/*@param {Array<String>} objects_ids @return {Object<String,Object<String,User>>}*/\n\n//@class Thing @extends BaseObject\n//@property {Number} importance\n\n/** @class Action @extends BaseObject */\n\n//@module life \n//@class Living @extends Thing\n//@method breath @param {Number} size\n\n//@class Animal @extends Living\n//@method eat @param {Array<Food>} food @return {Array<Energy>}\n\n//@class Person @extends Animal\n//@method walk @return {Action}\n/*@method crossStreet\n\nThis try to be a markdown [text](http://google.com)\n\nAnother paragraph\n\n\tvar someMarkup = {\n\t\ta: 1\n\t,\tn: 2\n\t,\tg: function (e)\n\t\t{\n\t\t\treturn 1;\n\t\t}\n\t};\n\nand some final text with a list\n\n1. First ordered list item\n2. Another item\n  * Unordered sub-list. \n1. Actual numbers don't matter, just that it's a number\n  1. Ordered sub-list\n  2. hello\n4. And another item.\n*/\n\n// @module problem1\n// @class Persona\n\n// @class Yo @extend Persona\n// @method explicar @param {Nati} nati @returns {Explicacion}\n\n// @class Nati @extend Persona\n// @property {boolean} isBoba en general devuelve true\n\n// @class Explicacion\n// @property {Persona} sabiondo\n// @property {Persona}burro\n// @property {Number} entendimiento\n\nvar a = 1;",
     "classes": {
-        "__DefaultModule.BaseObject": {
+        "ideal.BaseObject": {
             "annotation": "class",
             "name": "BaseObject",
             "text": "",
             "commentRange": [
                 0,
-                33
+                15
             ],
             "fileName": "ALL.js",
             "module": {
-                "name": "__DefaultModule"
+                "annotation": "module",
+                "name": "ideal",
+                "text": "",
+                "commentRange": [
+                    0,
+                    15
+                ],
+                "fileName": "ALL.js"
             },
-            "absoluteName": "__DefaultModule.BaseObject",
+            "absoluteName": "ideal.BaseObject",
             "properties": {
                 "creationDate": {
                     "annotation": "property",
@@ -22,7 +29,7 @@
                     "text": "",
                     "commentRange": [
                         0,
-                        33
+                        15
                     ],
                     "fileName": "ALL.js"
                 },
@@ -33,7 +40,7 @@
                     "text": "",
                     "commentRange": [
                         0,
-                        33
+                        15
                     ],
                     "fileName": "ALL.js"
                 },
@@ -44,7 +51,7 @@
                     "text": "",
                     "commentRange": [
                         0,
-                        33
+                        15
                     ],
                     "fileName": "ALL.js"
                 },
@@ -55,7 +62,7 @@
                     "text": "the owners, a map by owner id",
                     "commentRange": [
                         0,
-                        33
+                        15
                     ],
                     "fileName": "ALL.js"
                 }
@@ -67,7 +74,7 @@
             "text": "",
             "commentRange": [
                 0,
-                33
+                15
             ],
             "fileName": "ALL.js",
             "module": {
@@ -76,7 +83,7 @@
                 "text": "",
                 "commentRange": [
                     0,
-                    33
+                    15
                 ],
                 "fileName": "ALL.js"
             },
@@ -103,7 +110,7 @@
                     ],
                     "commentRange": [
                         0,
-                        33
+                        15
                     ],
                     "fileName": "ALL.js"
                 },
@@ -113,7 +120,7 @@
                     "text": "this method is useful for *blabla* blabla _blabla_ bab",
                     "commentRange": [
                         0,
-                        33
+                        15
                     ],
                     "fileName": "ALL.js",
                     "params": {
@@ -131,8 +138,8 @@
                                 }
                             ],
                             "commentRange": [
-                                504,
-                                587
+                                507,
+                                590
                             ],
                             "fileName": "ALL.js"
                         }
@@ -153,8 +160,8 @@
                 }
             ],
             "commentRange": [
-                589,
-                623
+                592,
+                626
             ],
             "fileName": "ALL.js",
             "module": {
@@ -163,7 +170,7 @@
                 "text": "",
                 "commentRange": [
                     0,
-                    33
+                    15
                 ],
                 "fileName": "ALL.js"
             },
@@ -175,8 +182,8 @@
                     "name": "importance",
                     "text": "",
                     "commentRange": [
-                        589,
-                        623
+                        592,
+                        626
                     ],
                     "fileName": "ALL.js"
                 }
@@ -195,8 +202,8 @@
                 }
             ],
             "commentRange": [
-                657,
-                697
+                660,
+                700
             ],
             "fileName": "ALL.js",
             "module": {
@@ -205,32 +212,40 @@
                 "text": "",
                 "commentRange": [
                     0,
-                    33
+                    15
                 ],
                 "fileName": "ALL.js"
             },
             "absoluteName": "ideal.Action"
         },
-        "ideal.Living": {
+        "life.Living": {
             "annotation": "class",
             "name": "Living",
             "text": "",
+            "children": [
+                {
+                    "annotation": "extends",
+                    "name": "Thing",
+                    "text": "",
+                    "theRestString": ""
+                }
+            ],
             "commentRange": [
-                699,
-                742
+                702,
+                717
             ],
             "fileName": "ALL.js",
             "module": {
                 "annotation": "module",
-                "name": "ideal",
+                "name": "life",
                 "text": "",
                 "commentRange": [
-                    0,
-                    33
+                    702,
+                    717
                 ],
                 "fileName": "ALL.js"
             },
-            "absoluteName": "ideal.Living",
+            "absoluteName": "life.Living",
             "methods": {
                 "breath": {
                     "annotation": "method",
@@ -246,8 +261,8 @@
                         }
                     ],
                     "commentRange": [
-                        699,
-                        742
+                        702,
+                        717
                     ],
                     "fileName": "ALL.js"
                 }
@@ -266,25 +281,17 @@
                 }
             ],
             "commentRange": [
-                699,
-                742
+                702,
+                717
             ],
             "fileName": "ALL.js",
             "module": {
                 "annotation": "module",
                 "name": "life",
                 "text": "",
-                "children": [
-                    {
-                        "annotation": "extends",
-                        "name": "Thing",
-                        "text": "",
-                        "theRestString": ""
-                    }
-                ],
                 "commentRange": [
-                    699,
-                    742
+                    702,
+                    717
                 ],
                 "fileName": "ALL.js"
             },
@@ -310,8 +317,8 @@
                         }
                     ],
                     "commentRange": [
-                        699,
-                        742
+                        702,
+                        717
                     ],
                     "fileName": "ALL.js"
                 }
@@ -330,25 +337,17 @@
                 }
             ],
             "commentRange": [
-                699,
-                742
+                702,
+                717
             ],
             "fileName": "ALL.js",
             "module": {
                 "annotation": "module",
                 "name": "life",
                 "text": "",
-                "children": [
-                    {
-                        "annotation": "extends",
-                        "name": "Thing",
-                        "text": "",
-                        "theRestString": ""
-                    }
-                ],
                 "commentRange": [
-                    699,
-                    742
+                    702,
+                    717
                 ],
                 "fileName": "ALL.js"
             },
@@ -367,8 +366,8 @@
                         }
                     ],
                     "commentRange": [
-                        699,
-                        742
+                        702,
+                        717
                     ],
                     "fileName": "ALL.js"
                 },
@@ -377,41 +376,33 @@
                     "name": "crossStreet",
                     "text": "This try to be a markdown [text](http://google.com)\n\nAnother paragraph\n\n\tvar someMarkup = {\n\t\ta: 1\n\t,\tn: 2\n\t,\tg: function (e)\n\t\t{\n\t\t\treturn 1;\n\t\t}\n\t};\n\nand some final text with a list\n\n1. First ordered list item\n2. Another item\n  * Unordered sub-list. \n1. Actual numbers don't matter, just that it's a number\n  1. Ordered sub-list\n  2. hello\n4. And another item.",
                     "commentRange": [
-                        943,
-                        1331
+                        949,
+                        1337
                     ],
                     "fileName": "ALL.js"
                 }
             }
         },
-        "life.Persona": {
+        "problem1.Persona": {
             "annotation": "class",
             "name": "Persona",
             "text": "",
             "commentRange": [
-                1333,
-                1367
+                1339,
+                1358
             ],
             "fileName": "ALL.js",
             "module": {
                 "annotation": "module",
-                "name": "life",
+                "name": "problem1",
                 "text": "",
-                "children": [
-                    {
-                        "annotation": "extends",
-                        "name": "Thing",
-                        "text": "",
-                        "theRestString": ""
-                    }
-                ],
                 "commentRange": [
-                    699,
-                    742
+                    1339,
+                    1358
                 ],
                 "fileName": "ALL.js"
             },
-            "absoluteName": "life.Persona"
+            "absoluteName": "problem1.Persona"
         },
         "problem1.Yo": {
             "annotation": "class",
@@ -426,8 +417,8 @@
                 }
             ],
             "commentRange": [
-                1333,
-                1367
+                1339,
+                1358
             ],
             "fileName": "ALL.js",
             "module": {
@@ -435,8 +426,8 @@
                 "name": "problem1",
                 "text": "",
                 "commentRange": [
-                    1333,
-                    1367
+                    1339,
+                    1358
                 ],
                 "fileName": "ALL.js"
             },
@@ -462,8 +453,8 @@
                         }
                     ],
                     "commentRange": [
-                        1333,
-                        1367
+                        1339,
+                        1358
                     ],
                     "fileName": "ALL.js"
                 }
@@ -482,8 +473,8 @@
                 }
             ],
             "commentRange": [
-                1333,
-                1367
+                1339,
+                1358
             ],
             "fileName": "ALL.js",
             "module": {
@@ -491,8 +482,8 @@
                 "name": "problem1",
                 "text": "",
                 "commentRange": [
-                    1333,
-                    1367
+                    1339,
+                    1358
                 ],
                 "fileName": "ALL.js"
             },
@@ -504,8 +495,8 @@
                     "name": "isBoba",
                     "text": "en general devuelve true",
                     "commentRange": [
-                        1333,
-                        1367
+                        1339,
+                        1358
                     ],
                     "fileName": "ALL.js"
                 }
@@ -516,8 +507,8 @@
             "name": "Explicacion",
             "text": "",
             "commentRange": [
-                1333,
-                1367
+                1339,
+                1358
             ],
             "fileName": "ALL.js",
             "module": {
@@ -525,8 +516,8 @@
                 "name": "problem1",
                 "text": "",
                 "commentRange": [
-                    1333,
-                    1367
+                    1339,
+                    1358
                 ],
                 "fileName": "ALL.js"
             },
@@ -538,8 +529,8 @@
                     "name": "sabiondo",
                     "text": "",
                     "commentRange": [
-                        1333,
-                        1367
+                        1339,
+                        1358
                     ],
                     "fileName": "ALL.js"
                 },
@@ -549,8 +540,8 @@
                     "name": "burro",
                     "text": "",
                     "commentRange": [
-                        1333,
-                        1367
+                        1339,
+                        1358
                     ],
                     "fileName": "ALL.js"
                 },
@@ -560,8 +551,8 @@
                     "name": "entendimiento",
                     "text": "",
                     "commentRange": [
-                        1333,
-                        1367
+                        1339,
+                        1358
                     ],
                     "fileName": "ALL.js"
                 }
@@ -575,7 +566,7 @@
             "text": "",
             "commentRange": [
                 0,
-                33
+                15
             ],
             "fileName": "ALL.js"
         },
@@ -583,17 +574,9 @@
             "annotation": "module",
             "name": "life",
             "text": "",
-            "children": [
-                {
-                    "annotation": "extends",
-                    "name": "Thing",
-                    "text": "",
-                    "theRestString": ""
-                }
-            ],
             "commentRange": [
-                699,
-                742
+                702,
+                717
             ],
             "fileName": "ALL.js"
         },
@@ -602,8 +585,8 @@
             "name": "problem1",
             "text": "",
             "commentRange": [
-                1333,
-                1367
+                1339,
+                1358
             ],
             "fileName": "ALL.js"
         }
