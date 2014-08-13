@@ -10,7 +10,7 @@ var self = this;
 <h3 class="class-extends-title">Extends <%= this.printTypeAsString(this.jsdoc.extends)%></h3>
 <% } %>
 
-<p class="class-text"><%= this.jsdoc.text %></p>
+<p class="class-text"><%= this.jsdoc.textHtml || this.jsdoc.text || '' %></p>
 
 <h3 class='methods'>Methods</h3>
 <ul>

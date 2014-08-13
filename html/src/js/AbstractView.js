@@ -7,7 +7,6 @@ var AbstractView = Backbone.View.extend({
 ,	initialize: function(application) 
 	{
 		this.application = application;
-		// this.resourceNotFound = false;
 	}
 
 ,	renderIn: function($parent)

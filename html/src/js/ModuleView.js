@@ -11,6 +11,8 @@ var ModuleView = AbstractView.extend({
 		this.classes = _( _(this.application.data.classes).values() ).filter(function(c){
 			return c.module.name === moduleName; 
 		}); 
+		
+		this.jsdoc.textHtml = this.getTextHtml(this.jsdoc);	
 	}
 
 });

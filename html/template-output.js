@@ -30,7 +30,7 @@ __p += '\n<h3 class="class-extends-title">Extends ' +
 '</h3>\n';
  } ;
 __p += '\n\n<p class="class-text">' +
-((__t = ( this.jsdoc.text )) == null ? '' : __t) +
+((__t = ( this.jsdoc.textHtml || this.jsdoc.text || '' )) == null ? '' : __t) +
 '</p>\n\n<h3 class=\'methods\'>Methods</h3>\n<ul>\n';
 
 _(this.jsdoc.methods).each(function(method) { ;

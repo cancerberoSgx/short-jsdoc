@@ -414,7 +414,7 @@ var JsDocMaker = GLOBAL.JsDocMaker = function()
 	//@property {Object<String,String>} customNativeTypes name to url map that the user can modify to register new native types b givin its url.
 	this.customNativeTypes = this.customNativeTypes || {};
 	this.annotationRegexp = /(\s+@\w+)/gi;
-	this.parseUnitRegexp = /\s*@(\w+)\s*(\{[\w<>,]+\}){0,1}\s*([\w]+){0,1}(.*)\s*/; 
+	this.parseUnitRegexp = /\s*@(\w+)\s*(\{[\w<>,]+\}){0,1}\s*([\w\._]+){0,1}(.*)\s*/; 
 }; 
 
 
@@ -444,22 +444,11 @@ JsDocMaker.prototype.parseFile = function(source, fileName)
 	return parsed; 
 }; 
 
+JsDocMaker.prototype.ignoreCommentPrefix = '?';
 
 //@method parse	@return {Array} array of class description - with methods, and methods containing params. 
 JsDocMaker.prototype.parse = function(comments, fileName)
 {
-	this.comments = comments;
-	this.data = this.data || {}; 
-	this.data.classes = this.data.classes || {}; 
-	this.data.modules = this.data.modules || {}; 
-
-	//we do the parsing block by block, 
-
-	//fix annotations that don't have names 
-	this.fixUnamedAnnotations();
-
-	//unify adjacents line comments in 1
-	this.unifyLineComments();
 
 	var self = this
 	,	classes = this.data.classes
@@ -467,8 +456,39 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 	,	currentMethod = null
 	,	currentModule = null;
 
+
+	this.ignoredComments = this.ignoredComments || []; 
+
+	this.comments = comments;
+	this.data = this.data || {}; 
+	this.data.classes = this.data.classes || {}; 
+	this.data.modules = this.data.modules || {}; 
+
+	//we do the parsing block by block, 
+
+	//first remove the comment nodes to ignore
+	for (var i = 0; i < this.comments.length; i++) 
+	{
+		var node = this.comments[i];		
+		var value = JsDocMaker.stringTrim(node.value);
+		if(JsDocMaker.startsWith(value, this.ignoreCommentPrefix))
+		{
+			this.ignoredComments.push(node);
+			this.comments.splice(i, 1); //remove this node
+		}
+	}
+
+
+	//fix annotations that don't have names 
+	this.fixUnamedAnnotations();
+
+	//unify adjacents line comments in 1
+	this.unifyLineComments();
+
+
 	_(this.comments).each(function(node)
 	{
+
 		// var a = (node.value || '').split(/((?:@class)|(?:@method)|(?:@param))/gi);
 		// var regex = /((?:@class)|(?:@method)|(?:@param))/gi; 
 		var regex = /((?:@class)|(?:@method)|(?:@property)|(?:@method)|(?:@module)|(?:@event)|(?:@constructor))/gi; 
@@ -480,7 +500,6 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 		
 		_(a).each(function(value)
 		{
-			//TODO: let the user mark some comment block somehow to let the parser to ignore it.			
 			var parsed_array = self.parseUnit(value, node);
 			_(parsed_array).each(function(parsed)
 			{
@@ -503,12 +522,30 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 
 					currentClass = parsed; 
 				}
+
+				else if(parsed.annotation === 'module')
+				{					
+					currentModule = parsed;
+					self.data.modules[currentModule.name] = self.data.modules[currentModule.name] || currentModule; 
+				}
+
+				//the rest are all children of class : 
+
+				// we treat @method as equivalent as @constructor
 				else if (parsed.annotation === 'method' && currentClass)
 				{
 					currentClass.methods = currentClass.methods || {};
 					currentClass.methods[parsed.name] = parsed;
 					currentMethod = parsed;
 				}
+				else if(parsed.annotation === 'constructor' && currentClass)
+				{
+					currentClass.constructors = currentClass.constructors || [];
+					currentClass.constructors.push(parsed); 
+					currentMethod = parsed; 
+				}
+
+				// @property and @event are treated similarly
 				else if(parsed.annotation === 'property' && currentClass)
 				{
 					currentClass.properties = currentClass.properties || {};
@@ -518,12 +555,9 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 				{
 					currentClass.events = currentClass.events || {};
 					currentClass.events[parsed.name] = parsed;
-				}				
-				else if(parsed.annotation === 'module')
-				{					
-					currentModule = parsed;
-					self.data.modules[currentModule.name] = self.data.modules[currentModule.name] || currentModule; 
 				}
+
+				//@param is children of @method
 				else if(parsed.annotation === 'param' && currentClass)
 				{
 					if(!currentMethod)
@@ -593,7 +627,7 @@ JsDocMaker.prototype.parseUnitSimple = function(str, comment)
 	{
 		str = JsDocMaker.stringTrim(str); 
 		//TODO: I have to put this regexp inline here - if not the second time I call exec on the instance it won't match :-??
-		result = /\s*@(\w+)\s*(\{[\w<>,]+\}){0,1}\s*([\w]+){0,1}([.\s\w\W]*)/gmi.exec(str); 
+		result = /\s*@(\w+)\s*(\{[\w<>,]+\}){0,1}\s*([\w\._]+){0,1}([.\s\w\W]*)/gmi.exec(str); 
 	}
 	if(!result || result.length<4)
 	{

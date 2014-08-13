@@ -12,12 +12,6 @@ var HeaderView = AbstractView.extend({
 ,	renderIn: function()
 	{
 		AbstractView.prototype.renderIn.apply(this, arguments); 
-		
-		// var template = this.application.templates[this.template]; 
-		// var html = template.apply(this, []); 
-		// this.$el.html(html);
-		// this.application.$mainHeader.empty().append(this.$el); 
-
 		this.installTypeAhead();
 	}
 
@@ -39,7 +33,7 @@ var HeaderView = AbstractView.extend({
 		var self = this;
 		this.typeahead.on('typeahead:selected', function()
 		{
-			self.handleSearchSelection.apply(self, arguments)
+			self.handleSearchSelection.apply(self, arguments);
 		});
 	}
 
@@ -83,14 +77,6 @@ var HeaderView = AbstractView.extend({
 		}); 
 
 		return matches;
-
-		//TODO: reorder matches since modules that match best are at last.
-		// _(matches).sortBy(function(val)
-		// {
-		// 	if(_(val.name).indexOf())
-		// });
-
-		// console.log(matches);
 	}
 
 ,	substringMatcher: function() 

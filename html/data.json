@@ -1,5 +1,5 @@
 {
-    "source": "//@module ideal\n//@class BaseObject \n//@property {Date} creationDate\n//@property {String} name\n//@property {String} description\n//@property {Object<String,User>} owners the owners, a map by owner id\nfunction BaseObject(){};\n\n//@class ObjectPool\nfunction ObjectPool(){};\n//@method loadObjects @param {Array<String>} objects_ids @return {Object<String,BaseObject>}\nObjectPool.prototype.getOwners = function(objects_ids){return null;}\n//@method getOwners this method is useful for *blabla* blabla _blabla_ bab\n/*@param {Array<String>} objects_ids @return {Object<String,Object<String,User>>}*/\n\n//@class Thing @extends BaseObject\n//@property {Number} importance\n\n/** @class Action @extends BaseObject */\n\n//@module life \n//@class Living @extends Thing\n//@method breath @param {Number} size\n\n//@class Animal @extends Living\n//@method eat @param {Array<Food>} food @return {Array<Energy>}\n\n//@class Person @extends Animal\n//@method walk @return {Action}\n/*@method crossStreet\n\nThis try to be a markdown [text](http://google.com)\n\nAnother paragraph\n\n\tvar someMarkup = {\n\t\ta: 1\n\t,\tn: 2\n\t,\tg: function (e)\n\t\t{\n\t\t\treturn 1;\n\t\t}\n\t};\n\nand some final text with a list\n\n1. First ordered list item\n2. Another item\n  * Unordered sub-list. \n1. Actual numbers don't matter, just that it's a number\n  1. Ordered sub-list\n  2. hello\n4. And another item.\n*/\n\n// @module problem1\n// @class Persona\n\n// @class Yo @extend Persona\n// @method explicar @param {Nati} nati @returns {Explicacion}\n\n// @class Nati @extend Persona\n// @property {boolean} isBoba en general devuelve true\n\n// @class Explicacion\n// @property {Persona} sabiondo\n// @property {Persona}burro\n// @property {Number} entendimiento\n\nvar a = 1;",
+    "source": "//@module ideal\n//@class BaseObject \n//@property {Date} creationDate\n//@property {String} name\n//@property {String} description\n//@property {Object<String,User>} owners the owners, a map by owner id\nfunction BaseObject(){};\n\n//@class ObjectPool\nfunction ObjectPool(){};\n//@method loadObjects @param {Array<String>} objects_ids @return {Object<String,BaseObject>}\nObjectPool.prototype.getOwners = function(objects_ids){return null;}\n//@method getOwners this method is useful for *blabla* blabla _blabla_ bab\n/*@param {Array<String>} objects_ids @return {Object<String,Object<String,User>>}*/\n\n//@event objectCreated event fired when an object is created in this pool.\n\n//@class Thing @extends BaseObject\n//@property {Number} importance\n\n/** @class Action @extends BaseObject */\n\n//@module life \n//@class Living @extends Thing\n//@method breath @param {Number} size\n\n//@class Animal @extends Living\n//@method eat @param {Array<Food>} food @return {Array<Energy>}\n\n//@class Person @extends Animal\n//@method walk @return {Action}\n/*@method crossStreet\n\nThis try to be a markdown [text](http://google.com)\n\nAnother paragraph\n\n\tvar someMarkup = {\n\t\ta: 1\n\t,\tn: 2\n\t,\tg: function (e)\n\t\t{\n\t\t\treturn 1;\n\t\t}\n\t};\n\nand some final text with a list\n\n1. First ordered list item\n2. Another item\n  * Unordered sub-list. \n1. Actual numbers don't matter, just that it's a number\n  1. Ordered sub-list\n  2. hello\n4. And another item.\n*/\n\n// @module problem1 This is a description of planet earth city from the point of view of an alien observing us from a space ship.\n//@class TerranObject\n// @class Person @extends TerranObject\n\n//@class List This is just a semantic alias for javascript Array. @extends Array\n//@class Map This is just a semantic alias for javascript Object. @extends Object\n\n/*@class Building @extends TerranObject */\n\n//@class Hospital @extends Building\n//@method getActiveDoctors @returns {List<Doctor>} the currently active doctors in this hospital\n//@property {Array<Person>} todayIngresedPatients all the patiens that entered this hospital today\n\n// @class Doctor @extend Person\n// @property {Map<String,MedicalTopic>} skills\n\n/*@class MedicalTopic\nLorem *ipsum* dolor sit amet, consectetur adipisicing elit, \n\n\tsed do eiusmod tempor \n\tincididunt ut labore et dolore \n\tmagna aliqua. \n\t\tUt enim ad minim \n\t\t\tveniam, quis nostrud exercitation\n\t\t\tullamco laboris nisi ut aliquip ex \n\t\tea commodo consequat. Duis aute irure dolor\n\tin reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. \n\nExcepteur sint occaecat *cupidatat* non proident, sunt in culpa qui officia deserunt mollit anim id est laborum\n*/",
     "classes": {
         "ideal.BaseObject": {
             "annotation": "class",
@@ -145,6 +145,18 @@
                         }
                     }
                 }
+            },
+            "events": {
+                "objectCreated": {
+                    "annotation": "event",
+                    "name": "objectCreated",
+                    "text": "event fired when an object is created in this pool.",
+                    "commentRange": [
+                        592,
+                        666
+                    ],
+                    "fileName": "ALL.js"
+                }
             }
         },
         "ideal.Thing": {
@@ -161,7 +173,7 @@
             ],
             "commentRange": [
                 592,
-                626
+                666
             ],
             "fileName": "ALL.js",
             "module": {
@@ -183,7 +195,7 @@
                     "text": "",
                     "commentRange": [
                         592,
-                        626
+                        666
                     ],
                     "fileName": "ALL.js"
                 }
@@ -202,8 +214,8 @@
                 }
             ],
             "commentRange": [
-                660,
-                700
+                736,
+                776
             ],
             "fileName": "ALL.js",
             "module": {
@@ -231,8 +243,8 @@
                 }
             ],
             "commentRange": [
-                702,
-                717
+                778,
+                793
             ],
             "fileName": "ALL.js",
             "module": {
@@ -240,8 +252,8 @@
                 "name": "life",
                 "text": "",
                 "commentRange": [
-                    702,
-                    717
+                    778,
+                    793
                 ],
                 "fileName": "ALL.js"
             },
@@ -261,8 +273,8 @@
                         }
                     ],
                     "commentRange": [
-                        702,
-                        717
+                        778,
+                        793
                     ],
                     "fileName": "ALL.js"
                 }
@@ -281,8 +293,8 @@
                 }
             ],
             "commentRange": [
-                702,
-                717
+                778,
+                793
             ],
             "fileName": "ALL.js",
             "module": {
@@ -290,8 +302,8 @@
                 "name": "life",
                 "text": "",
                 "commentRange": [
-                    702,
-                    717
+                    778,
+                    793
                 ],
                 "fileName": "ALL.js"
             },
@@ -317,8 +329,8 @@
                         }
                     ],
                     "commentRange": [
-                        702,
-                        717
+                        778,
+                        793
                     ],
                     "fileName": "ALL.js"
                 }
@@ -337,8 +349,8 @@
                 }
             ],
             "commentRange": [
-                702,
-                717
+                778,
+                793
             ],
             "fileName": "ALL.js",
             "module": {
@@ -346,8 +358,8 @@
                 "name": "life",
                 "text": "",
                 "commentRange": [
-                    702,
-                    717
+                    778,
+                    793
                 ],
                 "fileName": "ALL.js"
             },
@@ -366,8 +378,8 @@
                         }
                     ],
                     "commentRange": [
-                        702,
-                        717
+                        778,
+                        793
                     ],
                     "fileName": "ALL.js"
                 },
@@ -376,187 +388,275 @@
                     "name": "crossStreet",
                     "text": "This try to be a markdown [text](http://google.com)\n\nAnother paragraph\n\n\tvar someMarkup = {\n\t\ta: 1\n\t,\tn: 2\n\t,\tg: function (e)\n\t\t{\n\t\t\treturn 1;\n\t\t}\n\t};\n\nand some final text with a list\n\n1. First ordered list item\n2. Another item\n  * Unordered sub-list. \n1. Actual numbers don't matter, just that it's a number\n  1. Ordered sub-list\n  2. hello\n4. And another item.",
                     "commentRange": [
-                        949,
-                        1337
+                        1025,
+                        1413
                     ],
                     "fileName": "ALL.js"
                 }
             }
         },
-        "problem1.Persona": {
+        "problem1.TerranObject": {
             "annotation": "class",
-            "name": "Persona",
+            "name": "TerranObject",
             "text": "",
             "commentRange": [
-                1339,
-                1358
+                1415,
+                1544
             ],
             "fileName": "ALL.js",
             "module": {
                 "annotation": "module",
                 "name": "problem1",
-                "text": "",
+                "text": "This is a description of planet earth city from the point of view of an alien observing us from a space ship.",
                 "commentRange": [
-                    1339,
-                    1358
+                    1415,
+                    1544
                 ],
                 "fileName": "ALL.js"
             },
-            "absoluteName": "problem1.Persona"
+            "absoluteName": "problem1.TerranObject"
         },
-        "problem1.Yo": {
+        "problem1.Person": {
             "annotation": "class",
-            "name": "Yo",
+            "name": "Person",
             "text": "",
             "children": [
                 {
-                    "annotation": "extend",
-                    "name": "Persona",
+                    "annotation": "extends",
+                    "name": "TerranObject",
                     "text": "",
                     "theRestString": ""
                 }
             ],
             "commentRange": [
-                1339,
-                1358
+                1415,
+                1544
             ],
             "fileName": "ALL.js",
             "module": {
                 "annotation": "module",
                 "name": "problem1",
-                "text": "",
+                "text": "This is a description of planet earth city from the point of view of an alien observing us from a space ship.",
                 "commentRange": [
-                    1339,
-                    1358
+                    1415,
+                    1544
                 ],
                 "fileName": "ALL.js"
             },
-            "absoluteName": "problem1.Yo",
+            "absoluteName": "problem1.Person"
+        },
+        "problem1.List": {
+            "annotation": "class",
+            "name": "List",
+            "text": "This is just a semantic alias for javascript Array.",
+            "children": [
+                {
+                    "annotation": "extends",
+                    "name": "Array",
+                    "text": "",
+                    "theRestString": ""
+                }
+            ],
+            "commentRange": [
+                1415,
+                1544
+            ],
+            "fileName": "ALL.js",
+            "module": {
+                "annotation": "module",
+                "name": "problem1",
+                "text": "This is a description of planet earth city from the point of view of an alien observing us from a space ship.",
+                "commentRange": [
+                    1415,
+                    1544
+                ],
+                "fileName": "ALL.js"
+            },
+            "absoluteName": "problem1.List"
+        },
+        "problem1.Map": {
+            "annotation": "class",
+            "name": "Map",
+            "text": "This is just a semantic alias for javascript Object.",
+            "children": [
+                {
+                    "annotation": "extends",
+                    "name": "Object",
+                    "text": "",
+                    "theRestString": ""
+                }
+            ],
+            "commentRange": [
+                1415,
+                1544
+            ],
+            "fileName": "ALL.js",
+            "module": {
+                "annotation": "module",
+                "name": "problem1",
+                "text": "This is a description of planet earth city from the point of view of an alien observing us from a space ship.",
+                "commentRange": [
+                    1415,
+                    1544
+                ],
+                "fileName": "ALL.js"
+            },
+            "absoluteName": "problem1.Map"
+        },
+        "problem1.Building": {
+            "annotation": "class",
+            "name": "Building",
+            "text": "",
+            "children": [
+                {
+                    "annotation": "extends",
+                    "name": "TerranObject",
+                    "text": "",
+                    "theRestString": ""
+                }
+            ],
+            "commentRange": [
+                1771,
+                1813
+            ],
+            "fileName": "ALL.js",
+            "module": {
+                "annotation": "module",
+                "name": "problem1",
+                "text": "This is a description of planet earth city from the point of view of an alien observing us from a space ship.",
+                "commentRange": [
+                    1415,
+                    1544
+                ],
+                "fileName": "ALL.js"
+            },
+            "absoluteName": "problem1.Building"
+        },
+        "problem1.Hospital": {
+            "annotation": "class",
+            "name": "Hospital",
+            "text": "",
+            "children": [
+                {
+                    "annotation": "extends",
+                    "name": "Building",
+                    "text": "",
+                    "theRestString": ""
+                }
+            ],
+            "commentRange": [
+                1815,
+                1850
+            ],
+            "fileName": "ALL.js",
+            "module": {
+                "annotation": "module",
+                "name": "problem1",
+                "text": "This is a description of planet earth city from the point of view of an alien observing us from a space ship.",
+                "commentRange": [
+                    1415,
+                    1544
+                ],
+                "fileName": "ALL.js"
+            },
+            "absoluteName": "problem1.Hospital",
             "methods": {
-                "explicar": {
+                "getActiveDoctors": {
                     "annotation": "method",
-                    "name": "explicar",
+                    "name": "getActiveDoctors",
                     "text": "",
                     "children": [
                         {
-                            "annotation": "param",
-                            "type": "{Nati}",
-                            "name": "nati",
-                            "text": "",
-                            "theRestString": "@returns {Explicacion}"
-                        },
-                        {
                             "annotation": "returns",
-                            "type": "{Explicacion}",
-                            "text": "",
+                            "type": "{List<Doctor>}",
+                            "name": "the",
+                            "text": "currently active doctors in this hospital",
                             "theRestString": ""
                         }
                     ],
                     "commentRange": [
-                        1339,
-                        1358
+                        1815,
+                        1850
+                    ],
+                    "fileName": "ALL.js"
+                }
+            },
+            "properties": {
+                "todayIngresedPatients": {
+                    "annotation": "property",
+                    "type": "{Array<Person>}",
+                    "name": "todayIngresedPatients",
+                    "text": "all the patiens that entered this hospital today",
+                    "commentRange": [
+                        1815,
+                        1850
                     ],
                     "fileName": "ALL.js"
                 }
             }
         },
-        "problem1.Nati": {
+        "problem1.Doctor": {
             "annotation": "class",
-            "name": "Nati",
+            "name": "Doctor",
             "text": "",
             "children": [
                 {
                     "annotation": "extend",
-                    "name": "Persona",
+                    "name": "Person",
                     "text": "",
                     "theRestString": ""
                 }
             ],
             "commentRange": [
-                1339,
-                1358
+                1815,
+                1850
             ],
             "fileName": "ALL.js",
             "module": {
                 "annotation": "module",
                 "name": "problem1",
-                "text": "",
+                "text": "This is a description of planet earth city from the point of view of an alien observing us from a space ship.",
                 "commentRange": [
-                    1339,
-                    1358
+                    1415,
+                    1544
                 ],
                 "fileName": "ALL.js"
             },
-            "absoluteName": "problem1.Nati",
+            "absoluteName": "problem1.Doctor",
             "properties": {
-                "isBoba": {
+                "skills": {
                     "annotation": "property",
-                    "type": "{boolean}",
-                    "name": "isBoba",
-                    "text": "en general devuelve true",
+                    "type": "{Map<String,MedicalTopic>}",
+                    "name": "skills",
+                    "text": "",
                     "commentRange": [
-                        1339,
-                        1358
+                        1815,
+                        1850
                     ],
                     "fileName": "ALL.js"
                 }
             }
         },
-        "problem1.Explicacion": {
+        "problem1.MedicalTopic": {
             "annotation": "class",
-            "name": "Explicacion",
-            "text": "",
+            "name": "MedicalTopic",
+            "text": "Lorem *ipsum* dolor sit amet, consectetur adipisicing elit, \n\n\tsed do eiusmod tempor \n\tincididunt ut labore et dolore \n\tmagna aliqua. \n\t\tUt enim ad minim \n\t\t\tveniam, quis nostrud exercitation\n\t\t\tullamco laboris nisi ut aliquip ex \n\t\tea commodo consequat. Duis aute irure dolor\n\tin reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. \n\nExcepteur sint occaecat *cupidatat* non proident, sunt in culpa qui officia deserunt mollit anim id est laborum",
             "commentRange": [
-                1339,
-                1358
+                2128,
+                2625
             ],
             "fileName": "ALL.js",
             "module": {
                 "annotation": "module",
                 "name": "problem1",
-                "text": "",
+                "text": "This is a description of planet earth city from the point of view of an alien observing us from a space ship.",
                 "commentRange": [
-                    1339,
-                    1358
+                    1415,
+                    1544
                 ],
                 "fileName": "ALL.js"
             },
-            "absoluteName": "problem1.Explicacion",
-            "properties": {
-                "sabiondo": {
-                    "annotation": "property",
-                    "type": "{Persona}",
-                    "name": "sabiondo",
-                    "text": "",
-                    "commentRange": [
-                        1339,
-                        1358
-                    ],
-                    "fileName": "ALL.js"
-                },
-                "burro": {
-                    "annotation": "property",
-                    "type": "{Persona}",
-                    "name": "burro",
-                    "text": "",
-                    "commentRange": [
-                        1339,
-                        1358
-                    ],
-                    "fileName": "ALL.js"
-                },
-                "entendimiento": {
-                    "annotation": "property",
-                    "type": "{Number}",
-                    "name": "entendimiento",
-                    "text": "",
-                    "commentRange": [
-                        1339,
-                        1358
-                    ],
-                    "fileName": "ALL.js"
-                }
-            }
+            "absoluteName": "problem1.MedicalTopic"
         }
     },
     "modules": {
@@ -575,18 +675,18 @@
             "name": "life",
             "text": "",
             "commentRange": [
-                702,
-                717
+                778,
+                793
             ],
             "fileName": "ALL.js"
         },
         "problem1": {
             "annotation": "module",
             "name": "problem1",
-            "text": "",
+            "text": "This is a description of planet earth city from the point of view of an alien observing us from a space ship.",
             "commentRange": [
-                1339,
-                1358
+                1415,
+                1544
             ],
             "fileName": "ALL.js"
         }

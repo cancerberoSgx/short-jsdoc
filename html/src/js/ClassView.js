@@ -13,6 +13,8 @@ var ClassView = AbstractView.extend({
 			this.resourceNotFound = true;
 			return;
 		}
+
+		this.jsdoc.textHtml = this.getTextHtml(this.jsdoc);	
 		this.hierarchy = this.computeHierarchy();
 	}
 

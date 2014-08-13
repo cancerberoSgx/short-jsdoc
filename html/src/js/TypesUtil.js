@@ -50,7 +50,9 @@ _(AbstractView.prototype).extend({
 	{
 		var self = this;
 		var href = context.type.nativeTypeUrl || '#class/'+context.type.absoluteName; 
-		context.buffer.push('<a href="'+href+'">'+context.type.name+'</a>');
+		var htmlText = context.type.name; 
+		htmlText += (context.type.nativeTypeUrl ? '<span class="external-label">(external)</span>' : '');
+		context.buffer.push('<a href="'+href+'">'+htmlText+'</a>');
 
 		if(context.type.params) 
 		{ 

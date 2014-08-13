@@ -8,6 +8,11 @@ describe("JsDocMaker", function()
 		{
 			var code = 
 				'//@class Lemon'+'\n'+
+				'//this is a no module class'+'\n'+
+				'//@constructor the Lemon public constructor signature @param {Color} color'+'\n'+
+				'//?@method tricky this comment should be ignored b the parser because it starts with the special prefix ?'+'\n'+
+				'//@method glow'+'\n'+
+
 				'//@module livingThings'+'\n'+
 				
 				'//@class Apple @extend Fruit '+'\n'+
@@ -67,6 +72,12 @@ describe("JsDocMaker", function()
 		{
 			expect(Lion.events.angry.name).toBe('angry');
 			expect(Lion.events.angry.text).toBe('triggered when the lion gets angry');
+		});	
+
+		it("should ignore comments starting with '?' character", function() 
+		{
+			expect(Lemon.methods.glow.name).toBe('glow');
+			expect(Lemon.methods.tricky).toBe(undefined); 
 		});	
 
 		it("method's params", function() 
@@ -243,6 +254,57 @@ describe("JsDocMaker", function()
 		{
 			C1 = jsdoc.classes['m1.C1']; 
 			expect(C1.text).toBe("888898888 Some C1 class text 888898888 Some other C1 class text");
+		});
+	});
+
+	describe("module and class names can contain chars . and _", function() 
+	{
+		var jsdoc, maker, C1; 
+
+		beforeEach(function() 
+		{
+			var code = 
+				'//@module org.sgx.myprogram1'+'\n'+
+				'//some tetx for this module'+'\n'+
+				'//@class Program1'+'\n'+
+				'//Some Program1 class text'+'\n'+
+				'//@class Program1.Layout some other text'+'\n'+
+
+				'//@module other_module this module name is separated with _'+'\n'+
+				'//@class My_Program some other _ text @extends Program1.Layout'+'\n'+
+				'';
+			maker = new JsDocMaker();
+			maker.parseFile(code, 'file1');
+			maker.postProccess();
+			maker.postProccessBinding();
+			jsdoc = maker.data;
+		});
+
+		it(". should be able to be used in class and module names", function() 
+		{
+			var module = jsdoc.modules['org.sgx.myprogram1'];
+			expect(module.name).toBe('org.sgx.myprogram1');
+			expect(module.text).toBe('some tetx for this module');
+
+			var Program1 = jsdoc.classes['org.sgx.myprogram1.Program1'];
+			expect(Program1.name).toBe('Program1');
+			expect(Program1.text).toBe('Some Program1 class text');
+
+			var Program1Layout = jsdoc.classes['org.sgx.myprogram1.Program1.Layout'];
+			expect(Program1Layout.name).toBe('Program1.Layout');
+			expect(Program1Layout.text).toBe('some other text');
+		});
+
+		it("_ should be able to be used in class and module names", function() 
+		{
+			var other_module = jsdoc.modules.other_module;
+			expect(other_module.name).toBe('other_module');
+			expect(other_module.text).toBe('this module name is separated with _');
+
+			var My_Program = jsdoc.classes['other_module.My_Program']; 
+			expect(My_Program.name).toBe('My_Program');
+			expect(My_Program.text).toBe('some other _ text');
+			expect(My_Program.extends.absoluteName).toBe('org.sgx.myprogram1.Program1.Layout');
 		});
 	});
 
