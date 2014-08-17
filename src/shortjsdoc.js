@@ -567,6 +567,7 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 					else
 					{						
 						currentMethod.params = currentMethod.params || {};
+						// console.log('params', parsed.name, currentMetnod.name)
 						currentMethod.params[parsed.name] = parsed; 
 					}
 				}	
@@ -681,6 +682,7 @@ JsDocMaker.prototype.fixUnamedAnnotations = function()
 	{
 		if(node.value)
 		{
+			node.value = node.value.replace(/@constructor/gi, '@constructor n'); 
 			node.value = node.value.replace(/(@\w+)\s*$/gi, '$1 dummy ');
 			node.value = node.value.replace(/(@\w+)\s+(@\w+)/gi, '$1 dummy $2');
 		}
@@ -719,7 +721,7 @@ JsDocMaker.prototype.postProccess = function()
 		});
 		if (module)
 		{
-			c.module = module; //sg 
+			c.module = module;
 			c.children = _(c.children).without(module);
 			if(!self.data.modules[module.name])
 			{
@@ -731,6 +733,12 @@ JsDocMaker.prototype.postProccess = function()
 				self.data.modules[module.name].text = self.data.modules[module.name].text || module.text; 
 			}
 		}
+		_(c.constructors).each(function(co){
+			co.params = _(co.children||[]).filter(function(child)
+			{
+				return child.annotation === 'param'; 
+			});
+		}); 
 	}); 
 }; 
 
@@ -757,8 +765,13 @@ JsDocMaker.prototype.postProccessBinding = function()
 			c.children = _(c.children).without(extend);			
 		}
 
+		var methods = _(c.methods).clone();
+		if(c.constructors) for (var i = 0; i < c.constructors.length; i++) 
+		{
+			methods['constructor ' + i] = c.constructors[i]; //using invalid method name
+		};
 		//setup methods
-		_(c.methods).each(function(method, name)
+		_(methods).each(function(method, name)
 		{
 			//method.param property
 			var params = _(method.children||[]).filter(function(child)

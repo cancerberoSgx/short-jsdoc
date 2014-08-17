@@ -10,6 +10,7 @@ describe("JsDocMaker", function()
 				'//@class Lemon'+'\n'+
 				'//this is a no module class'+'\n'+
 				'//@constructor the Lemon public constructor signature @param {Color} color'+'\n'+
+				'//@constructor another constructor for the Lemon class @param {Number} size'+'\n'+
 				'//?@method tricky this comment should be ignored b the parser because it starts with the special prefix ?'+'\n'+
 				'//@method glow'+'\n'+
 
@@ -72,6 +73,18 @@ describe("JsDocMaker", function()
 		{
 			expect(Lion.events.angry.name).toBe('angry');
 			expect(Lion.events.angry.text).toBe('triggered when the lion gets angry');
+		});	
+
+		it("constructors", function() 
+		{
+			expect(Lemon.constructors.length).toBe(2); 
+			expect(Lemon.constructors[0].text).toBe('the Lemon public constructor signature');
+			expect(Lemon.constructors[0].params[0].name).toBe('color');
+			expect(Lemon.constructors[0].params[0].type.name).toBe('Color');
+			expect(Lemon.constructors[1].text).toBe('another constructor for the Lemon class');
+			// 	'//@constructor the Lemon public constructor signature @param {Color} color'+'\n'+
+			// 	'//@constructor another constructor for the Lemon class @param {Number} size'+'\n'+
+
 		});	
 
 		it("should ignore comments starting with '?' character", function() 

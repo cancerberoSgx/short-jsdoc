@@ -12,6 +12,29 @@ var self = this;
 
 <p class="class-text"><%= this.jsdoc.textHtml || this.jsdoc.text || '' %></p>
 
+<h3 class='methods'>Constructors</h3>
+<ul>
+<%
+_(this.jsdoc.constructors).each(function(method) { %>
+	<li class="constructor">
+		<!-- TODO: make link and constructor router -->
+		<!-- <%= self.makeLink(method, true)%>  -->
+		<% if(method.params) { %>
+		<h4 class="params-title">Parameters</h4>
+		<ol class="params">
+			<% _(method.params).each(function(param){ %>
+			<li class="param">
+				<span class="param-name"><%= param.name %></span>
+				<span class="param-type"><%= self.printTypeAsString(param.type) %></span> 
+			</li>
+			<% }); %>
+		</ol>
+		<% } %>
+	</li>
+<% }); %>
+</ul>
+
+
 <h3 class='methods'>Methods</h3>
 <ul>
 <%

@@ -31,7 +31,26 @@ __p += '\n<h3 class="class-extends-title">Extends ' +
  } ;
 __p += '\n\n<p class="class-text">' +
 ((__t = ( this.jsdoc.textHtml || this.jsdoc.text || '' )) == null ? '' : __t) +
-'</p>\n\n<h3 class=\'methods\'>Methods</h3>\n<ul>\n';
+'</p>\n\n<h3 class=\'methods\'>Constructors</h3>\n<ul>\n';
+
+_(this.jsdoc.constructors).each(function(method) { ;
+__p += '\n\t<li class="constructor">\n\t\t<!-- TODO: make link and constructor router -->\n\t\t<!-- ' +
+((__t = ( self.makeLink(method, true))) == null ? '' : __t) +
+'  -->\n\t\t';
+ if(method.params) { ;
+__p += '\n\t\t<h4 class="params-title">Parameters</h4>\n\t\t<ol class="params">\n\t\t\t';
+ _(method.params).each(function(param){ ;
+__p += '\n\t\t\t<li class="param">\n\t\t\t\t<span class="param-name">' +
+((__t = ( param.name )) == null ? '' : __t) +
+'</span>\n\t\t\t\t<span class="param-type">' +
+((__t = ( self.printTypeAsString(param.type) )) == null ? '' : __t) +
+'</span> \n\t\t\t</li>\n\t\t\t';
+ }); ;
+__p += '\n\t\t</ol>\n\t\t';
+ } ;
+__p += '\n\t</li>\n';
+ }); ;
+__p += '\n</ul>\n\n\n<h3 class=\'methods\'>Methods</h3>\n<ul>\n';
 
 _(this.jsdoc.methods).each(function(method) { ;
 __p += '\n\t<li class="method">\n\t\t' +
