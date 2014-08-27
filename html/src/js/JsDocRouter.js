@@ -2,10 +2,16 @@ var JsDocRouter = Backbone.Router.extend({
 
 	routes: {
 		'class/:class': 'showClass'
-	,	'classHierarchy/:class': 'showClass'
+
+	// ,	'classHierarchy/:class': 'showClass'event
+
 	,	'module/:module': 'showModule'
+
 	,	'method/:method': 'showMethod'
+	,	'constructor/:method': 'showMethod'
+
 	,	'property/:property': 'showProperty'
+	,	'event/:event': 'showEvent'
 
 	,	'index': 'showIndex'
 	,	'modules': 'showModules'
@@ -54,6 +60,11 @@ var JsDocRouter = Backbone.Router.extend({
 ,	showProperty: function(property)
 	{
 		var view = new PropertyView(this.application, property);
+		this.showView(view); 
+	}
+,	showEvent: function(property)
+	{
+		var view = new PropertyView(this.application, property, true);
 		this.showView(view); 
 	}
 

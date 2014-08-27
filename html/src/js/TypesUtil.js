@@ -25,12 +25,24 @@ _(AbstractView.prototype).extend({
 	{
 		// if (!node || !node.type) // no type for this node. This isn't undefined ! This means we just simply doesn't have the information.
 		// {
-		// 	return '';
+		//	return '';
 		// }
 		var s = htmlAnchors?'<a href="':'';
 		if(node.annotation==='method')
-		{			
+		{
 			s += '#method/' + node.absoluteName; 
+		}
+		else if(node.annotation==='constructor')
+		{			
+			s += '#constructor/' + node.absoluteName; 
+		}
+		else if(node.annotation==='property')
+		{
+			s += '#property/' + node.absoluteName; 
+		}
+		else if(node.annotation==='event')
+		{
+			s += '#event/' + node.absoluteName; 
 		}
 		else if(node.annotation==='class')
 		{
@@ -48,11 +60,20 @@ _(AbstractView.prototype).extend({
 	//@method printType @param {Object}context
 ,	printType: function(context)
 	{
+		if(!context || !context.type)
+		{
+			return ''; 
+		}
 		var self = this;
 		var href = context.type.nativeTypeUrl || '#class/'+context.type.absoluteName; 
 		var htmlText = context.type.name; 
-		htmlText += (context.type.nativeTypeUrl ? '<span class="external-label">(external)</span>' : '');
-		context.buffer.push('<a href="'+href+'">'+htmlText+'</a>');
+		// htmlText += (context.type.nativeTypeUrl ? '<span class="external-label">(external)</span>' : '');
+		// htmlText += (context.type.nativeTypeUrl ? '<span class="glyphicon glyphicon-star"></span>' : '');
+		var aclass = (context.type.nativeTypeUrl ? ' external ' : '');
+
+  
+
+		context.buffer.push('<a class="'+aclass+'" href="'+href+'">'+htmlText+'</a>');
 
 		if(context.type.params) 
 		{ 
@@ -112,6 +133,22 @@ _(AbstractView.prototype).extend({
 		{
 			return text; 
 		}
+	}
+
+	//@method printMethod
+,	printMethod: function(m)
+	{
+		var isConstructor = m.annotation==='constructor'; 
+		var s = '<span class="method">';
+		var methodName = isConstructor ? this.simpleName(m.ownerClass) : m.name;
+		if(!isConstructor && m.returns)
+		{
+			s += this.printTypeAsString(m.returns) + '&nbsp;'; 
+		}
+
+		s += '<a href="' + this.makeLink(m) + '">' + methodName + '</a>'; 
+
+		return s + '</span>';
 	}
 
 ,	renderSource: function(jsdoc, $container)

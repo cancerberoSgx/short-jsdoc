@@ -768,8 +768,11 @@ JsDocMaker.prototype.postProccessBinding = function()
 		var methods = _(c.methods).clone();
 		if(c.constructors) for (var i = 0; i < c.constructors.length; i++) 
 		{
-			methods['constructor ' + i] = c.constructors[i]; //using invalid method name
-		};
+			var cname = 'constructor ' + i;
+			methods[cname] = c.constructors[i]; //using invalid method name
+			c.constructors[i].name = i+'';
+		}
+
 		//setup methods
 		_(methods).each(function(method, name)
 		{
@@ -782,6 +785,7 @@ JsDocMaker.prototype.postProccessBinding = function()
 			method.params = params; 
 
 			method.ownerClass = c.absoluteName;
+				
 			method.absoluteName = c.absoluteName + JsDocMaker.ABSOLUTE_NAME_SEPARATOR + method.name; 
 
 			_(method.params).each(function(param)
@@ -813,7 +817,7 @@ JsDocMaker.prototype.postProccessBinding = function()
 		});
 
 		//setup properties
-		_(c.properties).each(function(prop, name)
+		var propertySetup = function(prop, name)
 		{
 			prop.ownerClass = c.absoluteName;
 			prop.absoluteName = c.absoluteName + JsDocMaker.ABSOLUTE_NAME_SEPARATOR + prop.name; 
@@ -822,7 +826,9 @@ JsDocMaker.prototype.postProccessBinding = function()
 			{
 				prop.type = self.parseTypeString(prop.type, c) || prop.type;
 			}	
-		});
+		}; 
+		_(c.properties).each(propertySetup);
+		_(c.events).each(propertySetup);
 	});
 };
 

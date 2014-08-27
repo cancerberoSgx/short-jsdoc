@@ -34,7 +34,9 @@ __p += '\n\n<p class="class-text">' +
 '</p>\n\n<h3 class=\'methods\'>Constructors</h3>\n<ul>\n';
 
 _(this.jsdoc.constructors).each(function(method) { ;
-__p += '\n\t<li class="constructor">\n\t\t<!-- TODO: make link and constructor router -->\n\t\t<!-- ' +
+__p += '\n' +
+((__t = ( self.printMethod(method))) == null ? '' : __t) +
+'\n\t<li class="constructor">\n\t\t<!-- TODO: make link and constructor router -->\n\t\t<!-- ' +
 ((__t = ( self.makeLink(method, true))) == null ? '' : __t) +
 '  -->\n\t\t';
  if(method.params) { ;
@@ -50,7 +52,19 @@ __p += '\n\t\t</ol>\n\t\t';
  } ;
 __p += '\n\t</li>\n';
  }); ;
-__p += '\n</ul>\n\n\n<h3 class=\'methods\'>Methods</h3>\n<ul>\n';
+__p += '\n</ul>\n\n\n<h3 class=\'properties\'>Properties</h3>\n<ul>\n';
+ 
+var self = this; 
+_(this.jsdoc.properties).each(function(p) { ;
+__p += '\n\t<li class="property">\n\t\t<a class=\'property-name\' href="#property/' +
+((__t = ( p.absoluteName )) == null ? '' : __t) +
+'">' +
+((__t = ( p.name )) == null ? '' : __t) +
+'</a>\n\t\t<span class="property-type">' +
+((__t = ( self.printTypeAsString(p.type) )) == null ? '' : __t) +
+'</span> \n\t</li>\n';
+ }); ;
+__p += '\n</ul>\n\n<h3 class=\'methods\'>Methods</h3>\n<ul>\n';
 
 _(this.jsdoc.methods).each(function(method) { ;
 __p += '\n\t<li class="method">\n\t\t' +
@@ -73,19 +87,17 @@ __p += '\n\n\t\t<h4 class="returns-title">Returns ' +
 ((__t = ( method.returns.text || '')) == null ? '' : __t) +
 '</div>\n\t</li>\n';
  }); ;
-__p += '\n</ul>\n\n\n\n<h3 class=\'methods\'>Properties</h3>\n<ul>\n';
+__p += '\n</ul>\n\n\n<h3 class=\'events\'>Events</h3>\n<ul>\n';
  
 var self = this; 
-_(this.jsdoc.properties).each(function(p) { ;
-__p += '\n\t<li class="property">\n\t\t<a class=\'property-name\' href="#property/' +
+_(this.jsdoc.events).each(function(p) { ;
+__p += '\n\t<li class="event">\n\t\t<a class=\'event-name\' href="#event/' +
 ((__t = ( p.absoluteName )) == null ? '' : __t) +
 '">' +
 ((__t = ( p.name )) == null ? '' : __t) +
-'</a>\n\t\t<span class="property-type">' +
-((__t = ( self.printTypeAsString(p.type) )) == null ? '' : __t) +
-'</span> \n\t</li>\n';
+'</a>\n\t</li>\n';
  }); ;
-__p += '\n</ul>\n\n<div data-type="sources"></div>';
+__p += '\n</ul>\n\n\n<div data-type="sources"></div>';
 
 }
 return __p
@@ -144,11 +156,17 @@ obj || (obj = {});
 var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
-__p += '\n<h2>Method <a href="' +
+
+ if(this.isConstructor){;
+__p += '\n<h2>Constructor</h2>\n';
+ } else {;
+__p += '\n<h2>Method&nbsp;<a href="' +
 ((__t = ( this.makeLink(this.jsdoc) )) == null ? '' : __t) +
 '">' +
 ((__t = ( this.jsdoc.name)) == null ? '' : __t) +
-'</a></h2>\n\n<h3>Of class <a href="#class/' +
+'</a></h2>\n';
+ } ;
+__p += '\n\n\n<h3>Of class <a href="#class/' +
 ((__t = ( this.jsdoc.ownerClass )) == null ? '' : __t) +
 '">\n\t' +
 ((__t = ( this.simpleName(this.jsdoc.ownerClass) )) == null ? '' : __t) +
@@ -171,16 +189,20 @@ __p += '\n\t<li>\n\t\tname: ' +
 '</span>\n\t</li>\n\n';
  }); ;
 __p += '\n</ul>\n\n';
+ if(!this.isConstructor){;
+__p += '\n\t';
  if (this.jsdoc.returns) { ;
-__p += '\n<h3 class="returns-title">Returns</h3>\n' +
+__p += '\n\t\t<h3 class="returns-title">Returns</h3>\n\t\t' +
 ((__t = ( self.printTypeAsString(this.jsdoc.returns.type) )) == null ? '' : __t) +
-'\n\n';
+'\n\n\t\t';
  if(this.jsdoc.returns.text){ ;
-__p += '\n<p class="returns-text">' +
+__p += '\n\t\t\t<p class="returns-text">' +
 ((__t = ( this.jsdoc.returns.text)) == null ? '' : __t) +
-'</p>\n';
+'</p>\n\t\t';
  } ;
-__p += '\n\n';
+__p += '\n\n\t';
+ };
+__p += '\n';
  };
 __p += '\n\n\n<div data-type="sources"></div>';
 
@@ -245,7 +267,9 @@ obj || (obj = {});
 var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
-__p += '<h2>Property <a href="' +
+__p += '<h2>' +
+((__t = ( this.isEvent ? 'Event' : 'Property' )) == null ? '' : __t) +
+'&nbsp;<a href="' +
 ((__t = ( this.makeLink(this.jsdoc) )) == null ? '' : __t) +
 '">' +
 ((__t = ( this.jsdoc.name)) == null ? '' : __t) +

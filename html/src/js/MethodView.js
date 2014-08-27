@@ -11,7 +11,16 @@ var MethodView = AbstractView.extend({
 		var className = a[0] + '.' + a[1]; 
 		var class_ = this.application.data.classes[className];
 		var methodSimpleName = a[2];
-		this.jsdoc = class_.methods[methodSimpleName]; 
+		if(!isNaN(parseInt(methodSimpleName, 10)))
+		{
+			this.jsdoc = class_.constructors[parseInt(methodSimpleName, 10)]; 
+			this.isConstructor = true;
+		}
+		else
+		{			
+			this.jsdoc = class_.methods[methodSimpleName]; 
+			this.isConstructor = false;
+		}
 		if(!this.jsdoc)
 		{
 			this.resourceNotFound = true;

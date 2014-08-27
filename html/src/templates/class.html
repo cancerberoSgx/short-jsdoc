@@ -16,6 +16,7 @@ var self = this;
 <ul>
 <%
 _(this.jsdoc.constructors).each(function(method) { %>
+<%= self.printMethod(method)%>
 	<li class="constructor">
 		<!-- TODO: make link and constructor router -->
 		<!-- <%= self.makeLink(method, true)%>  -->
@@ -34,6 +35,18 @@ _(this.jsdoc.constructors).each(function(method) { %>
 <% }); %>
 </ul>
 
+
+<h3 class='properties'>Properties</h3>
+<ul>
+<% 
+var self = this; 
+_(this.jsdoc.properties).each(function(p) { %>
+	<li class="property">
+		<a class='property-name' href="#property/<%= p.absoluteName %>"><%= p.name %></a>
+		<span class="property-type"><%= self.printTypeAsString(p.type) %></span> 
+	</li>
+<% }); %>
+</ul>
 
 <h3 class='methods'>Methods</h3>
 <ul>
@@ -60,17 +73,16 @@ _(this.jsdoc.methods).each(function(method) { %>
 </ul>
 
 
-
-<h3 class='methods'>Properties</h3>
+<h3 class='events'>Events</h3>
 <ul>
 <% 
 var self = this; 
-_(this.jsdoc.properties).each(function(p) { %>
-	<li class="property">
-		<a class='property-name' href="#property/<%= p.absoluteName %>"><%= p.name %></a>
-		<span class="property-type"><%= self.printTypeAsString(p.type) %></span> 
+_(this.jsdoc.events).each(function(p) { %>
+	<li class="event">
+		<a class='event-name' href="#event/<%= p.absoluteName %>"><%= p.name %></a>
 	</li>
 <% }); %>
 </ul>
+
 
 <div data-type="sources"></div>

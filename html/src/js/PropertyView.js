@@ -4,14 +4,15 @@ var PropertyView = AbstractView.extend({
 
 ,	template: 'property'
 
-,	initialize: function(application, propertyName) 
+,	initialize: function(application, propertyName, isEvent) 
 	{
 		this.application = application;
+		this.isEvent = isEvent;
 		var a = propertyName.split('.');
 		var className = a[0] + '.' + a[1]; 
 		var class_ = this.application.data.classes[className];
 		var propertySimpleName = a[2];
-		this.jsdoc = class_.properties[propertySimpleName]; 
+		this.jsdoc = isEvent ? class_.events[propertySimpleName] : class_.properties[propertySimpleName];
 		if(!this.jsdoc)
 		{
 			this.resourceNotFound = true;

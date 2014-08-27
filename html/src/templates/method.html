@@ -1,5 +1,9 @@
+<% if(this.isConstructor){%>
+<h2>Constructor</h2>
+<% } else {%>
+<h2>Method&nbsp;<a href="<%= this.makeLink(this.jsdoc) %>"><%= this.jsdoc.name%></a></h2>
+<% } %>
 
-<h2>Method <a href="<%= this.makeLink(this.jsdoc) %>"><%= this.jsdoc.name%></a></h2>
 
 <h3>Of class <a href="#class/<%= this.jsdoc.ownerClass %>">
 	<%= this.simpleName(this.jsdoc.ownerClass) %></a>
@@ -25,14 +29,16 @@ _(this.jsdoc.params).each(function(param){
 <% }); %>
 </ul>
 
-<% if (this.jsdoc.returns) { %>
-<h3 class="returns-title">Returns</h3>
-<%= self.printTypeAsString(this.jsdoc.returns.type) %>
+<% if(!this.isConstructor){%>
+	<% if (this.jsdoc.returns) { %>
+		<h3 class="returns-title">Returns</h3>
+		<%= self.printTypeAsString(this.jsdoc.returns.type) %>
 
-<% if(this.jsdoc.returns.text){ %>
-<p class="returns-text"><%= this.jsdoc.returns.text%></p>
-<% } %>
+		<% if(this.jsdoc.returns.text){ %>
+			<p class="returns-text"><%= this.jsdoc.returns.text%></p>
+		<% } %>
 
+	<% }%>
 <% }%>
 
 

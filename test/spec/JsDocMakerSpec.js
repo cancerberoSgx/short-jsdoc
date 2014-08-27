@@ -72,12 +72,15 @@ describe("JsDocMaker", function()
 		it("events", function() 
 		{
 			expect(Lion.events.angry.name).toBe('angry');
+			expect(Lion.events.angry.absoluteName).toBe('livingThings.Lion.angry');
 			expect(Lion.events.angry.text).toBe('triggered when the lion gets angry');
 		});	
 
 		it("constructors", function() 
 		{
 			expect(Lemon.constructors.length).toBe(2); 
+			expect(Lemon.constructors[0].name).toBe('0'); 
+			expect(Lemon.constructors[0].absoluteName).toBe('__DefaultModule.Lemon.0'); 
 			expect(Lemon.constructors[0].text).toBe('the Lemon public constructor signature');
 			expect(Lemon.constructors[0].params[0].name).toBe('color');
 			expect(Lemon.constructors[0].params[0].type.name).toBe('Color');

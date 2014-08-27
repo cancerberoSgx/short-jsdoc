@@ -8,7 +8,9 @@
 /*@class Building @extends TerranObject */
 
 //@class Hospital @extends Building
-//@constructor @param {Number} availableBeds
+//@constructor Neque porro quisquam est qui _dolorem_ *ipsum* quia dolor sit amet, consectetur, adipisci velit... 
+//@param {Number} availableBeds
+//Neque porro quisquam est qui _dolorem_ *ipsum* quia dolor sit amet, consectetur, adipisci velit...
 //@method getActiveDoctors @returns {List<Doctor>} the currently active doctors in this hospital
 //@property {Array<Person>} todayIngresedPatients all the patiens that entered this hospital today
 
