@@ -4,7 +4,11 @@
 
 [Online Example Demo](http://cancerberosgx.github.io/short-jsdoc/html)
 
-Features: flexible comment syntax, simplycity, heavy support for Types and Types generics.
+#Features
+flexible comment syntax, simplycity, heavy support for Types and Types generics.
+
+#Syntax
+[Some syntax notes](https://github.com/cancerberoSgx/short-jsdoc/blob/master/SYNTAX.md)
 
 ##License
 
