@@ -31,7 +31,9 @@ __p += '\n<h3 class="class-extends-title">Extends ' +
  } ;
 __p += '\n\n<p class="class-text">' +
 ((__t = ( this.jsdoc.textHtml || this.jsdoc.text || '' )) == null ? '' : __t) +
-'</p>\n\n<h3 class=\'methods\'>Constructors</h3>\n<ul>\n';
+'</p>\n\n\n<!-- <ul class="nav nav-tabs" role="tablist">\n  <li class="active"><a href="#">Home</a></li>\n  <li><a href="#">Profile</a></li>\n  <li><a href="#">Messages</a></li>\n</ul> -->\n\n';
+ if(this.jsdoc.constructors && this.jsdoc.constructors.length) { ;
+__p += '\n<h3 class=\'methods\'>Constructors</h3>\n<ul>\n';
 
 _(this.jsdoc.constructors).each(function(method) { ;
 __p += '\n' +
@@ -52,7 +54,11 @@ __p += '\n\t\t</ol>\n\t\t';
  } ;
 __p += '\n\t</li>\n';
  }); ;
-__p += '\n</ul>\n\n\n<h3 class=\'properties\'>Properties</h3>\n<ul>\n';
+__p += '\n</ul>\n';
+ } ;
+__p += '\n\n\n\n';
+ if(this.jsdoc.properties && _(this.jsdoc.properties).keys().length) { ;
+__p += '\n<h3 class=\'properties\'>Properties</h3>\n<ul>\n';
  
 var self = this; 
 _(this.jsdoc.properties).each(function(p) { ;
@@ -64,7 +70,11 @@ __p += '\n\t<li class="property">\n\t\t<a class=\'property-name\' href="#propert
 ((__t = ( self.printTypeAsString(p.type) )) == null ? '' : __t) +
 '</span> \n\t</li>\n';
  }); ;
-__p += '\n</ul>\n\n<h3 class=\'methods\'>Methods</h3>\n<ul>\n';
+__p += '\n</ul>\n';
+ } ;
+__p += '\n\n\n\n';
+if(this.jsdoc.methods && _(this.jsdoc.methods).keys().length) {;
+__p += '\n<h3 class=\'methods\'>Methods</h3>\n<ul>\n';
 
 _(this.jsdoc.methods).each(function(method) { ;
 __p += '\n\t<li class="method">\n\t\t' +
@@ -81,13 +91,21 @@ __p += '\n\t\t\t<li class="param">\n\t\t\t\t<span class="param-name">' +
  }); ;
 __p += '\n\t\t</ol>\n\t\t';
  } ;
-__p += '\n\n\t\t<h4 class="returns-title">Returns ' +
+__p += '\n\n\t\t';
+ if(method.returns && (method.returns.type || method.returns.text)) {;
+__p += '\n\t\t<h4 class="returns-title">Returns ' +
 ((__t = ( self.printTypeAsString(method.returns.type) )) == null ? '' : __t) +
-'</h4>\n\t\t<div class="returns-text">' +
+'</h4> \t\n\t\t<div class="returns-text">' +
 ((__t = ( method.returns.text || '')) == null ? '' : __t) +
-'</div>\n\t</li>\n';
+'</div>\n\t\t';
+ } ;
+__p += '\n\t</li>\n';
  }); ;
-__p += '\n</ul>\n\n\n<h3 class=\'events\'>Events</h3>\n<ul>\n';
+__p += '\n</ul>\n';
+ } ;
+__p += '\n\n';
+ if(this.jsdoc.events && _(this.jsdoc.events).keys().length) { ;
+__p += '\n<h3 class=\'events\'>Events</h3>\n<ul>\n';
  
 var self = this; 
 _(this.jsdoc.events).each(function(p) { ;
@@ -97,7 +115,9 @@ __p += '\n\t<li class="event">\n\t\t<a class=\'event-name\' href="#event/' +
 ((__t = ( p.name )) == null ? '' : __t) +
 '</a>\n\t</li>\n';
  }); ;
-__p += '\n</ul>\n\n\n<div data-type="sources"></div>';
+__p += '\n</ul>\n';
+ } ;
+__p += '\n\n<div data-type="sources"></div>';
 
 }
 return __p
@@ -191,7 +211,7 @@ __p += '\n\t<li>\n\t\tname: ' +
 __p += '\n</ul>\n\n';
  if(!this.isConstructor){;
 __p += '\n\t';
- if (this.jsdoc.returns) { ;
+if (this.jsdoc.returns) { ;
 __p += '\n\t\t<h3 class="returns-title">Returns</h3>\n\t\t' +
 ((__t = ( self.printTypeAsString(this.jsdoc.returns.type) )) == null ? '' : __t) +
 '\n\n\t\t';
@@ -298,6 +318,16 @@ with (obj) {
 __p += '<h3>Sources <button data-type="goto-source" class="btn btn-link ">goto def</button></h3>\n\n<pre class="prettyprint linenums">' +
 __e( this.sourceSubset ) +
 '</pre>';
+
+}
+return __p
+};
+
+this["shortjsdoc"]["treeview/seba123"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += 'seba123.html         ';
 
 }
 return __p

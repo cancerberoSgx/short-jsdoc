@@ -48,13 +48,13 @@ module.exports = function (grunt) {
 			options : {
 				processName : function(filename) {
 					return filename.substring(filename
-							.lastIndexOf('/') + 1, filename
+							.lastIndexOf('/templates/') + '/templates/'.length, filename
 							.lastIndexOf('.html'));
 				},
 				namespace : 'shortjsdoc'
 			},
 			files : {
-				'html/template-output.js': 'html/src/templates/*.html'
+				'html/template-output.js': 'html/src/templates/**/*.html'
 			}
 		}
 	}

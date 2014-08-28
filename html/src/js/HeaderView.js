@@ -1,3 +1,5 @@
+//@module shortjsdoc
+//@class HeaderView @extends AbstractView
 var HeaderView = AbstractView.extend({
 
 	className: "header-view"

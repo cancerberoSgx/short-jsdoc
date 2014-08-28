@@ -1,3 +1,5 @@
+//@module shortjsdoc
+//@class PropertyView @extends AbstractView
 var PropertyView = AbstractView.extend({
 
 	className: "property-view"

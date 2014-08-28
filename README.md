@@ -33,18 +33,33 @@ this project neds an simple initial installation:
     cd short-jsdoc
     npm install
 
-## generating documentation for a project in filesystem
+## Generating documentation for a project in filesystem
 
     cd short-jsdoc
     node src/shortjsdoc.js /home/my-js-project/ > html/data.json
     cp html /home/my-js-project/apidocs
 
-This will generate the ready to use html application /home/my-js-project/apidocs/index.html showing your project's classes. If you need to debug it use grunt run - feel free to put-copy this full project in your apidocs forlder. 
+This will generate the ready to use html application /home/my-js-project/apidocs/index.html showing your project's classes. 
+
+More detailed explanation. What just happened is that the first command creates a data.json file with all your project js files jsdocs. The html application just reads this files and renders all its information in a navigable page. 
+
+Feel free to put-copy this full project in your apidocs forlder. And of course feel free to modify to your needs. It is self contained and includes jQuery, bootstrap, underscorejs and backbonejs. In general you will be modifying the markup located in html/src/templates and the styles (very little included and writen in less).
+
+If you need to debug it use grunt run like explained below.
 
 ## Running development web demo
 
     grunt run
     firefox http://localhost:8080/html
+
+## Interesting commands
+
+    # generates the test-project json data
+    node src/shortjsdoc.js test/test-project/ > html/data.json
+    # generates the front end js application jsdocs itself
+    node src/shortjsdoc.js html/src/ > html/data.json 
+
+#Motivation
 
 ## Motivation 1: short simple and flexible jsdoc syntax
 

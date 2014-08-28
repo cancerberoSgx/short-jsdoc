@@ -103,16 +103,18 @@
   margin: 0;
 }
 */
-.linenums > li {
-  margin-left: 15px;
-}
 .selectedJsDocLine {
   border: 3px solid pink;
 }
-.row {
-  margin-left: 0;
+/*fix incopatibility between bootstrap&prettyprint*/
+/*.linenums>li {
+	margin-left: 15px
+}*/
+/*types */
+.external .glyphicon {
+  /*padding-left: 5px;*/
+  font-size: 0.8em;
 }
-.external-label {
-  left-margin: 5px;
-  font-size: 10px;
+.type {
+  padding-right: 6px;
 }

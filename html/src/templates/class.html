@@ -12,6 +12,14 @@ var self = this;
 
 <p class="class-text"><%= this.jsdoc.textHtml || this.jsdoc.text || '' %></p>
 
+
+<!-- <ul class="nav nav-tabs" role="tablist">
+  <li class="active"><a href="#">Home</a></li>
+  <li><a href="#">Profile</a></li>
+  <li><a href="#">Messages</a></li>
+</ul> -->
+
+<% if(this.jsdoc.constructors && this.jsdoc.constructors.length) { %>
 <h3 class='methods'>Constructors</h3>
 <ul>
 <%
@@ -34,8 +42,11 @@ _(this.jsdoc.constructors).each(function(method) { %>
 	</li>
 <% }); %>
 </ul>
+<% } %>
 
 
+
+<% if(this.jsdoc.properties && _(this.jsdoc.properties).keys().length) { %>
 <h3 class='properties'>Properties</h3>
 <ul>
 <% 
@@ -47,7 +58,11 @@ _(this.jsdoc.properties).each(function(p) { %>
 	</li>
 <% }); %>
 </ul>
+<% } %>
 
+
+
+<%if(this.jsdoc.methods && _(this.jsdoc.methods).keys().length) {%>
 <h3 class='methods'>Methods</h3>
 <ul>
 <%
@@ -66,13 +81,16 @@ _(this.jsdoc.methods).each(function(method) { %>
 		</ol>
 		<% } %>
 
-		<h4 class="returns-title">Returns <%= self.printTypeAsString(method.returns.type) %></h4>
+		<% if(method.returns && (method.returns.type || method.returns.text)) {%>
+		<h4 class="returns-title">Returns <%= self.printTypeAsString(method.returns.type) %></h4> 	
 		<div class="returns-text"><%= method.returns.text || ''%></div>
+		<% } %>
 	</li>
 <% }); %>
 </ul>
+<% } %>
 
-
+<% if(this.jsdoc.events && _(this.jsdoc.events).keys().length) { %>
 <h3 class='events'>Events</h3>
 <ul>
 <% 
@@ -83,6 +101,6 @@ _(this.jsdoc.events).each(function(p) { %>
 	</li>
 <% }); %>
 </ul>
-
+<% } %>
 
 <div data-type="sources"></div>

@@ -284,6 +284,10 @@ JsDocMaker.prototype.fixUnamedAnnotations = function()
 		if(node.value)
 		{
 			node.value = node.value.replace(/@constructor/gi, '@constructor n'); 
+			// if(node.value.indexOf('@return')!==-1)console.log('begin',node.value)
+			// node.value = node.value.replace(/@returns\s+/gi, '@returns n '); 
+			// node.value = node.value.replace(/@return\s+/gi, '@returns n '); 
+			// if(node.value.indexOf('@return')!==-1)console.log('end',node.value)
 			node.value = node.value.replace(/(@\w+)\s*$/gi, '$1 dummy ');
 			node.value = node.value.replace(/(@\w+)\s+(@\w+)/gi, '$1 dummy $2');
 		}
@@ -406,8 +410,8 @@ JsDocMaker.prototype.postProccessBinding = function()
 			}); 
 			method.returns = returns.length ? returns[0] : {name:'',type:''};
 
-			//because @returns doesn't have a name it breaks our simple grammar, so we merge the name with ts text.
-			method.returns.text = method.returns.name + ' ' + method.returns.text; 
+			//because @returns doesn't have a name it breaks our simple grammar, so we merge the name with its text.
+			method.returns.text = (method.returns.name ? method.returns.name+' ' : '') + (method.returns.text||''); 
 
 			if(_(method.returns.type).isString())
 			{

@@ -1,3 +1,5 @@
+//@module shortjsdoc
+//@class ModuleView @extends AbstractView
 var ModuleView = AbstractView.extend({
 
 	className: "module"

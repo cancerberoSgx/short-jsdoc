@@ -2,6 +2,8 @@
 # TODO: ideas
  * currently we are taking ALL the comments - but we shoul donly take comments adjacent to comments that contain some annotation. 
  * @class' @constructor and @event
+ * cmd line tools should support multiple input folders
+ * cmd line should accept a package.json file as an input for getting project meta-information
  * method and properties inherited from super classes
  * search for class, modules, methods, methods that return or accept a type. subclasses of..., classes overriding a method... be able to find the classes that uses a certain class in a property or parameter or return type...
  * 

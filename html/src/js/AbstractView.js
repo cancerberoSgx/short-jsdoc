@@ -1,3 +1,4 @@
+//@module shortjsdoc
 //@class AbstractView @extend Backbone.View @module shortjsdoc
 
 var AbstractView = Backbone.View.extend({
@@ -9,6 +10,7 @@ var AbstractView = Backbone.View.extend({
 		this.application = application;
 	}
 
+	//@method renderIn renders this view in given parent element @param {jQuery} $parent
 ,	renderIn: function($parent)
 	{
 		var template = this.application.templates[this.template]; 
@@ -21,8 +23,9 @@ var AbstractView = Backbone.View.extend({
 		this.afterRender();
 	}
 
-	// @method afterRender called b the application jsut after this view is shown.
+	// @method afterRender called b the application jsut after this view is shown. Ooverridable b subclasses for doing some post rendering like installing js widgets, or something. Do nothing b default so you extenders don't need to call super
 ,	afterRender: function()
 	{
 	}
 });
+

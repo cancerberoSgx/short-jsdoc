@@ -1,5 +1,6 @@
+//@module shortjsdoc
 // this file add methods to Abstract Application for dealing with types and html markup. 
-// @class AbstractView
+// @class AbstractView @extends BackboneView
 
 _(AbstractView.prototype).extend({
 
@@ -69,11 +70,10 @@ _(AbstractView.prototype).extend({
 		var htmlText = context.type.name; 
 		// htmlText += (context.type.nativeTypeUrl ? '<span class="external-label">(external)</span>' : '');
 		// htmlText += (context.type.nativeTypeUrl ? '<span class="glyphicon glyphicon-star"></span>' : '');
-		var aclass = (context.type.nativeTypeUrl ? ' external ' : '');
+		var aclass = (context.type.nativeTypeUrl ? ' type external ' : ' type ');
+		var iconHtml = context.type.nativeTypeUrl ? '<span class="glyphicon glyphicon-share"></span>' : ''; 
 
-  
-
-		context.buffer.push('<a class="'+aclass+'" href="'+href+'">'+htmlText+'</a>');
+		context.buffer.push('<a class="'+aclass+'" href="'+href+'">'+iconHtml+htmlText+'</a>');
 
 		if(context.type.params) 
 		{ 
