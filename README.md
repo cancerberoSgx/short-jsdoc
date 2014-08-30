@@ -11,7 +11,6 @@ flexible comment syntax, simplycity, heavy support for Types and Types generics.
 [Some syntax notes](https://github.com/cancerberoSgx/short-jsdoc/blob/master/SYNTAX.md)
 
 ##License
-
 short-jsdoc is open sourced under the [MIT License](https://github.com/cancerberoSgx/short-jsdoc/blob/master/LICENSE). 
 
 

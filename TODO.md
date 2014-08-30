@@ -1,6 +1,7 @@
 
 # TODO: ideas
- * currently we are taking ALL the comments - but we shoul donly take comments adjacent to comments that contain some annotation. 
+ 
+ * performance optimization in html app
  * @class' @constructor and @event
  * cmd line tools should support multiple input folders
  * cmd line should accept a package.json file as an input for getting project meta-information

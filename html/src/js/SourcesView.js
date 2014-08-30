@@ -16,16 +16,17 @@ var SourcesView = AbstractView.extend({
 		this.jsdoc = jsdoc;
 		this.allSource = this.application.maker.data.source; 
 
-		var rangeRatio = 280;
-		var rangeMin = Math.min(0, this.jsdoc.commentRange[0] - rangeRatio);
+		var rangeRatio = 400;
+		var rangeMin = Math.max(0, this.jsdoc.commentRange[0] - rangeRatio);
 		var rangeMax = Math.min(this.allSource.length - 1, this.jsdoc.commentRange[1] + rangeRatio);
-		this.sourceSubset = String.prototype.substring.apply(this.allSource, [rangeMin, rangeMax]);
-
-		var jsdocSource = this.sourceSubset.substring.apply(this.sourceSubset, this.jsdoc.commentRange); 
+		this.sourceSubset = this.allSource.substring(rangeMin, rangeMax);
+		var jsdocSource = this.allSource.substring(this.jsdoc.commentRange[0], this.jsdoc.commentRange[1]); 
 		var previusSource = this.sourceSubset.substring(0, this.sourceSubset.indexOf(jsdocSource));
 		var previusSourceLineCount = previusSource.split('\n').length; 
 
 		this.jsdocLineNumber = previusSourceLineCount - 1;
+
+		//TODO: count the lines of the comment and show all the lines - not only the first one
 	}
 
 ,	afterRender: function()

@@ -58,7 +58,7 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 	,	currentModule = null;
 
 
-	this.ignoredComments = this.ignoredComments || []; 
+	// this.ignoredComments = this.ignoredComments || []; 
 
 	this.comments = comments;
 	this.data = this.data || {}; 
@@ -67,14 +67,15 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 
 	//we do the parsing block by block, 
 
+		// console.error(this.comments)
 	//first remove the comment nodes to ignore
 	for (var i = 0; i < this.comments.length; i++) 
 	{
-		var node = this.comments[i];		
+		var node = this.comments[i]; 
 		var value = JsDocMaker.stringTrim(node.value);
 		if(JsDocMaker.startsWith(value, this.ignoreCommentPrefix))
 		{
-			this.ignoredComments.push(node);
+			// this.ignoredComments.push(node);
 			this.comments.splice(i, 1); //remove this node
 		}
 	}
@@ -262,10 +263,12 @@ JsDocMaker.prototype.unifyLineComments = function()
 	{
 		var c = this.comments[i]
 		,	next = this.comments[i+1]; 
-		if(c.type==='Line' && next.type==='Line')
+
+		var sss = JsDocMaker.stringFullTrim(this.data.source.substring(c.range[1], next.range[0])); 
+		if (c.type==='Line' && next.type==='Line' && !sss)
 		{
 			c.value += ' ' + this.lineCommentSeparator + ' ' + next.value; 
-			// c.value += ' ' + next.value; //this works!
+			c.range[1] = next.range[1]; 
 			this.comments.splice(i+1, 1); 
 		}
 		else
