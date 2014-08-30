@@ -26,6 +26,8 @@ var SourcesView = AbstractView.extend({
 
 		this.jsdocLineNumber = previusSourceLineCount - 1;
 
+		this.lineCount = jsdocSource.split('\n').length; 
+
 		//TODO: count the lines of the comment and show all the lines - not only the first one
 	}
 
@@ -46,9 +48,11 @@ var SourcesView = AbstractView.extend({
 			jQuery(window).scrollTop($target.position().top);
 			$target.addClass('selectedJsDocLine'); 
 		}
-		// else
-		// {
-			// console.log('empty: ', selector); 
-		// }
+
+		for (var i = 0; i < this.lineCount; i++) 
+		{
+			$target = jQuery(jQuery(selector).get(this.jsdocLineNumber+i));
+			$target.addClass('selectedJsDocLine'); 
+		}
 	}
 });

@@ -10,6 +10,7 @@
 		"grunt-contrib-watch": "*",
 		"grunt-contrib-connect":"*",
 		"grunt-contrib-concat":"*",
+		"grunt-contrib-uglify":"*",
   		"matchdep": "*",
   		"grunt-contrib-less": "*",
 
