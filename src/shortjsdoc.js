@@ -437,8 +437,6 @@ JsDocMaker.prototype.parseFile = function(source, fileName)
 	,	comment: true		
 	});
 
-	// _(this.syntax.comments).each(function(comment) {});
-
 	var parsed = this.parse(this.syntax.comments, fileName);
 
 	return parsed; 
@@ -456,9 +454,6 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 	,	currentMethod = null
 	,	currentModule = null;
 
-
-	// this.ignoredComments = this.ignoredComments || []; 
-
 	this.comments = comments;
 	this.data = this.data || {}; 
 	this.data.classes = this.data.classes || {}; 
@@ -466,7 +461,6 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 
 	//we do the parsing block by block, 
 
-		// console.error(this.comments)
 	//first remove the comment nodes to ignore
 	for (var i = 0; i < this.comments.length; i++) 
 	{
@@ -474,11 +468,9 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 		var value = JsDocMaker.stringTrim(node.value);
 		if(JsDocMaker.startsWith(value, this.ignoreCommentPrefix))
 		{
-			// this.ignoredComments.push(node);
 			this.comments.splice(i, 1); //remove this node
 		}
 	}
-
 
 	//fix annotations that don't have names 
 	this.fixUnamedAnnotations();
@@ -489,9 +481,6 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 
 	_(this.comments).each(function(node)
 	{
-
-		// var a = (node.value || '').split(/((?:@class)|(?:@method)|(?:@param))/gi);
-		// var regex = /((?:@class)|(?:@method)|(?:@param))/gi; 
 		var regex = /((?:@class)|(?:@method)|(?:@property)|(?:@method)|(?:@module)|(?:@event)|(?:@constructor))/gi; 
 		var a = JsDocMaker.splitAndPreserve(node.value || '', regex); 
 		a = _(a).filter(function(v)  //delete empties and trim
@@ -686,10 +675,6 @@ JsDocMaker.prototype.fixUnamedAnnotations = function()
 		if(node.value)
 		{
 			node.value = node.value.replace(/@constructor/gi, '@constructor n'); 
-			// if(node.value.indexOf('@return')!==-1)console.log('begin',node.value)
-			// node.value = node.value.replace(/@returns\s+/gi, '@returns n '); 
-			// node.value = node.value.replace(/@return\s+/gi, '@returns n '); 
-			// if(node.value.indexOf('@return')!==-1)console.log('end',node.value)
 			node.value = node.value.replace(/(@\w+)\s*$/gi, '$1 dummy ');
 			node.value = node.value.replace(/(@\w+)\s+(@\w+)/gi, '$1 dummy $2');
 		}
@@ -722,24 +707,6 @@ JsDocMaker.prototype.postProccess = function()
 	// do some work for classes
 	_(self.data.classes).each(function(c, name)
 	{
-		var module = _(c.children||[]).find(function(child)
-		{
-			return child.annotation === 'module'; 
-		});
-		if (module)
-		{
-			c.module = module;
-			c.children = _(c.children).without(module);
-			if(!self.data.modules[module.name])
-			{
-				self.data.modules[module.name] = module; 
-			}
-			else
-			{
-				//set the module's text to first with text found.
-				self.data.modules[module.name].text = self.data.modules[module.name].text || module.text; 
-			}
-		}
 		_(c.constructors).each(function(co){
 			co.params = _(co.children||[]).filter(function(child)
 			{
@@ -748,6 +715,7 @@ JsDocMaker.prototype.postProccess = function()
 		}); 
 	}); 
 }; 
+
 
 //@method postProccessBinding precondion: call postProccess() first. We separated the post proccessing in two because we shouln't do JSON.stringify() after we bind types because of recursive loops. 
 JsDocMaker.prototype.postProccessBinding = function()
@@ -1005,7 +973,7 @@ JsDocMaker.prototype.getNativeTypeUrl = function(name)
 
 
 
-//MODIFIERS - like static, private, final
+//MODIFIERS postproccessing- like static, private, final
 
 //@property {Array<String>}MODIFIERS @static
 JsDocMaker.MODIFIERS = ['static', 'private', 'final']; 
@@ -1024,7 +992,63 @@ JsDocMaker.prototype.installModifiers = function(node)
 
 
 
+// INHERITED methods&properties postproccessing
 
+//@method postProccessInherited calculates inherited methods&properties and put it in class'properties inheritedMethods and inheritedProperties
+JsDocMaker.prototype.postProccessInherited = function()
+{
+	var self = this;
+	_(self.data.classes).each(function(c, name)
+	{
+		c.inherited	= c.inherited || {}; 
+		var inheritedData = {}; 
+
+		c.inherited.methods = c.inherited.methods || {};
+		self.extractInherited(c, c.extends, 'method', inheritedData);
+		_(c.inherited.methods).extend(inheritedData); 
+
+		inheritedData = {}; 
+		c.inherited.properties = c.inherited.properties || {};
+		self.extractInherited(c, c.extends, 'property', inheritedData);
+		_(c.inherited.properties).extend(inheritedData); 
+	});
+};
+
+//@method extractInherited
+JsDocMaker.prototype.extractInherited = function(baseClass, c, what, data)
+{
+	var self = this;
+	if(!c || c.nativeTypeUrl)
+	{
+		return;
+	}
+	what = what || 'method'; 
+	if(what === 'method')
+	{		
+		_(c.methods).each(function(method, name)
+		{
+			if(baseClass.methods && !baseClass.methods[name])
+			{
+				data[name] = method;
+			}
+		});
+	}
+	else if(what === 'property')
+	{		
+		_(c.properties).each(function(p, name)
+		{
+			if(baseClass.properties && !baseClass.properties[name])
+			{
+				data[name] = p;
+			}
+		});
+	}
+
+	if(c.extends) //recurse!
+	{
+		self.extractInherited(baseClass, c.extends, what, data);
+	}
+};
 
 
 //UTILITIES

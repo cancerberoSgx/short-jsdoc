@@ -1,6 +1,6 @@
 
 
-	describe("custom native types", function() 
+	describe("inherited mthods and properties", function() 
 	{
 		var jsdoc, maker; 
 
@@ -8,42 +8,43 @@
 		{
 			var code = 
 
-				'//@module office' + '\n' +	
+				'//@module vehicles' + '\n' +
 
-				// '//@class Machine TODO some text documenting the machine here please' + '\n' +
+				'//@class Vehicle' + '\n' +
+				'//@method move all vehicles move. Subclasses must override this. @param {Vector2D} direction @param {Nmber}' + '\n' +
 
-				'//@class Machine' + '\n' +
-				'//TODO some text documenting the machine here please' + '\n' +
+				'//@class Car @extends Vehicle' + '\n' +
+				'//@method balance @param {String} eficiency' + '\n' +
 
-				'//@method calculate @param {Object<String,Array<HomeFinance>>} finances' + '\n' + 
-				'//@property {Bag<Eye>} eye' + '\n' +
-				'//@class Eye a reutilizable eye' + '\n' +	
+				'//@class VMW @extends Car' + '\n' +
+				'//@method deployAirbag' + '\n' +
+
+				'//@class MotorBike @extends Vehicle' + '\n' +
+				'//@method doTheWilly' + '\n' +
 				'';
 			maker = new JsDocMaker();
-
-			//before parsing we register the custom native types Bag and HomeFinance. Just give an url.
-			_(maker.customNativeTypes).extend({
-				Bag: 'http://mylang.com/api/Bag'
-			,	HomeFinance: 'http://mylang.com/api/HomeFinance'
-			}); 
 
 			maker.parseFile(code, 'genericstest1'); 
 			maker.postProccess();
 			maker.postProccessBinding();
+			maker.postProccessInherited(); // <-- important - explicitlyask the framework to calculate inherited methods&properties
+			
 			jsdoc = maker.data;
 		});
 
-		it("custom natives should be binded", function() 
+		it("inherited methods", function() 
 		{
-			var Machine = jsdoc.classes['office.Machine'];
-			// debugger;
-			expect(Machine.text).toBe('TODO some text documenting the machine here please');
-			var param1 = Machine.methods.calculate.params[0].type.params[1].params[0];
-			expect(param1.name).toBe('HomeFinance');
-			expect(param1.nativeTypeUrl).toBe('http://mylang.com/api/HomeFinance');
-			var param2 = Machine.properties.eye.type; 
-			expect(param2.name).toBe('Bag');
-			expect(param2.nativeTypeUrl).toBe('http://mylang.com/api/Bag');
+			var Car = jsdoc.classes['vehicles.Car'];
+			expect(Car.inherited.methods.move.absoluteName).toBe('vehicles.Vehicle.move'); 
+			expect(Car.inherited.methods.move.ownerClass).toBe('vehicles.Vehicle'); 
+			expect(Car.inherited.methods.move.text).toBe('all vehicles move. Subclasses must override this.'); 
+
+			var VMW = jsdoc.classes['vehicles.VMW'];
+			expect(VMW.inherited.methods.move.absoluteName).toBe('vehicles.Vehicle.move'); 
+			expect(VMW.inherited.methods.move.ownerClass).toBe('vehicles.Vehicle'); 
+			expect(VMW.inherited.methods.move.text).toBe('all vehicles move. Subclasses must override this.'); 
+			expect(VMW.inherited.methods.balance.absoluteName).toBe('vehicles.Car.balance'); 
+			expect(VMW.inherited.methods.balance.params[0].type.name).toBe('String'); 
 		});
 	});
 

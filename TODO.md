@@ -1,8 +1,6 @@
 
 # TODO: ideas
  
- * performance optimization in html app
- * @class' @constructor and @event
  * cmd line tools should support multiple input folders
  * cmd line should accept a package.json file as an input for getting project meta-information
  * method and properties inherited from super classes
