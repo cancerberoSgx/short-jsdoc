@@ -281,7 +281,7 @@ describe("JsDocMaker", function()
 		{
 			var code = 
 				'//@module org.sgx.myprogram1'+'\n'+
-				'//some tetx for this module'+'\n'+
+				'//some text for this module'+'\n'+
 				'//@class Program1'+'\n'+
 				'//Some Program1 class text'+'\n'+
 				'//@class Program1.Layout some other text'+'\n'+
@@ -300,7 +300,7 @@ describe("JsDocMaker", function()
 		{
 			var module = jsdoc.modules['org.sgx.myprogram1'];
 			expect(module.name).toBe('org.sgx.myprogram1');
-			expect(module.text).toBe('some tetx for this module');
+			expect(module.text).toBe('some text for this module');
 
 			var Program1 = jsdoc.classes['org.sgx.myprogram1.Program1'];
 			expect(Program1.name).toBe('Program1');
@@ -325,7 +325,7 @@ describe("JsDocMaker", function()
 	});
 
 
-	describe("inherited mthods and properties", function() 
+	describe("inherited methods and properties", function() 
 	{
 		var jsdoc, maker; 
 
@@ -337,6 +337,8 @@ describe("JsDocMaker", function()
 
 				'//@class Vehicle' + '\n' +
 				'//@method move all vehicles move. Subclasses must override this. @param {Vector2D} direction @param {Nmber}' + '\n' +
+				'//@property {Number} mass the mass of this Vehicle' + '\n' +				
+				'//@event hit triggered whenever this vehicle hits another object' + '\n' +	
 
 				'//@class Car @extends Vehicle' + '\n' +
 				'//@method balance @param {String} eficiency' + '\n' +
@@ -359,10 +361,18 @@ describe("JsDocMaker", function()
 
 		it("inherited methods", function() 
 		{
+			var Vehicle = jsdoc.classes['vehicles.Vehicle'];
+			expect(Vehicle.inherited.properties.mass).not.toBeDefined();
+			expect(Vehicle.events.hit.text).toBe('triggered whenever this vehicle hits another object');
+			expect(Vehicle.inherited.events.hit).not.toBeDefined();
+
 			var Car = jsdoc.classes['vehicles.Car'];
 			expect(Car.inherited.methods.move.absoluteName).toBe('vehicles.Vehicle.move'); 
 			expect(Car.inherited.methods.move.ownerClass).toBe('vehicles.Vehicle'); 
 			expect(Car.inherited.methods.move.text).toBe('all vehicles move. Subclasses must override this.'); 
+			expect(Car.inherited.balance).not.toBeDefined();			
+			expect(Car.inherited.properties.mass.type.name).toBe('Number');
+			expect(Car.inherited.properties.mass.text).toBe('the mass of this Vehicle');
 
 			var VMW = jsdoc.classes['vehicles.VMW'];
 			expect(VMW.inherited.methods.move.absoluteName).toBe('vehicles.Vehicle.move'); 
@@ -370,7 +380,52 @@ describe("JsDocMaker", function()
 			expect(VMW.inherited.methods.move.text).toBe('all vehicles move. Subclasses must override this.'); 
 			expect(VMW.inherited.methods.balance.absoluteName).toBe('vehicles.Car.balance'); 
 			expect(VMW.inherited.methods.balance.params[0].type.name).toBe('String'); 
+			expect(VMW.inherited.methods.balance.inheritedFrom.absoluteName).toBe('vehicles.Car'); 
+			expect(VMW.inherited.properties.mass.absoluteName).toBe('vehicles.Vehicle.mass'); 
+			expect(VMW.inherited.events.hit.text).toBe('triggered whenever this vehicle hits another object');
+			expect(VMW.inherited.events.hit.inheritedFrom.absoluteName).toBe('vehicles.Vehicle');
 		});
 	});
+
+
+
+	describe("custom annotations", function() 
+	{
+		it("user can use recurseAST to install a visitor for doing its own post processing", function() 
+		{
+
+			var code = 
+				'//@module office @versionfoo 3.2' + '\n' +	
+				'//@class Computer' + '\n' +
+				'//you can do excel here' + '\n' +
+				'//@versionfoo 1.2' + '\n' +
+				'//@method putmusic @param {Object<String,Array<Song>>} songs' + '\n' + 
+				'//@versionfoo 1.0' + '\n' +
+				'';
+			var maker = new JsDocMaker();
+			maker.parseFile(code); 
+			maker.postProccess();
+			maker.postProccessBinding();
+
+			var jsdoc = maker.data;
+
+			// we define a function to visit each AST node - we will search for a children @versionfoo and if any set as a property
+			var astVisitor = function(node)
+			{
+				var versionfoo = _(node.children||[]).find(function(child)
+				{
+					return child.annotation === 'versionfoo'; 
+				});
+				if(versionfoo && versionfoo.name)
+				{
+					node.versionfoo = versionfoo.name; 
+				}
+			}; 
+			maker.recurseAST(astVisitor); 
+
+			expect(jsdoc.modules.office.versionfoo).toBe('3.2');
+		});
+	});
+
 });
 

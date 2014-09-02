@@ -27,7 +27,7 @@
 			maker.parseFile(code, 'genericstest1'); 
 			maker.postProccess();
 			maker.postProccessBinding();
-			maker.postProccessInherited(); // <-- important - explicitlyask the framework to calculate inherited methods&properties
+			maker.postProccessInherited(); // <-- important - explicitly ask the framework to calculate inherited methods&properties
 			
 			jsdoc = maker.data;
 		});

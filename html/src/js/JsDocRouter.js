@@ -4,6 +4,7 @@ var JsDocRouter = Backbone.Router.extend({
 
 	routes: {
 		'class/:class': 'showClass'
+	,	'class/:class?:options': 'showClass'
 
 	// ,	'classHierarchy/:class': 'showClass'event
 
@@ -49,10 +50,26 @@ var JsDocRouter = Backbone.Router.extend({
 		this.showView(view); 
 	}
 
+	//method parseOptions @return {Object<String,String>}
+,	parseOptions: function(options)
+	{
+
+	}
+
 	//@method showClass  @param {String} className
-,	showClass: function(className) 
-	{ 
-		var view = new ClassView(this.application, className);
+,	showClass: function(className, options) 
+	{
+		options = options || '';
+		var params = this.parseOptions(options);
+		_(options.split('&')).each(function(p)
+		{
+			var a = p.split('='); 
+			if (a.length >= 2)
+			{
+				params[a[0]] = a[1]; 
+			}
+		}); 
+		var view = new ClassView(this.application, className, params);
 		this.showView(view); 
 	}
 

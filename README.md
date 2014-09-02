@@ -5,7 +5,41 @@
 [Online Example Demo](http://cancerberosgx.github.io/short-jsdoc/html)
 
 #Features
-flexible comment syntax, simplycity, heavy support for Types and Types generics.
+
+##Short
+
+If you want you can define a whole method signature in one line like this:
+
+    //@method add adds a new line @param {Line} line @return {OrderLineCollection} support method chaining
+    OrderLineCollection.prototype.add = function(line){...}
+
+##Flexible comment syntax
+
+Support all comment types, like /* /** // 
+
+##Simple annotation syntax
+
+Simple annotation syntax based in a unique pattern @annotation {Type} name text. 
+
+Also use the concept of primary annotations @module, @class, @method, @property that contains secondary annotations like @extends @returns @static
+
+## Heavy type support
+
+Heavy support for Types - they are optional but it is important for getting a navigable API. Support Type Generic syntax.
+
+##Rich output
+
+The parser generates a json file with all jsdoc meta data that can be consumed and shared easily.
+
+Then there is an html5 application default implementation that shows this output in a very rich way and easy to customize. The jsdoc text support plain text, html or markdown. 
+
+##Extendable
+
+The parser read the sources and generate a Abstract Syntax Tree (AST) of ALL the @annotations. THEN it is 'beautified' with shortcuts for properties and methods. But the AST is there for those who want to define its own semantics and annotations.
+
+##browser and nodejs
+
+100% usable both in nodejs or in the browser.
 
 #Syntax
 [Some syntax notes](https://github.com/cancerberoSgx/short-jsdoc/blob/master/SYNTAX.md)
@@ -61,6 +95,58 @@ If you need to debug it use grunt run like explained below.
     node src/shortjsdoc.js test/test-project/ > html/data.json
     # generates the front end js application jsdocs itself
     node src/shortjsdoc.js html/src/ > html/data.json 
+
+
+# Heavy type support
+Heavy support for Types - they are optional but it is important for getting a navigable API. Features: 
+ * customizable native types (by default pointing to mozilla site)
+ * generics syntax support - Array is not as descriptive as Array<Object<String,Apple>>. Generics are optional but there and are based on javadocs and have a flexible syntax.
+
+    //@class Farmer a human that harvest food @extends Human 
+    //@method harvest @param {Object<String,Resource>} resources the resources to be harvested b the farmer, by id. 
+    //@return {Object<String,Food>} the harvested food units.
+    Farmer.prototype.harvest = function(resources){...}
+
+
+#Extendable
+
+The parser read the sources and generate a Abstract Syntax Tree (AST) of ALL the @annotations. THEN it is 'beautified' with shortcuts for properties and methods. But the AST is there for those who want to define its own semantics and annotations. For example, you want to use your own custom annotation, let's say, @versionfoo to indicate you method's, classes', properties etc version you could do something like the following (ready to run) test
+
+    // the code to be parsed - note that it contains some custom @versionfoo annotations
+    var code = 
+        '//@module office @versionfoo 3.2' + '\n' + 
+        '//@class Computer' + '\n' +
+        '//you can do excel here' + '\n' +
+        '//@versionfoo 1.2' + '\n' +
+        '//@method putmusic @param {Object<String,Array<Song>>} songs' + '\n' + 
+        '//@versionfoo 1.0' + '\n' +
+        '';
+
+    //instantiate the parser and parse
+    var maker = new JsDocMaker();
+    maker.parseFile(code); 
+    maker.postProccess();
+    maker.postProccessBinding();    
+    var jsdoc = maker.data;
+
+    // we define a function to visit each AST node - we will search for a children @versionfoo and if any set as a property
+    var astVisitor = function(node)
+    {
+        var versionfoo = _(node.children||[]).find(function(child)
+        {
+            return child.annotation === 'versionfoo'; 
+        });
+        if(versionfoo && versionfoo.name)
+        {
+            node.versionfoo = versionfoo.name; 
+        }
+    }; 
+    maker.recurseAST(astVisitor); 
+    expect(jsdoc.modules.office.versionfoo).toBe('3.2');
+
+After this we can easily access the @versionfoo of any node like for example, the following expression:
+
+    jsdoc.modules.office.versionfoo === '3.2'
 
 #Motivation
 

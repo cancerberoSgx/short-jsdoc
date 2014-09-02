@@ -415,6 +415,8 @@ var JsDocMaker = GLOBAL.JsDocMaker = function()
 	this.customNativeTypes = this.customNativeTypes || {};
 	this.annotationRegexp = /(\s+@\w+)/gi;
 	this.parseUnitRegexp = /\s*@(\w+)\s*(\{[\w<>,]+\}){0,1}\s*([\w\._]+){0,1}(.*)\s*/; 
+	//@property {Array<Function>}postProccessors
+	this.postProccessors = [];
 }; 
 
 
@@ -1011,6 +1013,11 @@ JsDocMaker.prototype.postProccessInherited = function()
 		c.inherited.properties = c.inherited.properties || {};
 		self.extractInherited(c, c.extends, 'property', inheritedData);
 		_(c.inherited.properties).extend(inheritedData); 
+
+		inheritedData = {}; 
+		c.inherited.events = c.inherited.events || {};
+		self.extractInherited(c, c.extends, 'event', inheritedData);
+		_(c.inherited.events).extend(inheritedData); 
 	});
 };
 
@@ -1027,19 +1034,38 @@ JsDocMaker.prototype.extractInherited = function(baseClass, c, what, data)
 	{		
 		_(c.methods).each(function(method, name)
 		{
-			if(baseClass.methods && !baseClass.methods[name])
+			baseClass.methods = baseClass.methods || {};
+			if(!baseClass.methods[name])
 			{
 				data[name] = method;
+				data[name].inherited = true; 
+				data[name].inheritedFrom = c; 
 			}
 		});
 	}
 	else if(what === 'property')
-	{		
+	{
 		_(c.properties).each(function(p, name)
 		{
-			if(baseClass.properties && !baseClass.properties[name])
+			baseClass.properties = baseClass.properties || {};
+			if(!baseClass.properties[name])
 			{
-				data[name] = p;
+				data[name] = p;				
+				data[name].inherited = true; 
+				data[name].inheritedFrom = c; 
+			}
+		});
+	}
+	else if(what === 'event')
+	{
+		_(c.events).each(function(p, name)
+		{
+			baseClass.events = baseClass.events || {};
+			if(!baseClass.events[name])
+			{
+				data[name] = p;				
+				data[name].inherited = true; 
+				data[name].inheritedFrom = c; 
 			}
 		});
 	}
@@ -1050,6 +1076,31 @@ JsDocMaker.prototype.extractInherited = function(baseClass, c, what, data)
 	}
 };
 
+
+//custom postproccess
+//@method recurseAST visit all the ast nodes with given function @param {Function} fn
+JsDocMaker.prototype.recurseAST = function(fn)
+{
+	var self = this;
+	_(self.data.classes).each(function(c, name)
+	{
+		_(c.methods).each(function(m, name)
+		{
+			fn.apply(m, [m]); 
+			//TODO: params
+		}); 
+
+		_(c.properties).each(function(p, name)
+		{
+			fn.apply(p, [p]); 
+		}); 
+		//TODO: events
+	});
+	_(self.data.modules).each(function(m, name)
+	{
+		fn.apply(m, [m]); 
+	});
+}; 
 
 //UTILITIES
 

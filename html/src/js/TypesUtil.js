@@ -157,4 +157,15 @@ _(AbstractView.prototype).extend({
 		view.renderIn($container); 
 		// this.application.templates.sources.apply(this, arguments)	
 	}
+
+,	getInherited: function(c, what)
+	{
+		var data = {};
+		if(what==='method')
+		{
+			data = _(c.methods).clone();
+			_(data).extend(c.inherited.methods || {});
+		}
+		return data;
+	}
 });

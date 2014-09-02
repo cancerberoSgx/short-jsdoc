@@ -19,14 +19,7 @@ var Application = function(data)
 	this.maker = new JsDocMaker();
 	this.maker.data = data;
 	this.maker.postProccessBinding();
-
-	// jQuery('body').addClass('container-fluid');
-
-	// if(jQuery('#mainHeader').size()===0)
-	// {
-	// 	jQuery('body').append('<div id="mainHeader"></div>'); 
-	// }
-	// this.$mainHeader = jQuery('#mainHeader'); 
+	this.maker.postProccessInherited(); // <-- important - explicitly ask the framework to calculate inherited methods&properties
 
 	if(jQuery('#mainContainer').size()===0)
 	{
@@ -37,6 +30,7 @@ var Application = function(data)
 
 _(Application.prototype).extend({
 
+	//@method start starts the application by instantiating routers and history and navigating to the index.
 	start: function()
 	{		
 		this.router = new JsDocRouter(this);
@@ -45,15 +39,16 @@ _(Application.prototype).extend({
 		Backbone.history.navigate(navigateTo, {trigger: true});
 	}
 
+	//@method showView @param {AbstractView} view
 ,	showView: function(view)
 	{
 		this.applicationView = this.applicationView || new ApplicationView(this); 
 		this.currentView = view;
 		this.$containerEl.empty();
 		this.applicationView.renderIn(this.$containerEl);
-		// view.afterRender(); 
 	}
-	
+
+	//@method refreshWithNewModel @param {Object}data
 ,	refreshWithNewModel: function(data)
 	{
 		this.data = data; 
@@ -61,6 +56,7 @@ _(Application.prototype).extend({
 		this.showView(this.currentView);
 	}
 
+	//@method showErrorView @param {String}s 
 ,	showErrorView: function(s) 
 	{
 		this.$containerEl.empty().append('<h1>'+s+'</h1>'); 
@@ -70,8 +66,9 @@ _(Application.prototype).extend({
 
 //@method start an application loading it with given data. @static
 //@param data the output of passing jsindentator JsDocMaker. 
-Application.start = function(data)
+Application.startApplication = function(data)
 {
 	var app = new Application(data); 
 	app.start();
 }; 
+  
