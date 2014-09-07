@@ -30,23 +30,20 @@ var uglifyLibFiles = [
 ,	'html/lib/prettify/prettify.js'
 
 ];
+
+var concat_files = ['src/shortjsdoc-header.js', 'src/typeParser.js', 'src/JsDocMaker.js', 'src/shortjsdoc-main.js'];
+
 module.exports = function (grunt) {
 
 	require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
 
-	var concat_files = ['src/typeParser.js', 'src/JsDocMaker.js', 'src/shortjsdoc-main.js'];
+	
 
 	grunt.initConfig({
 
 	//WARNING - in linux for watch to work i have to do the following: 
 	//echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p
-
 	watch : {
-// browserify : {
-//	files : 'src/**/*.js',
-//	// files : './src/*.js',
-//	tasks : [ /*'browserify', */'yuidoc' ]
-// }
 
 		jst : {
 			files : 'html/src/templates/**/*.html'
@@ -73,8 +70,6 @@ module.exports = function (grunt) {
 			options : {
 				port : 8080
 			,	base : '.'
-			// ,	keepalive: true
-			// ,	open: 'http://localhost:8080/index.html'
 			}
 		}
 	}
@@ -117,8 +112,8 @@ module.exports = function (grunt) {
 ,	uglify: {
 		my_target: {
 			options: {
-				sourceMap: true,
-				sourceMapName: 'html/all.min.map'
+				sourceMap: true
+				// sourceMapName: 'html/all.min.map'
 			},
 			files: {
 				'html/all.min.js': uglifyFiles
@@ -129,8 +124,8 @@ module.exports = function (grunt) {
 
 	});
 
-	grunt.registerTask('run', [ 'jst', 'uglify', 'connect', 'watch' ]);
-	// grunt.registerTask('run', [ 'browserify', 'connect'  ]);
-	// grunt.registerTask('apidoc', [ 'apidocs' ]);
+	grunt.registerTask('run', [ 'jst', 'concat', 'uglify', 'connect', 'watch' ]);
+
+	grunt.registerTask('compile', [ 'jst', 'concat', 'uglify' ]);
 
 };

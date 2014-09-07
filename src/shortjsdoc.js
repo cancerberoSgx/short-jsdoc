@@ -1,4 +1,5 @@
-/*
+#!/usr/bin/node
+;/*
 parser for type expressions like Map<String,Array<Apple>> created in this site http://pegjs.majda.cz/online using the following source:
 
 //Map<Strign,Array<String>>
@@ -1197,7 +1198,7 @@ var fs = require('fs')
 
 var JsDocMaker = this.JsDocMaker;
 var ShortJsDocTypeParser = this.ShortJsDocTypeParser; 
-
+ 
 //@class ShortJsDoc main class for running jsdocmaker using node through the command line.
 var ShortJsDoc = function()
 {
@@ -1216,14 +1217,16 @@ _(ShortJsDoc.prototype).extend({
 	//@method main
 ,	main: function main()
 	{
-		if(process.argv.length < 3)
+		var argNUmber = process.argv[0].indexOf('node')===-1 ? 1 : 2; 
+
+		if(process.argv.length < argNUmber+1)
 		{
 			error('more parameters required'); 
 		}
 
 		this.sources = {}; 
 		var self=this
-		,	inputDirs = _(process.argv).toArray().slice(2, process.argv.length);
+		,	inputDirs = _(process.argv).toArray().slice(argNUmber, process.argv.length);
 		_(inputDirs).each(function(inputDir)
 		{
 			_(self.sources).extend(self.buildSources(inputDir)); 

@@ -59,11 +59,20 @@ this project neds an simple initial installation:
     cd short-jsdoc
     npm install
 
+    #optionally - install the command line shortcut
+    sudo npm link
+
 ## Generating documentation for a project in filesystem
+
+Using node directly:
 
     cd short-jsdoc
     node src/shortjsdoc.js /home/my-js-project/ > html/data.json
     cp html /home/my-js-project/apidocs
+
+Using the command line shortcut (if you installed it)
+
+    shortjsdoc /home/my-project1/src/js > /home/my-project1/apidocs.json
 
 This will generate the ready to use html application /home/my-js-project/apidocs/index.html showing your project's classes. 
 

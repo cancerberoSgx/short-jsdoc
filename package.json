@@ -4,6 +4,11 @@
 ,	"description": "short and simple jsdoc Object Oriented syntax format and implementation"
 ,	"author": "Sebastián Gurin"
 
+,	"dependencies": {
+		"underscore": "*",
+		"esprima": "*"
+	}
+
 ,	"devDependencies": {
 		"grunt": "*",
     	"grunt-contrib-jst": "*",
@@ -17,4 +22,8 @@
 		"underscore": "*",
 		"esprima": "*"
 	}
+
+,  "bin": {
+    "shortjsdoc": "./src/shortjsdoc.js"
+  }
 }
