@@ -1198,6 +1198,7 @@ var fs = require('fs')
 var JsDocMaker = this.JsDocMaker;
 var ShortJsDocTypeParser = this.ShortJsDocTypeParser; 
 
+//@class ShortJsDoc main class for running jsdocmaker using node through the command line.
 var ShortJsDoc = function()
 {
 	this.maker = new JsDocMaker();
@@ -1205,21 +1206,29 @@ var ShortJsDoc = function()
 
 _(ShortJsDoc.prototype).extend({
 
+	//@method error
 	error: function (m)
 	{
-		console.log(m + '\nUSAGE:\n\tnode src/shortjsdoc.js home/my-js-project/ > html/data.json'); 
+		console.log(m + '\nUSAGE:\n\tnode src/shortjsdoc.js home/my-js-project/ home/another-js-project/ ... > html/data.json'); 
 		process.exit(1);
 	}
 
+	//@method main
 ,	main: function main()
 	{
 		if(process.argv.length < 3)
 		{
 			error('more parameters required'); 
 		}
-		var inputDir = process.argv[2]; 
 
-		this.sources = this.buildSources(inputDir); 
+		this.sources = {}; 
+		var self=this
+		,	inputDirs = _(process.argv).toArray().slice(2, process.argv.length);
+		_(inputDirs).each(function(inputDir)
+		{
+			_(self.sources).extend(self.buildSources(inputDir)); 
+		}); 
+
 		this.parsedSources = this.parseSources();
 
 		var jsdoc = this.maker.data;
@@ -1230,17 +1239,18 @@ _(ShortJsDoc.prototype).extend({
 		console.log(JSON.stringify(jsdoc, null, 4)); 
 	}
 
+	//@method parseSources
 ,	parseSources: function()
 	{
 		var buffer = [];
-		for (file in this.sources) 
+		_(this.sources).each(function(val, file)
 		{
-			buffer.push(this.sources[file]);
-			// console.log('MAKER', this.maker.data)
-		}
+			buffer.push(val);
+		}); 
 		this.maker.parseFile(buffer.join('\n\n'), 'ALL.js');
 	}
 
+	//@method buildSources
 ,	buildSources: function buildSources(inputDir)
 	{	
 		var map = {};

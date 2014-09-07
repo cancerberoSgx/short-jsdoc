@@ -25,26 +25,26 @@ Also use the concept of primary annotations @module, @class, @method, @property 
 
 ## Heavy type support
 
-Heavy support for Types - they are optional but it is important for getting a navigable API. Support Type Generic syntax.
+Heavy support for Types - they are optional but it is important for getting a navigable API. Support Type Generic syntax. and multiple types.
 
-##Rich output
+## Rich output
 
 The parser generates a json file with all jsdoc meta data that can be consumed and shared easily.
 
-Then there is an html5 application default implementation that shows this output in a very rich way and easy to customize. The jsdoc text support plain text, html or markdown. 
+Then there is an html5 single page application default implementation that shows this output in a very rich way and easy to customize. The jsdoc text support plain text, html or markdown. 
 
-##Extendable
+## Extendable
 
-The parser read the sources and generate a Abstract Syntax Tree (AST) of ALL the @annotations. THEN it is 'beautified' with shortcuts for properties and methods. But the AST is there for those who want to define its own semantics and annotations.
+The parser read the sources and generate a Abstract Syntax Tree (AST) of ALL the @annotations. THEN it is 'beautified' with shortcuts for properties and methods. But the original AST with ALL the annotations is there for those who want to define its own semantics and annotations.
 
-##browser and nodejs
+## Browser and nodejs
 
 100% usable both in nodejs or in the browser.
 
-#Syntax
+# Syntax
 [Some syntax notes](https://github.com/cancerberoSgx/short-jsdoc/blob/master/SYNTAX.md)
 
-##License
+## License
 short-jsdoc is open sourced under the [MIT License](https://github.com/cancerberoSgx/short-jsdoc/blob/master/LICENSE). 
 
 
@@ -84,6 +84,8 @@ If you need to debug it use grunt run like explained below.
     node src/shortjsdoc.js test/test-project/ > html/data.json
     # generates the front end js application jsdocs itself
     node src/shortjsdoc.js html/src/ > html/data.json 
+    # or do both:
+    node src/shortjsdoc.js test/test-project/ html/src/js > html/data.json
 
 
 
@@ -112,8 +114,14 @@ Heavy support for Types - they are optional but it is important for getting a na
     //@return {Object<String,Food>} the harvested food units.
     Farmer.prototype.harvest = function(resources){...}
 
+Also multiple types syntax is supported. In a non typed language like javascript, often, method signatures support different kind of parameter types. For example, a method's parameter can be a String or an HTMLElement or a jQuery object. This type of syntax is supported using the '|' character like this:
 
-#Extendable
+    @method @html
+    @param {String|HTMLElement|jQuery|Array<String>} el
+
+That would be interpreted as 'param method can be any of String, HTMLElement, jQuery object or an Array of strings'. Notice that generics and multiple types syntax can be mixed arbitrarily.
+
+# Extendable
 
 The parser read the sources and generate a Abstract Syntax Tree (AST) of ALL the @annotations. THEN it is 'beautified' with shortcuts for properties and methods. But the AST is there for those who want to define its own semantics and annotations. For example, you want to use your own custom annotation, let's say, @versionfoo to indicate you method's, classes', properties etc version you could do something like the following (ready to run) test
 
@@ -153,7 +161,7 @@ After this we can easily access the @versionfoo of any node like for example, th
 
     jsdoc.modules.office.versionfoo === '3.2'
 
-#Motivation
+# Motivation
 
 ## Motivation 1: short simple and flexible jsdoc syntax
 
