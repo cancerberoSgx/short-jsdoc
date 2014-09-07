@@ -95,7 +95,7 @@ _(AbstractView.prototype).extend({
 	}
 
 	//@method printTypeAsString @param {String} type @return {String}
-,	printTypeAsString: function(type)
+,	printSingleTypeAsString: function(type)
 	{
 		var buffer = [];
 		var context = {type: type, typeTemplate: this.printType, buffer: buffer}; 
@@ -103,7 +103,23 @@ _(AbstractView.prototype).extend({
 		var typeOutput = buffer.join(''); 
 		return typeOutput; 
 	}
-
+,	printTypeAsString: function(type)
+	{
+		var self = this;
+		if(_(type).isArray())
+		{
+			var a = [];
+			_(type).each(function(t)
+			{
+				a.push(self.printSingleTypeAsString(t));
+			}); 
+			return a.join('<span class="type-separator">or</span>'); 
+		}
+		else
+		{
+			return this.printSingleTypeAsString(type); 
+		}
+	}
 	//@method getTextHtml depends on lib/marked/
 ,	getTextHtml: function(node)
 	{

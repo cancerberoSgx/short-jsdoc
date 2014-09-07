@@ -117,3 +117,7 @@
 .type {
   padding-right: 6px;
 }
+.type-separator {
+  /*padding-left: 6px; */
+  padding-right: 6px;
+}

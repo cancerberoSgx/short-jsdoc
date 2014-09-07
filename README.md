@@ -48,17 +48,6 @@ The parser read the sources and generate a Abstract Syntax Tree (AST) of ALL the
 short-jsdoc is open sourced under the [MIT License](https://github.com/cancerberoSgx/short-jsdoc/blob/master/LICENSE). 
 
 
-## Motivation
-
-Often in the JavaScript world, jsdocs comments are added as-a-feature in an existing source that already is commented. This project try to target those who in general just need to add some @annotations to an existing js sources to define some OO model. Annotations supported are @module @class @property @method @param @method @extend @return @static @private
-
-This project's core is a JavaScript code parser that will extract jsdoc AST-like data from code comments. It is heavily inspired on Java's and emphasis on types, this is type binding and support type generics syntax
-
-    // like in @returns {Array<Apple>} all the fruits of this tree
-
-The other important part of the project is an html5 application that shows this information in a navigable and responsive site.
-
-At last there is a little nodejs tool for the end-user to extract its code jsdocs and generate this html5 application showing it.
 
 
 # Using it
@@ -95,6 +84,22 @@ If you need to debug it use grunt run like explained below.
     node src/shortjsdoc.js test/test-project/ > html/data.json
     # generates the front end js application jsdocs itself
     node src/shortjsdoc.js html/src/ > html/data.json 
+
+
+
+## Motivation
+
+Often in the JavaScript world, jsdocs comments are added as-a-feature in an existing source that already is commented. This project try to target those who in general just need to add some @annotations to an existing js sources to define some OO model. Annotations supported are @module @class @property @method @param @method @extend @return @static @private
+
+This project's core is a JavaScript code parser that will extract jsdoc AST-like data from code comments. It is heavily inspired on Java's and emphasis on types, this is type binding and support type generics syntax
+
+    // like in @returns {Array<Apple>} all the fruits of this tree
+
+The other important part of the project is an html5 application that shows this information in a navigable and responsive site.
+
+At last there is a little nodejs tool for the end-user to extract its code jsdocs and generate this html5 application showing it.
+
+
 
 
 # Heavy type support

@@ -55,3 +55,5 @@ if(typeof sentence === 'undefined')
 {
 	console.log('alert'); 
 }
+
+//@method extract @param {String|BaseObject|Array<BaseObject>} what

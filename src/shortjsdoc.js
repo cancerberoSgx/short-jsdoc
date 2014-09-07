@@ -398,6 +398,7 @@ LIST_OF_NAMES
     parse:       parse
   };
 })(this);;/*jshint laxcomma:true, evil:true*/
+/*global _:false, esprima:false, ShortJsDocTypeParser:false*/
 
 
 (function(GLOBAL) 
@@ -414,7 +415,7 @@ var JsDocMaker = GLOBAL.JsDocMaker = function()
 	//@property {Object<String,String>} customNativeTypes name to url map that the user can modify to register new native types b givin its url.
 	this.customNativeTypes = this.customNativeTypes || {};
 	this.annotationRegexp = /(\s+@\w+)/gi;
-	this.parseUnitRegexp = /\s*@(\w+)\s*(\{[\w<>,]+\}){0,1}\s*([\w\._]+){0,1}(.*)\s*/; 
+	this.parseUnitRegexp = /\s*@(\w+)\s*(\{[\w<>\|,]+\}){0,1}\s*([\w\._]+){0,1}(.*)\s*/; 
 	//@property {Array<Function>}postProccessors
 	this.postProccessors = [];
 }; 
@@ -451,7 +452,6 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 {
 
 	var self = this
-	,	classes = this.data.classes
 	,	currentClass = null
 	,	currentMethod = null
 	,	currentModule = null;
@@ -559,7 +559,6 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 					else
 					{						
 						currentMethod.params = currentMethod.params || {};
-						// console.log('params', parsed.name, currentMetnod.name)
 						currentMethod.params[parsed.name] = parsed; 
 					}
 				}	
@@ -707,7 +706,7 @@ JsDocMaker.prototype.postProccess = function()
 	var self = this;
 
 	// do some work for classes
-	_(self.data.classes).each(function(c, name)
+	_(self.data.classes).each(function(c)
 	{
 		_(c.constructors).each(function(co){
 			co.params = _(co.children||[]).filter(function(child)
@@ -724,7 +723,7 @@ JsDocMaker.prototype.postProccessBinding = function()
 {
 	var self = this;
 	//at this points we have all our modules and classes - now we normalize extend, methods and params and also do the type binding. 
-	_(self.data.classes).each(function(c, name)
+	_(self.data.classes).each(function(c)
 	{
 		//class.extends property
 		var extend = _(c.children||[]).find(function(child)
@@ -743,15 +742,18 @@ JsDocMaker.prototype.postProccessBinding = function()
 		}
 
 		var methods = _(c.methods).clone();
-		if(c.constructors) for (var i = 0; i < c.constructors.length; i++) 
-		{
-			var cname = 'constructor ' + i;
-			methods[cname] = c.constructors[i]; //using invalid method name
-			c.constructors[i].name = i+'';
-		}
+		if(c.constructors) 
+        {
+            for (var i = 0; i < c.constructors.length; i++) 
+            {
+                var cname = 'constructor ' + i;
+                methods[cname] = c.constructors[i]; //using invalid method name
+                c.constructors[i].name = i+'';
+            }
+        }
 
 		//setup methods
-		_(methods).each(function(method, name)
+		_(methods).each(function(method)
 		{
 			//method.param property
 			var params = _(method.children||[]).filter(function(child)
@@ -794,7 +796,7 @@ JsDocMaker.prototype.postProccessBinding = function()
 		});
 
 		//setup properties
-		var propertySetup = function(prop, name)
+		var propertySetup = function(prop)
 		{
 			prop.ownerClass = c.absoluteName;
 			prop.absoluteName = c.absoluteName + JsDocMaker.ABSOLUTE_NAME_SEPARATOR + prop.name; 
@@ -838,24 +840,43 @@ JsDocMaker.prototype.parseTypeString = function(typeString, baseClass)
 	}
 	typeString = inner[1]; 
 
-	if(typeString.indexOf('<')!==-1)
+	var ret = this.parseSingleTypeString(typeString, baseClass); 
+	if(ret && ret.length===1)
 	{
-		var type = null;
-		try
-		{
-			type = JsDocMaker.parseType(typeString);
-			var type_binded = this.bindParsedType(type, baseClass);
-			return type_binded;
-		}
-		catch(ex)
-		{
-			this.error('Invalid Type: '+typeString, ', baseClass: ', JSON.stringify(baseClass)); 
-		}	
+		return ret[0]; 
 	}
 	else
 	{	
-		return this.bindClass(typeString, baseClass);	
-	}
+		return ret;	
+	}	
+}; 
+
+JsDocMaker.prototype.parseSingleTypeString = function(typeString2, baseClass)
+{
+	var a = typeString2.split('|'), ret = [], self=this;
+	_(a).each(function(typeString)
+	{
+		if(typeString.indexOf('<')!==-1)
+		{
+			var type = null;
+			try
+			{
+				type = JsDocMaker.parseType(typeString);
+				var type_binded = self.bindParsedType(type, baseClass);
+				ret.push(type_binded); 
+				// return type_binded;
+			}
+			catch(ex)
+			{
+				self.error('Invalid Type: '+typeString, ', baseClass: ', JSON.stringify(baseClass)); 
+			}	
+		}
+		else
+		{	ret.push(self.bindClass(typeString, baseClass)); 
+			// return self.bindClass(typeString, baseClass);	
+		}
+	}) ; 
+	return ret;
 }; 
 
 //@method bindParsedType merges the data of JsDocMaker.parseType with bindings of current jsdoc. recursive!
@@ -1000,7 +1021,7 @@ JsDocMaker.prototype.installModifiers = function(node)
 JsDocMaker.prototype.postProccessInherited = function()
 {
 	var self = this;
-	_(self.data.classes).each(function(c, name)
+	_(self.data.classes).each(function(c)
 	{
 		c.inherited	= c.inherited || {}; 
 		var inheritedData = {}; 
@@ -1082,21 +1103,21 @@ JsDocMaker.prototype.extractInherited = function(baseClass, c, what, data)
 JsDocMaker.prototype.recurseAST = function(fn)
 {
 	var self = this;
-	_(self.data.classes).each(function(c, name)
+	_(self.data.classes).each(function(c)
 	{
-		_(c.methods).each(function(m, name)
+		_(c.methods).each(function(m)
 		{
 			fn.apply(m, [m]); 
 			//TODO: params
 		}); 
 
-		_(c.properties).each(function(p, name)
+		_(c.properties).each(function(p)
 		{
 			fn.apply(p, [p]); 
 		}); 
 		//TODO: events
 	});
-	_(self.data.modules).each(function(m, name)
+	_(self.data.modules).each(function(m)
 	{
 		fn.apply(m, [m]); 
 	});

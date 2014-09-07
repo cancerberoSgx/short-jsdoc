@@ -1,4 +1,4 @@
-//@module life 
+//@module life
 //@class Living @extends Thing
 //@method breath @param {Number} size
 
@@ -11,7 +11,7 @@
 
 This try to be a markdown [text](http://google.com)
 
-Another paragraph
+Another paragraph 
 
 	var someMarkup = {
 		a: 1
@@ -26,7 +26,7 @@ and some final text with a list
 
 1. First ordered list item
 2. Another item
-  * Unordered sub-list. 
+  * Unordered sub-list.
 1. Actual numbers don't matter, just that it's a number
   1. Ordered sub-list
   2. hello

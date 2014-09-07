@@ -7,7 +7,7 @@ var ClassView = AbstractView.extend({
 
 ,	template: 'class'
 
-,	initialize: function(application, className) 
+,	initialize: function(application, className, options) 
 	{
 		this.application = application;
 		this.jsdoc = this.application.data.classes[className]; 
@@ -18,9 +18,12 @@ var ClassView = AbstractView.extend({
 		}
 
 		this.jsdoc.textHtml = this.getTextHtml(this.jsdoc);	
-		this.hierarchy = this.computeHierarchy();
-	}
 
+		this.options = options || {};
+
+		// this.hierarchy = this.computeHierarchy();
+	}
+/*
 ,	computeHierarchy: function()
 	{
 		var hierarchy = [];
@@ -36,7 +39,7 @@ var ClassView = AbstractView.extend({
 		while( (c = c.extends) ); 
 		return hierarchy;
 	}
-
+*/
 ,	afterRender: function()
 	{
 		this.renderSource(this.jsdoc, this.$('[data-type="sources"]')); 
