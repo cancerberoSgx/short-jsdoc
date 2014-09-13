@@ -23,7 +23,13 @@ __p += '\n\n<h2 class="class-title">Class ' +
 ((__t = ( this.makeLink(this.jsdoc, true) )) == null ? '' : __t) +
 '</h2>\n\n<h3 class="class-module-title">Module ' +
 ((__t = ( this.makeLink(this.jsdoc.module, true) )) == null ? '' : __t) +
-'</h3>\n\n';
+'</h3>\n\n\n<div class="pull-right"><a href="' +
+((__t = ( this.makeLink(this.jsdoc) )) == null ? '' : __t) +
+'?inherited=' +
+((__t = ( this.options.inherited ? 0 : 1 )) == null ? '' : __t) +
+'">' +
+((__t = ( this.options.inherited ? 'Hide' : 'Show' )) == null ? '' : __t) +
+' inherited properties</a></div>\n\n\n';
  if (this.jsdoc.extends) { ;
 __p += '\n<h3 class="class-extends-title">Extends ' +
 ((__t = ( this.printTypeAsString(this.jsdoc.extends))) == null ? '' : __t) +
@@ -31,17 +37,15 @@ __p += '\n<h3 class="class-extends-title">Extends ' +
  } ;
 __p += '\n\n<p class="class-text">' +
 ((__t = ( this.jsdoc.textHtml || this.jsdoc.text || '' )) == null ? '' : __t) +
-'</p>\n\n\n<!-- <ul class="nav nav-tabs" role="tablist">\n  <li class="active"><a href="#">Home</a></li>\n  <li><a href="#">Profile</a></li>\n  <li><a href="#">Messages</a></li>\n</ul> -->\n\n';
+'</p>\n\n';
  if(this.jsdoc.constructors && this.jsdoc.constructors.length) { ;
 __p += '\n<h3 class=\'methods\'>Constructors</h3>\n<ul>\n';
 
 _(this.jsdoc.constructors).each(function(method) { ;
 __p += '\n' +
 ((__t = ( self.printMethod(method))) == null ? '' : __t) +
-'\n\t<li class="constructor">\n\t\t<!-- TODO: make link and constructor router -->\n\t\t<!-- ' +
-((__t = ( self.makeLink(method, true))) == null ? '' : __t) +
-'  -->\n\t\t';
- if(method.params) { ;
+'\n\t<li class="constructor">\n\t\t';
+ if(method.params && method.params.length) { ;
 __p += '\n\t\t<h4 class="params-title">Parameters</h4>\n\t\t<ol class="params">\n\t\t\t';
  _(method.params).each(function(param){ ;
 __p += '\n\t\t\t<li class="param">\n\t\t\t\t<span class="param-name">' +
@@ -57,11 +61,11 @@ __p += '\n\t</li>\n';
 __p += '\n</ul>\n';
  } ;
 __p += '\n\n\n\n';
- if(this.jsdoc.properties && _(this.jsdoc.properties).keys().length) { ;
+ if(this.properties && _(this.properties).keys().length) { ;
 __p += '\n<h3 class=\'properties\'>Properties</h3>\n<ul>\n';
  
 var self = this; 
-_(this.jsdoc.properties).each(function(p) { ;
+_(this.properties).each(function(p) { ;
 __p += '\n\t<li class="property">\n\t\t<a class=\'property-name\' href="#property/' +
 ((__t = ( p.absoluteName )) == null ? '' : __t) +
 '">' +
@@ -73,14 +77,14 @@ __p += '\n\t<li class="property">\n\t\t<a class=\'property-name\' href="#propert
 __p += '\n</ul>\n';
  } ;
 __p += '\n\n\n\n';
-if(this.jsdoc.methods && _(this.jsdoc.methods).keys().length) {;
+ if(this.methods && _(this.methods).keys().length) { ;
 __p += '\n<h3 class=\'methods\'>Methods</h3>\n<ul>\n';
 
-_(this.jsdoc.methods).each(function(method) { ;
+_(this.methods).each(function(method) { ;
 __p += '\n\t<li class="method">\n\t\t' +
 ((__t = ( self.makeLink(method, true))) == null ? '' : __t) +
 '\n\t\t';
- if(method.params) { ;
+ if(method.params && method.params.length) { ;
 __p += '\n\t\t<h4 class="params-title">Parameters</h4>\n\t\t<ol class="params">\n\t\t\t';
  _(method.params).each(function(param){ ;
 __p += '\n\t\t\t<li class="param">\n\t\t\t\t<span class="param-name">' +

@@ -6,18 +6,15 @@ var self = this;
 
 <h3 class="class-module-title">Module <%= this.makeLink(this.jsdoc.module, true) %></h3>
 
+
+<div class="pull-right"><a href="<%= this.makeLink(this.jsdoc) %>?inherited=<%= this.options.inherited ? 0 : 1 %>"><%= this.options.inherited ? 'Hide' : 'Show' %> inherited properties</a></div>
+
+
 <% if (this.jsdoc.extends) { %>
 <h3 class="class-extends-title">Extends <%= this.printTypeAsString(this.jsdoc.extends)%></h3>
 <% } %>
 
 <p class="class-text"><%= this.jsdoc.textHtml || this.jsdoc.text || '' %></p>
-
-
-<!-- <ul class="nav nav-tabs" role="tablist">
-  <li class="active"><a href="#">Home</a></li>
-  <li><a href="#">Profile</a></li>
-  <li><a href="#">Messages</a></li>
-</ul> -->
 
 <% if(this.jsdoc.constructors && this.jsdoc.constructors.length) { %>
 <h3 class='methods'>Constructors</h3>
@@ -26,9 +23,7 @@ var self = this;
 _(this.jsdoc.constructors).each(function(method) { %>
 <%= self.printMethod(method)%>
 	<li class="constructor">
-		<!-- TODO: make link and constructor router -->
-		<!-- <%= self.makeLink(method, true)%>  -->
-		<% if(method.params) { %>
+		<% if(method.params && method.params.length) { %>
 		<h4 class="params-title">Parameters</h4>
 		<ol class="params">
 			<% _(method.params).each(function(param){ %>
@@ -46,12 +41,12 @@ _(this.jsdoc.constructors).each(function(method) { %>
 
 
 
-<% if(this.jsdoc.properties && _(this.jsdoc.properties).keys().length) { %>
+<% if(this.properties && _(this.properties).keys().length) { %>
 <h3 class='properties'>Properties</h3>
 <ul>
 <% 
 var self = this; 
-_(this.jsdoc.properties).each(function(p) { %>
+_(this.properties).each(function(p) { %>
 	<li class="property">
 		<a class='property-name' href="#property/<%= p.absoluteName %>"><%= p.name %></a>
 		<span class="property-type"><%= self.printTypeAsString(p.type) %></span> 
@@ -62,14 +57,14 @@ _(this.jsdoc.properties).each(function(p) { %>
 
 
 
-<%if(this.jsdoc.methods && _(this.jsdoc.methods).keys().length) {%>
+<% if(this.methods && _(this.methods).keys().length) { %>
 <h3 class='methods'>Methods</h3>
 <ul>
 <%
-_(this.jsdoc.methods).each(function(method) { %>
+_(this.methods).each(function(method) { %>
 	<li class="method">
 		<%= self.makeLink(method, true)%>
-		<% if(method.params) { %>
+		<% if(method.params && method.params.length) { %>
 		<h4 class="params-title">Parameters</h4>
 		<ol class="params">
 			<% _(method.params).each(function(param){ %>

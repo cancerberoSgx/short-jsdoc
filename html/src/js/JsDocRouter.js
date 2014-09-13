@@ -53,14 +53,7 @@ var JsDocRouter = Backbone.Router.extend({
 	//method parseOptions @return {Object<String,String>}
 ,	parseOptions: function(options)
 	{
-
-	}
-
-	//@method showClass  @param {String} className
-,	showClass: function(className, options) 
-	{
-		options = options || '';
-		var params = this.parseOptions(options);
+		var params = {};
 		_(options.split('&')).each(function(p)
 		{
 			var a = p.split('='); 
@@ -69,6 +62,14 @@ var JsDocRouter = Backbone.Router.extend({
 				params[a[0]] = a[1]; 
 			}
 		}); 
+		return params;
+	}
+
+	//@method showClass  @param {String} className
+,	showClass: function(className, options) 
+	{
+		options = options || '';
+		var params = this.parseOptions(options);		
 		var view = new ClassView(this.application, className, params);
 		this.showView(view); 
 	}

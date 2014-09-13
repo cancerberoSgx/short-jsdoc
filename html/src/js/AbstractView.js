@@ -21,6 +21,13 @@ var AbstractView = Backbone.View.extend({
 			$parent.append(this.$el); 
 		}
 		this.afterRender();
+		return this;
+	}
+
+	//@method render implemented to comply with Backbone View contract
+,	render: function()
+	{
+		return this.renderIn(jQuery(this.el)); 
 	}
 
 	// @method afterRender called b the application jsut after this view is shown. Ooverridable b subclasses for doing some post rendering like installing js widgets, or something. Do nothing b default so you extenders don't need to call super

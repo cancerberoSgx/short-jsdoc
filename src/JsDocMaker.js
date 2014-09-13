@@ -660,8 +660,8 @@ JsDocMaker.prototype.extractInherited = function(baseClass, c, what, data)
 			if(!baseClass.methods[name])
 			{
 				data[name] = method;
-				data[name].inherited = true; 
-				data[name].inheritedFrom = c; 
+				// data[name].inherited = true; 
+				// data[name].inheritedFrom = c; 
 			}
 		});
 	}
@@ -673,8 +673,8 @@ JsDocMaker.prototype.extractInherited = function(baseClass, c, what, data)
 			if(!baseClass.properties[name])
 			{
 				data[name] = p;				
-				data[name].inherited = true; 
-				data[name].inheritedFrom = c; 
+				// data[name].inherited = true; 
+				// data[name].inheritedFrom = c; 
 			}
 		});
 	}
