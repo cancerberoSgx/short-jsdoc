@@ -2,9 +2,7 @@
 # TODO: ideas
 
  * cmd line should accept a package.json file as an input for getting project meta-information
- * method and properties inherited from super classes
  * search for class, modules, methods, methods that return or accept a type. subclasses of..., classes overriding a method... be able to find the classes that uses a certain class in a property or parameter or return type...
- * types should be able to contain spaces
  * class hierarchy in classview
  * support comments like /** and in those remove ** prefix
  * support the beauty /* * * * */ multiline block comments like eclipse's. Remove the first aster after a line.

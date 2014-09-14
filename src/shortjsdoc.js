@@ -416,7 +416,7 @@ var JsDocMaker = GLOBAL.JsDocMaker = function()
 	//@property {Object<String,String>} customNativeTypes name to url map that the user can modify to register new native types b givin its url.
 	this.customNativeTypes = this.customNativeTypes || {};
 	this.annotationRegexp = /(\s+@\w+)/gi;
-	this.parseUnitRegexp = /\s*@(\w+)\s*(\{[\w<>\|,]+\}){0,1}\s*([\w\._]+){0,1}(.*)\s*/; 
+	this.parseUnitRegexp = /\s*@(\w+)\s*(\{[\w<>\|, ]+\}){0,1}\s*([\w\._]+){0,1}(.*)\s*/; 
 	//@property {Array<Function>}postProccessors
 	this.postProccessors = [];
 }; 
@@ -840,7 +840,7 @@ JsDocMaker.prototype.parseTypeString = function(typeString, baseClass)
 		return null;
 	}
 	typeString = inner[1]; 
-
+	typeString = typeString.replace(/\s+/gi, '');
 	var ret = this.parseSingleTypeString(typeString, baseClass); 
 	if(ret && ret.length===1)
 	{
