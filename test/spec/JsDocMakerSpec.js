@@ -473,30 +473,9 @@ describe("JsDocMaker", function()
 
 
 
-	describe("types with spacess", function() 
-	{
-		it("types can contain spaces", function() 
-		{
-			var code = 
-				'//@module stuff1' + '\n' +	
-				'//@class Something' + '\n' +				
-				'//@property {Object<String, Array<String > >} aProperty' + '\n' +'';
-				// '//@property {Object<String,Array<String>>} aProperty' + '\n' +'';
-			var maker = new JsDocMaker();
-			maker.parseFile(code); 
-			maker.postProccess();
-			maker.postProccessBinding();
-			var jsdoc = maker.data;
+	
 
-			var type = jsdoc.classes['stuff1.Something'].properties.aProperty.type;
-			debugger;
-		
-		});
-	});
-
-
-
-	describe("types with spacess", function() 
+	describe("types with spaces", function() 
 	{
 		it("types can contain spaces", function() 
 		{
@@ -519,6 +498,36 @@ describe("JsDocMaker", function()
 		});
 	});
 
+
+
+
+
+
+
+
+	describe("support alternative comment block syntax", function() 
+	{
+			
+		describe("block commments with style", function() 
+		{
+			it("/** style blocks", function() 
+			{
+				var code = 
+					'//@module stuff2' + '\n' +	
+					'/**@class Sky\n * some text\n * and another line\n */' + '\n'; 
+
+				var maker = new JsDocMaker();
+				maker.parseFile(code); 
+				maker.postProccess();
+				maker.postProccessBinding();
+				var jsdoc = maker.data;
+
+				var Sky = jsdoc.classes['stuff2.Sky'];
+				expect(Sky.text).toBe('some text\n and another line');
+			});
+		});
+
+	});
 
 });
 

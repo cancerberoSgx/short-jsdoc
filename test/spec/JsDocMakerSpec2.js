@@ -1,28 +1,24 @@
 
 
-describe("inherited mthods and properties", function() 
+describe("support several types of block comments", function() 
 {
 		
-
-	describe("types with spacess", function() 
+	describe("block commments with style", function() 
 	{
-		it("types can contain spaces", function() 
+		it("/** style blocks", function() 
 		{
 			var code = 
-				'//@module stuff1' + '\n' +	
-				'//@class Something' + '\n' +				
-				'//@property {Object<String, Array<String > >} aProperty' + '\n' +'';
+				'//@module stuff2' + '\n' +	
+				'/**@class Sky\n * some text\n * and another line\n */' + '\n'; 
+
 			var maker = new JsDocMaker();
 			maker.parseFile(code); 
 			maker.postProccess();
 			maker.postProccessBinding();
 			var jsdoc = maker.data;
 
-			var type = jsdoc.classes['stuff1.Something'].properties.aProperty.type;
-			expect(type.name).toBe('Object'); 
-			expect(type.params[0].name).toBe('String'); 
-			expect(type.params[1].name).toBe('Array'); 
-			expect(type.params[1].params[0].name).toBe('String'); 
+			var Sky = jsdoc.classes['stuff2.Sky'];
+			expect(Sky.text).toBe(' some text\n and another line');
 		});
 	});
 

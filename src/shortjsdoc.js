@@ -446,6 +446,7 @@ JsDocMaker.prototype.parseFile = function(source, fileName)
 	return parsed; 
 }; 
 
+//@property {String} ignoreCommentPrefix
 JsDocMaker.prototype.ignoreCommentPrefix = '?';
 
 //@method parse	@return {Array} array of class description - with methods, and methods containing params. 
@@ -461,19 +462,9 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 	this.data = this.data || {}; 
 	this.data.classes = this.data.classes || {}; 
 	this.data.modules = this.data.modules || {}; 
-
-	//we do the parsing block by block, 
-
+ 
 	//first remove the comment nodes to ignore
-	for (var i = 0; i < this.comments.length; i++) 
-	{
-		var node = this.comments[i]; 
-		var value = JsDocMaker.stringTrim(node.value);
-		if(JsDocMaker.startsWith(value, this.ignoreCommentPrefix))
-		{
-			this.comments.splice(i, 1); //remove this node
-		}
-	}
+	this.preprocessComments();
 
 	//fix annotations that don't have names 
 	this.fixUnamedAnnotations();
@@ -640,6 +631,34 @@ JsDocMaker.prototype.parseUnitSimple = function(str, comment)
 	};
 	return ret;
 }; 
+
+//@method preprocessComments do an initial preprocesing on the comments erasing those marked to be ignored, and fixing its text to support alternative syntax.
+JsDocMaker.prototype.preprocessComments = function()
+{
+	//we do the parsing block by block,
+	for (var i = 0; i < this.comments.length; i++) 
+	{
+		var node = this.comments[i]; 
+		node.value = node.value || ''; 
+
+		// fix styled comment blocks with '*' as new line prefix
+		if(node.type === 'Block')
+		{
+			// Note: syntax /** - not necesary to implement
+			// console.log(node.value, node.value.replace(/\n \*/gi, '\n'))
+			// debugger;
+			node.value = node.value.replace(/\n \*/gi, '\n');
+		}
+
+		// remove comments that starts with ignoreCommentPrefix
+		if(JsDocMaker.startsWith(JsDocMaker.stringTrim(node.value), this.ignoreCommentPrefix))
+		{
+			//if \n * is detected it is fixed to not count the decorative '*'
+			this.comments.splice(i, 1); //remove this node
+		}
+	}
+}; 
+
 
 // @method unifyLineComments unify adjacents Line comment nodes into one in the ns.syntax.coments generated after visiting. 
 JsDocMaker.prototype.unifyLineComments = function()
