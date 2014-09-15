@@ -86,7 +86,10 @@ _(ShortJsDoc.prototype).extend({
 ShortJsDoc.folderWalk = function (dir, action) {
 	// Assert that it's a function
 	if (typeof action !== "function")
+	{
 		action = function (error, file) { };
+	}
+		
 
 	// Read the directory
 
@@ -107,11 +110,15 @@ ShortJsDoc.folderWalk = function (dir, action) {
 		// console.log(stat);
 		// If the file is a directory
 		if (stat && stat.isDirectory())
+		{
 			// Dive into the directory
 			ShortJsDoc.folderWalk(path, action);
+		}			
 		else
+		{
 			// Call the action
 			action(null, path);
+		}			
 		// });
 	});
 	// });

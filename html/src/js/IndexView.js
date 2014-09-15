@@ -2,7 +2,7 @@
 //@class IndexView @extends AbstractView
 var IndexView = AbstractView.extend({
 
-	className: "index"
+	className: 'index'
 
 ,	template: 'index'
 

@@ -18,6 +18,7 @@
 		"grunt-contrib-uglify":"*",
   		"matchdep": "*",
   		"grunt-contrib-less": "*",
+  		"grunt-contrib-jshint": "*",
 
 		"underscore": "*",
 		"esprima": "*"

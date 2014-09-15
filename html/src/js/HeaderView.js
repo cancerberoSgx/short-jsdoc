@@ -2,7 +2,7 @@
 //@class HeaderView @extends AbstractView
 var HeaderView = AbstractView.extend({
 
-	className: "header-view"
+	className: 'header-view'
 
 ,	template: 'header'
 

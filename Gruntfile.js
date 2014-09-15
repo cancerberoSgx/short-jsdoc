@@ -31,7 +31,7 @@ var uglifyLibFiles = [
 
 ];
 
-var concat_files = ['src/shortjsdoc-header.js', 'src/typeParser.js', 'src/JsDocMaker.js', 'src/shortjsdoc-main.js'];
+var concat_files = ['src/shortjsdoc-header.txt', 'src/typeParser.js', 'src/JsDocMaker.js', 'src/shortjsdoc-main.js'];
 
 module.exports = function (grunt) {
 
@@ -104,7 +104,7 @@ module.exports = function (grunt) {
 ,	less: {
 		development: {
 			files: {
-				"html/src/styles/styles.css": "html/src/styles/main.less"
+				'html/src/styles/styles.css': 'html/src/styles/main.less'
 			}
 		}
 	}
@@ -122,10 +122,31 @@ module.exports = function (grunt) {
 		}
 	}
 
+
+,	jshint: {
+		all: ['Gruntfile.js', 'src/JsDocMaker.js', 'html/src/js/**/*.js']
+	,	options: {
+			forin:true
+		,	noarg:true
+		,	noempty:true
+		,	eqeqeq:true
+		,	bitwise:false
+		,	undef:false
+		,	unused:false
+		,	curly:true
+		,	browser:true
+		,	quotmark:'single'
+		,	maxerr:50
+		,	laxcomma:true
+		,	expr:true
+		,	newcap: false
+	}
+	}
+
 	});
 
 	grunt.registerTask('run', [ 'jst', 'concat', 'uglify', 'connect', 'watch' ]);
 
-	grunt.registerTask('compile', [ 'jst', 'concat', 'uglify' ]);
+	grunt.registerTask('compile', [ 'jshint', 'jst', 'concat', 'uglify' ]);
 
 };

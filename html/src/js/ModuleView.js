@@ -2,7 +2,7 @@
 //@class ModuleView @extends AbstractView
 var ModuleView = AbstractView.extend({
 
-	className: "module"
+	className: 'module'
 
 ,	template: 'module'
 

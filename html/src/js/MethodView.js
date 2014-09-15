@@ -2,7 +2,7 @@
 //@class MethodView @extends AbstractView
 var MethodView = AbstractView.extend({
 
-	className: "method-view"
+	className: 'method-view'
 
 ,	template: 'method'
 

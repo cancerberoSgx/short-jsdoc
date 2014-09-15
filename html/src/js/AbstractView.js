@@ -3,7 +3,7 @@
 
 var AbstractView = Backbone.View.extend({
 
-	tagName: "div"
+	tagName: 'div'
 
 ,	initialize: function(application) 
 	{

@@ -3,7 +3,7 @@
 
 var ClassView = AbstractView.extend({
 
-	className: "class-view"
+	className: 'class-view'
 
 ,	template: 'class'
 

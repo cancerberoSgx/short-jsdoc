@@ -2,7 +2,7 @@
 //@class ApplicationView @extends AbstractView
 var ApplicationView = AbstractView.extend({
 
-	className: "application-view"
+	className: 'application-view'
 
 ,	template: 'application'
 
