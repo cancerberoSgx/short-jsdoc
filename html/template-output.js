@@ -19,23 +19,23 @@ with (obj) {
  
 var self = this; 
 ;
-__p += '\n\n<h2 class="class-title">Class ' +
+__p += '\n\n<div class="row">\n\t<div class="col-md-4">\n\t\t<h2 class="class-title">Class ' +
 ((__t = ( this.makeLink(this.jsdoc, true) )) == null ? '' : __t) +
-'</h2>\n\n<h3 class="class-module-title">Module ' +
+'</h2>\n\t</div>\n\t<div class="col-md-4">\t\t\n\t\t';
+ if (this.jsdoc.extends) { ;
+__p += '\n\t\t<h3 class="class-extends-title">Extends ' +
+((__t = ( this.printTypeAsString(this.jsdoc.extends))) == null ? '' : __t) +
+'</h3>\n\t\t';
+ } ;
+__p += '\n\t</div>\n\t<div class="col-md-4">\n\t\t<h3 class="class-module-title">Module ' +
 ((__t = ( this.makeLink(this.jsdoc.module, true) )) == null ? '' : __t) +
-'</h3>\n\n\n<div class="pull-right"><a href="' +
+'</h3>\n\t</div>\n</div>\n\n\n<div class="pull-right"><a href="' +
 ((__t = ( this.makeLink(this.jsdoc) )) == null ? '' : __t) +
 '?inherited=' +
 ((__t = ( this.options.inherited ? 0 : 1 )) == null ? '' : __t) +
 '">' +
 ((__t = ( this.options.inherited ? 'Hide' : 'Show' )) == null ? '' : __t) +
-' inherited properties</a></div>\n\n\n';
- if (this.jsdoc.extends) { ;
-__p += '\n<h3 class="class-extends-title">Extends ' +
-((__t = ( this.printTypeAsString(this.jsdoc.extends))) == null ? '' : __t) +
-'</h3>\n';
- } ;
-__p += '\n\n<p class="class-text">' +
+' inherited properties</a></div>\n\n\n<p class="class-text">' +
 ((__t = ( this.jsdoc.textHtml || this.jsdoc.text || '' )) == null ? '' : __t) +
 '</p>\n\n';
  if(this.jsdoc.constructors && this.jsdoc.constructors.length) { ;
@@ -169,7 +169,7 @@ __p += '\n\n' +
 ((__t = ( this.application.templates['modules'].apply(this, arguments) )) == null ? '' : __t) +
 '\n\n\n' +
 ((__t = ( this.application.templates['classes'].apply(this, arguments) )) == null ? '' : __t) +
-'\n\n<p><a href="#parse"><b>Parse</b> your own code! --></a></p>\n\n<p>(devel)<a href="../test/SpecRunner.html">Specs</a></p> ';
+'\n\n<p><a href="#parse"><b>Parse</b> your own code! --></a></p>\n\n<p>(devel)<a href="../test/SpecRunner.html">Specs</a></p> \n\n';
 
 }
 return __p

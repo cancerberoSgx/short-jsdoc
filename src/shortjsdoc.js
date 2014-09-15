@@ -417,13 +417,13 @@ var JsDocMaker = GLOBAL.JsDocMaker = function()
 	this.customNativeTypes = this.customNativeTypes || {};
 	this.annotationRegexp = /(\s+@\w+)/gi;
 	this.parseUnitRegexp = /\s*@(\w+)\s*(\{[\w<>\|, ]+\}){0,1}\s*([\w\._]+){0,1}(.*)\s*/; 
-	//@property {Array<Function>}postProccessors
-	this.postProccessors = [];
 }; 
+//@property {Array<Function>}postProccessors
+JsDocMaker.prototype.postProccessors = []; 
 
 
-
-
+//@property {Array<Function>}commentPreprocessors
+JsDocMaker.prototype.commentPreprocessors = []; 
 
 
 //PARSING AND PREPROCESSING
@@ -462,16 +462,11 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 	this.data = this.data || {}; 
 	this.data.classes = this.data.classes || {}; 
 	this.data.modules = this.data.modules || {}; 
- 
-	//first remove the comment nodes to ignore
-	this.preprocessComments();
 
-	//fix annotations that don't have names 
-	this.fixUnamedAnnotations();
-
-	//unify adjacents line comments in 1
-	this.unifyLineComments();
-
+	_(this.commentPreprocessors).each(function(preprocessor)
+	{
+		preprocessor.apply(self, [self]); 
+	});
 
 	_(this.comments).each(function(node)
 	{
@@ -632,6 +627,16 @@ JsDocMaker.prototype.parseUnitSimple = function(str, comment)
 	return ret;
 }; 
 
+
+
+
+
+
+
+
+
+//COMMENT PREPROCESSORS
+
 //@method preprocessComments do an initial preprocesing on the comments erasing those marked to be ignored, and fixing its text to support alternative syntax.
 JsDocMaker.prototype.preprocessComments = function()
 {
@@ -658,6 +663,27 @@ JsDocMaker.prototype.preprocessComments = function()
 		}
 	}
 }; 
+//install it as comment preprocessor plugin!
+JsDocMaker.prototype.commentPreprocessors.push(JsDocMaker.prototype.preprocessComments); 
+
+
+//@method fixUnamedAnnotations - our regexp format expect an anotation with a name. So for enabling unamed annotations we do this dirty fix, this is add a name to 
+//precondition
+JsDocMaker.prototype.fixUnamedAnnotations = function()
+{
+	_(this.comments).each(function(node)
+	{
+		if(node.value)
+		{
+			node.value = node.value.replace(/@constructor/gi, '@constructor n'); 
+			node.value = node.value.replace(/(@\w+)\s*$/gi, '$1 dummy ');
+			node.value = node.value.replace(/(@\w+)\s+(@\w+)/gi, '$1 dummy $2');
+		}
+	});
+};
+//install it as comment preprocessor plugin!
+JsDocMaker.prototype.commentPreprocessors.push(JsDocMaker.prototype.fixUnamedAnnotations); 
+
 
 
 // @method unifyLineComments unify adjacents Line comment nodes into one in the ns.syntax.coments generated after visiting. 
@@ -686,23 +712,8 @@ JsDocMaker.prototype.unifyLineComments = function()
 		}
 	}
 }; 
-
-//@method fixUnamedAnnotations - our regexp format expect an anotation with a name. So for enabling unamed annotations we do this dirty fix, this is add a name to 
-//precondition
-JsDocMaker.prototype.fixUnamedAnnotations = function()
-{
-	_(this.comments).each(function(node)
-	{
-		if(node.value)
-		{
-			node.value = node.value.replace(/@constructor/gi, '@constructor n'); 
-			node.value = node.value.replace(/(@\w+)\s*$/gi, '$1 dummy ');
-			node.value = node.value.replace(/(@\w+)\s+(@\w+)/gi, '$1 dummy $2');
-		}
-	});
-};
-
-
+//install it as comment preprocessor plugin!
+JsDocMaker.prototype.commentPreprocessors.push(JsDocMaker.prototype.unifyLineComments); 
 
 
 
@@ -1203,6 +1214,10 @@ JsDocMaker.startsWith = function(s, prefix)
 	s = s || '';
 	return s.indexOf(prefix)===0;
 }; 
+
+
+
+
 
 
 

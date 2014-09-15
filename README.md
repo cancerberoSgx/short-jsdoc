@@ -170,6 +170,38 @@ After this we can easily access the @versionfoo of any node like for example, th
 
     jsdoc.modules.office.versionfoo === '3.2'
 
+
+Also another kind of extension / plugin is available for preprocessing the source comments, for example for removing or adding something. In the following example we remove a string and add some extra information to all our comments of type line:
+
+    var code = 
+        '//@module stuff3' + '\n' + 
+        '/**@class Vanilla some text @author sgx */' + '\n'; 
+        
+    var maker = new JsDocMaker();
+    
+    //define a comment preprocessor
+    var my_preprocessor = function()
+    {
+        for (var i = 0; i < this.comments.length; i++) 
+        {
+            var node = this.comments[i]; 
+            node.value = node.value.replace(/@author\s+\w+/gi, '') + ' @author thief'; 
+        }
+    }; 
+    //and install it
+    maker.commentPreprocessors.push(my_preprocessor);
+    
+    //then do the parsing
+    maker.parseFile(code); 
+    maker.postProccess();
+    maker.postProccessBinding();
+    var jsdoc = maker.data;
+    
+    var Vanilla = jsdoc.classes['stuff3.Vanilla'];
+    var author = _(Vanilla.children).find(function(c){return c.annotation === 'author'; });
+    expect(author.name).toBe('thief');
+
+
 # Motivation
 
 ## Motivation 1: short simple and flexible jsdoc syntax

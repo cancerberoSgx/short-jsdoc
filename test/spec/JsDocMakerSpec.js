@@ -529,5 +529,48 @@ describe("JsDocMaker", function()
 
 	});
 
+
+
+
+	describe("support comment preprocessor", function() 
+	{
+			
+		describe("for example one can install a pcomment preprocessor for adding/removing fragment to comments", function() 
+		{
+			it("/** style blocks", function() 
+			{
+				var code = 
+					'//@module stuff3' + '\n' +	
+					'/**@class Vanilla some text @author sgx */' + '\n'; 
+
+				var maker = new JsDocMaker();
+
+				//define a comment preprocessor
+				var my_preprocessor = function()
+				{
+					for (var i = 0; i < this.comments.length; i++) 
+					{
+						var node = this.comments[i]; 
+						node.value = node.value.replace(/@author\s+\w+/gi, '') + ' @author thief'; 
+					}
+				}; 
+				//and install it
+				maker.commentPreprocessors.push(my_preprocessor);
+
+				//then do the parsing
+				maker.parseFile(code); 
+				maker.postProccess();
+				maker.postProccessBinding();
+				var jsdoc = maker.data;
+
+				var Vanilla = jsdoc.classes['stuff3.Vanilla'];
+				var author = _(Vanilla.children).find(function(c){return c.annotation === 'author'; });
+				expect(author.name).toBe('thief');
+			});
+		});
+
+	});
+
+
 });
 
