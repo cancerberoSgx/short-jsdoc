@@ -24,9 +24,6 @@ var PropertyView = AbstractView.extend({
 		this.jsdoc.textHtml = this.getTextHtml(this.jsdoc);		
 	}
 
-,	afterRender: function()
-	{
-		this.renderSource(this.jsdoc, this.$('[data-type="sources"]')); 
-	}
+
 });
 

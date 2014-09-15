@@ -167,13 +167,28 @@ _(AbstractView.prototype).extend({
 		return s + '</span>';
 	}
 
-,	renderSource: function(jsdoc, $container)
+,	renderSource_: function(jsdoc, $container)
 	{
 		var view = new SourcesView(this.application, jsdoc); 
 		view.renderIn($container); 
-		// this.application.templates.sources.apply(this, arguments)	
 	}
 
+
+,	renderSource: function()
+	{
+		if(!this.jsdoc)
+		{
+			return;
+		}
+		this.renderSource_(this.jsdoc, this.$('[data-type="sources"]')); 
+		this.$('pre code').addClass('prettyprint'); 
+		if(typeof prettyPrint !== 'undefined') 
+		{
+			prettyPrint('pre code');
+		}
+	}
+
+	
 ,	getInherited: function(c, what)
 	{
 		var data = {};

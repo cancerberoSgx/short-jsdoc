@@ -722,7 +722,7 @@ JsDocMaker.prototype.extractInherited = function(baseClass, c, what, data)
 		});
 	}
 
-	if(c.extends) //recurse!
+	if(c.extends && c !== c.extends) //recurse!
 	{
 		self.extractInherited(baseClass, c.extends, what, data);
 	}

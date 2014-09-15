@@ -2,7 +2,8 @@
 # TODO: ideas
 
  * cmd line should accept a package.json file as an input for getting project meta-information
- * program the JsDocMaker to be a collection of plugins - that are runned in different stages : preprocessComments. This way it will be a core and a collection of plugins with the singularities (the short-jsdoc syntax definition). This allow to be better extendable.
+ * @link preprocessed comment that is replaced by html or mardown link at preprocessing.
+ * make jsdoc for javascript objects liek with methods, etc and offer the possibility to use that information jsdocs instead links to the nativemozilla document like now. This gives the possibility to really see all js attributes inherited from js api.
  * search for class, modules, methods, methods that return or accept a type. subclasses of..., classes overriding a method... be able to find the classes that uses a certain class in a property or parameter or return type...
  * class hierarchy in classview
  * support comments like /** and in those remove ** prefix
