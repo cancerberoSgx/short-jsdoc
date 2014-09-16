@@ -6,7 +6,7 @@
 
 @class ObjectPrototype
 
-Adapted from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/prototype#Properties
+Adapted from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/prototype
 
 The Object.prototype property represents the Object prototype object.
 
@@ -224,4 +224,212 @@ Note that in the last case there are no newly created objects.
 
 @param param The name of the property to test.
 
+*/
+
+
+
+
+
+
+
+
+/*
+@method isPrototypeOf
+##Summary
+The isPrototypeOf() method tests for an object in another object's prototype chain.
+
+	Note: isPrototypeOf differs from the instanceof operator. In the expression "object instanceof AFunction", the object prototype chain is checked against AFunction.prototype, not against AFunction itself.
+
+The isPrototypeOf method allows you to check whether or not an object exists within another object's prototype chain.
+
+For example, consider the following prototype chain:
+
+	function Fee() {
+	  // . . .
+	}
+
+	function Fi() {
+	  // . . .
+	}
+	Fi.prototype = new Fee();
+
+	function Fo() {
+	  // . . .
+	}
+	Fo.prototype = new Fi();
+
+	function Fum() {
+	  // . . .
+	}
+	Fum.prototype = new Fo();
+
+Later on down the road, if you instantiate Fum and need to check if Fi's prototype exists within the Fum prototype chain, you could do this:
+
+	var fum = new Fum();
+	. . .
+	
+	if (Fi.prototype.isPrototypeOf(fum)) {
+	  // do something safe
+	}
+This, along with the instanceof operator particularly comes in handy if you have code that can only function when dealing with objects descended from a specific prototype chain, e.g., to guarantee that certain methods or properties will be present on that object.
+
+
+@param {Object} obj the object whose prototype chain will be searched
+*/
+
+
+
+
+
+/*
+@method propertyIsEnumerable
+##Summary
+The propertyIsEnumerable() method returns a Boolean indicating whether the specified property is enumerable.
+
+##Description
+Every object has a propertyIsEnumerable method. This method can determine whether the specified property in an object can be enumerated by a for...in loop, with the exception of properties inherited through the prototype chain. If the object does not have the specified property, this method returns false.
+
+##Examples
+###Example: A basic use of propertyIsEnumerable
+
+The following example shows the use of propertyIsEnumerable on objects and arrays:
+
+	var o = {};
+	var a = [];
+	o.prop = 'is enumerable';
+	a[0] = 'is enumerable';
+
+	o.propertyIsEnumerable('prop');   // returns true
+	a.propertyIsEnumerable(0);        // returns true
+
+###Example: User-defined versus built-in objects
+
+The following example demonstrates the enumerability of user-defined versus built-in properties:
+
+	var a = ['is enumerable'];
+
+	a.propertyIsEnumerable(0);          // returns true
+	a.propertyIsEnumerable('length');   // returns false
+
+	Math.propertyIsEnumerable('random');   // returns false
+	this.propertyIsEnumerable('Math');     // returns false
+	Example: Direct versus inherited properties
+
+	var a = [];
+	a.propertyIsEnumerable('constructor');         // returns false
+
+	function firstConstructor() {
+	  this.property = 'is not enumerable';
+	}
+
+	firstConstructor.prototype.firstMethod = function () {};
+
+	function secondConstructor() {
+	  this.method = function method() { return 'is enumerable'; };
+	}
+
+	secondConstructor.prototype = new firstConstructor;
+	secondConstructor.prototype.constructor = secondConstructor;
+
+	var o = new secondConstructor();
+	o.arbitraryProperty = 'is enumerable';
+
+	o.propertyIsEnumerable('arbitraryProperty');   // returns true
+	o.propertyIsEnumerable('method');              // returns true
+	o.propertyIsEnumerable('property');            // returns false
+
+	o.property = 'is enumerable';
+
+	o.propertyIsEnumerable('property');            // returns true
+
+	// These return false as they are on the prototype which 
+	// propertyIsEnumerable does not consider (even though the last two
+	// are iteratable with for-in)
+	o.propertyIsEnumerable('prototype');   // returns false (as of JS 1.8.1/FF3.6)
+	o.propertyIsEnumerable('constructor'); // returns false
+	o.propertyIsEnumerable('firstMethod'); // returns false
+
+@param prop
+The name of the property to test.
+*/
+
+
+
+
+/*
+@method toLocaleString
+##Summary
+The toLocaleString() method returns a string representing the object. This method is meant to be overriden by derived objects for locale-specific purposes.
+
+##Syntax
+obj.toLocaleString();
+##Description
+Object's toLocaleString returns the result of calling toString().
+
+This function is provided to give objects a generic toLocaleString method, even though not all may use it. See the list below.
+
+##Objects overriding toLocaleString
+
+Array: Array.prototype.toLocaleString()
+Number: Number.prototype.toLocaleString()
+Date: Date.prototype.toLocaleString()
+*/
+
+
+
+
+
+/*
+@method toString
+##Summary
+The toString() method returns a string representing object.
+
+##Syntax
+obj.toString()
+##Description
+Every object has a toString() method that is automatically called when the object is to be represented as a text value or when an object is referred to in a manner in which a string is expected. By default, the toString() method is inherited by every object descended from Object. If this method is not overridden in a custom object, toString() returns "[object type]", where type is the object type. The following code illustrates this:
+
+var o = new Object();
+o.toString();           // returns [object Object]
+Starting in JavaScript 1.8.5 toString() called on null returns [object Null], and undefined returns [object Undefined], as defined in the 5th Edition of ECMAScript and a subsequent Errata. See Using toString to detect object type.
+##Examples
+###Overriding the default toString method
+
+You can create a function to be called in place of the default toString() method. The toString() method takes no arguments and should return a string. The toString() method you create can be any value you want, but it will be most useful if it carries information about the object.
+
+The following code defines the Dog object type and creates theDog, an object of type Dog:
+
+	function Dog(name,breed,color,sex) {
+	   this.name=name;
+	   this.breed=breed;
+	   this.color=color;
+	   this.sex=sex;
+	}
+
+	theDog = new Dog("Gabby","Lab","chocolate","female");
+If you call the toString() method on this custom object, it returns the default value inherited from Object:
+
+	theDog.toString(); //returns [object Object]
+	The following code creates and assigns dogToString() to override the default toString() method. This function generates a string containing the name, breed, color, and sex of the object, in the form "property = value;".
+
+	Dog.prototype.toString = function dogToString() {
+	  var ret = "Dog " + this.name + " is a " + this.sex + " " + this.color + " " + this.breed;
+	  return ret;
+	}
+With the preceding code in place, any time theDog is used in a string context, JavaScript automatically calls the dogToString() function, which returns the following string:
+
+Dog Gabby is a female chocolate Lab
+Using toString() to detect object class
+
+toString() can be used with every object and allows you to get its class. To use the Object.prototype.toString() with every object, you need to call Function.prototype.call() or Function.prototype.apply() on it, passing the object you want to inspect as the first parameter called thisArg.
+
+	var toString = Object.prototype.toString;
+
+	toString.call(new Date); // [object Date]
+	toString.call(new String); // [object String]
+	toString.call(Math); // [object Math]
+
+	//Since JavaScript 1.8.5
+	toString.call(undefined); // [object Undefined]
+	toString.call(null); // [object Null]
 */

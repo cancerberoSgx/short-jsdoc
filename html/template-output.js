@@ -200,7 +200,11 @@ __p += '\n<div class="method-text">\n\t' +
 ((__t = ( this.jsdoc.textHtml )) == null ? '' : __t) +
 '\n</div>\n';
  } ;
-__p += '\n\n<h3>Parameters</h3>\n\n<ul>\n';
+__p += '\n\n\n\n';
+ if( this.jsdoc.params.length ) { ;
+__p += '\n<h3>Parameters</h3>\n';
+ } ;
+__p += '\n\n<ul>\n';
  var self = this, buffer = [];
 _(this.jsdoc.params).each(function(param){
 ;
@@ -212,10 +216,10 @@ __p += '\n\t<li>\n\t\tname: ' +
 ((__t = ( param.text )) == null ? '' : __t) +
 '</span>\n\t</li>\n\n';
  }); ;
-__p += '\n</ul>\n\n';
+__p += '\n</ul>\n\n\n\n';
  if(!this.isConstructor){;
 __p += '\n\t';
-if (this.jsdoc.returns) { ;
+if (this.jsdoc.returns && (this.jsdoc.returns.type || this.jsdoc.returns.text) ) { ;
 __p += '\n\t\t<h3 class="returns-title">Returns</h3>\n\t\t' +
 ((__t = ( self.printTypeAsString(this.jsdoc.returns.type) )) == null ? '' : __t) +
 '\n\n\t\t';

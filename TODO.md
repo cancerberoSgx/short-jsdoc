@@ -4,6 +4,10 @@
  * cmd line should accept a package.json file as an input for getting project meta-information
  * @link preprocessed comment that is replaced by html or mardown link at preprocessing.
  * make jsdoc for javascript objects liek with methods, etc and offer the possibility to use that information jsdocs instead links to the nativemozilla document like now. This gives the possibility to really see all js attributes inherited from js api.
+ * support multiple inheritance.
+ * configurable option boolean showSources
+ * if an extension loop occurs a maximun call stack size exceeded exception ocurrs. Detect this more friendly.
+ * Log not found types.
  * search for class, modules, methods, methods that return or accept a type. subclasses of..., classes overriding a method... be able to find the classes that uses a certain class in a property or parameter or return type...
  * class hierarchy in classview
  * support comments like /** and in those remove ** prefix

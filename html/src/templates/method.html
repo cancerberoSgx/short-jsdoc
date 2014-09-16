@@ -15,7 +15,11 @@
 </div>
 <% } %>
 
+
+
+<% if( this.jsdoc.params.length ) { %>
 <h3>Parameters</h3>
+<% } %>
 
 <ul>
 <% var self = this, buffer = [];
@@ -29,8 +33,10 @@ _(this.jsdoc.params).each(function(param){
 <% }); %>
 </ul>
 
+
+
 <% if(!this.isConstructor){%>
-	<%if (this.jsdoc.returns) { %>
+	<%if (this.jsdoc.returns && (this.jsdoc.returns.type || this.jsdoc.returns.text) ) { %>
 		<h3 class="returns-title">Returns</h3>
 		<%= self.printTypeAsString(this.jsdoc.returns.type) %>
 
