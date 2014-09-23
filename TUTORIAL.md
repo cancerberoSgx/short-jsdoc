@@ -59,6 +59,18 @@ Another example indicate that the param el may be an String or an HTMLElement:
 
 Types are optional but using them makes your API navigable (easy to learn). 
 
+# Respect the syntax!
+
+The most common mistake is perhaps not respecting the simple annotation syntax when using multiple @annotations. Take for example
+
+    @class Apple @extends @Fruit Apples are fruits that grows in the forest tiles. 
+
+this is incorrect because the Apple text, this is 'are fruits that grows in the forest tiles.' it will be ignored. The right ways would be : 
+
+    @class Apple Apples are fruits that grows in the forest tiles. @extends @Fruit
+
+Then you just know there are major @annotatios like @module @class @method @param @property that will contain other minor like @extend @static etc.
+
 #Example 1
 
 We hope the syntax is clear enough to be learn by reading it:

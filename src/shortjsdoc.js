@@ -416,7 +416,6 @@ var JsDocMaker = GLOBAL.JsDocMaker = function()
 	//@property {Object<String,String>} customNativeTypes name to url map that the user can modify to register new native types b givin its url.
 	this.customNativeTypes = this.customNativeTypes || {};
 	this.annotationRegexp = /(\s+@\w+)/gi;
-	this.parseUnitRegexp = /\s*@(\w+)\s*(\{[\w<>\|, ]+\}){0,1}\s*([\w\._]+){0,1}(.*)\s*/; 
 }; 
 //@property {Array<Function>}postProccessors
 JsDocMaker.prototype.postProccessors = []; 
@@ -596,17 +595,20 @@ JsDocMaker.prototype.parseUnitSimple = function(str, comment)
 		return null;
 	}
 	var result;
+	var regexp = null; 
 
 	if(comment.type==='Line')
 	{
 		str = JsDocMaker.stringFullTrim(str); 
-		result = this.parseUnitRegexp.exec(str);
+		regexp = /\s*@(\w+)\s*(\{[\w<>\|, ]+\}){0,1}\s*([\w\._]+){0,1}(.*)\s*/; 
+		result = regexp.exec(str);
 	}
 	else
 	{
 		str = JsDocMaker.stringTrim(str); 
+		regexp = /\s*@(\w+)\s*(\{[\w<>\|, #\(\)]+\}){0,1}\s*([\w\._]+){0,1}([.\s\w\W]*)/gmi;
 		//TODO: I have to put this regexp inline here - if not the second time I call exec on the instance it won't match :-??
-		result = /\s*@(\w+)\s*(\{[\w<>,]+\}){0,1}\s*([\w\._]+){0,1}([.\s\w\W]*)/gmi.exec(str); 
+		result = regexp.exec(str); 
 	}
 	if(!result || result.length<4)
 	{
@@ -650,8 +652,6 @@ JsDocMaker.prototype.preprocessComments = function()
 		if(node.type === 'Block')
 		{
 			// Note: syntax /** - not necesary to implement
-			// console.log(node.value, node.value.replace(/\n \*/gi, '\n'))
-			// debugger;
 			node.value = node.value.replace(/\n \*/gi, '\n');
 		}
 
@@ -887,7 +887,34 @@ JsDocMaker.prototype.parseSingleTypeString = function(typeString2, baseClass)
 	var a = typeString2.split('|'), ret = [], self=this;
 	_(a).each(function(typeString)
 	{
-		if(typeString.indexOf('<')!==-1)
+		// first look for custom types which have the syntax: #command1(param1,2)
+		var customType = /^#(\w+)\(([^\()]+)\)/.exec(typeString); 
+		if(customType && customType.length === 3)
+		{
+			var parserName = customType[1];
+			var parserInput = customType[2]; 
+			var parser = self.typeParsers[parserName]; 
+			if(parser)
+			{
+				try 
+				{
+					var parsed = parser.parse(parserInput);
+					if(parsed)
+					{
+						// TODO bind type ? 
+						// var type_binded = self.bindParsedType(type, baseClass); 
+						ret.push(parsed); 
+					}
+				}
+				catch(ex)
+				{
+					self.error('Invalid Type: '+typeString, ', baseClass: ', JSON.stringify(baseClass)); 
+				}	
+				
+			}
+		}
+
+		else if(typeString.indexOf('<')!==-1)
 		{
 			var type = null;
 			try
@@ -902,9 +929,10 @@ JsDocMaker.prototype.parseSingleTypeString = function(typeString2, baseClass)
 				self.error('Invalid Type: '+typeString, ', baseClass: ', JSON.stringify(baseClass)); 
 			}	
 		}
+
 		else
-		{	ret.push(self.bindClass(typeString, baseClass)); 
-			// return self.bindClass(typeString, baseClass);	
+		{	
+			ret.push(self.bindClass(typeString, baseClass));	
 		}
 	}) ; 
 	return ret;
@@ -976,20 +1004,32 @@ JsDocMaker.prototype.bindClass = function(name, baseClass)
 	}
 }; 
 
-//@method parseType parse a type string like 'Map<String,Array<Apple>>' and return an object like {name: 'Map',params:['String',{name: 'Array',params:['Apple']}]} 
-//It depends on type parser file typeParser.js @static
-JsDocMaker.parseType = function(s)
-{
-	var parsed = ShortJsDocTypeParser.parse(s);
-	var obj = eval('(' + parsed + ')'); 
-	return obj; 
-}; 
-
 // @method simpleName @param {String} name @return {String}
 JsDocMaker.prototype.simpleName = function(name)
 {
 	var a = name.split(JsDocMaker.ABSOLUTE_NAME_SEPARATOR);
 	return a[a.length-1]; 
+}; 
+
+
+
+//TYPE PARSING
+
+//@method parseType parse a type string like 'Map<String,Array<Apple>>' and return an object like {name: 'Map',params:['String',{name: 'Array',params:['Apple']}]}. This is the default type parser. 
+//It depends on type parser file typeParser.js @static
+JsDocMaker.parseType = function(s)
+{
+	this.typeParsers = this.typeParsers || {};
+	var parsed = ShortJsDocTypeParser.parse(s);
+	var obj = eval('(' + parsed + ')'); 
+	return obj; 
+}; 
+
+
+JsDocMaker.prototype.registerTypeParser = function(typeParser)
+{
+	this.typeParsers = this.typeParsers || {};
+	this.typeParsers[typeParser.name] = typeParser; 
 }; 
 
 

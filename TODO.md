@@ -3,7 +3,11 @@
 
  * cmd line should accept a package.json file as an input for getting project meta-information
  * @link preprocessed comment that is replaced by html or mardown link at preprocessing.
+ * literal object syntax with types: @return {name: String, colors: Array<Color>}. 
+ * more gneeral idea: be able to register type-parser plugins, for example @param {#obj(name:String,colors:Array<Color>)} a - so this is a custom type parser - the user must also provide a function that returns the type object, like return {name: 'Object', objectProperties: {name: {name:'String'}, colors: {name:Array,params: {...}}}}
+ * 
  * make jsdoc for javascript objects liek with methods, etc and offer the possibility to use that information jsdocs instead links to the nativemozilla document like now. This gives the possibility to really see all js attributes inherited from js api.
+ * generics typeparser doesn't accept type names with . or _
  * support multiple inheritance.
  * configurable option boolean showSources
  * if an extension loop occurs a maximun call stack size exceeded exception ocurrs. Detect this more friendly.
@@ -17,6 +21,8 @@
  * support two types of format for returns types, @return and @method {ReturnType} methodName
  * when navigating to class/ it will show the classes view. same for modules .index.html shoulod print those with links
  * TODO: let the user mark some comment block somehow to let the parser to ignore it.
+ * issue seems to be failing wen text contains underscore template code: //@method renderTemplate renders underscore templates using a ShopperState context. 
+    // Example: state.renderTemplate("hello <%= get('item').get('_price')%>")
  * issue, this text doesnt work:
  //@class A
  //Some text for class A

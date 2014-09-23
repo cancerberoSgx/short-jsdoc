@@ -85,8 +85,8 @@ describe("JsDocMaker", function()
 			expect(Lemon.constructors[0].params[0].name).toBe('color');
 			expect(Lemon.constructors[0].params[0].type.name).toBe('Color');
 			expect(Lemon.constructors[1].text).toBe('another constructor for the Lemon class');
-			// 	'//@constructor the Lemon public constructor signature @param {Color} color'+'\n'+
-			// 	'//@constructor another constructor for the Lemon class @param {Number} size'+'\n'+
+			/*'//@constructor the Lemon public constructor signature @param {Color} color'+'\n'+
+			'//@constructor another constructor for the Lemon class @param {Number} size'+'\n'+*/
 
 		});	
 
@@ -571,6 +571,55 @@ describe("JsDocMaker", function()
 
 	});
 
+
+
+
+	describe("support custom type parsers", function() 
+	{			
+		describe("same", function() 
+		{
+			it("example1: we define the custom type syntax {#lemmon(prop1)} that returns a relevant type object", function() 
+			{
+				var code = 
+					'//@module customTypeParsers' + '\n' +	
+					'/*@class Vanilla some text ' + '\n' +	
+					'@method method1' + '\n' +	
+					'@return {#lemmon(acid,lazy,green)} */' + '\n' +
+					''; 
+
+				var maker = new JsDocMaker();
+
+				// define and regiter a custom type syntax:
+				var customTypeParser = {
+					name: 'lemmon'	
+				,	parse: function(s)
+					{
+						// variable s is the text body of the custom type for example 'acid,lazy,green'.
+						// we return the following object as this type obejct implementation.
+						return {
+							name: 'Object'
+						,	lemmonProperties: s.split(',')
+						}; 
+					}
+				};
+				maker.registerTypeParser(customTypeParser); 
+
+				//then do the parsing
+				maker.parseFile(code); 
+				maker.postProccess();
+				maker.postProccessBinding();
+				var jsdoc = maker.data;
+
+				var Vanilla = jsdoc.classes['customTypeParsers.Vanilla'];
+				var return1 = Vanilla.methods.method1.returns.type; 
+				expect(return1.lemmonProperties[0]).toBe('acid'); 
+				expect(return1.lemmonProperties[1]).toBe('lazy'); 
+				expect(return1.lemmonProperties[2]).toBe('green'); 
+				expect(return1.name).toBe('Object'); 
+			});
+		});
+
+	});
 
 });
 

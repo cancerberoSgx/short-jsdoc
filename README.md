@@ -132,6 +132,8 @@ That would be interpreted as 'param method can be any of String, HTMLElement, jQ
 
 # Extendable
 
+## Extensibility 1: jsdoc AST Postprocessing
+
 The parser read the sources and generate a Abstract Syntax Tree (AST) of ALL the @annotations. THEN it is 'beautified' with shortcuts for properties and methods. But the AST is there for those who want to define its own semantics and annotations. For example, you want to use your own custom annotation, let's say, @versionfoo to indicate you method's, classes', properties etc version you could do something like the following (ready to run) test
 
     // the code to be parsed - note that it contains some custom @versionfoo annotations
@@ -170,6 +172,7 @@ After this we can easily access the @versionfoo of any node like for example, th
 
     jsdoc.modules.office.versionfoo === '3.2'
 
+## Extensibility 2: Source comments preprocessing
 
 Also another kind of extension / plugin is available for preprocessing the source comments, for example for removing or adding something. In the following example we remove a string and add some extra information to all our comments of type line:
 
@@ -200,6 +203,50 @@ Also another kind of extension / plugin is available for preprocessing the sourc
     var Vanilla = jsdoc.classes['stuff3.Vanilla'];
     var author = _(Vanilla.children).find(function(c){return c.annotation === 'author'; });
     expect(author.name).toBe('thief');
+
+##Extensibility 3: Custom type sytax
+
+shortjsdoc supports a general way of defining Custom types. In gneral we register a custom type that defines its name and a function that will process the custom type input string and output the type object. 
+
+In the following example we define a custom type syntax like @returns {#lemmon(acid,yellow)} that will proccess each {type} with a syntax like that:
+
+    var code = 
+        '//@module customTypeParsers' + '\n' +  
+        '/*@class Vanilla some text ' + '\n' +  
+        '@method method1' + '\n' +  
+        '@return {#lemmon(acid,lazy,green)} */' + '\n' +
+        ''; 
+
+    var maker = new JsDocMaker();
+
+    // define and regiter a custom type syntax:
+    var customTypeParser = {
+        name: 'lemmon'  
+    ,   parse: function(s)
+        {
+            // variable s is the text body of the custom type for example 'acid,lazy,green'.
+            // we return the following object as this type obejct implementation.
+            return {
+                name: 'Object'
+            ,   lemmonProperties: s.split(',')
+            }; 
+        }
+    };
+    maker.registerTypeParser(customTypeParser); 
+
+    //then do the parsing
+    maker.parseFile(code); 
+    maker.postProccess();
+    maker.postProccessBinding();
+    var jsdoc = maker.data;
+
+    var Vanilla = jsdoc.classes['customTypeParsers.Vanilla'];
+    var return1 = Vanilla.methods.method1.returns.type; 
+    expect(return1.lemmonProperties[0]).toBe('acid'); 
+    expect(return1.lemmonProperties[1]).toBe('lazy'); 
+    expect(return1.lemmonProperties[2]).toBe('green'); 
+    expect(return1.name).toBe('Object'); 
+
 
 
 # Motivation
