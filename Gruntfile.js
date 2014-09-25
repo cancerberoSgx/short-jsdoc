@@ -19,7 +19,8 @@ var uglifyLibFiles = [
 	'lib/esprima.js'
 ,	'lib/underscore.js'
 ,	'src/JsDocMaker.js'
-,	'src/typeParser.js'
+// ,	'src/typeParser.js'
+,	'src/literalObjectParser.js'
 
 ,	'html/lib/jquery/jquery-2.0.3.min.js'
 ,	'html/lib/backbone/backbone.js'

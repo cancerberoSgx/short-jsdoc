@@ -10,6 +10,7 @@
 // with classes and modules array that users can use to easily access jsdocs information, for example, parsed.classes.Apple.methods.getColor
 // use the parseFile method for this! This will return the AST, if you want to perform more enrichment and type binding, then use 
 // postProccess and postProccessBinding methods after.
+// @author sgurin
 //@constructor JsDocMaker
 var JsDocMaker = GLOBAL.JsDocMaker = function()
 {	
@@ -51,7 +52,6 @@ JsDocMaker.prototype.ignoreCommentPrefix = '?';
 //@method parse	@return {Array} array of class description - with methods, and methods containing params. 
 JsDocMaker.prototype.parse = function(comments, fileName)
 {
-
 	var self = this
 	,	currentClass = null
 	,	currentMethod = null
@@ -200,13 +200,13 @@ JsDocMaker.prototype.parseUnitSimple = function(str, comment)
 	if(comment.type==='Line')
 	{
 		str = JsDocMaker.stringFullTrim(str); 
-		regexp = /\s*@(\w+)\s*(\{[\w<>\|, ]+\}){0,1}\s*([\w\._]+){0,1}(.*)\s*/; 
+		regexp = /\s*@(\w+)\s*(\{[\w<>\|, #:\(\)]+\}){0,1}\s*([\w\._]+){0,1}(.*)\s*/; 
 		result = regexp.exec(str);
 	}
 	else
 	{
 		str = JsDocMaker.stringTrim(str); 
-		regexp = /\s*@(\w+)\s*(\{[\w<>\|, #\(\)]+\}){0,1}\s*([\w\._]+){0,1}([.\s\w\W]*)/gmi;
+		regexp = /\s*@(\w+)\s*(\{[\w<>\|, #:\(\)]+\}){0,1}\s*([\w\._]+){0,1}([.\s\w\W]*)/gmi;
 		//TODO: I have to put this regexp inline here - if not the second time I call exec on the instance it won't match :-??
 		result = regexp.exec(str); 
 	}
@@ -226,6 +226,8 @@ JsDocMaker.prototype.parseUnitSimple = function(str, comment)
 	,	text: JsDocMaker.stringTrim(text||'')
 	,	theRestString: JsDocMaker.stringTrim(splitted.join(''))
 	};
+
+	// console.log(str, ret);
 	return ret;
 }; 
 
@@ -488,7 +490,11 @@ JsDocMaker.prototype.parseSingleTypeString = function(typeString2, baseClass)
 	_(a).each(function(typeString)
 	{
 		// first look for custom types which have the syntax: #command1(param1,2)
-		var customType = /^#(\w+)\(([^\()]+)\)/.exec(typeString); 
+		var customType = /^#(\w+)\(([^\()]+)\)/.exec(typeString)
+		,	type_binded = null; 
+
+		// console.log(typeString, customType); 
+
 		if(customType && customType.length === 3)
 		{
 			var parserName = customType[1];
@@ -498,17 +504,17 @@ JsDocMaker.prototype.parseSingleTypeString = function(typeString2, baseClass)
 			{
 				try 
 				{
-					var parsed = parser.parse(parserInput);
+					var parsed = parser.parse(parserInput, baseClass);
 					if(parsed)
 					{
 						// TODO bind type ? 
-						// var type_binded = self.bindParsedType(type, baseClass); 
-						ret.push(parsed); 
+						type_binded = self.bindParsedType(parsed, baseClass); 
+						ret.push(type_binded); 
 					}
 				}
 				catch(ex)
 				{
-					self.error('Invalid Type: '+typeString, ', baseClass: ', JSON.stringify(baseClass)); 
+					self.error('Invalid Custom Type: '+typeString, ', baseClass: ', JSON.stringify(baseClass)); 
 				}	
 				
 			}
@@ -520,7 +526,7 @@ JsDocMaker.prototype.parseSingleTypeString = function(typeString2, baseClass)
 			try
 			{
 				type = JsDocMaker.parseType(typeString);
-				var type_binded = self.bindParsedType(type, baseClass);
+				type_binded = self.bindParsedType(type, baseClass);
 				ret.push(type_binded); 
 				// return type_binded;
 			}
@@ -620,9 +626,14 @@ JsDocMaker.prototype.simpleName = function(name)
 JsDocMaker.parseType = function(s)
 {
 	this.typeParsers = this.typeParsers || {};
-	var parsed = ShortJsDocTypeParser.parse(s);
+
+	var ss = '{name:'+s+'}'; 
+	var parsed = shortjsdocParseLiteralObject.parse(ss);
 	var obj = eval('(' + parsed + ')'); 
-	return obj; 
+	var ret = obj.name; 
+	return ret;
+	
+	// return ShortJsDocTypeParser.parse(s);//old code
 }; 
 
 
@@ -631,6 +642,8 @@ JsDocMaker.prototype.registerTypeParser = function(typeParser)
 	this.typeParsers = this.typeParsers || {};
 	this.typeParsers[typeParser.name] = typeParser; 
 }; 
+
+
 
 
 
@@ -667,6 +680,9 @@ JsDocMaker.prototype.getNativeTypeUrl = function(name)
 
 
 
+
+
+
 //MODIFIERS postproccessing- like static, private, final
 
 //@property {Array<String>}MODIFIERS @static
@@ -683,6 +699,10 @@ JsDocMaker.prototype.installModifiers = function(node)
 		}
 	});
 }; 
+
+
+
+
 
 
 
@@ -769,7 +789,14 @@ JsDocMaker.prototype.extractInherited = function(baseClass, c, what, data)
 };
 
 
+
+
+
+
+
+
 //custom postproccess
+
 //@method recurseAST visit all the ast nodes with given function @param {Function} fn
 JsDocMaker.prototype.recurseAST = function(fn)
 {
@@ -793,6 +820,57 @@ JsDocMaker.prototype.recurseAST = function(fn)
 		fn.apply(m, [m]); 
 	});
 }; 
+
+
+
+
+
+
+
+//CUSTOM TYPE literalObject - requires literalObjectParser.js
+//syntax: {#obj(prop1:String,prop2:Array<Apple>)}
+//@method literalObjectParse
+JsDocMaker.prototype.literalObjectParse = function(s, baseClass)
+{
+	var parsed = null
+	,	self=this
+	,	objectProperties = {};
+	try
+	{
+		parsed = shortjsdocParseLiteralObject.parse('{' + s + '}');
+		var result = eval('('+parsed+')');
+		_(result).each(function(value, key)
+		{
+			var valueBinded = self.bindParsedType(value, baseClass);
+			objectProperties[key] = valueBinded; 
+		}); 
+	}
+	catch(ex)
+	{
+		JsDocMaker.prototype.error('Failed to parse literal object ' + s);
+		throw ex;
+	}
+	return {
+		name: 'Object'
+	,	objectProperties: objectProperties
+	,	objectPropertiesOriginal: parsed
+	}; 
+};
+
+JsDocMaker.prototype.literalObjectInstall = function()
+{
+	var parser = {
+		name: 'obj'
+	,	parse: _(this.literalObjectParse).bind(this)
+	};
+	this.registerTypeParser(parser); 
+}; 
+
+
+
+
+
+
 
 //UTILITIES
 
