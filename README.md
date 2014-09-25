@@ -23,6 +23,8 @@ Simple annotation syntax based in a unique pattern @annotation {Type} name text.
 
 Also use the concept of primary annotations @module, @class, @method, @property that contains secondary annotations like @extends @returns @static
 
+The mission is that you can just add @annotations to existing source comments without having to re-write them or change its format. 
+
 ## Heavy type support
 
 Heavy support for Types - they are optional but it is important for getting a navigable API. Support Type Generic syntax. multiple types, object literals and custom type definitions.
@@ -127,6 +129,7 @@ Heavy support for Types - they are optional but it is important for getting a na
     Farmer.prototype.harvest = function(resources){...}
 
 ##Multiple types
+
 Also multiple types syntax is supported. In a non typed language like javascript, often, method signatures support different kind of parameter types. For example, a method's parameter can be a String or an HTMLElement or a jQuery object. This type of syntax is supported using the '|' character like this:
 
     @method @html
@@ -135,11 +138,14 @@ Also multiple types syntax is supported. In a non typed language like javascript
 That would be interpreted as 'param method can be any of String, HTMLElement, jQuery object or an Array of strings'. Notice that generics and multiple types syntax can be mixed arbitrarily.
 
 ##Object Literal types definition
+
 Another type supported is a literal description of an object properties. Support you want to describe a JSON Object returned or consumed  by one of your methods or classes but you don't want to define a whole new Class for this. Instead you could do something like this:
 
-    @return {name:String,colors:Array<Color>,car:Car}
+    @method getState @returns {name:String,colors:Array<Color>,car:Car}
 
-Object literal types definition like this support arbitraryuse of generics but it is not recursive ad it does not support multiple types with |, not yet. 
+This means that the method getState returns an Object with properties name of type String, colors of type Array and car of type Car. 
+
+Object literal types definition like this support arbitrary use of generics but it is not recursive ad it does not support multiple types with |, not yet. 
 
 
 # Extendable
@@ -220,7 +226,7 @@ Also another kind of extension / plugin is available for preprocessing the sourc
 
 shortjsdoc supports a general way of defining Custom types. In gneral we register a custom type that defines its name and a function that will process the custom type input string and output the type object. 
 
-In the following example we define a custom type syntax like @returns {#lemmon(acid,yellow)} that will proccess each {type} with a syntax like that:
+In the following example we define a custom type syntax like @returns {#lemmon(acid,yellow)} that will parse that string in an object like {type:'Object', lemmonProperties:['acid','yellow']}. As you can see the AST type object semantics is defined 100% by the parser:
 
     var code = 
         '//@module customTypeParsers' + '\n' +  

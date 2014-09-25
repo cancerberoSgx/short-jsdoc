@@ -1,5 +1,5 @@
 /*
-this parser is not longer used - it support generics and is deprecated b literalObjectParser that is a superset of this. Nevertheless we keep it here for historical reasons. 
+this parser is not longer used - it support generics and is deprecated by literalObjectParser that is a superset of this. Nevertheless we keep it here for historical reasons. 
 
 parser for type expressions like Map<String,Array<Apple>> created in this site http://pegjs.majda.cz/online using the following source:
 
