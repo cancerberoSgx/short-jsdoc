@@ -17,6 +17,7 @@ var JsDocMaker = GLOBAL.JsDocMaker = function()
 	//@property {Object<String,String>} customNativeTypes name to url map that the user can modify to register new native types b givin its url.
 	this.customNativeTypes = this.customNativeTypes || {};
 	this.annotationRegexp = /(\s+@\w+)/gi;
+	this.typeParsers = {};
 }; 
 //@property {Array<Function>}postProccessors
 JsDocMaker.prototype.postProccessors = []; 
@@ -493,7 +494,7 @@ JsDocMaker.prototype.parseTypeString = function(typeString, baseClass)
 JsDocMaker.prototype.parseSingleTypeString = function(typeString2, baseClass)
 {
 	var a = typeString2.split('|'), ret = [], self=this;
-	self.typeParsers = self.typeParsers || {}; 
+	// self.typeParsers = self.typeParsers || {}; 
 
 	_(a).each(function(typeString)
 	{
@@ -629,21 +630,24 @@ JsDocMaker.prototype.simpleName = function(name)
 
 //TYPE PARSING
 
-//@method parseType parse a type string like 'Map<String,Array<Apple>>' and return an object like {name: 'Map',params:['String',{name: 'Array',params:['Apple']}]}. This is the default type parser. 
+//@method parseType parse a type string like 'Map<String,Array<Apple>>' or 'String' and return an object like {name: 'Map',params:['String',{name: 'Array',params:['Apple']}]}. This is the default type parser. 
 //It depends on type parser file typeParser.js @static
 JsDocMaker.parseType = function(s)
 {
-	this.typeParsers = this.typeParsers || {};
-
 	var ss = '{name:'+s+'}'; 
-	var parsed = shortjsdocParseLiteralObject.parse(ss);
-	var obj = eval('(' + parsed + ')'); 
-	var ret = obj.name; 
+	var parsed = JsDocMaker.parseLiteralObjectType(ss);
+	var ret = parsed.name; 
 	return ret;
 	
 	// return ShortJsDocTypeParser.parse(s);//old code
 }; 
-
+// @method parse a object literal type string like '' @return {Object} the parsed object @static
+JsDocMaker.parseLiteralObjectType = function(s)
+{
+	var parsed = shortjsdocParseLiteralObject.parse(s);	
+	var obj = eval('(' + parsed + ')'); 
+	return obj;
+}; 
 
 JsDocMaker.prototype.registerTypeParser = function(typeParser)
 {
