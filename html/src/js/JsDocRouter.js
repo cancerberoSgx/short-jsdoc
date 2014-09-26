@@ -6,8 +6,6 @@ var JsDocRouter = Backbone.Router.extend({
 		'class/:class': 'showClass'
 	,	'class/:class?:options': 'showClass'
 
-	// ,	'classHierarchy/:class': 'showClass'event
-
 	,	'module/:module': 'showModule'
 
 	,	'method/:method': 'showMethod'
@@ -21,7 +19,6 @@ var JsDocRouter = Backbone.Router.extend({
 	,	'classes': 'showClasses'
 
 	,	'parse': 'showParse'
-	// ,	'search': 'showSearch'
 	}
 
 ,	initialize: function(application) 

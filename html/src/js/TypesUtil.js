@@ -57,14 +57,25 @@ _(AbstractView.prototype).extend({
 		s += htmlAnchors?('">'+node.name+'</a>'):'';
 		return s;
 	}
+
+,	printLiteralObjectType: function(context)
+	{
+		debugger;
+	}
 	
-	//@method printType @param {Object}context
+	//@method printType prints a type as html support generic@param {Object}context  @return {String} the type html
 ,	printType: function(context)
 	{
 		if(!context || !context.type)
 		{
 			return ''; 
 		}
+
+		if(context.type.objectProperties)
+		{
+			this.printLiteralObjectType(context); 
+		}
+
 		var self = this;
 		var href = context.type.nativeTypeUrl || '#class/'+context.type.absoluteName; 
 		var htmlText = context.type.name; 
@@ -94,7 +105,7 @@ _(AbstractView.prototype).extend({
 		} 
 	}
 
-	//@method printTypeAsString @param {String} type @return {String}
+	//@method printTypeAsString this is the public method for printing a type - supports any type @param {String} type @return {String}  @return {String} the type html
 ,	printSingleTypeAsString: function(type)
 	{
 		var buffer = [];
@@ -103,6 +114,7 @@ _(AbstractView.prototype).extend({
 		var typeOutput = buffer.join(''); 
 		return typeOutput; 
 	}
+	//@method printTypeAsString @param {Array<Type>|Type} type @return {String} the type html
 ,	printTypeAsString: function(type)
 	{
 		var self = this;

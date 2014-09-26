@@ -5,7 +5,10 @@
  * @link preprocessed comment that is replaced by html or mardown link at preprocessing.
  * literal object syntax with types: @return {name: String, colors: Array<Color>}. 
  * more gneeral idea: be able to register type-parser plugins, for example @param {#obj(name:String,colors:Array<Color>)} a - so this is a custom type parser - the user must also provide a function that returns the type object, like return {name: 'Object', objectProperties: {name: {name:'String'}, colors: {name:Array,params: {...}}}}
- * 
+ * ISSUE: doing the following will fail parsing the param:
+ /*@method1 blabla
+ @returns {T} blabla*/
+ //@param {R} param1
  * make jsdoc for javascript objects liek with methods, etc and offer the possibility to use that information jsdocs instead links to the nativemozilla document like now. This gives the possibility to really see all js attributes inherited from js api.
  * generics typeparser doesn't accept type names with . or _
  * support multiple inheritance.

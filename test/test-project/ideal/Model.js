@@ -21,6 +21,11 @@ if(typeof sentence === 'undefined')
 {
 	console.log('alert'); 
 }
+/*
+@method getState get's the current state of this pool
+@returns {#obj(id:String,objectDic:Object<String,Object>)}
+*/
+var blablabla=1;
 
 
 /*@param {Array<String>} objects_ids @return {Object<String,Object<String,User>>}*/

@@ -62,6 +62,11 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 	this.data.classes = this.data.classes || {}; 
 	this.data.modules = this.data.modules || {}; 
 
+	if(this.literalObjectInstall)
+	{
+		this.literalObjectInstall(); 
+	}
+
 	_(this.commentPreprocessors).each(function(preprocessor)
 	{
 		preprocessor.apply(self, [self]); 
@@ -200,7 +205,7 @@ JsDocMaker.prototype.parseUnitSimple = function(str, comment)
 	if(comment.type==='Line')
 	{
 		str = JsDocMaker.stringFullTrim(str); 
-		regexp = /\s*@(\w+)\s*(\{[\w<>\|, #:\(\)]+\}){0,1}\s*([\w\._]+){0,1}(.*)\s*/; 
+		regexp = /\s*@(\w+)\s*(\{[\w<>\|, #:\(\)]+\}){0,1}\s*([\w\._]+){0,1}(.*)\s*/i; 
 		result = regexp.exec(str);
 	}
 	else
@@ -228,6 +233,7 @@ JsDocMaker.prototype.parseUnitSimple = function(str, comment)
 	};
 
 	// console.log(str, ret);
+	// debugger;
 	return ret;
 }; 
 
@@ -487,6 +493,8 @@ JsDocMaker.prototype.parseTypeString = function(typeString, baseClass)
 JsDocMaker.prototype.parseSingleTypeString = function(typeString2, baseClass)
 {
 	var a = typeString2.split('|'), ret = [], self=this;
+	self.typeParsers = self.typeParsers || {}; 
+
 	_(a).each(function(typeString)
 	{
 		// first look for custom types which have the syntax: #command1(param1,2)
@@ -858,7 +866,8 @@ JsDocMaker.prototype.literalObjectParse = function(s, baseClass)
 };
 
 JsDocMaker.prototype.literalObjectInstall = function()
-{
+{	
+	this.typeParsers = this.typeParsers || {}; 
 	var parser = {
 		name: 'obj'
 	,	parse: _(this.literalObjectParse).bind(this)

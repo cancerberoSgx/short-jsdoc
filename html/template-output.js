@@ -175,6 +175,16 @@ __p += '\n\n' +
 return __p
 };
 
+this["shortjsdoc"]["literalObject"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '';
+
+}
+return __p
+};
+
 this["shortjsdoc"]["method"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
@@ -326,16 +336,6 @@ with (obj) {
 __p += '<h3>Sources <button data-type="goto-source" class="btn btn-link ">goto def</button></h3>\n\n<pre class="prettyprint linenums">' +
 __e( this.sourceSubset ) +
 '</pre>';
-
-}
-return __p
-};
-
-this["shortjsdoc"]["treeview/seba123"] = function(obj) {
-obj || (obj = {});
-var __t, __p = '', __e = _.escape;
-with (obj) {
-__p += 'seba123.html         ';
 
 }
 return __p

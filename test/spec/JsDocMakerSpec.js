@@ -532,9 +532,9 @@ describe("JsDocMaker", function()
 
 
 
+
 	describe("support comment preprocessor", function() 
-	{
-			
+	{			
 		describe("for example one can install a pcomment preprocessor for adding/removing fragment to comments", function() 
 		{
 			it("/** style blocks", function() 
@@ -568,8 +568,10 @@ describe("JsDocMaker", function()
 				expect(author.name).toBe('thief');
 			});
 		});
-
 	});
+
+
+
 
 
 
@@ -619,6 +621,50 @@ describe("JsDocMaker", function()
 			});
 		});
 
+		// describe("something more useful", function() 
+		// {
+		// 	it("example2: define a custom obejct literal that let the user define the exact AST types object with json", function() 
+		// 	{
+		// 		var code = 
+		// 			'//@module customTypeParsers2' + '\n' +	
+		// 			'/*@class ObjjectPool some text ' + '\n' +	
+		// 			'@method getState return the state of this pool' + '\n' +	
+		// 			'@return {#myObj(name:"Object",properties:[["name",],[],[]])} */' + '\n' +
+		// 			''; 
+
+		// 		var maker = new JsDocMaker();
+
+		// 		// define and regiter a custom type syntax:
+		// 		var customTypeParser = {
+		// 			name: 'lemmon'	
+		// 		,	parse: function(s)
+		// 			{
+		// 				// variable s is the text body of the custom type for example 'acid,lazy,green'.
+		// 				// we return the following object as this type obejct implementation.
+		// 				return {
+		// 					name: 'Object'
+		// 				,	lemmonProperties: s.split(',')
+		// 				}; 
+		// 			}
+		// 		};
+		// 		maker.registerTypeParser(customTypeParser); 
+
+		// 		//then do the parsing
+		// 		maker.parseFile(code); 
+		// 		maker.postProccess();
+		// 		maker.postProccessBinding();
+		// 		var jsdoc = maker.data;
+
+		// 		var Vanilla = jsdoc.classes['customTypeParsers.Vanilla'];
+		// 		var return1 = Vanilla.methods.method1.returns.type; 
+		// 		expect(return1.lemmonProperties[0]).toBe('acid'); 
+		// 		expect(return1.lemmonProperties[1]).toBe('lazy'); 
+		// 		expect(return1.lemmonProperties[2]).toBe('green'); 
+		// 		expect(return1.name).toBe('Object'); 
+		// 	});
+		// });
+
+
 	});
 
 	
@@ -627,17 +673,18 @@ describe("JsDocMaker", function()
 
 	describe("support a literal object custom type implementation", function() 
 	{	
-		it("example1: we define the custom type syntax {#lemmon(prop1)} that returns a relevant type object", function() 
+		it("the type {#obj(prop1:Type1,...)} is supported out of the box", function() 
 		{
 			var code = 
 				'//@module customTypeParsers2' + '\n' +	
 				'/*@class Vanilla2 some text ' + '\n' +	
 				'@method method1' + '\n' +	
-				'@return {#obj(prop:Type,prop2:Type2)} */' + '\n' +
+				'@return {#obj(prop:Type,prop2:Type2<Type3>)} some text*/' + '\n' +
+				'//@method method2 blabla' + '\n' +	
+				'//@param {#obj(id:String,objectDic:Object<String>)} param1 some text' + '\n' +	
 				''; 
 
 			var maker = new JsDocMaker();
-			maker.literalObjectInstall();
 
 			//then do the parsing
 			maker.parseFile(code); 
@@ -650,6 +697,12 @@ describe("JsDocMaker", function()
 			expect(returns.type.name).toBe('Object');
 			expect(returns.type.objectProperties.prop.name).toBe('Type');
 			expect(returns.type.objectProperties.prop2.name).toBe('Type2');
+			expect(returns.type.objectProperties.prop2.params[0].name).toBe('Type3');
+
+			var param1 = Vanilla.methods.method2.params[0];
+			expect(param1.type.name).toBe('Object'); 
+			expect(param1.type.objectProperties.id.name).toBe('String'); 
+			expect(param1.type.objectProperties.objectDic.name).toBe('Object'); 
 		});
 	});
 
