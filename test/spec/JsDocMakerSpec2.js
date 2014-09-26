@@ -1,16 +1,15 @@
 
 
-	describe("support a literal object custom type implementation", function() 
+	describe("issues", function() 
 	{	
-		it("the type {#obj(prop1:Type1,...)} is supported out of the box", function() 
+		it("using different comment syntax for method and param", function() 
 		{
 			var code = 
-				'//@module customTypeParsers2' + '\n' +	
-				'/*@class Vanilla2 some text ' + '\n' +	
+				'//@module issues' + '\n' +	
+				'/*@class Mercury some text ' + '\n' +	
 				'@method method1' + '\n' +	
-				'@return {#obj(prop:Type,prop2:Type2<Type3>)} some text*/' + '\n' +
-				'//@method method2 blabla' + '\n' +	
-				'//@param {#obj(id:String,objectDic:Object<String>)} param1 some text' + '\n' +	
+				'@return {Array} some text*/' + '\n' +
+				'//@param {String} param1 some text' + '\n' +	
 				''; 
 
 			var maker = new JsDocMaker();
@@ -21,17 +20,13 @@
 			maker.postProccessBinding();
 			var jsdoc = maker.data;
 
-			var Vanilla = jsdoc.classes['customTypeParsers2.Vanilla2'];
-			var returns = Vanilla.methods.method1.returns; 
-			expect(returns.type.name).toBe('Object');
-			expect(returns.type.objectProperties.prop.name).toBe('Type');
-			expect(returns.type.objectProperties.prop2.name).toBe('Type2');
-			expect(returns.type.objectProperties.prop2.params[0].name).toBe('Type3');
+			var Mercury = jsdoc.classes['issues.Mercury'];
 
-			var param1 = Vanilla.methods.method2.params[0];
-			expect(param1.type.name).toBe('Object'); 
-			expect(param1.type.objectProperties.id.name).toBe('String'); 
-			expect(param1.type.objectProperties.objectDic.name).toBe('Object'); 
+			//this is OK the method is OK
+			expect(Mercury.methods.method1.absoluteName).toBe('issues.Mercury.method1');
+
+			//this is error - the param is not defined
+			expect(Mercury.params).toBeDefined();
 		});
 	});
 
