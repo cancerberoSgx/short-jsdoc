@@ -93,11 +93,11 @@ __p += '\n\n\t<li class="method ' +
 ((__t = ( self.makeLink(method, true))) == null ? '' : __t) +
 '\n\t\t';
  if(method.params && method.params.length) { ;
-__p += '\n\t\t<h4 class="params-title">Parameters</h4>\n\t\t<ol class="params">\n\t\t\t';
+__p += '\n\t\tParameters: \n\t\t<ol class="params">\n\t\t\t';
  _(method.params).each(function(param){ ;
 __p += '\n\t\t\t<li class="param">\n\t\t\t\t<span class="param-name">' +
 ((__t = ( param.name )) == null ? '' : __t) +
-'</span>\n\t\t\t\t<span class="param-type">' +
+'</span>: \n\t\t\t\t<span class="param-type">' +
 ((__t = ( self.printTypeAsString(param.type) )) == null ? '' : __t) +
 '</span> \n\t\t\t</li>\n\t\t\t';
  }); ;
@@ -105,11 +105,11 @@ __p += '\n\t\t</ol>\n\t\t';
  } ;
 __p += '\n\n\t\t';
  if(method.returns && (method.returns.type || method.returns.text)) {;
-__p += '\n\t\t<h4 class="returns-title">Returns ' +
+__p += '\n\t\tReturns: ' +
 ((__t = ( self.printTypeAsString(method.returns.type) )) == null ? '' : __t) +
-'</h4> \t\n\t\t<div class="returns-text">' +
+'\t\n\t\t<!-- <span class="returns-text">' +
 ((__t = ( method.returns.text || '')) == null ? '' : __t) +
-'</div>\n\t\t';
+'</span> -->\n\t\t';
  } ;
 __p += '\n\t</li>\n';
  }); ;
@@ -226,9 +226,9 @@ __p += '\n\n<ul>\n';
  var self = this, buffer = [];
 _(this.jsdoc.params).each(function(param){
 ;
-__p += '\n\t<li>\n\t\tname: ' +
+__p += '\n\t<li>\n\t\t' +
 ((__t = ( param.name)) == null ? '' : __t) +
-', type: ' +
+': ' +
 ((__t = ( self.printTypeAsString(param.type) )) == null ? '' : __t) +
 '\n\t\t<span class="param-text">' +
 ((__t = ( param.text )) == null ? '' : __t) +

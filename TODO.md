@@ -2,9 +2,12 @@
 # TODO: ideas
 
  * cmd line should accept a package.json file as an input for getting project meta-information
+ * support throw/throws
+ * IDEA: in src/libs-jsdoc with folders like javascript/mozilla jQuery/ Backbone/. Thes folders contains .js files with short jsdoc OO for each library and they can be optionally imported when processing a project.  
  * inherited fields should have the information from which class is inherited
  * @link preprocessed comment that is replaced by html or mardown link at preprocessing.
  * literal object syntax with types: @return {name: String, colors: Array<Color>}. 
+ * ISSUE: parser fail to parse more than two modifiers like these @final @static @myownmodifier - see issues spec.js
  * more gneeral idea: be able to register type-parser plugins, for example @param {#obj(name:String,colors:Array<Color>)} a - so this is a custom type parser - the user must also provide a function that returns the type object, like return {name: 'Object', objectProperties: {name: {name:'String'}, colors: {name:Array,params: {...}}}}
  * ISSUE: Resource not found page should have the header.
  * ISSUE: doing the following will fail parsing the param:

@@ -134,6 +134,7 @@ describe("JsDocMaker", function()
 				'//@return {Energy} the total energy generated afte rthe proccess' + '\n' +
 				''; 
 			maker = new JsDocMaker();
+
 			maker.parseFile(code, 'textarea'); 
 			maker.postProccess();
 			maker.postProccessBinding();
@@ -153,8 +154,7 @@ describe("JsDocMaker", function()
 			expect(Monkey.extends.name).toBe('Animal');
 			expect(Monkey.extends.methods.run.params.length).toBe(1);
 			expect(_(Monkey.extends.methods.run.modifiers).contains('final')).toBe(true);
-			expect(_(Monkey.extends.methods.run.modifiers).contains('static')).toBe(true);
-			
+			expect(_(Monkey.extends.methods.run.modifiers).contains('static')).toBe(true);	
 		});
 	});
 
@@ -406,7 +406,7 @@ describe("JsDocMaker", function()
 
 			expect(JsDocMaker.classOwnsProperty(VMW, VMW.inherited.methods.move)).toBe(false); 
 			expect(JsDocMaker.classOwnsProperty(VMW, VMW.methods.deployAirbag)).toBe(true); 
-			
+
 		});
 	});
 

@@ -77,11 +77,11 @@ _(this.methods).each(function(method) {
 	<li class="method <%= inherited ? 'inherited' : '' %>">
 		<%= self.makeLink(method, true)%>
 		<% if(method.params && method.params.length) { %>
-		<h4 class="params-title">Parameters</h4>
+		Parameters: 
 		<ol class="params">
 			<% _(method.params).each(function(param){ %>
 			<li class="param">
-				<span class="param-name"><%= param.name %></span>
+				<span class="param-name"><%= param.name %></span>: 
 				<span class="param-type"><%= self.printTypeAsString(param.type) %></span> 
 			</li>
 			<% }); %>
@@ -89,8 +89,8 @@ _(this.methods).each(function(method) {
 		<% } %>
 
 		<% if(method.returns && (method.returns.type || method.returns.text)) {%>
-		<h4 class="returns-title">Returns <%= self.printTypeAsString(method.returns.type) %></h4> 	
-		<div class="returns-text"><%= method.returns.text || ''%></div>
+		Returns: <%= self.printTypeAsString(method.returns.type) %>	
+		<!-- <span class="returns-text"><%= method.returns.text || ''%></span> -->
 		<% } %>
 	</li>
 <% }); %>
