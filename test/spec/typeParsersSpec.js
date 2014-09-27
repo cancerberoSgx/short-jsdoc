@@ -18,7 +18,7 @@ describe("type parsers", function()
 			expect(parsed.prop1.params[0]).toBe('String'); 
 			expect(parsed.prop1.params[1].name).toBe('Array'); 
 			expect(parsed.prop1.params[1].params[0]).toBe('Apple'); 
-			expect(parsed.prop2.name).toBe('String'); 
+			expect(parsed.prop2).toBe('String'); //no type object, just the string
 		}); 
 	});
 

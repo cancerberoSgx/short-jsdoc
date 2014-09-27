@@ -465,11 +465,6 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 	this.data.classes = this.data.classes || {}; 
 	this.data.modules = this.data.modules || {}; 
 
-	if(this.literalObjectInstall)
-	{
-		this.literalObjectInstall(); 
-	}
-
 	_(this.commentPreprocessors).each(function(preprocessor)
 	{
 		preprocessor.apply(self, [self]); 
@@ -635,7 +630,7 @@ JsDocMaker.prototype.parseUnitSimple = function(str, comment)
 	,	theRestString: JsDocMaker.stringTrim(splitted.join(''))
 	};
 
-	// console.log(str, ret);
+	// console.error(str, ret);
 	// debugger;
 	return ret;
 }; 
@@ -763,7 +758,12 @@ JsDocMaker.prototype.postProccess = function()
 //@method postProccessBinding precondion: call postProccess() first. We separated the post proccessing in two because we shouln't do JSON.stringify() after we bind types because of recursive loops. 
 JsDocMaker.prototype.postProccessBinding = function()
 {
+	if(this.literalObjectInstall)
+	{
+		this.literalObjectInstall(); 
+	}
 	var self = this;
+	
 	//at this points we have all our modules and classes - now we normalize extend, methods and params and also do the type binding. 
 	_(self.data.classes).each(function(c)
 	{
@@ -896,15 +896,12 @@ JsDocMaker.prototype.parseTypeString = function(typeString, baseClass)
 JsDocMaker.prototype.parseSingleTypeString = function(typeString2, baseClass)
 {
 	var a = typeString2.split('|'), ret = [], self=this;
-	// self.typeParsers = self.typeParsers || {}; 
 
 	_(a).each(function(typeString)
 	{
 		// first look for custom types which have the syntax: #command1(param1,2)
 		var customType = /^#(\w+)\(([^\()]+)\)/.exec(typeString)
 		,	type_binded = null; 
-
-		// console.log(typeString, customType); 
 
 		if(customType && customType.length === 3)
 		{
@@ -919,6 +916,9 @@ JsDocMaker.prototype.parseSingleTypeString = function(typeString2, baseClass)
 					if(parsed)
 					{
 						// TODO bind type ? 
+
+						//BIG PROBLEM HERE - this code executes at parsing time and here we are minding - do this binding in a post processing ast
+						//TODO probably all this code should be moved to postprocessing ast phase and here we only dump the original type string.
 						type_binded = self.bindParsedType(parsed, baseClass); 
 						ret.push(type_binded); 
 					}
@@ -939,7 +939,6 @@ JsDocMaker.prototype.parseSingleTypeString = function(typeString2, baseClass)
 				type = JsDocMaker.parseType(typeString);
 				type_binded = self.bindParsedType(type, baseClass);
 				ret.push(type_binded); 
-				// return type_binded;
 			}
 			catch(ex)
 			{
@@ -952,6 +951,7 @@ JsDocMaker.prototype.parseSingleTypeString = function(typeString2, baseClass)
 			ret.push(self.bindClass(typeString, baseClass));	
 		}
 	}) ; 
+
 	return ret;
 }; 
 
@@ -1251,8 +1251,9 @@ JsDocMaker.prototype.literalObjectParse = function(s, baseClass)
 	,	objectProperties = {};
 	try
 	{
-		parsed = shortjsdocParseLiteralObject.parse('{' + s + '}');
-		var result = eval('('+parsed+')');
+		var result  = JsDocMaker.parseLiteralObjectType('{' + s + '}');
+		// console.error(result)
+		// var result = eval('('+parsed+')');
 		_(result).each(function(value, key)
 		{
 			var valueBinded = self.bindParsedType(value, baseClass);

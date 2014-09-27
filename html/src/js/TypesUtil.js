@@ -60,18 +60,25 @@ _(AbstractView.prototype).extend({
 
 ,	printLiteralObjectType: function(context)
 	{
-		debugger;
+		var self = this;
+		var buf = []; 
+		context.buffer.push(this.printType(context.type, true) + '{');
+		_(context.type.objectProperties).each(function(value, key)
+		{
+			buf.push(key + ': ' + self.printSingleTypeAsString(value));
+		}); 
+		context.buffer.push(buf.join(', ')); 
 	}
 	
 	//@method printType prints a type as html support generic@param {Object}context  @return {String} the type html
-,	printType: function(context)
+,	printType: function(context, ignoreLiteralObject)
 	{
 		if(!context || !context.type)
 		{
 			return ''; 
 		}
 
-		if(context.type.objectProperties)
+		if(context.type.objectProperties && !ignoreLiteralObject)
 		{
 			this.printLiteralObjectType(context); 
 		}

@@ -15,27 +15,27 @@ function BaseObject(){};
 function ObjectPool(){};
 //@method loadObjects @param {Array<String>} objects_ids @return {Object<String,BaseObject>}
 ObjectPool.prototype.getOwners = function(objects_ids){return null;}
+
+// @param {Array<String>} objects_ids
+var s = 'these are just js sample sentences'; 
+if(typeof sentence === 'undefined')
+{
+	console.log('alert'); 
+}
+
+
 //@method getOwners this method is useful for *blabla* blabla _blabla_ bab
 var s = 'these are just js sample sentences'; 
 if(typeof sentence === 'undefined')
 {
 	console.log('alert'); 
 }
-/*
-@method getState get's the current state of this pool
-@returns {#obj(id:String,objectDic:Object<String,Object>)}
-*/
-var blablabla=1;
 
+// @method getState get's the current state of this pool
+// @returns {#obj(id:String,objectDic:Object<String>)} bla bla bla
+var getState=function(){};
 
-/*@param {Array<String>} objects_ids @return {Object<String,Object<String,User>>}*/
-var s = 'these are just js sample sentences'; 
-if(typeof sentence === 'undefined')
-{
-	console.log('alert'); 
-}
-//@event objectCreated event fired when an object is created in this pool.
-
+// @event objectCreated event fired when an object is created in this pool.
 var s = 'these are just js sample sentences'; 
 if(typeof sentence === 'undefined')
 {

@@ -1,8 +1,8 @@
-#About
-
-##Online HTML5 project demo. 
+#Online HTML5 project demo. 
 
 [Online Example Demo](http://cancerberosgx.github.io/short-jsdoc/html)
+
+
 
 #Features
 
@@ -48,6 +48,8 @@ The parser read the sources and generate a Abstract Syntax Tree (AST) of ALL the
 
 ## License
 short-jsdoc is open sourced under the [MIT License](https://github.com/cancerberoSgx/short-jsdoc/blob/master/LICENSE). 
+
+
 
 
 
@@ -100,6 +102,8 @@ If you need to debug it use grunt run like explained below.
 
 
 
+
+
 ## Motivation
 
 Often in the JavaScript world, jsdocs comments are added as-a-feature in an existing source that already is commented. This project try to target those who in general just need to add some @annotations to an existing js sources to define some OO model. Annotations supported are @module @class @property @method @param @method @extend @return @static @private
@@ -111,6 +115,7 @@ This project's core is a JavaScript code parser that will extract jsdoc AST-like
 The other important part of the project is an html5 application that shows this information in a navigable and responsive site.
 
 At last there is a little nodejs tool for the end-user to extract its code jsdocs and generate this html5 application showing it.
+
 
 
 
@@ -146,6 +151,9 @@ Another type supported is a literal description of an object properties. Support
 This means that the method getState returns an Object with properties name of type String, colors of type Array and car of type Car. 
 
 Object literal types definition like this support arbitrary use of generics but it is not recursive ad it does not support multiple types with |, not yet. 
+
+
+
 
 
 # Extendable
@@ -190,6 +198,8 @@ After this we can easily access the @versionfoo of any node like for example, th
 
     jsdoc.modules.office.versionfoo === '3.2'
 
+
+
 ## Extensibility 2: Source comments preprocessing
 
 Also another kind of extension / plugin is available for preprocessing the source comments, for example for removing or adding something. In the following example we remove a string and add some extra information to all our comments of type line:
@@ -221,6 +231,8 @@ Also another kind of extension / plugin is available for preprocessing the sourc
     var Vanilla = jsdoc.classes['stuff3.Vanilla'];
     var author = _(Vanilla.children).find(function(c){return c.annotation === 'author'; });
     expect(author.name).toBe('thief');
+
+
 
 ##Extensibility 3: Custom type sytax
 
@@ -264,6 +276,10 @@ In the following example we define a custom type syntax like @returns {#lemmon(a
     expect(return1.lemmonProperties[1]).toBe('lazy'); 
     expect(return1.lemmonProperties[2]).toBe('green'); 
     expect(return1.name).toBe('Object'); 
+
+Notice that the literal object type syntax '{#obj(name:String)}' is just one of these custom-type-plugins. 
+
+
 
 
 

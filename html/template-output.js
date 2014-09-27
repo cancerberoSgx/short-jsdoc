@@ -169,7 +169,7 @@ __p += '\n\n' +
 ((__t = ( this.application.templates['modules'].apply(this, arguments) )) == null ? '' : __t) +
 '\n\n\n' +
 ((__t = ( this.application.templates['classes'].apply(this, arguments) )) == null ? '' : __t) +
-'\n\n<p><a href="#parse"><b>Parse</b> your own code! --></a></p>\n\n<p>(devel)<a href="../test/SpecRunner.html">Specs</a></p> \n\n';
+'\n\n<p><a href="#parse"><b>Parse</b> your own code! --></a></p>\n\n<p>(devel)<a href="../test/SpecRunner.html">Specs</a></p> \n\n\n';
 
 }
 return __p
