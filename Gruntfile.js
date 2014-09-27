@@ -111,7 +111,7 @@ module.exports = function (grunt) {
 	}
 
 ,	uglify: {
-		my_target: {
+		project: {
 			options: {
 				sourceMap: true
 				// sourceMapName: 'html/all.min.map'
@@ -119,6 +119,7 @@ module.exports = function (grunt) {
 			files: {
 				'html/all.min.js': uglifyFiles
 			,	'html/libs.min.js': uglifyLibFiles
+			,	'html/data.min.json': 'html/data.min.json'
 			}
 		}
 	}

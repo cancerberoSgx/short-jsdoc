@@ -201,13 +201,13 @@ JsDocMaker.prototype.parseUnitSimple = function(str, comment)
 	if(comment.type==='Line')
 	{
 		str = JsDocMaker.stringFullTrim(str); 
-		regexp = /\s*@(\w+)\s*(\{[\w<>\|, #:\(\)]+\}){0,1}\s*([\w\._]+){0,1}(.*)\s*/i; 
+		regexp = /\s*@(\w+)\s*(\{[\w<>\|, #:\(\)]+\}){0,1}\s*([\w\._\$]+){0,1}(.*)\s*/i; 
 		result = regexp.exec(str);
 	}
 	else
 	{
 		str = JsDocMaker.stringTrim(str); 
-		regexp = /\s*@(\w+)\s*(\{[\w<>\|, #:\(\)]+\}){0,1}\s*([\w\._]+){0,1}([.\s\w\W]*)/gmi;
+		regexp = /\s*@(\w+)\s*(\{[\w<>\|, #:\(\)]+\}){0,1}\s*([\w\._\$]+){0,1}([.\s\w\W]*)/gmi;
 		//TODO: I have to put this regexp inline here - if not the second time I call exec on the instance it won't match :-??
 		result = regexp.exec(str); 
 	}
@@ -718,6 +718,8 @@ JsDocMaker.prototype.installModifiers = function(node)
 
 
 
+
+
 // INHERITED methods&properties postproccessing
 
 //@method postProccessInherited calculates inherited methods&properties and put it in class'properties inheritedMethods and inheritedProperties
@@ -762,6 +764,7 @@ JsDocMaker.prototype.extractInherited = function(baseClass, c, what, data)
 			if(!baseClass.methods[name])
 			{
 				data[name] = method;
+				// TODO: here we can act and clone the inherited nodes and add more info about the owner
 				// data[name].inherited = true; 
 				// data[name].inheritedFrom = c; 
 			}
@@ -774,7 +777,8 @@ JsDocMaker.prototype.extractInherited = function(baseClass, c, what, data)
 			baseClass.properties = baseClass.properties || {};
 			if(!baseClass.properties[name])
 			{
-				data[name] = p;				
+				data[name] = p;
+				// TODO: here we can act and clone the inherited nodes and add more info about the owner
 				// data[name].inherited = true; 
 				// data[name].inheritedFrom = c; 
 			}
@@ -787,9 +791,10 @@ JsDocMaker.prototype.extractInherited = function(baseClass, c, what, data)
 			baseClass.events = baseClass.events || {};
 			if(!baseClass.events[name])
 			{
-				data[name] = p;				
-				data[name].inherited = true; 
-				data[name].inheritedFrom = c; 
+				data[name] = p;
+				// TODO: here we can act and clone the inherited nodes and add more info about the owner	
+				// data[name].inherited = true; 
+				// data[name].inheritedFrom = c; 
 			}
 		});
 	}
@@ -799,6 +804,16 @@ JsDocMaker.prototype.extractInherited = function(baseClass, c, what, data)
 		self.extractInherited(baseClass, c.extends, what, data);
 	}
 };
+
+//@method isClassOwner utility method for knowing if a property is defined in given class or is inherithed
+//@static @param aClass @param prop
+JsDocMaker.classOwnsProperty = function(aClass, prop)
+{
+	var result = prop.absoluteName && aClass.absoluteName && prop.absoluteName.indexOf(aClass.absoluteName) === 0; 
+	return result;
+}; 
+
+
 
 
 

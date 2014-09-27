@@ -28,7 +28,8 @@ _(AbstractView.prototype).extend({
 		// {
 		//	return '';
 		// }
-		var s = htmlAnchors?'<a href="':'';
+		var className = node.annotation + '-name'; 
+		var s = htmlAnchors ? ('<a class="' + className + '" href="') : '';
 		if(node.annotation==='method')
 		{
 			s += '#method/' + node.absoluteName; 
@@ -52,6 +53,10 @@ _(AbstractView.prototype).extend({
 		else if(node.annotation==='module')
 		{
 			s += '#module/' + node.name; 
+		}
+		else
+		{
+			return '';
 		}
 
 		s += htmlAnchors?('">'+node.name+'</a>'):'';

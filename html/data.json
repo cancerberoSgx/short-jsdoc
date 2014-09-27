@@ -1568,9 +1568,21 @@
             },
             "absoluteName": "Backbone.BackboneView",
             "properties": {
-                "undefined": {
+                "$el": {
                     "annotation": "property",
                     "type": "{jQuery}",
+                    "name": "$el",
+                    "text": "",
+                    "commentRange": [
+                        23712,
+                        23946
+                    ],
+                    "fileName": "ALL.js"
+                },
+                "$": {
+                    "annotation": "property",
+                    "type": "{jQuery}",
+                    "name": "$",
                     "text": "",
                     "commentRange": [
                         23712,

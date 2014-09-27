@@ -2,6 +2,7 @@
 # TODO: ideas
 
  * cmd line should accept a package.json file as an input for getting project meta-information
+ * inherited fields should have the information from which class is inherited
  * @link preprocessed comment that is replaced by html or mardown link at preprocessing.
  * literal object syntax with types: @return {name: String, colors: Array<Color>}. 
  * more gneeral idea: be able to register type-parser plugins, for example @param {#obj(name:String,colors:Array<Color>)} a - so this is a custom type parser - the user must also provide a function that returns the type object, like return {name: 'Object', objectProperties: {name: {name:'String'}, colors: {name:Array,params: {...}}}}

@@ -52,8 +52,10 @@ _(this.jsdoc.constructors).each(function(method) { %>
 <ul>
 <% 
 var self = this; 
-_(this.properties).each(function(p) { %>
-	<li class="property">
+_(this.properties).each(function(p) { 
+	var inherited = !JsDocMaker.classOwnsProperty(self.jsdoc, p); 
+	%>
+	<li class="property <%= inherited ? 'inherited' : '' %>">
 		<a class='property-name' href="#property/<%= p.absoluteName %>"><%= p.name %></a>
 		<span class="property-type"><%= self.printTypeAsString(p.type) %></span> 
 	</li>
@@ -63,12 +65,16 @@ _(this.properties).each(function(p) { %>
 
 
 
+
 <% if(this.methods && _(this.methods).keys().length) { %>
 <h3 class='methods'>Methods</h3>
 <ul>
 <%
-_(this.methods).each(function(method) { %>
-	<li class="method">
+_(this.methods).each(function(method) { 
+	var inherited = !JsDocMaker.classOwnsProperty(self.jsdoc, method); 
+%>
+
+	<li class="method <%= inherited ? 'inherited' : '' %>">
 		<%= self.makeLink(method, true)%>
 		<% if(method.params && method.params.length) { %>
 		<h4 class="params-title">Parameters</h4>
@@ -90,6 +96,8 @@ _(this.methods).each(function(method) { %>
 <% }); %>
 </ul>
 <% } %>
+
+
 
 <% if(this.jsdoc.events && _(this.jsdoc.events).keys().length) { %>
 <h3 class='events'>Events</h3>

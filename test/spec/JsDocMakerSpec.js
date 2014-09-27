@@ -159,6 +159,8 @@ describe("JsDocMaker", function()
 	});
 
 
+
+
 	describe("custom native types", function() 
 	{
 		var jsdoc, maker; 
@@ -205,6 +207,8 @@ describe("JsDocMaker", function()
 
 
 
+
+
 	describe("Block comments shouln't remove the indentation chars", function() 
 	{
 		var jsdoc, maker, Apple, Lion, Lemon; 
@@ -247,6 +251,7 @@ describe("JsDocMaker", function()
 
 
 
+
 	describe("lineCommentSeparator configurable property", function() 
 	{
 		var jsdoc, maker, C1; 
@@ -273,6 +278,8 @@ describe("JsDocMaker", function()
 			expect(C1.text).toBe("888898888 Some C1 class text 888898888 Some other C1 class text");
 		});
 	});
+
+
 
 
 
@@ -328,6 +335,9 @@ describe("JsDocMaker", function()
 	});
 
 
+
+
+
 	describe("inherited methods and properties", function() 
 	{
 		var jsdoc, maker; 
@@ -362,7 +372,7 @@ describe("JsDocMaker", function()
 			jsdoc = maker.data;
 		});
 
-		it("inherited methods, properties and events", function() 
+		it("inherited methods, properties and events. We have the method JsDocMaker.classOwnsProperty to know if a property is inherited", function() 
 		{
 			var Vehicle = jsdoc.classes['vehicles.Vehicle'];
 			expect(Vehicle.inherited.properties.mass).not.toBeDefined();
@@ -387,6 +397,16 @@ describe("JsDocMaker", function()
 			expect(VMW.inherited.properties.mass.absoluteName).toBe('vehicles.Vehicle.mass'); 
 			expect(VMW.inherited.events.hit.text).toBe('triggered whenever this vehicle hits another object');
 			// expect(VMW.inherited.events.hit.inheritedFrom.absoluteName).toBe('vehicles.Vehicle');
+		});
+
+
+		it("We have the method JsDocMaker.classOwnsProperty to know if a property is inherited", function() 
+		{
+			var VMW = jsdoc.classes['vehicles.VMW'];
+
+			expect(JsDocMaker.classOwnsProperty(VMW, VMW.inherited.methods.move)).toBe(false); 
+			expect(JsDocMaker.classOwnsProperty(VMW, VMW.methods.deployAirbag)).toBe(true); 
+			
 		});
 	});
 
@@ -620,49 +640,6 @@ describe("JsDocMaker", function()
 				expect(return1.name).toBe('Object'); 
 			});
 		});
-
-		// describe("something more useful", function() 
-		// {
-		// 	it("example2: define a custom obejct literal that let the user define the exact AST types object with json", function() 
-		// 	{
-		// 		var code = 
-		// 			'//@module customTypeParsers2' + '\n' +	
-		// 			'/*@class ObjjectPool some text ' + '\n' +	
-		// 			'@method getState return the state of this pool' + '\n' +	
-		// 			'@return {#myObj(name:"Object",properties:[["name",],[],[]])} */' + '\n' +
-		// 			''; 
-
-		// 		var maker = new JsDocMaker();
-
-		// 		// define and regiter a custom type syntax:
-		// 		var customTypeParser = {
-		// 			name: 'lemmon'	
-		// 		,	parse: function(s)
-		// 			{
-		// 				// variable s is the text body of the custom type for example 'acid,lazy,green'.
-		// 				// we return the following object as this type obejct implementation.
-		// 				return {
-		// 					name: 'Object'
-		// 				,	lemmonProperties: s.split(',')
-		// 				}; 
-		// 			}
-		// 		};
-		// 		maker.registerTypeParser(customTypeParser); 
-
-		// 		//then do the parsing
-		// 		maker.parseFile(code); 
-		// 		maker.postProccess();
-		// 		maker.postProccessBinding();
-		// 		var jsdoc = maker.data;
-
-		// 		var Vanilla = jsdoc.classes['customTypeParsers.Vanilla'];
-		// 		var return1 = Vanilla.methods.method1.returns.type; 
-		// 		expect(return1.lemmonProperties[0]).toBe('acid'); 
-		// 		expect(return1.lemmonProperties[1]).toBe('lazy'); 
-		// 		expect(return1.lemmonProperties[2]).toBe('green'); 
-		// 		expect(return1.name).toBe('Object'); 
-		// 	});
-		// });
 
 
 	});

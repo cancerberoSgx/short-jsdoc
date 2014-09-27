@@ -65,8 +65,12 @@ __p += '\n\n\n\n';
 __p += '\n<h3 class=\'properties\'>Properties</h3>\n<ul>\n';
  
 var self = this; 
-_(this.properties).each(function(p) { ;
-__p += '\n\t<li class="property">\n\t\t<a class=\'property-name\' href="#property/' +
+_(this.properties).each(function(p) { 
+	var inherited = !JsDocMaker.classOwnsProperty(self.jsdoc, p); 
+	;
+__p += '\n\t<li class="property ' +
+((__t = ( inherited ? 'inherited' : '' )) == null ? '' : __t) +
+'">\n\t\t<a class=\'property-name\' href="#property/' +
 ((__t = ( p.absoluteName )) == null ? '' : __t) +
 '">' +
 ((__t = ( p.name )) == null ? '' : __t) +
@@ -76,12 +80,16 @@ __p += '\n\t<li class="property">\n\t\t<a class=\'property-name\' href="#propert
  }); ;
 __p += '\n</ul>\n';
  } ;
-__p += '\n\n\n\n';
+__p += '\n\n\n\n\n';
  if(this.methods && _(this.methods).keys().length) { ;
 __p += '\n<h3 class=\'methods\'>Methods</h3>\n<ul>\n';
 
-_(this.methods).each(function(method) { ;
-__p += '\n\t<li class="method">\n\t\t' +
+_(this.methods).each(function(method) { 
+	var inherited = !JsDocMaker.classOwnsProperty(self.jsdoc, method); 
+;
+__p += '\n\n\t<li class="method ' +
+((__t = ( inherited ? 'inherited' : '' )) == null ? '' : __t) +
+'">\n\t\t' +
 ((__t = ( self.makeLink(method, true))) == null ? '' : __t) +
 '\n\t\t';
  if(method.params && method.params.length) { ;
@@ -107,7 +115,7 @@ __p += '\n\t</li>\n';
  }); ;
 __p += '\n</ul>\n';
  } ;
-__p += '\n\n';
+__p += '\n\n\n\n';
  if(this.jsdoc.events && _(this.jsdoc.events).keys().length) { ;
 __p += '\n<h3 class=\'events\'>Events</h3>\n<ul>\n';
  

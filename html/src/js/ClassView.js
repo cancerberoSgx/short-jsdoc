@@ -36,11 +36,6 @@ var ClassView = AbstractView.extend({
 		// this.hierarchy = this.computeHierarchy();
 	}
 
-	//@method inherit @return true if inherited param is an inherited property from the point of view of baseClass
-,	inherit: function(inherited, baseClass)
-	{
-		
-	}
 /*
 ,	computeHierarchy: function()
 	{
