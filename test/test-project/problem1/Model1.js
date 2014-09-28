@@ -17,7 +17,9 @@
 // @class Doctor @extend Person
 // @property {Map<String,MedicalTopic>} skills
 
-/*@class MedicalTopic
+/*
+
+@class MedicalTopic
 Lorem *ipsum* dolor sit amet, consectetur adipisicing elit, 
 
 	sed do eiusmod tempor 
@@ -33,6 +35,7 @@ Excepteur sint occaecat *cupidatat* non proident, sunt in culpa qui officia dese
 
 
 @method beUsed 
+
 Lorem *ipsum* dolor sit amet, consectetur adipisicing elit, 
 
 	sed do eiusmod tempor 
@@ -46,7 +49,13 @@ Lorem *ipsum* dolor sit amet, consectetur adipisicing elit,
 
 Excepteur sint occaecat *cupidatat* non proident, sunt in culpa qui officia deserunt mollit anim id est laborum
 
+@throws {MedicalException} if there is any medical issue stuff...
 @param {Number} amount Excepteur sint occaecat *cupidatat* 
 
 @return {Array<MedicalTopic>}
+
+
+
+
+@class MedicalException @extends Error
 */

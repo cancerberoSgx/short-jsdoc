@@ -88,6 +88,8 @@ _(this.methods).each(function(method) {
 		</ol>
 		<% } %>
 
+		<!-- TODO: do throw here ?  -->
+
 		<% if(method.returns && (method.returns.type || method.returns.text)) {%>
 		Returns: <%= self.printTypeAsString(method.returns.type) %>	
 		<!-- <span class="returns-text"><%= method.returns.text || ''%></span> -->

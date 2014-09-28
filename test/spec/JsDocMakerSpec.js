@@ -699,7 +699,7 @@ describe("JsDocMaker", function()
 				'//@class Thrower ' + '\n' +
 				'//@method method1 @param {String} p some text' + '\n' + 
 				'//@throws {IOException} if a IO error occurs' + '\n' + 
-				'//@throws {CompilerException} if a compiler error error occurs' + '\n' + 				
+				'//@throws {CompilerException} if a compiler error error occurs' + '\n' +
 				''; 
 			maker = new JsDocMaker();
 			maker.parseFile(code, 'textarea'); 
@@ -712,6 +712,7 @@ describe("JsDocMaker", function()
 		{
 			var method1 = jsdoc.classes['throwtest1.Thrower'].methods.method1;
 
+			debugger;
 			expect(method1.throws[0].type.name).toBe('IOException'); 
 			expect(method1.throws[0].text).toBe('if a IO error occurs'); 
 			expect(method1.throws[0].type.text).toBe('throwed when an IO error occurs'); 

@@ -30,8 +30,6 @@ var MethodView = AbstractView.extend({
 		}
 
 		this.jsdoc.textHtml = this.getTextHtml(this.jsdoc);
-
-		debugger;
 	}
 
 });

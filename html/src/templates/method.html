@@ -1,4 +1,5 @@
-<% if(this.isConstructor){%>
+<% var self = this;
+if(this.isConstructor){ %>
 <h2>Constructor</h2>
 <% } else {%>
 <h2>Method&nbsp;<a href="<%= this.makeLink(this.jsdoc) %>"><%= this.jsdoc.name%></a></h2>
@@ -21,10 +22,8 @@
 <h3>Parameters</h3>
 <% } %>
 
-<ul>
-<% var self = this, buffer = [];
-_(this.jsdoc.params).each(function(param){
-%>
+<ul class="parameter-list">
+<% _(this.jsdoc.params).each(function(param) { %>
 	<li>
 		<%= param.name%>: <%= self.printTypeAsString(param.type) %>
 		<span class="param-text"><%= param.text %></span>
@@ -46,6 +45,24 @@ _(this.jsdoc.params).each(function(param){
 
 	<% }%>
 <% }%>
+
+
+
+
+<% if(this.jsdoc.throws && this.jsdoc.throws.length) { %>
+
+<h3>Throws</h3>
+
+<ul class="throws-list">
+<% _(this.jsdoc.throws).each(function(t) { %>
+	<li>
+		<%= self.printTypeAsString(t.type) %>
+		<span class="param-text"><%= t.text %></span>
+	</li>
+<% }); %>
+</ul>
+
+<% } %>
 
 
 <div data-type="sources"></div>

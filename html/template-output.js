@@ -103,7 +103,7 @@ __p += '\n\t\t\t<li class="param">\n\t\t\t\t<span class="param-name">' +
  }); ;
 __p += '\n\t\t</ol>\n\t\t';
  } ;
-__p += '\n\n\t\t';
+__p += '\n\n\t\t<!-- TODO: do throw here ?  -->\n\n\t\t';
  if(method.returns && (method.returns.type || method.returns.text)) {;
 __p += '\n\t\tReturns: ' +
 ((__t = ( self.printTypeAsString(method.returns.type) )) == null ? '' : __t) +
@@ -199,7 +199,8 @@ var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
 
- if(this.isConstructor){;
+ var self = this;
+if(this.isConstructor){ ;
 __p += '\n<h2>Constructor</h2>\n';
  } else {;
 __p += '\n<h2>Method&nbsp;<a href="' +
@@ -222,10 +223,8 @@ __p += '\n\n\n\n';
  if( this.jsdoc.params.length ) { ;
 __p += '\n<h3>Parameters</h3>\n';
  } ;
-__p += '\n\n<ul>\n';
- var self = this, buffer = [];
-_(this.jsdoc.params).each(function(param){
-;
+__p += '\n\n<ul class="parameter-list">\n';
+ _(this.jsdoc.params).each(function(param) { ;
 __p += '\n\t<li>\n\t\t' +
 ((__t = ( param.name)) == null ? '' : __t) +
 ': ' +
@@ -250,6 +249,18 @@ __p += '\n\n\t';
  };
 __p += '\n';
  };
+__p += '\n\n\n\n\n';
+ if(this.jsdoc.throws && this.jsdoc.throws.length) { ;
+__p += '\n\n<h3>Throws</h3>\n\n<ul class="throws-list">\n';
+ _(this.jsdoc.throws).each(function(t) { ;
+__p += '\n\t<li>\n\t\t' +
+((__t = ( self.printTypeAsString(t.type) )) == null ? '' : __t) +
+'\n\t\t<span class="param-text">' +
+((__t = ( t.text )) == null ? '' : __t) +
+'</span>\n\t</li>\n';
+ }); ;
+__p += '\n</ul>\n\n';
+ } ;
 __p += '\n\n\n<div data-type="sources"></div>';
 
 }
