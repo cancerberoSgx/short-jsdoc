@@ -19,7 +19,7 @@ with (obj) {
  
 var self = this; 
 ;
-__p += '\n\n<div class="row">\n\t<div class="col-md-4">\n\t\t<h2 class="class-title">Class ' +
+__p += '\n\n<div class="row class-header">\n\t<div class="col-md-4">\n\t\t<h2 class="class-title">Class ' +
 ((__t = ( this.makeLink(this.jsdoc, true) )) == null ? '' : __t) +
 '</h2>\n\t</div>\n\t<div class="col-md-4">\t\t\n\t\t';
  if (this.jsdoc.extends) { ;
@@ -35,9 +35,7 @@ __p += '\n\t</div>\n\t<div class="col-md-4">\n\t\t<h3 class="class-module-title"
 ((__t = ( this.options.inherited ? 0 : 1 )) == null ? '' : __t) +
 '">' +
 ((__t = ( this.options.inherited ? 'Hide' : 'Show' )) == null ? '' : __t) +
-' inherited properties</a></div>\n\n\n<p class="class-text">' +
-((__t = ( this.jsdoc.textHtml || this.jsdoc.text || '' )) == null ? '' : __t) +
-'</p>\n\n';
+' inherited properties</a></div>\n\n\n\n\n<div class="row">\n\n\t<div class="col-md-4">\n\n\n\n\n';
  if(this.jsdoc.constructors && this.jsdoc.constructors.length) { ;
 __p += '\n<h3 class=\'methods\'>Constructors</h3>\n<ul>\n';
 
@@ -129,7 +127,9 @@ __p += '\n\t<li class="event">\n\t\t<a class=\'event-name\' href="#event/' +
  }); ;
 __p += '\n</ul>\n';
  } ;
-__p += '\n\n<div data-type="sources"></div>';
+__p += '\n\n\n\n\t</div>\n\n\t<div class="col-md-8">\n\n\t\t<div class="class-text">' +
+((__t = ( this.jsdoc.textHtml || this.jsdoc.text || '' )) == null ? '' : __t) +
+'</div>\n\n\t\t<div data-type="sources"></div>\n\n\t</div>\n</div>\n';
 
 }
 return __p
@@ -183,85 +183,78 @@ __p += '\n\n' +
 return __p
 };
 
-this["shortjsdoc"]["literalObject"] = function(obj) {
-obj || (obj = {});
-var __t, __p = '', __e = _.escape;
-with (obj) {
-__p += '';
-
-}
-return __p
-};
-
 this["shortjsdoc"]["method"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
 
- var self = this;
-if(this.isConstructor){ ;
-__p += '\n<h2>Constructor</h2>\n';
+ var self = this;;
+__p += '\n\n\n\n<div class="row method-header">\n\t<div class="col-md-4">\n\t\t<h2 class="method-title">\n\t\t\t';
+ if(this.isConstructor){ ;
+__p += '\n\t\t\t<h2>Constructor</h2>\n\t\t\t';
  } else {;
-__p += '\n<h2>Method&nbsp;<a href="' +
+__p += '\n\t\t\t<h2>Method&nbsp;<a href="' +
 ((__t = ( this.makeLink(this.jsdoc) )) == null ? '' : __t) +
 '">' +
 ((__t = ( this.jsdoc.name)) == null ? '' : __t) +
-'</a></h2>\n';
+'</a></h2>\n\t\t\t';
  } ;
-__p += '\n\n\n<h3>Of class <a href="#class/' +
+__p += '\n\t\t</h2>\n\t</div>\n\t<div class="col-md-4">\n\t\t<h3>Of class <a href="#class/' +
 ((__t = ( this.jsdoc.ownerClass )) == null ? '' : __t) +
-'">\n\t' +
+'">\n\t\t\t' +
 ((__t = ( this.simpleName(this.jsdoc.ownerClass) )) == null ? '' : __t) +
-'</a>\n</h3>\n\n';
- if (this.jsdoc.text) { ;
-__p += '\n<div class="method-text">\n\t' +
-((__t = ( this.jsdoc.textHtml )) == null ? '' : __t) +
-'\n</div>\n';
- } ;
-__p += '\n\n\n\n';
+'</a>\n\t\t</h3>\n\t</div>\n\n\t<div class="col-md-4">\n\t\t<h3 class="class-module-title">Of Module ' +
+((__t = ( this.makeLink(this.ownerClass.module, true) )) == null ? '' : __t) +
+'</h3>\n\t</div>\n</div>\n\n\n\n\n\n\n\n<div class="row">\n\t<div class="col-md-4">\n\n\t\t';
  if( this.jsdoc.params.length ) { ;
-__p += '\n<h3>Parameters</h3>\n';
+__p += '\n\t\t<h3>Parameters</h3>\n\t\t';
  } ;
-__p += '\n\n<ul class="parameter-list">\n';
+__p += '\n\n\t\t<ul class="parameter-list">\n\t\t';
  _(this.jsdoc.params).each(function(param) { ;
-__p += '\n\t<li>\n\t\t' +
+__p += '\n\t\t\t<li>\n\t\t\t\t' +
 ((__t = ( param.name)) == null ? '' : __t) +
 ': ' +
 ((__t = ( self.printTypeAsString(param.type) )) == null ? '' : __t) +
-'\n\t\t<span class="param-text">' +
+'\n\t\t\t\t<span class="param-text">' +
 ((__t = ( param.text )) == null ? '' : __t) +
-'</span>\n\t</li>\n\n';
+'</span>\n\t\t\t</li>\n\n\t\t';
  }); ;
-__p += '\n</ul>\n\n\n\n';
+__p += '\n\t\t</ul>\n\n\n\n\t\t';
  if(!this.isConstructor){;
-__p += '\n\t';
+__p += '\n\t\t\t';
 if (this.jsdoc.returns && (this.jsdoc.returns.type || this.jsdoc.returns.text) ) { ;
-__p += '\n\t\t<h3 class="returns-title">Returns</h3>\n\t\t' +
+__p += '\n\t\t\t\t<h3 class="returns-title">Returns</h3>\n\t\t\t\t' +
 ((__t = ( self.printTypeAsString(this.jsdoc.returns.type) )) == null ? '' : __t) +
-'\n\n\t\t';
+'\n\n\t\t\t\t';
  if(this.jsdoc.returns.text){ ;
-__p += '\n\t\t\t<p class="returns-text">' +
+__p += '\n\t\t\t\t\t<p class="returns-text">' +
 ((__t = ( this.jsdoc.returns.text)) == null ? '' : __t) +
-'</p>\n\t\t';
+'</p>\n\t\t\t\t';
  } ;
-__p += '\n\n\t';
+__p += '\n\n\t\t\t';
  };
-__p += '\n';
+__p += '\n\t\t';
  };
-__p += '\n\n\n\n\n';
+__p += '\n\n\n\n\n\t\t';
  if(this.jsdoc.throws && this.jsdoc.throws.length) { ;
-__p += '\n\n<h3>Throws</h3>\n\n<ul class="throws-list">\n';
+__p += '\n\n\t\t<h3>Throws</h3>\n\n\t\t<ul class="throws-list">\n\t\t';
  _(this.jsdoc.throws).each(function(t) { ;
-__p += '\n\t<li>\n\t\t' +
+__p += '\n\t\t\t<li>\n\t\t\t\t' +
 ((__t = ( self.printTypeAsString(t.type) )) == null ? '' : __t) +
-'\n\t\t<span class="param-text">' +
+'\n\t\t\t\t<span class="param-text">' +
 ((__t = ( t.text )) == null ? '' : __t) +
-'</span>\n\t</li>\n';
+'</span>\n\t\t\t</li>\n\t\t';
  }); ;
-__p += '\n</ul>\n\n';
+__p += '\n\t\t</ul>\n\n\t\t';
  } ;
-__p += '\n\n\n<div data-type="sources"></div>';
+__p += '\n\t</div>\n\n\n\n\t<div class="col-md-8">\n\t\t';
+ if (this.jsdoc.text) { ;
+__p += '\n\t\t<div class="method-text">\n\t\t\t' +
+((__t = ( this.jsdoc.textHtml )) == null ? '' : __t) +
+'\n\t\t</div>\n\n\t\t<div data-type="sources"></div>\n\t\t';
+ } ;
+__p += '\n\n\t</div>\n</div>\n\n\n';
 
 }
 return __p
@@ -274,7 +267,13 @@ function print() { __p += __j.call(arguments, '') }
 with (obj) {
 __p += '<h2 class="module-title">Module ' +
 ((__t = ( this.jsdoc.name)) == null ? '' : __t) +
-'</h2>\n\n<h3>Classes</h3>\n\n<ul class="classes">\n';
+'</h2>\n\n';
+ if (this.jsdoc.text) { ;
+__p += '\n<div class="method-text">\n\t' +
+((__t = ( this.jsdoc.textHtml )) == null ? '' : __t) +
+'\n</div>\n';
+ };
+__p += '\n\n<h3>Classes</h3>\n\n<ul class="classes">\n';
  _(this.classes).each(function(c) { ;
 __p += '\n\t<li>\n\t\t<a href="#class/' +
 ((__t = ( c.absoluteName )) == null ? '' : __t) +

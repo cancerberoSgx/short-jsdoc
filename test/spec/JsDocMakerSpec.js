@@ -194,7 +194,6 @@ describe("JsDocMaker", function()
 		it("custom natives should be binded", function() 
 		{
 			var Machine = jsdoc.classes['office.Machine'];
-			// debugger;
 			expect(Machine.text).toBe('TODO some text documenting the machine here please');
 			var param1 = Machine.methods.calculate.params[0].type.params[1].params[0];
 			expect(param1.name).toBe('HomeFinance');
@@ -712,7 +711,6 @@ describe("JsDocMaker", function()
 		{
 			var method1 = jsdoc.classes['throwtest1.Thrower'].methods.method1;
 
-			debugger;
 			expect(method1.throws[0].type.name).toBe('IOException'); 
 			expect(method1.throws[0].text).toBe('if a IO error occurs'); 
 			expect(method1.throws[0].type.text).toBe('throwed when an IO error occurs'); 

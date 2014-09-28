@@ -1,5 +1,11 @@
 <h2 class="module-title">Module <%= this.jsdoc.name%></h2>
 
+<% if (this.jsdoc.text) { %>
+<div class="method-text">
+	<%= this.jsdoc.textHtml %>
+</div>
+<% }%>
+
 <h3>Classes</h3>
 
 <ul class="classes">

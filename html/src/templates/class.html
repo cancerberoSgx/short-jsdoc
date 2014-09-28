@@ -2,7 +2,7 @@
 var self = this; 
 %>
 
-<div class="row">
+<div class="row class-header">
 	<div class="col-md-4">
 		<h2 class="class-title">Class <%= this.makeLink(this.jsdoc, true) %></h2>
 	</div>
@@ -20,7 +20,14 @@ var self = this;
 <div class="pull-right"><a href="<%= this.makeLink(this.jsdoc) %>?inherited=<%= this.options.inherited ? 0 : 1 %>"><%= this.options.inherited ? 'Hide' : 'Show' %> inherited properties</a></div>
 
 
-<p class="class-text"><%= this.jsdoc.textHtml || this.jsdoc.text || '' %></p>
+
+
+<div class="row">
+
+	<div class="col-md-4">
+
+
+
 
 <% if(this.jsdoc.constructors && this.jsdoc.constructors.length) { %>
 <h3 class='methods'>Constructors</h3>
@@ -114,4 +121,15 @@ _(this.jsdoc.events).each(function(p) { %>
 </ul>
 <% } %>
 
-<div data-type="sources"></div>
+
+
+	</div>
+
+	<div class="col-md-8">
+
+		<div class="class-text"><%= this.jsdoc.textHtml || this.jsdoc.text || '' %></div>
+
+		<div data-type="sources"></div>
+
+	</div>
+</div>
