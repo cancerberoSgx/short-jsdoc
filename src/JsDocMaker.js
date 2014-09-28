@@ -400,7 +400,7 @@ JsDocMaker.prototype.postProccessBinding = function()
 			c.children = _(c.children).without(extend);			
 		}
 
-		var methods = _(c.methods).clone();
+		var methods = _(c.methods).clone() || {};
 		if(c.constructors) 
         {
             for (var i = 0; i < c.constructors.length; i++) 
@@ -736,7 +736,7 @@ JsDocMaker.prototype.getNativeTypeUrl = function(name)
 //MODIFIERS postproccessing- like static, private, final
 
 //@property {Array<String>}MODIFIERS @static
-JsDocMaker.MODIFIERS = ['static', 'private', 'final', 'obsolete', 'experimental', 'optional']; 
+JsDocMaker.MODIFIERS = ['static', 'private', 'final', 'deprecated', 'experimental', 'optional']; 
 //@method installModifiers sets the property modifiers to the node according its children
 JsDocMaker.prototype.installModifiers = function(node)
 {
