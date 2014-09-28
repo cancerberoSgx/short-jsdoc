@@ -2,56 +2,46 @@
 
 
 
-	describe("type binding & generics", function() 
+	describe("method throw exception", function() 
 	{
 		var jsdoc, maker; 
 
 		beforeEach(function() 
 		{
 			var code = 
-				'//@module livingThings2' + '\n' +
-				'//@class Animal ' + '\n' +
-				'//@method run @param {int} amount in kilometers @final @static @myownmodifier' + '\n' + 
-				'//@class Monkey @extend Animal @module livingThings2' + '\n' +
-				'//@method eat way of feeding' + '\n' +
-				'//@param {Int} amount' + '\n' +
-				'//@param {Food} food what is eaten' + '\n' +
-				'//@return {Energy} the total energy generated afte rthe proccess' + '\n' +
+				'//@module throwtest1' + '\n' +
+				'//@class CompilerException special exception for compiler errors @extends IOException ' + '\n' +
+				'//@param {Number} error_line @param {String} error_msg' + '\n' +
+				'//@class IOException throwed when an IO error occurs @extends Error ' + '\n' +
+				'//@class Thrower ' + '\n' +
+				'//@method method1 @param {String} p some text' + '\n' + 
+				'//@throws {IOException} if a IO error occurs' + '\n' + 
+				'//@throws {CompilerException} if a compiler error error occurs' + '\n' + 
+
+				
 				''; 
 			maker = new JsDocMaker();
-
-			debugger;
-			//registering a new modifier
-			JsDocMaker.MODIFIERS.push('myownmodifier');
-
 			maker.parseFile(code, 'textarea'); 
 			maker.postProccess();
 			maker.postProccessBinding();
 			jsdoc = maker.data;
 		});
 
-		it("should be able to parse some javascript code", function() 
+		it("@throws nodes have a type and text", function() 
 		{
-			expect(jsdoc.modules.livingThings2).toBeDefined();
-			var Monkey = jsdoc.classes['livingThings2.Monkey']; 
-			expect(Monkey).toBeDefined();
-			expect(Monkey.absoluteName).toBe('livingThings2.Monkey');
-			expect(Monkey.name).toBe('Monkey');
+			var method1 = jsdoc.classes['throwtest1.Thrower'].methods.method1;
 
-			expect(Monkey.extends.name).toBe('Animal');
-			expect(Monkey.extends.absoluteName).toBe('livingThings2.Animal');
-			expect(Monkey.extends.name).toBe('Animal');
-			expect(Monkey.extends.methods.run.params.length).toBe(1);
-			expect(_(Monkey.extends.methods.run.modifiers).contains('final')).toBe(true);
-			expect(_(Monkey.extends.methods.run.modifiers).contains('static')).toBe(true);	
+			expect(method1.throws[0].type.name).toBe('IOException'); 
+			expect(method1.throws[0].text).toBe('if a IO error occurs'); 
+			expect(method1.throws[0].type.text).toBe('throwed when an IO error occurs'); 
+			expect(method1.throws[0].type.extends.name).toBe('Error'); 
+
+			expect(method1.throws[1].type.name).toBe('CompilerException'); 
+			expect(method1.throws[1].text).toBe('if a compiler error error occurs'); 
+			expect(method1.throws[1].type.text).toBe('special exception for compiler errors'); 
+			expect(method1.throws[1].type.extends.name).toBe('IOException'); 
 		});
 
-		it("I can register my own modifiers before parsing", function() 
-		{
-			var Animal = jsdoc.classes['livingThings2.Animal'];
-			debugger;
-			expect(_(Animal.methods.run.modifiers).contains('myownmodifier')).toBe(true);			
-		});
 	});
 
 

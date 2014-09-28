@@ -683,5 +683,46 @@ describe("JsDocMaker", function()
 		});
 	});
 
+
+
+	describe("method throw exception", function() 
+	{
+		var jsdoc, maker; 
+
+		beforeEach(function() 
+		{
+			var code = 
+				'//@module throwtest1' + '\n' +
+				'//@class CompilerException special exception for compiler errors @extends IOException ' + '\n' +
+				'//@param {Number} error_line @param {String} error_msg' + '\n' +
+				'//@class IOException throwed when an IO error occurs @extends Error ' + '\n' +
+				'//@class Thrower ' + '\n' +
+				'//@method method1 @param {String} p some text' + '\n' + 
+				'//@throws {IOException} if a IO error occurs' + '\n' + 
+				'//@throws {CompilerException} if a compiler error error occurs' + '\n' + 				
+				''; 
+			maker = new JsDocMaker();
+			maker.parseFile(code, 'textarea'); 
+			maker.postProccess();
+			maker.postProccessBinding();
+			jsdoc = maker.data;
+		});
+
+		it("@throws nodes have a type and text", function() 
+		{
+			var method1 = jsdoc.classes['throwtest1.Thrower'].methods.method1;
+
+			expect(method1.throws[0].type.name).toBe('IOException'); 
+			expect(method1.throws[0].text).toBe('if a IO error occurs'); 
+			expect(method1.throws[0].type.text).toBe('throwed when an IO error occurs'); 
+			expect(method1.throws[0].type.extends.name).toBe('Error'); 
+
+			expect(method1.throws[1].type.name).toBe('CompilerException'); 
+			expect(method1.throws[1].text).toBe('if a compiler error error occurs'); 
+			expect(method1.throws[1].type.text).toBe('special exception for compiler errors'); 
+			expect(method1.throws[1].type.extends.name).toBe('IOException'); 
+		});
+
+	});
 });
 

@@ -148,6 +148,20 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 						currentMethod.params = currentMethod.params || {};
 						currentMethod.params[parsed.name] = parsed; 
 					}
+				}
+
+				//@throw is children of @method
+				else if((parsed.annotation === 'throw' || parsed.annotation === 'throws') && currentClass)
+				{
+					if(!currentMethod)
+					{
+						self.error('param before method: ', parsed);
+					}
+					else
+					{						
+						currentMethod.throws = currentMethod.throws || {};
+						currentMethod.throws[parsed.name] = parsed; 
+					}
 				}	
 
 			}); 
@@ -340,13 +354,18 @@ JsDocMaker.prototype.postProccess = function()
 {
 	var self = this;
 
-	// do some work for classes
+	// set params and throws of constructors
 	_(self.data.classes).each(function(c)
 	{
 		_(c.constructors).each(function(co){
 			co.params = _(co.children||[]).filter(function(child)
 			{
 				return child.annotation === 'param'; 
+			});
+
+			co.throws = _(co.children||[]).filter(function(child)
+			{
+				return child.annotation === 'throw' || child.annotation === 'throws'; 
 			});
 		}); 
 	}); 
@@ -403,8 +422,7 @@ JsDocMaker.prototype.postProccessBinding = function()
 			}); 
 			method.params = params; 
 
-			method.ownerClass = c.absoluteName;
-				
+			method.ownerClass = c.absoluteName;				
 			method.absoluteName = c.absoluteName + JsDocMaker.ABSOLUTE_NAME_SEPARATOR + method.name; 
 
 			_(method.params).each(function(param)
@@ -413,7 +431,27 @@ JsDocMaker.prototype.postProccessBinding = function()
 				{
 					param.typeOriginalString = param.type; 
 					param.type = self.parseTypeString(param.type, c) || param.type;						
-				}					
+				}
+			}); 
+
+			//method throws property
+			var throw$ = _(method.children||[]).filter(function(child)
+			{
+				// child.text = JsDocMaker.stringTrim(child.text||''); 
+				return child.annotation === 'throw' || child.annotation === 'throws'; 
+			}); 
+			method.throws = throw$; 
+			// method.ownerClass = c.absoluteName;				
+			// method.absoluteName = c.absoluteName + JsDocMaker.ABSOLUTE_NAME_SEPARATOR + method.name; 
+			_(method.throws).each(function(t)
+			{
+				//because @throws doesn't have a name it breaks our simple grammar, so we merge the name with its text.
+				t.text = (t.name ? t.name+' ' : '') + (t.text||''); 
+				if(_(t.type).isString())
+				{
+					t.typeOriginalString = t.type; 
+					t.type = self.parseTypeString(t.type, c) || t.type;						
+				}
 			}); 
 
 			//method.returns property
