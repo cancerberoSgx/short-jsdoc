@@ -1872,3 +1872,12 @@ The prototype chain remains untouched. However, the __proto__  property is seale
 
 @param  obj The object which should be sealed.
 */
+
+
+
+
+
+/*
+@class Any
+This is an artificial type that means 'any value is valid here'
+*/
