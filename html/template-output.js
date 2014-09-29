@@ -22,7 +22,7 @@ var self = this;
 __p += '\n\n<div class="row class-header">\n\t<div class="col-md-4">\n\t\t<h2 class="class-title">Class ' +
 ((__t = ( this.makeLink(this.jsdoc, true) )) == null ? '' : __t) +
 '</h2>\n\t</div>\n\t<div class="col-md-4">\t\t\n\t\t';
- if (this.jsdoc.extends) { ;
+ if (this.jsdoc.extends && this.jsdoc.absoluteName != this.jsdoc.extends.absoluteName) { ;
 __p += '\n\t\t<h3 class="class-extends-title">Extends ' +
 ((__t = ( this.printTypeAsString(this.jsdoc.extends))) == null ? '' : __t) +
 '</h3>\n\t\t';
@@ -39,99 +39,106 @@ __p += '\n\t</div>\n\t<div class="col-md-4">\n\t\t<h3 class="class-module-title"
  var template = this.application.templates.classSummary;;
 __p += '\n' +
 ((__t = ( template.apply(this, arguments) )) == null ? '' : __t) +
-'\n\n<div class="row">\n\n\t<div class="col-md-4">\n\n\n\n\n';
+'\n\n<div class="row">\n\n\t<div class="col-md-5">\n\n\n\n\t\t';
  if(this.jsdoc.constructors && this.jsdoc.constructors.length) { ;
-__p += '\n<h3 class=\'methods\'>Constructors</h3>\n<ul>\n';
+__p += '\n\t\t<h3 class=\'methods\'>Constructors</h3>\n\t\t<ul>\n\t\t';
 
-_(this.jsdoc.constructors).each(function(method) { ;
-__p += '\n' +
+		_(this.jsdoc.constructors).each(function(method) { ;
+__p += '\n\t\t' +
 ((__t = ( self.printMethod(method))) == null ? '' : __t) +
-'\n\t<li class="constructor">\n\t\t';
+'\n\t\t\t<li class="constructor">\n\t\t\t\t';
  if(method.params && method.params.length) { ;
-__p += '\n\t\t<h4 class="params-title">Parameters</h4>\n\t\t<ol class="params">\n\t\t\t';
+__p += '\n\t\t\t\tParameters:\n\t\t\t\t<ol class="params">\n\t\t\t\t\t';
  _(method.params).each(function(param){ ;
-__p += '\n\t\t\t<li class="param">\n\t\t\t\t<span class="param-name">' +
+__p += '\n\t\t\t\t\t<li class="param">\n\t\t\t\t\t\t<span class="param-name">' +
 ((__t = ( param.name )) == null ? '' : __t) +
-'</span>\n\t\t\t\t<span class="param-type">' +
+'</span>\n\t\t\t\t\t\t<span class="param-type">' +
 ((__t = ( self.printTypeAsString(param.type) )) == null ? '' : __t) +
-'</span> \n\t\t\t</li>\n\t\t\t';
+'</span> \n\t\t\t\t\t</li>\n\t\t\t\t\t';
  }); ;
-__p += '\n\t\t</ol>\n\t\t';
+__p += '\n\t\t\t\t</ol>\n\t\t\t\t';
  } ;
-__p += '\n\t</li>\n';
+__p += '\n\t\t\t</li>\n\t\t';
  }); ;
-__p += '\n</ul>\n';
+__p += '\n\t\t</ul>\n\t\t';
  } ;
-__p += '\n\n\n\n';
+__p += '\n\n\n\n\n\t\t';
  if(this.properties && _(this.properties).keys().length) { ;
-__p += '\n<h3 class=\'properties\'>Properties</h3>\n<ul>\n';
+__p += '\n\t\t<h3 class=\'properties\'>Properties</h3>\n\t\t<ul>\n\t\t';
  
-var self = this; 
-_(this.properties).each(function(p) { 
-	var inherited = !JsDocMaker.classOwnsProperty(self.jsdoc, p); 
-	;
-__p += '\n\t<li class="property ' +
+		var self = this; 
+		_(this.properties).each(function(p) { 
+			var inherited = !JsDocMaker.classOwnsProperty(self.jsdoc, p); 
+			//TODO: perform this in the view or plugin
+			
+			var inheritedByName = p.absoluteName.substring(0, p.absoluteName.lastIndexOf('.'));
+			var inheritedBy = self.application.data.classes[inheritedByName] || {};
+			
+			;
+__p += '\n\t\t\t<li class="property ' +
 ((__t = ( inherited ? 'inherited' : '' )) == null ? '' : __t) +
-'">\n\t\t<a class=\'property-name\' href="#property/' +
+'">\n\t\t\t\t<a class=\'property-name\' href="#property/' +
 ((__t = ( p.absoluteName )) == null ? '' : __t) +
 '">' +
 ((__t = ( p.name )) == null ? '' : __t) +
-'</a>\n\t\t<span class="property-type">' +
+'</a>\n\t\t\t\t<span class="property-type">' +
 ((__t = ( self.printTypeAsString(p.type) )) == null ? '' : __t) +
-'</span> \n\t</li>\n';
+'</span> \n\t\t\t\t' +
+((__t = ( !inherited ? '' : ('(inherited by ' + self.printTypeAsString(inheritedBy) + ')') )) == null ? '' : __t) +
+'\n\t\t\t</li>\n\t\t';
  }); ;
-__p += '\n</ul>\n';
+__p += '\n\t\t</ul>\n\t\t';
  } ;
-__p += '\n\n\n\n\n';
+__p += '\n\n\n\n\n\n\t\t';
  if(this.methods && _(this.methods).keys().length) { ;
-__p += '\n<h3 class=\'methods\'>Methods</h3>\n<ul>\n';
+__p += '\n\t\t<h3 class=\'methods\'>Methods</h3>\n\t\t<ul>\n\t\t';
 
-_(this.methods).each(function(method) { 
-	var inherited = !JsDocMaker.classOwnsProperty(self.jsdoc, method); 
-;
-__p += '\n\n\t<li class="method ' +
+		_(this.methods).each(function(method) { 
+			var inherited = !JsDocMaker.classOwnsProperty(self.jsdoc, method); 
+		;
+__p += '\n\n\t\t\t<li class="method ' +
 ((__t = ( inherited ? 'inherited' : '' )) == null ? '' : __t) +
-'">\n\t\t' +
+'">\n\t\t\t\t' +
 ((__t = ( self.makeLink(method, true))) == null ? '' : __t) +
-'\n\t\t';
+'\n\t\t\t\t';
  if(method.params && method.params.length) { ;
-__p += '\n\t\tParameters: \n\t\t<ol class="params">\n\t\t\t';
+__p += '\n\t\t\t\tParameters: \n\t\t\t\t<ol class="params">\n\t\t\t\t\t';
  _(method.params).each(function(param){ ;
-__p += '\n\t\t\t<li class="param">\n\t\t\t\t<span class="param-name">' +
+__p += '\n\t\t\t\t\t<li class="param">\n\t\t\t\t\t\t<span class="param-name">' +
 ((__t = ( param.name )) == null ? '' : __t) +
-'</span>: \n\t\t\t\t<span class="param-type">' +
+'</span>: \n\t\t\t\t\t\t<span class="param-type">' +
 ((__t = ( self.printTypeAsString(param.type) )) == null ? '' : __t) +
-'</span> \n\t\t\t</li>\n\t\t\t';
+'</span> \n\t\t\t\t\t</li>\n\t\t\t\t\t';
  }); ;
-__p += '\n\t\t</ol>\n\t\t';
+__p += '\n\t\t\t\t</ol>\n\t\t\t\t';
  } ;
-__p += '\n\n\t\t<!-- TODO: do throw here ?  -->\n\n\t\t';
+__p += '\n\n\t\t\t\t<!-- TODO: do throw here ?  -->\n\n\t\t\t\t';
  if(method.returns && (method.returns.type || method.returns.text)) {;
-__p += '\n\t\tReturns: ' +
+__p += '\n\t\t\t\tReturns: ' +
 ((__t = ( self.printTypeAsString(method.returns.type) )) == null ? '' : __t) +
-'\t\n\t\t<!-- <span class="returns-text">' +
+'\t\n\t\t\t\t<!-- <span class="returns-text">' +
 ((__t = ( method.returns.text || '')) == null ? '' : __t) +
-'</span> -->\n\t\t';
+'</span> -->\n\t\t\t\t';
  } ;
-__p += '\n\t</li>\n';
+__p += '\n\t\t\t</li>\n\t\t';
  }); ;
-__p += '\n</ul>\n';
+__p += '\n\t\t</ul>\n\t\t';
  } ;
-__p += '\n\n\n\n';
+__p += '\n\n\n\n\n\t\t';
  if(this.jsdoc.events && _(this.jsdoc.events).keys().length) { ;
-__p += '\n<h3 class=\'events\'>Events</h3>\n<ul>\n';
+__p += '\n\t\t<h3 class=\'events\'>Events</h3>\n\t\t<ul>\n\t\t';
  
-var self = this; 
-_(this.jsdoc.events).each(function(p) { ;
-__p += '\n\t<li class="event">\n\t\t<a class=\'event-name\' href="#event/' +
+		var self = this; 
+		_(this.jsdoc.events).each(function(p) { ;
+__p += '\n\t\t\t<li class="event">\n\t\t\t\t<a class=\'event-name\' href="#event/' +
 ((__t = ( p.absoluteName )) == null ? '' : __t) +
 '">' +
 ((__t = ( p.name )) == null ? '' : __t) +
-'</a>\n\t</li>\n';
+'</a>\n\t\t\t</li>\n\t\t';
  }); ;
-__p += '\n</ul>\n';
+__p += '\n\t\t</ul>\n\t\t';
  } ;
-__p += '\n\n\n\n\t</div>\n\n\t<div class="col-md-8">\n\n\t\t<div class="class-text">\n\t\t' +
+__p += '\n\n\n\t</div>\n\n\t<div class="col-md-7">\n\n\t\t<div class="class-text">\n\t\t' +
 ((__t = ( this.jsdoc.textHtml || self.getTextHtml(this.jsdoc.text) || this.jsdoc.text || '' )) == null ? '' : __t) +
 '\n\t\t</div>\n\n\t\t<div data-type="sources"></div>\n\n\t</div>\n</div>\n';
 
@@ -148,13 +155,13 @@ __p += '<span class="class-summary-extends">class ' +
 ((__t = ( this.makeLink(this.jsdoc, true) )) == null ? '' : __t) +
 '\n';
  if (this.jsdoc.extends) { ;
-__p += '\n\t<span class="class-summary-extends">extends ' +
+__p += '\n\t<span class="class-summary-extends"><span class=" ">extends ' +
 ((__t = ( this.printTypeAsString(this.jsdoc.extends))) == null ? '' : __t) +
 '</span>\n\t';
  } ;
 __p += '\n';
  ;
-__p += '\n<span class="class-summary-open">{</span>\n</span>';
+__p += '\n<span class="class-summary-open">{</span>\n</span>\n\n';
 
 }
 return __p

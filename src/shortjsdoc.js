@@ -512,7 +512,7 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 
 				//the rest are all children of class : 
 
-				// we treat @method as equivalent as @constructor
+				//? we treat @method as equivalent as @constructor
 				else if (parsed.annotation === 'method' && currentClass)
 				{
 					currentClass.methods = currentClass.methods || {};
@@ -526,7 +526,7 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 					currentMethod = parsed; 
 				}
 
-				// @property and @event are treated similarly
+				//? @property and @event are treated similarly
 				else if(parsed.annotation === 'property' && currentClass)
 				{
 					currentClass.properties = currentClass.properties || {};
@@ -538,7 +538,7 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 					currentClass.events[parsed.name] = parsed;
 				}
 
-				//@param is children of @method
+				//? @param is children of @method
 				else if(parsed.annotation === 'param' && currentClass)
 				{
 					if(!currentMethod)
@@ -552,19 +552,33 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 					}
 				}
 
-				//@throw is children of @method
-				else if((parsed.annotation === 'throw' || parsed.annotation === 'throws') && currentClass)
-				{
-					if(!currentMethod)
-					{
-						self.error('param before method: ', parsed);
-					}
-					else
-					{						
-						currentMethod.throws = currentMethod.throws || {};
-						currentMethod.throws[parsed.name] = parsed; 
-					}
-				}	
+				//? @throw is children of @method
+				// else if((parsed.annotation === 'throw' || parsed.annotation === 'throws') && currentClass)
+				// {
+				// 	if(!currentMethod)
+				// 	{
+				// 		self.error('param before method: ', parsed);
+				// 	}
+				// 	else
+				// 	{						
+				// 		currentMethod.throws = currentMethod.throws || {};
+				// 		currentMethod.throws[parsed.name] = parsed; 
+				// 	}
+				// }	
+
+				//? @return is children of @method
+				// else if((parsed.annotation === 'returns' || parsed.annotation === 'return') && currentClass)
+				// {
+				// 	if(!currentMethod)
+				// 	{
+				// 		self.error('returns before method: ', parsed);
+				// 	}
+				// 	else
+				// 	{						
+				// 		currentMethod.throws = currentMethod.throws || {};
+				// 		currentMethod.throws[parsed.name] = parsed; 
+				// 	}
+				// }	
 
 			}); 
 		});
@@ -604,7 +618,7 @@ JsDocMaker.prototype.parseUnit = function(str, comment)
 	return ret; 
 }; 
 
-//@method parseUnitSimple
+//@method parseUnitSimple @param {String} str @param comment
 JsDocMaker.prototype.parseUnitSimple = function(str, comment) 
 {	
 	if(!str)
@@ -696,6 +710,8 @@ JsDocMaker.prototype.fixUnamedAnnotations = function()
 		if(node.value)
 		{
 			node.value = node.value.replace(/@constructor/gi, '@constructor n'); 
+			// node.value = node.value.replace(/@throw/gi, '@throws n'); 
+			// node.value = node.value.replace(/@throws/gi, '@throws n'); 
 			node.value = node.value.replace(/(@\w+)\s*$/gi, '$1 dummy ');
 			node.value = node.value.replace(/(@\w+)\s+(@\w+)/gi, '$1 dummy $2');
 		}
@@ -1138,7 +1154,7 @@ JsDocMaker.prototype.getNativeTypeUrl = function(name)
 //MODIFIERS postproccessing- like static, private, final
 
 //@property {Array<String>}MODIFIERS @static
-JsDocMaker.MODIFIERS = ['static', 'private', 'final', 'deprecated', 'experimental', 'optional']; 
+JsDocMaker.MODIFIERS = ['static', 'private', 'final', 'deprecated', 'experimental', 'optional', 'abstract']; 
 //@method installModifiers sets the property modifiers to the node according its children
 JsDocMaker.prototype.installModifiers = function(node)
 {
@@ -1359,12 +1375,6 @@ JsDocMaker.splitAndPreserve = function(string, replace)
 	splitted = splitted.split(marker);
 	return splitted; 
 }; 
-//@mmethod error @param {String}msg
-JsDocMaker.prototype.error = function(msg)
-{
-	console.error('Error detected: ' + msg); 
-	throw msg;
-}; 
 
 //@method stringFullTrim @param {String} s @static
 JsDocMaker.stringFullTrim = function(s)
@@ -1402,7 +1412,12 @@ JsDocMaker.startsWith = function(s, prefix)
 	return s.indexOf(prefix)===0;
 }; 
 
-
+//@mmethod error @param {String}msg
+JsDocMaker.prototype.error = function(msg)
+{
+	console.error('Error detected: ' + msg); 
+	throw msg;
+}; 
 
 
 
@@ -1410,7 +1425,8 @@ JsDocMaker.startsWith = function(s, prefix)
 
 })(this);
 ;// nodejs command line utility for generating the .json definition scanning a given source folder or file. 
-//depends on src/JsDocMaker.js
+// depends on src/JsDocMaker.js
+// Please don't use console.log here since the output is dumped to stdout
 
 var fs = require('fs')
 ,	path = require('path')
@@ -1458,9 +1474,12 @@ _(ShortJsDoc.prototype).extend({
 		var jsdoc = this.maker.data;
 
 		this.maker.postProccess();
-		// this.maker.postProccessBinding();
 		
-		console.log(JSON.stringify(jsdoc, null, 4)); 
+		// dump the output indented:
+		// console.log(JSON.stringify(jsdoc, null, 4)); 
+
+		// dump the output minified:
+		console.log(JSON.stringify(jsdoc)); 
 	}
 
 	//@method parseSources

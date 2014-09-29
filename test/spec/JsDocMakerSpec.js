@@ -693,12 +693,15 @@ describe("JsDocMaker", function()
 			var code = 
 				'//@module throwtest1' + '\n' +
 				'//@class CompilerException special exception for compiler errors @extends IOException ' + '\n' +
-				'//@param {Number} error_line @param {String} error_msg' + '\n' +
+				// '//@param {Number} error_line @param {String} error_msg' + '\n' +
 				'//@class IOException throwed when an IO error occurs @extends Error ' + '\n' +
 				'//@class Thrower ' + '\n' +
 				'//@method method1 @param {String} p some text' + '\n' + 
+				'//@param {Number} p1 sdf sdf' + '\n' +
 				'//@throws {IOException} if a IO error occurs' + '\n' + 
+				'//@param {Number} p3' + '\n' +
 				'//@throws {CompilerException} if a compiler error error occurs' + '\n' +
+				'//@returns {SomeResult} or null in case of an error' + '\n' +
 				''; 
 			maker = new JsDocMaker();
 			maker.parseFile(code, 'textarea'); 
@@ -710,7 +713,6 @@ describe("JsDocMaker", function()
 		it("@throws nodes have a type and text", function() 
 		{
 			var method1 = jsdoc.classes['throwtest1.Thrower'].methods.method1;
-
 			expect(method1.throws[0].type.name).toBe('IOException'); 
 			expect(method1.throws[0].text).toBe('if a IO error occurs'); 
 			expect(method1.throws[0].type.text).toBe('throwed when an IO error occurs'); 
@@ -720,6 +722,53 @@ describe("JsDocMaker", function()
 			expect(method1.throws[1].text).toBe('if a compiler error error occurs'); 
 			expect(method1.throws[1].type.text).toBe('special exception for compiler errors'); 
 			expect(method1.throws[1].type.extends.name).toBe('IOException'); 
+
+			expect(method1.params[0].name).toBe('p'); 
+			expect(method1.params[1].name).toBe('p1'); 
+			expect(method1.params[2].name).toBe('p3'); 
+
+			expect(method1.returns.type.name).toBe('SomeResult'); 
+
+		});
+
+	});
+
+
+
+
+
+
+
+
+	describe("custom base class", function() 
+	{
+		var jsdoc, maker; 
+
+		beforeEach(function() 
+		{
+			var code = 
+				'//@module custombaseclass1' + '\n' +
+				'//@class Test1 blabla ' + '\n' +
+				'//@class Object yes I can go crazy and make Object just a concrete common name @extends Test1 ' + '\n' +
+				''; 
+
+			JsDocMaker.DEFAULT_CLASS = 'MyDefaultClass'; 
+			maker = new JsDocMaker();
+			maker.parseFile(code, 'textarea'); 
+			maker.postProccess();
+			maker.postProccessBinding();
+			jsdoc = maker.data;
+		});
+
+		it("yes now Object is no longer the default-base class", function() 
+		{
+			var Test1 = jsdoc.classes['custombaseclass1.Test1']; 
+			expect(Test1.extends.name).toBe('MyDefaultClass'); 
+		});
+		it("is just a concrete class", function() 
+		{
+			var _Object = jsdoc.classes['custombaseclass1.Object']; 
+			expect(_Object.extends.name).toBe('Test1'); 
 		});
 
 	});

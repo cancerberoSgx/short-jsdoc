@@ -1,5 +1,6 @@
 // nodejs command line utility for generating the .json definition scanning a given source folder or file. 
-//depends on src/JsDocMaker.js
+// depends on src/JsDocMaker.js
+// Please don't use console.log here since the output is dumped to stdout
 
 var fs = require('fs')
 ,	path = require('path')
@@ -47,9 +48,12 @@ _(ShortJsDoc.prototype).extend({
 		var jsdoc = this.maker.data;
 
 		this.maker.postProccess();
-		// this.maker.postProccessBinding();
 		
-		console.log(JSON.stringify(jsdoc, null, 4)); 
+		// dump the output indented:
+		// console.log(JSON.stringify(jsdoc, null, 4)); 
+
+		// dump the output minified:
+		console.log(JSON.stringify(jsdoc)); 
 	}
 
 	//@method parseSources
