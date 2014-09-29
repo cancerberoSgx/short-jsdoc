@@ -144,7 +144,7 @@ _(AbstractView.prototype).extend({
 			return this.printSingleTypeAsString(type); 
 		}
 	}
-	//@method getTextHtml depends on lib/marked/
+	//@method getTextHtml depends on lib/marked/ - all texts should be printed using this method
 ,	getTextHtml: function(node)
 	{
 		if(!node || !node.text)

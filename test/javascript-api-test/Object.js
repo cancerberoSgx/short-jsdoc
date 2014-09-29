@@ -4,12 +4,49 @@
 @class Object
 Adapted from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object
 
-@property {ObjectPrototype} prototype
-@static 
+#Description
+The Object constructor creates an object wrapper for the given value. If the value is null or undefined, it will create and return an empty object, otherwise, it will return an object of a Type that corresponds to the given value. If the value is an object already, it will return the value.
 
+When called in a non-constructor context, Object behaves identically to new Object().
+
+#Object instances and Object prototype object
+All objects in JavaScript are descended from Object; all objects inherit methods and properties from Object.prototype, although they may be overridden. For example, other constructors' prototypes override the constructor property and provide their own toString methods. Changes to the Object prototype object are propagated to all objects unless the properties and methods subject to those changes are overridden further along the prototype chain.
+
+#Examples
+##Example: Using Object given undefined and null types
+
+The following examples store an empty Object object in o:
+
+	var o = new Object();
+	var o = new Object(undefined);
+	var o = new Object(null);
+##Example: Using Object to create Boolean objects
+
+The following examples store Boolean objects in o:
+
+	// equivalent to o = new Boolean(true);
+	var o = new Object(true);
+	// equivalent to o = new Boolean(false);
+	var o = new Object(Boolean());
+
+
+@property {ObjectPrototype} prototype
+
+@static 
 
 */
 
+/*
+@constructor bla bla
+
+	// Object initialiser or literal 
+	{ [ nameValuePair1 [, nameValuePair2 [, ...nameValuePairN] ] ] }  
+	// Called as a constructor 
+	new Object( [ value ] )
+
+@param nameValuePair1,nameValuePair2,...nameValuePairN Pairs of names (strings) and values (any value) where the name is separated from the value by a colon.
+@param value Any value.
+*/
 
 
 

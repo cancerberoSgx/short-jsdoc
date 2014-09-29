@@ -6,16 +6,35 @@
 // @author: sgurin
 
 //@class Application 
-//@constructor Application @param {Object} data
+/*
+@constructor Application 
+
+@param {Object} data is the data.json object outputed by running 
+	
+	var maker = new JsDocMaker();
+	maker.parseFile(myCodeString);
+	maker.postProccess();
+	var data = maker.data; 
+*/
 var Application = function(data)
 {
+	//@property {String} textFormat  can be markdown or html. default: markdown
 	this.textFormat = 'markdown'; 
 	
-	this.templates = shortjsdoc; //global variable given b templates.js
+	//@property {Object} templates The templates dictionary (given by template-output.js)
+	this.templates = shortjsdoc; 
 
-	// this.parser = jsindentator.styles.shortJsDoc; 
+	/*@property {Object} data is the data.json object outputed by running:
+	
+		var maker = new JsDocMaker();
+		maker.parseFile(myCodeString);
+		maker.postProccess();
+		var data = maker.data; 
+
+	*/
 	this.data = data; 
 
+	//@property {JsDocMaker} maker the JsDocMaker instance we will use for loading the parsed data and doing some post processing stage (type binding and so)
 	this.maker = new JsDocMaker();
 	this.maker.data = data;
 	this.maker.postProccessBinding();

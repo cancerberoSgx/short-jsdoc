@@ -40,7 +40,7 @@
 		<% _(this.jsdoc.params).each(function(param) { %>
 			<li>
 				<%= param.name%>: <%= self.printTypeAsString(param.type) %>
-				<span class="param-text"><%= param.text %></span>
+				<span class="param-text"><%= self.getTextHtml(param) %></span>
 			</li>
 
 		<% }); %>
@@ -48,13 +48,13 @@
 
 
 
-		<% if(!this.isConstructor){%>
+		<% if(!this.isConstructor) { %>
 			<%if (this.jsdoc.returns && (this.jsdoc.returns.type || this.jsdoc.returns.text) ) { %>
 				<h3 class="returns-title">Returns</h3>
 				<%= self.printTypeAsString(this.jsdoc.returns.type) %>
 
 				<% if(this.jsdoc.returns.text){ %>
-					<p class="returns-text"><%= this.jsdoc.returns.text%></p>
+					<p class="returns-text"><%= self.getTextHtml(this.jsdoc.returns) %></p>
 				<% } %>
 
 			<% }%>
@@ -71,7 +71,7 @@
 		<% _(this.jsdoc.throws).each(function(t) { %>
 			<li>
 				<%= self.printTypeAsString(t.type) %>
-				<span class="param-text"><%= t.text %></span>
+				<span class="param-text"><%= self.getTextHtml(t) %></span>
 			</li>
 		<% }); %>
 		</ul>

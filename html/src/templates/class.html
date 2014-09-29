@@ -21,6 +21,9 @@ var self = this;
 
 
 
+<h3>Class Summary</h3>
+<% var template = this.application.templates.classSummary;%>
+<%= template.apply(this, arguments) %>
 
 <div class="row">
 
@@ -127,7 +130,9 @@ _(this.jsdoc.events).each(function(p) { %>
 
 	<div class="col-md-8">
 
-		<div class="class-text"><%= this.jsdoc.textHtml || this.jsdoc.text || '' %></div>
+		<div class="class-text">
+		<%= this.jsdoc.textHtml || self.getTextHtml(this.jsdoc.text) || this.jsdoc.text || '' %>
+		</div>
 
 		<div data-type="sources"></div>
 
