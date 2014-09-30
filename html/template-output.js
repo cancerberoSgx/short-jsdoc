@@ -4,7 +4,7 @@ this["shortjsdoc"]["application"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<div class="container">\n\t<div data-type="header-container"></div>\n\t<div data-type="main-view-container"></div>\n</div>';
+__p += '<div class="container">\n\t<div data-type="header-container"></div>\n\t<div data-type="main-view-container" class="main-view-container"></div>\n</div>';
 
 }
 return __p
@@ -260,9 +260,9 @@ __p += '\n\t\t\t\t<h3 class="returns-title">Returns</h3>\n\t\t\t\t' +
 ((__t = ( self.printTypeAsString(this.jsdoc.returns.type) )) == null ? '' : __t) +
 '\n\n\t\t\t\t';
  if(this.jsdoc.returns.text){ ;
-__p += '\n\t\t\t\t\t<p class="returns-text">' +
+__p += '\n\t\t\t\t\t<span class="returns-text">' +
 ((__t = ( self.getTextHtml(this.jsdoc.returns) )) == null ? '' : __t) +
-'</p>\n\t\t\t\t';
+'</span>\n\t\t\t\t';
  } ;
 __p += '\n\n\t\t\t';
  };
