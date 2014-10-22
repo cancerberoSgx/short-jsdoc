@@ -421,6 +421,13 @@ var JsDocMaker = GLOBAL.JsDocMaker = function()
 	this.annotationRegexp = /(\s+@\w+)/gi;
 	this.typeParsers = {};
 }; 
+
+
+JsDocMaker.DEFAULT_CLASS = 'Object'; 
+JsDocMaker.DEFAULT_MODULE = '__DefaultModule'; 
+JsDocMaker.ABSOLUTE_NAME_SEPARATOR = '.'; 
+JsDocMaker.MULTIPLE_TEXT_SEPARATOR = '\n\n'; 
+
 //@property {Array<Function>}postProccessors
 JsDocMaker.prototype.postProccessors = []; 
 
@@ -489,25 +496,53 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 
 				delete parsed.theRestString; 
 
+				//Note: here is the (only) place were the 'primary tags' are implemented 
+				//We get primary tags like class,module,method,property and form the first primary AST (a module contains classes which contain methods and properties)
+				//All the other annotations are treated as secondary, this means they will be assigned as childresn to the last primary annotation.
+
 				if(parsed.annotation==='class') //allow classes without modules - asignated to a defulat module
 				{
 					if (!currentModule)
 					{
 						currentModule = {name: JsDocMaker.DEFAULT_MODULE};
 					}
+
 					parsed.module = currentModule; 
 					parsed.absoluteName = currentModule.name + JsDocMaker.ABSOLUTE_NAME_SEPARATOR + parsed.name;
 
-					self.data.classes[parsed.absoluteName] = parsed; 
-					delete self.data.classes[parsed.name];
+					//if the class was already defined we want to preserve all the definitions texts
+					if(self.data.classes[parsed.absoluteName])
+					{
+						if(self.data.classes[parsed.absoluteName].text !== parsed.text)
+						{
+							self.data.classes[parsed.absoluteName].text += JsDocMaker.MULTIPLE_TEXT_SEPARATOR + parsed.text; 
+						}
+					}
+					else
+					{						
+						self.data.classes[parsed.absoluteName] = parsed; 
+						delete self.data.classes[parsed.name];
+					}
 
 					currentClass = parsed; 
 				}
 
 				else if(parsed.annotation === 'module')
-				{					
+				{	
 					currentModule = parsed;
-					self.data.modules[currentModule.name] = self.data.modules[currentModule.name] || currentModule; 
+
+					//if the module was already defined we want to preserve all the definitions texts
+					if(self.data.modules[currentModule.name])
+					{
+						if(self.data.modules[currentModule.name].text !== currentModule.text)
+						{
+							self.data.modules[currentModule.name].text += JsDocMaker.MULTIPLE_TEXT_SEPARATOR + currentModule.text; 
+						}
+					}
+					else
+					{
+						self.data.modules[currentModule.name] = currentModule; 
+					}
 				}
 
 				//the rest are all children of class : 
@@ -671,6 +706,8 @@ JsDocMaker.prototype.parseUnitSimple = function(str, comment)
 
 
 
+
+
 //COMMENT PREPROCESSORS
 
 //@method preprocessComments do an initial preprocesing on the comments erasing those marked to be ignored, and fixing its text to support alternative syntax.
@@ -754,6 +791,10 @@ JsDocMaker.prototype.commentPreprocessors.push(JsDocMaker.prototype.unifyLineCom
 
 
 
+
+
+
+
 //POST PROCESSING
 
 
@@ -765,9 +806,6 @@ JsDocMaker.prototype.commentPreprocessors.push(JsDocMaker.prototype.unifyLineCom
 // is the fullname property that will return an unique full name in the format 
 // '$MODULE.$CLASS.$METHOD'. We assume that a module contains unique named classes and 
 // that classes contain unique named properties and methods. 
-JsDocMaker.DEFAULT_CLASS = 'Object'; 
-JsDocMaker.DEFAULT_MODULE = '__DefaultModule'; 
-JsDocMaker.ABSOLUTE_NAME_SEPARATOR = '.'; 
 JsDocMaker.prototype.postProccess = function()
 {
 	var self = this;

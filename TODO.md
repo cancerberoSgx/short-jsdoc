@@ -1,4 +1,3 @@
-
 # TODO: ideas
 
  * cmd line should accept a package.json file as an input for getting project meta-information
@@ -9,8 +8,10 @@
  * define a syntax and support varargs - like {num1, ..., numN}
 
 
+ * expand the module view to show the full module documentation - for example: http://lunrjs.com/docs/#lunr
 
- * inherited fields should have the information from which class is inherited
+
+ * inherited fields should have the information from which class is inherited - this can be done easy using the name - done manually in the html app.
 
  * @link preprocessed comment that is replaced by html or mardown link at preprocessing.
 
