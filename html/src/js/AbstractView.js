@@ -35,5 +35,15 @@ var AbstractView = Backbone.View.extend({
 	{
 		this.renderSource(); 
 	}
+
+,	setTitle: function(t)
+	{
+		// var self = this;
+		this.title = t;
+		setTimeout(function()
+		{
+			document.title = t; 
+		}, 200);
+	}
 });
 

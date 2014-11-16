@@ -35,7 +35,7 @@ __p += '\n\t</div>\n\t<div class="col-md-4">\n\t\t<h3 class="class-module-title"
 ((__t = ( this.options.inherited ? 0 : 1 )) == null ? '' : __t) +
 '">' +
 ((__t = ( this.options.inherited ? 'Hide' : 'Show' )) == null ? '' : __t) +
-' inherited properties</a></div>\n\n\n\n<h3>Summary</h3>\n';
+' inherited properties</a></div>\n\n\n\n<!-- <h3>Summary</h3> -->\n';
  var template = this.application.templates.classSummary;;
 __p += '\n' +
 ((__t = ( template.apply(this, arguments) )) == null ? '' : __t) +
@@ -138,7 +138,7 @@ __p += '\n\t\t\t<li class="event">\n\t\t\t\t<a class=\'event-name\' href="#event
  }); ;
 __p += '\n\t\t</ul>\n\t\t';
  } ;
-__p += '\n\n\n\t</div>\n\n\t<div class="col-md-7">\n\n\t\t<div class="class-text">\n\t\t' +
+__p += '\n\n\n\t</div>\n\n\t<div class="col-md-7">\n\n\t\t<h3>Summary</h3>\n\t\t\n\t\t<div class="class-text">\n\t\t' +
 ((__t = ( this.jsdoc.textHtml || self.getTextHtml(this.jsdoc.text) || this.jsdoc.text || '' )) == null ? '' : __t) +
 '\n\t\t</div>\n\n\t\t<div data-type="sources"></div>\n\n\t</div>\n</div>\n';
 

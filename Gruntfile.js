@@ -37,7 +37,6 @@ var concat_files = ['src/shortjsdoc-header.txt', 'src/typeParser.js', 'src/JsDoc
 module.exports = function (grunt) {
 
 	require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
-
 	
 
 	grunt.initConfig({
@@ -63,7 +62,9 @@ module.exports = function (grunt) {
 
 	,	uglify: {
 			files : 'html/src/js/**/*.js'
+		// ,	tasks : [ 'reload']
 		}
+
 	}
 	
 ,	connect : { 
@@ -71,9 +72,21 @@ module.exports = function (grunt) {
 			options : {
 				port : 8080
 			,	base : '.'
+			// ,	livereload: true
 			}
 		}
 	}
+
+
+  		// "grunt-reload": "*",
+// ,	reload: {
+// 		port: 35729
+		// proxy: {
+		// 	host: 'localhost'
+		// ,	port: '8080'
+		// ,	includeReloadScript: true
+		// }
+	// }
 
 ,	jst : {
 		compile : {

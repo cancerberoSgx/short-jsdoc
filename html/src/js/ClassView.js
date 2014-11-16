@@ -33,7 +33,6 @@ var ClassView = AbstractView.extend({
 		{
 			this.properties = _(_(this.properties).clone()).extend(this.jsdoc.inherited.properties); 
 		}
-		
 		//TODO: I'm sorry for the following code:
 		var self = this; setTimeout(function(){document.title = self.jsdoc.name + 'Class ';}, 200);
 		
