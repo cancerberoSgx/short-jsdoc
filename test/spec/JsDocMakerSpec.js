@@ -772,5 +772,109 @@ describe("JsDocMaker", function()
 		});
 
 	});
+
+
+
+
+
+
+
+
+
+describe("several definitions", function() 
+{
+	var jsdoc, maker; 
+
+	beforeEach(function() 
+	{
+		var code = 
+			'//@module mymodule the first text for mymodule' + '\n' +
+			'//@class MyClass some text for myclass' + '\n' +
+			'//@method m1 blabalbal @param p1 @param p2' + '\n' +
+
+			'//@module othermodule' + '\n' +
+			'//@class MyClass this text is from another class' + '\n' +
+			'//@class Other class this text is from another class' + '\n' +
+			'//@method m1 blabalbal @param p1 @param p2' + '\n' +
+
+			'//@module mymodule a second text for mymodule' + '\n' +
+			'//@class MyClass a second text for my class' + '\n' +
+			''; 
+
+		maker = new JsDocMaker();
+		maker.parseFile(code, 'textarea'); 
+		maker.postProccess();
+		maker.postProccessBinding();
+		jsdoc = maker.data;
+	});
+
+	it("Two definitions of the same module or class should preserve all the texts", function() 
+	{
+		var mymodule = jsdoc.modules.mymodule; 
+		expect(mymodule.text).toBe('the first text for mymodule' + JsDocMaker.MULTIPLE_TEXT_SEPARATOR + 'a second text for mymodule');
+
+		var MyClass = jsdoc.classes['mymodule.MyClass']; 
+		expect(MyClass.text).toBe('some text for myclass' + JsDocMaker.MULTIPLE_TEXT_SEPARATOR + 'a second text for my class');
+	});
+
 });
+
+
+
+
+
+describe("talking about the same class in different places", function() 
+{
+	var jsdoc, maker; 
+
+	beforeEach(function() 
+	{
+		var code = 
+			'//@module mymodule' + '\n' +
+
+			'//@class MyClass some text for myclass' + '\n' +
+			'var MyClass = function(){}' + '\n' +
+
+			'//@method m1 blabalbal @param p1 something in the rain @param p2 smells nasty' + '\n' +
+			'MyClass.prototype.m1 = function(p1, p2){};' + '\n' +
+
+			'//@class OtherClass some text for the other class' + '\n' +
+			'var MyClass = function(){}' + '\n' +
+
+			'//@method m3 blabalbal @param a @param b' + '\n' +
+			'MyClass.prototype.m3 = function(a, b){};' + '\n' +
+
+			'//@class MyClass' + '\n' +
+			'//@method m2 bleblebel @param c @param d' + '\n' +
+			'MyClass.prototype.m2 = function(c, d){};' + '\n' +
+			''; 
+
+		maker = new JsDocMaker();
+		maker.parseFile(code, 'textarea'); 
+		maker.postProccess();
+		maker.postProccessBinding();
+		jsdoc = maker.data;
+	});
+
+	it("Two definitions of the same module or class should preserve all the texts", function() 
+	{
+		var MyClass = jsdoc.classes['mymodule.MyClass']; 
+		expect(_(MyClass.methods).keys().length).toBe(2);
+		expect(MyClass.methods.m1.text).toBe('blabalbal');
+		expect(MyClass.methods.m2.text).toBe('bleblebel');
+
+		expect(MyClass.methods.m1.params[0].name).toBe('p1');
+		expect(MyClass.methods.m1.params[0].text).toBe('something in the rain');
+
+		expect(MyClass.methods.m2.params[0].name).toBe('c');
+		expect(MyClass.methods.m2.params[1].name).toBe('d');
+	});
+
+});
+
+
+});
+
+
+
 

@@ -34,12 +34,19 @@ var Application = function(data)
 	*/
 	this.data = data; 
 
+
+
 	//@property {JsDocMaker} maker the JsDocMaker instance we will use for loading the parsed data and doing some post processing stage (type binding and so)
 	this.maker = new JsDocMaker();
 	this.maker.data = data;
+
+
 	this.maker.postProccessBinding();
 	this.maker.postProccessInherited(); // <-- important - explicitly ask the framework to calculate inherited methods&properties
 
+
+	window.shortjsdocdata = data;//for debugging only
+	
 	if(jQuery('#mainContainer').size()===0)
 	{
 		jQuery('body').append('<div id="mainContainer"></div>'); 

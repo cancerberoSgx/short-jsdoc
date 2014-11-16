@@ -1,22 +1,29 @@
 
-describe("several definitions", function() 
+
+describe("talking about the same class in different places", function() 
 {
 	var jsdoc, maker; 
 
 	beforeEach(function() 
 	{
 		var code = 
-			'//@module mymodule the first text for mymodule' + '\n' +
+			'//@module mymodule' + '\n' +
+
 			'//@class MyClass some text for myclass' + '\n' +
-			'//@method m1 blabalbal @param p1 @param p2' + '\n' +
+			'var MyClass = function(){}' + '\n' +
 
-			'//@module othermodule' + '\n' +
-			'//@class MyClass this text is from another class' + '\n' +
-			'//@class Other class this text is from another class' + '\n' +
 			'//@method m1 blabalbal @param p1 @param p2' + '\n' +
+			'MyClass.prototype.m1 = function(p1, p2){};' + '\n' +
 
-			'//@module mymodule a second text for mymodule' + '\n' +
-			'//@class MyClass a second text for my class' + '\n' +
+			'//@class OtherClass some text for the other class' + '\n' +
+			'var MyClass = function(){}' + '\n' +
+
+			'//@method m3 blabalbal @param a @param b' + '\n' +
+			'MyClass.prototype.m3 = function(a, b){};' + '\n' +
+
+			'//@class MyClass' + '\n' +
+			'//@method m2 blabalbal @param c @param d' + '\n' +
+			'MyClass.prototype.m2 = function(c, d){};' + '\n' +
 			''; 
 
 		maker = new JsDocMaker();
@@ -28,11 +35,8 @@ describe("several definitions", function()
 
 	it("Two definitions of the same module or class should preserve all the texts", function() 
 	{
-		var mymodule = jsdoc.modules.mymodule; 
-		expect(mymodule.text).toBe('the first text for mymodule' + JsDocMaker.MULTIPLE_TEXT_SEPARATOR + 'a second text for mymodule');
-
 		var MyClass = jsdoc.classes['mymodule.MyClass']; 
-		expect(MyClass.text).toBe('some text for myclass' + JsDocMaker.MULTIPLE_TEXT_SEPARATOR + 'a second text for my class');
+		debugger;
 	});
 
 });

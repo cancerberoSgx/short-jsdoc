@@ -15,7 +15,7 @@
 
  * @link preprocessed comment that is replaced by html or mardown link at preprocessing.
 
-
+ * idea: prove how extendable is short-jsdoc    
  * literal object syntax with types: @return {name: String, colors: Array<Color>}. 
 
 

@@ -21,6 +21,8 @@ var ApplicationView = AbstractView.extend({
 		this.mainView = this.application.currentView; 
 
 		this.mainView.renderIn(this.$('[data-type="main-view-container"]')); 
+
+		document.title = this.title || window.location.href + '';
 	}
 
 });

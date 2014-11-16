@@ -98,8 +98,9 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 				//We get primary tags like class,module,method,property and form the first primary AST (a module contains classes which contain methods and properties)
 				//All the other annotations are treated as secondary, this means they will be assigned as childresn to the last primary annotation.
 
-				if(parsed.annotation==='class') //allow classes without modules - asignated to a defulat module
+				if(parsed.annotation === 'class') 
 				{
+					//allow classes without modules - asignated to a defulat module
 					if (!currentModule)
 					{
 						currentModule = {name: JsDocMaker.DEFAULT_MODULE};
@@ -115,14 +116,15 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 						{
 							self.data.classes[parsed.absoluteName].text += JsDocMaker.MULTIPLE_TEXT_SEPARATOR + parsed.text; 
 						}
+						currentClass = self.data.classes[parsed.absoluteName]; 
 					}
 					else
 					{						
 						self.data.classes[parsed.absoluteName] = parsed; 
 						delete self.data.classes[parsed.name];
+						currentClass = parsed; 
 					}
 
-					currentClass = parsed; 
 				}
 
 				else if(parsed.annotation === 'module')

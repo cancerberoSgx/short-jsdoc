@@ -16,7 +16,7 @@
 
 // @class Equation
 
-// @method resolve
+// @method resolve invoke this method to solve the equation 
 
 // @throws {EquationError} kja shkdj ahsd
 
