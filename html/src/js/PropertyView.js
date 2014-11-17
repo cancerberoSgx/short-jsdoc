@@ -2,7 +2,7 @@
 //@class PropertyView @extends AbstractView
 var PropertyView = AbstractView.extend({
 
-	className: "property-view"
+	className: 'property-view'
 
 ,	template: 'property'
 
@@ -12,10 +12,11 @@ var PropertyView = AbstractView.extend({
 		this.isEvent = isEvent;
 		// var a = propertyName.split('.');
 		// var className = a[0] + '.' + a[1]; 
-		var className = propertyName.substring(0, propertyName.lastIndexOf('.')); 
-		var class_ = this.application.data.classes[className];
+		var className = this.getClassName(propertyName);
 		// var propertySimpleName = a[2];
-		var propertySimpleName = propertyName.substring(propertyName.lastIndexOf('.')+1, propertyName.length); 
+		var propertySimpleName = this.getSimpleName(propertyName);
+
+		var class_ = this.application.data.classes[className];
 		this.jsdoc = isEvent ? class_.events[propertySimpleName] : class_.properties[propertySimpleName];
 		if(!this.jsdoc)
 		{

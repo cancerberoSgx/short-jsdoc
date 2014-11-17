@@ -10,8 +10,8 @@
 
 If you want you can define a whole method signature in one line like this:
 
-    //@method add adds a new line @param {Line} line @return {OrderLineCollection} support method chaining
-    OrderLineCollection.prototype.add = function(line){...}
+    //@method add adds a new tool @param {Tool} tool @return {Promise} solved when all ends
+    ToolCollection.prototype.add = function(tool){...}
 
 ##Flexible comment syntax
 
@@ -24,6 +24,9 @@ Simple annotation syntax based in a unique pattern @annotation {Type} name text.
 Also use the concept of primary annotations @module, @class, @method, @property that contains secondary annotations like @extends @returns @static
 
 The mission is that you can just add @annotations to existing source comments without having to re-write them or change its format. 
+
+##Rich Object Oriented Concepts support
+short-jsdoc supports a rich set of Object oriented concepts out of the box: module, @class, @property, @method, @event, @constructor, @extend, and many more!
 
 ## Heavy type support
 

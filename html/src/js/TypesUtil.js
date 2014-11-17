@@ -223,4 +223,16 @@ _(AbstractView.prototype).extend({
 		}
 		return data;
 	}
+
+	
+,	getClassName: function(absoluteName)
+	{
+		return absoluteName.substring(0, absoluteName.lastIndexOf('.'));
+	}
+
+,	getSimpleName: function(absoluteName)
+	{
+		return absoluteName.substring(absoluteName.lastIndexOf('.')+1, absoluteName.length); 
+	}
+
 });

@@ -1,7 +1,7 @@
 /*@module html 
 
 
-@class HTMLElement
+@class HTMLElement @extends XMLNode
 
 #Events 
 

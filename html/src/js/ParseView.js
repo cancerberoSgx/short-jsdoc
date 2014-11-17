@@ -2,7 +2,7 @@
 //@class ParseView @extends AbstractView
 var ParseView = AbstractView.extend({
 
-	className: "parse"
+	className: 'parse'
 
 ,	events: {
 		'click [data-action="inputcode_doit"]': 'inputCodeDoit'

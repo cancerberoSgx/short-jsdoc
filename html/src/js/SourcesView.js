@@ -2,7 +2,7 @@
 //@class SourcesView @extends AbstractView
 var SourcesView = AbstractView.extend({
 
-	className: "sources"
+	className: 'sources'
 
 ,	template: 'sources'
 

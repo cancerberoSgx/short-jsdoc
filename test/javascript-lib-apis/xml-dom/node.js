@@ -21,7 +21,59 @@ Notice that while all objects inherits the Node properties / methods for dealing
 
 @property {Object} attributes	A NamedNodeMap containing the attributes of this node (if it is an Element)
 @property {String} baseURI	Returns the absolute base URI of a node
-@property childNodes	Returns a NodeList of child nodes for a node
+
+
+
+@property {XMLNodeList} childNodes	Returns a NodeList of child nodes for a node
+
+##Definition and Usage
+The childNodes property returns a NodeList of child nodes for the specified node.
+
+Tip: You can use the length property to determine the number of child nodes, then you can loop through all child nodes and extract the info you want.
+
+##Browser Support
+Internet Explorer Firefox Opera Google Chrome Safari
+
+The childNodes property is supported in all major browsers.
+
+##Return Value:	
+A NodeList object representing a collection of nodes
+DOM Version	Core Level 1
+
+##Example
+The following code fragment loads "books.xml" into xmlDoc using loadXMLDoc() and displays the child nodes of the XML document:
+
+	xmlDoc = loadXMLDoc("books.xml");
+
+	x = xmlDoc.childNodes;
+	for (i=0; i<x.length; i++)
+	  {
+	  document.write("Nodename: " + x[i].nodeName);
+	  document.write(" (nodetype: " + x[i].nodeType + ")<br>");
+	  }
+
+Output IE:
+
+	Nodename: xml (nodetype: 7)
+	Nodename: #comment (nodetype: 8)
+	Nodename: bookstore (nodetype: 1)
+
+Output Firefox, Opera, Chrome, and Safari :
+
+	Nodename: #comment (nodetype: 8)
+	Nodename: bookstore (nodetype: 1)
+
+
+
+
+
+
+
+
+
+
+
+
 @property firstChild	Returns the first child of a node
 @property lastChild	Returns the last child of a node
 @property localName	Returns the local part of the name of a node
