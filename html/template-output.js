@@ -282,9 +282,9 @@ __p += '\n\t</div>\n\n\n\n\t<div class="col-md-8">\n\t\t';
  if (this.jsdoc.text) { ;
 __p += '\n\t\t<div class="method-text">\n\t\t\t' +
 ((__t = ( this.jsdoc.textHtml )) == null ? '' : __t) +
-'\n\t\t</div>\n\n\t\t<div data-type="sources"></div>\n\t\t';
+'\n\t\t</div>\n\t\t';
  } ;
-__p += '\n\n\t</div>\n</div>\n\n\n';
+__p += '\n\t\t\n\t\t<div data-type="sources"></div>\n\t</div>\n</div>\n\n\n';
 
 }
 return __p
