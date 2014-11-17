@@ -7,6 +7,10 @@
 
  * define a syntax and support varargs - like {num1, ..., numN}
 
+ * module names cannot contains dots ('.')
+
+ * @extends won't work with repeated class names. allow to pass an absolute name or log a warning.
+
 
  * expand the module view to show the full module documentation - for example: http://lunrjs.com/docs/#lunr
 

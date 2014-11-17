@@ -3,8 +3,3 @@
 @class jQuery
 */
 
-
-/*
-
-@class jQueryDeferred
-*/
