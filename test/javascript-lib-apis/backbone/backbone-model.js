@@ -303,5 +303,230 @@ Resets the model's state from the server by delegating to Backbone.sync. Returns
 
 
 /*
-@method
+@method save
+
+Save a model to your database (or alternative persistence layer), by delegating to Backbone.sync. Returns a jqXHR if validation is successful and false otherwise. The attributes hash (as in set) should contain the attributes you'd like to change — keys that aren't mentioned won't be altered — but, a complete representation of the resource will be sent to the server. As with set, you may pass individual keys and values instead of a hash. If the model has a validate method, and validation fails, the model will not be saved. If the model isNew, the save will be a "create" (HTTP POST), if the model already exists on the server, the save will be an "update" (HTTP PUT).
+
+If instead, you'd only like the changed attributes to be sent to the server, call model.save(attrs, {patch: true}). You'll get an HTTP PATCH request to the server with just the passed-in attributes.
+
+Calling save with new attributes will cause a "change" event immediately, a "request" event as the Ajax request begins to go to the server, and a "sync" event after the server has acknowledged the successful change. Pass {wait: true} if you'd like to wait for the server before setting the new attributes on the model.
+
+In the following example, notice how our overridden version of Backbone.sync receives a "create" request the first time the model is saved and an "update" request the second time.
+
+	Backbone.sync = function(method, model) {
+	  alert(method + ": " + JSON.stringify(model));
+	  model.set('id', 1);
+	};
+
+	var book = new Backbone.Model({
+	  title: "The Rough Riders",
+	  author: "Theodore Roosevelt"
+	});
+
+	book.save();
+
+	book.save({author: "Teddy"});
+
+save accepts success and error callbacks in the options hash, which will be passed the arguments (model, response, options). If a server-side validation fails, return a non-200 HTTP response code, along with an error response in text or JSON.
+
+	book.save("author", "F.D.R.", {error: function(){ ... }});
+
+@param {Object} attributes optional
+@param {Object} options optional
+
+*/
+
+
+
+
+
+/*
+@method destroy
+
+Destroys the model on the server by delegating an HTTP DELETE request to Backbone.sync. Returns a jqXHR object, or false if the model isNew. Accepts success and error callbacks in the options hash, which will be passed (model, response, options). Triggers a "destroy" event on the model, which will bubble up through any collections that contain it, a "request" event as it begins the Ajax request to the server, and a "sync" event, after the server has successfully acknowledged the model's deletion. Pass {wait: true} if you'd like to wait for the server to respond before removing the model from the collection.
+
+	book.destroy({success: function(model, response) {
+	  ...
+	}});
+
+@param {Object} options optional
+
+*/
+
+
+
+
+
+/*
+
+@method validate
+
+This method is left undefined, and you're encouraged to override it with your custom validation logic, if you have any that can be performed in JavaScript. By default validate is called before save, but can also be called before set if {validate:true} is passed. The validate method is passed the model attributes, as well as the options from set or save. If the attributes are valid, don't return anything from validate; if they are invalid, return an error of your choosing. It can be as simple as a string error message to be displayed, or a complete error object that describes the error programmatically. If validate returns an error, save will not continue, and the model attributes will not be modified on the server. Failed validations trigger an "invalid" event, and set the validationError property on the model with the value returned by this method.
+
+	var Chapter = Backbone.Model.extend({
+	  validate: function(attrs, options) {
+	    if (attrs.end < attrs.start) {
+	      return "can't end before it starts";
+	    }
+	  }
+	});
+
+	var one = new Chapter({
+	  title : "Chapter One: The Beginning"
+	});
+
+	one.on("invalid", function(model, error) {
+	  alert(model.get("title") + " " + error);
+	});
+
+	one.save({
+	  start: 15,
+	  end:   10
+	});
+
+"invalid" events are useful for providing coarse-grained error messages at the model or collection level.
+
+@param {Object} attributes optional
+@param {Object} options optional
+
+*/
+
+
+/*
+@property {Error} validation
+The value returned by validate during the last failed validation.
+
+
+*/
+
+
+
+/*@method isValid
+
+Run validate to check the model state.
+
+	var Chapter = Backbone.Model.extend({
+	  validate: function(attrs, options) {
+	    if (attrs.end < attrs.start) {
+	      return "can't end before it starts";
+	    }
+	  }
+	});
+
+	var one = new Chapter({
+	  title : "Chapter One: The Beginning"
+	});
+
+	one.set({
+	  start: 15,
+	  end:   10
+	});
+
+	if (!one.isValid()) {
+	  alert(one.get("title") + " " + one.validationError);
+	}
+
+@return {boolean} true if model is valid
+*/
+
+
+
+/*@method url
+Returns the relative URL where the model's resource would be located on the server. If your models are located somewhere else, override this method with the correct logic. Generates URLs of the form: "[collection.url]/[id]" by default, but you may override by specifying an explicit urlRoot if the model's collection shouldn't be taken into account.
+
+Delegates to Collection#url to generate the URL, so make sure that you have it defined, or a urlRoot property, if all models of this class share a common root URL. A model with an id of 101, stored in a Backbone.Collection with a url of "/documents/7/notes", would have this URL: "/documents/7/notes/101"
+
+@return {String} the relative of url for this model
+*/
+
+
+/*
+@property {Function|String} urlRoot
+
+Specify a urlRoot if you're using a model outside of a collection, to enable the default url function to generate URLs based on the model id. "[urlRoot]/id"
+Normally, you won't need to define this. Note that urlRoot may also be a function.
+
+	var Book = Backbone.Model.extend({urlRoot : '/books'});
+
+	var solaris = new Book({id: "1083-lem-solaris"});
+
+	alert(solaris.url());
+*/
+
+
+
+
+/*
+@method parse
+parse is called whenever a model's data is returned by the server, in fetch, and save. The function is passed the raw response object, and should return the attributes hash to be set on the model. The default implementation is a no-op, simply passing through the JSON response. Override this if you need to work with a preexisting API, or better namespace your responses.
+
+If you're working with a Rails backend that has a version prior to 3.1, you'll notice that its default to_json implementation includes a model's attributes under a namespace. To disable this behavior for seamless Backbone integration, set:
+
+	ActiveRecord::Base.include_root_in_json = false
+
+@param {Object} response 
+@param {Object} options
+
+*/
+
+
+/*
+@method clone
+
+Returns a new instance of the model with identical attributes.
+
+*/
+
+
+/*@method isNew
+Has this model been saved to the server yet? If the model does not yet have an id, it is considered to be new.
+@return {boolean}
+*/
+
+
+/*
+@method hasChanged
+Has the model changed since the last set? If an attribute is passed, returns true if that specific attribute has changed.
+
+Note that this method, and the following change-related ones, are only useful during the course of a "change" event.
+
+	book.on("change", function() {
+	  if (book.hasChanged("title")) {
+	    ...
+	  }
+	});
+
+@param {String} attribute optional
+
+*/
+
+
+/*
+@method changedAttributes
+Retrieve a hash of only the model's attributes that have changed since the last set, or false if there are none. Optionally, an external attributes hash can be passed in, returning the attributes in that hash which differ from the model. This can be used to figure out which portions of a view should be updated, or what calls need to be made to sync the changes to the server.
+
+@param {Object} attributes optional
+*/
+
+
+/*
+@method previous
+During a "change" event, this method can be used to get the previous value of a changed attribute.
+
+	var bill = new Backbone.Model({
+	  name: "Bill Smith"
+	});
+
+	bill.on("change:name", function(model, name) {
+	  alert("Changed name from " + bill.previous("name") + " to " + name);
+	});
+
+	bill.set({name : "Bill Jones"});
+
+@param {String} attribute optional
+*/
+
+
+/* @method previousAttributes
+Return a copy of the model's previous attributes. Useful for getting a diff between versions of a model, or getting back to a valid state after an error occurs.
 */

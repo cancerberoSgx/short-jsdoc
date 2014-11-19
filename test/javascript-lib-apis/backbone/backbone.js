@@ -23,13 +23,76 @@ Philosophically, Backbone is an attempt to discover the minimal set of data-stru
 
 If you're new here, and aren't yet quite sure what Backbone is for, start by browsing the list of Backbone-based projects.
 
+
+
+@class Backbone
+
+
+
+
+@method sync 
+
+Backbone.sync is the function that Backbone calls every time it attempts to read or save a model to the server. By default, it uses jQuery.ajax to make a RESTful JSON request and returns a jqXHR. You can override it in order to use a different persistence strategy, such as WebSockets, XML transport, or Local Storage.
+
+The method signature of Backbone.sync is sync(method, model, [options])
+
+method – the CRUD method ("create", "read", "update", or "delete")
+model – the model to be saved (or collection to be read)
+options – success and error callbacks, and all other jQuery request options
+With the default implementation, when Backbone.sync sends up a request to save a model, its attributes will be passed, serialized as JSON, and sent in the HTTP body with content-type application/json. When returning a JSON response, send down the attributes of the model that have been changed by the server, and need to be updated on the client. When responding to a "read" request from a collection (Collection#fetch), send down an array of model attribute objects.
+
+Whenever a model or collection begins a sync with the server, a "request" event is emitted. If the request completes successfully you'll get a "sync" event, and an "error" event if not.
+
+The sync function may be overriden globally as Backbone.sync, or at a finer-grained level, by adding a sync function to a Backbone collection or to an individual model.
+
+The default sync handler maps CRUD to REST like so:
+
+create → POST   /collection
+read → GET   /collection[/id]
+update → PUT   /collection/id
+patch → PATCH   /collection/id
+delete → DELETE   /collection/id
+As an example, a Rails handler responding to an "update" call from Backbone might look like this: (In real code, never use update_attributes blindly, and always whitelist the attributes you allow to be changed.)
+
+	def update
+	  account = Account.find params[:id]
+	  account.update_attributes params
+	  render :json => account
+	end
+One more tip for integrating Rails versions prior to 3.1 is to disable the default namespacing for to_json calls on models by setting ActiveRecord::Base.include_root_in_json = false
+
+@param {String}method
+@param {BackboneModel} model
+@param {Object} options optional
+@static
+
+
+
+
+@method ajax 
+If you want to use a custom AJAX function, or your endpoint doesn't support the jQuery.ajax API and you need to tweak things, you can do so by setting Backbone.ajax.
+@param request
+@static
+
+
+
+
+
+@property {boolean} emulateHTTPBackbone 
+If you want to work with a legacy web server that doesn't support Backbone's default REST/HTTP approach, you may choose to turn on Backbone.emulateHTTP. Setting this option will fake PUT, PATCH and DELETE requests with a HTTP POST, setting the X-HTTP-Method-Override header with the true method. If emulateJSON is also on, the true method will be passed as an additional _method parameter.
+
+	Backbone.emulateHTTP = true;
+
+	model.save();  // POST to "/collection/id", with "_method=PUT" + header.
+
+@static
+
+
+
+
+@property {boolean}emulateJSON
+If you're working with a legacy web server that can't handle requests encoded as application/json, setting Backbone.emulateJSON = true; will cause the JSON to be serialized under a model parameter, and the request to be made with a application/x-www-form-urlencoded MIME type, as if from an HTML form.
+
+@static
+
 */
-
-//@class BackboneView
-//@property {jQuery} $el
-//@property {jQuery} $
-//@property {HTMLElement} el
-//@method render
-
-//@class BackboneRouter
-//@class BackboneModel
