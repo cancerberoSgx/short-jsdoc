@@ -96,3 +96,22 @@ If you're working with a legacy web server that can't handle requests encoded as
 @static
 
 */
+
+
+/*
+@method noConflict
+	var backbone = Backbone.noConflict(); 
+	
+Returns the Backbone object back to its original value. You can use the return value of Backbone.noConflict() to keep a local reference to Backbone. Useful for embedding Backbone on third-party websites, where you don't want to clobber the existing Backbone.
+
+	var localBackbone = Backbone.noConflict();
+	var model = localBackbone.Model.extend(...);
+
+
+@property{jQuery}$
+
+If you have multiple copies of jQuery on the page, or simply want to tell Backbone to use a particular object as its DOM / Ajax library, this is the property for you. If you're loading Backbone with CommonJS (e.g. node, component, or browserify) you must set this property manually.
+
+	var Backbone.$ = require('jquery');
+
+*/

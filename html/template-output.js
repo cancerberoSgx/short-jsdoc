@@ -322,17 +322,29 @@ obj || (obj = {});
 var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
-__p += '<h3><a href="#modules">Modules</a></h3>\n\n';
- var data = this.application.data; ;
+__p += '<div class="modules">\n\n<h3><a href="#modules">Modules</a></h3>\n\n';
+ var data = this.application.data; 
+var self = this; ;
 __p += '\n<ul>\n';
  _(data.modules).each(function(moduleBody, moduleName) { ;
-__p += '\n\t<li><a href="#module/' +
+__p += '\n\t<li ><a class=\'module-name\' href="#module/' +
 ((__t = ( moduleName )) == null ? '' : __t) +
 '">' +
 ((__t = ( moduleName )) == null ? '' : __t) +
-'</a></li>\n';
+'</a>\n\t\t<ul>\n\t\t';
+ 
+		/* TODO: make a view */
+		var moduleClasses = self.getModuleClasses(moduleName, self.application.data); 
+		_(moduleClasses).each(function(c) { ;
+__p += '\n\t\t\t<li ><a class=\'class-name\' href="#class/' +
+((__t = ( c.absoluteName )) == null ? '' : __t) +
+'">' +
+((__t = ( c.name )) == null ? '' : __t) +
+'</a></li>\n\t\t';
  }); ;
-__p += '\n</ul>\n';
+__p += '\n\t\t</ul>\n\t</li>\n';
+ }); ;
+__p += '\n</ul>\n\n</div>';
 
 }
 return __p

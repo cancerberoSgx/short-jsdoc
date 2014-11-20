@@ -400,7 +400,7 @@ JsDocMaker.prototype.commentPreprocessors.push(JsDocMaker.prototype.unifyLineCom
 
 
 // @method postProccess so the data is already parsed but we want to normalize some 
-// children like @extend and @module to be properties of the unit instead children.
+// children like @extend and @ module to be properties of the unit instead children.
 // Also we enforce explicit  parent reference, this is a class must reference its 
 // parent module and a method muest reference its parent class. Also related to this 
 // is the fullname property that will return an unique full name in the format 

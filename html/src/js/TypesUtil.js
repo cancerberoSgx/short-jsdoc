@@ -211,7 +211,6 @@ _(AbstractView.prototype).extend({
 			prettyPrint('pre code');
 		}
 	}
-
 	
 ,	getInherited: function(c, what)
 	{
@@ -223,7 +222,6 @@ _(AbstractView.prototype).extend({
 		}
 		return data;
 	}
-
 	
 ,	getClassName: function(absoluteName)
 	{
@@ -233,6 +231,20 @@ _(AbstractView.prototype).extend({
 ,	getSimpleName: function(absoluteName)
 	{
 		return absoluteName.substring(absoluteName.lastIndexOf('.')+1, absoluteName.length); 
+	}
+
+,	getModuleClasses: function(moduleName, data)
+	{
+		var a = [];
+		// return a;//data ; //return this.application.data.classes;
+		_(data.classes).each(function(c)
+		{
+			if(c.absoluteName.indexOf(moduleName)===0)
+			{
+				a.push(c); 
+			}
+		});
+		return a;
 	}
 
 });

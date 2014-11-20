@@ -1,6 +1,5 @@
 # TODO: ideas
 
- * cmd line should accept a package.json file as an input for getting project meta-information
 
  * IDEA: in src/libs-jsdoc with folders like javascript/mozilla jQuery/ Backbone/. Thes folders contains .js files with short jsdoc OO for each library and they can be optionally imported when processing a project.  
 
@@ -18,7 +17,7 @@
  * @link preprocessed comment that is replaced by html or mardown link at preprocessing.
 
  * idea: prove how extendable is short-jsdoc    
- * literal object syntax with types: @return {name: String, colors: Array<Color>}. 
+ * literal object syntax with types: @return {name: String, colors: Array<Color>}.
 
 
  * ISSUE: parser fail to parse more than two modifiers like these @final @static @myownmodifier - see issues spec.js
@@ -89,7 +88,29 @@ thigs moved here after solving - instead erasing it.
 
 
 
-##self-documentable
+
+#Project configuration 
+
+this is a MUST. 
+
+1)cmd line should accept porject configuration json object containing project's meta information. 
+2)user should be be able to put this config in a .shortjsdocrc file in any folder with a config for that folder's files. Try to follow package.json syntax.
+Example:
+
+    {
+        "name": "short-jsdoc"
+    ,   "version": "0.1.0"
+    ,   "description": "short and simple jsdoc Object Oriented syntax format and implementation"
+    ,   "author": "Sebastián Gurin"
+
+    ,   "showSources": true
+    }
+
+A big question here is : should we use package.json for looking at project dependencies?
+
+
+
+##self-documentable crazy idea
 
 idea - new project - a self documentable - the idea is that you only put @annotation without types or text and extract the information from javascript nodes. For example the following code
 

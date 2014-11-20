@@ -1,6 +1,7 @@
 // nodejs command line utility for generating the .json definition scanning a given source folder or file. 
 // depends on src/JsDocMaker.js
 // Please don't use console.log here since the output is dumped to stdout
+// module jsdoc-cli
 
 var fs = require('fs')
 ,	path = require('path')
@@ -43,7 +44,19 @@ _(ShortJsDoc.prototype).extend({
 			_(self.sources).extend(self.buildSources(inputDir)); 
 		}); 
 
-		this.parsedSources = this.parseSources();
+		this.parsedSources = null;
+		
+		try
+		{
+			parsedSources = this.parseSources();
+		}
+		catch (ex)
+		{
+			// will print the javascript syntax error detected in the sources. we parse only valid js!
+			console.error(ex); 
+			throw ex;
+		}
+
 
 		var jsdoc = this.maker.data;
 
@@ -70,16 +83,29 @@ _(ShortJsDoc.prototype).extend({
 	//@method buildSources
 ,	buildSources: function buildSources(inputDir)
 	{	
-		var map = {};
-		ShortJsDoc.folderWalk(inputDir, function(error, file)
+		var map = {}
+		,	self = this;
+		if(!fs.statSync(inputDir).isDirectory())
 		{
-			if(!error && file && JsDocMaker.stringEndsWith(file, '.js'))
-			{			
-				var src = fs.readFileSync(file, 'utf8'); 
-				map[file] = src; 
-			}
-		}); 
+			self.readSource(inputDir, map);
+		}
+		else
+		{			
+			ShortJsDoc.folderWalk(inputDir, function(error, file)
+			{
+				if(!error && file && JsDocMaker.stringEndsWith(file, '.js'))
+				{			
+					self.readSource(file, map);
+				}
+			}); 
+		}
 		return map;
+	}
+
+,	readSource: function(file, map)
+	{
+		var src = fs.readFileSync(file, 'utf8'); 
+		map[file] = src; 
 	}
 
 });
