@@ -88,7 +88,9 @@ var self = this;
 		<ul>
 		<%
 		_(this.methods).each(function(method) { 
-			var inherited = !JsDocMaker.classOwnsProperty(self.jsdoc, method); 
+			var inherited = !JsDocMaker.classOwnsProperty(self.jsdoc, method); 			
+			var inheritedByName = method.absoluteName.substring(0, method.absoluteName.lastIndexOf('.'));
+			var inheritedBy = self.application.data.classes[inheritedByName] || {};
 		%>
 
 			<li class="method <%= inherited ? 'inherited' : '' %>">
@@ -100,6 +102,7 @@ var self = this;
 					<li class="param">
 						<span class="param-name"><%= param.name %></span>: 
 						<span class="param-type"><%= self.printTypeAsString(param.type) %></span> 
+						<%= !inherited ? '' : ('(inherited by ' + self.printTypeAsString(inheritedBy) + ')') %>
 					</li>
 					<% }); %>
 				</ol>

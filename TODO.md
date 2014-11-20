@@ -3,11 +3,14 @@
 
  * IDEA: in src/libs-jsdoc with folders like javascript/mozilla jQuery/ Backbone/. Thes folders contains .js files with short jsdoc OO for each library and they can be optionally imported when processing a project.  
 
+ * include events @properties ni the typeahead search
 
  * define a syntax and support varargs - like {num1, ..., numN}
 
  * @extends won't work with repeated class names. allow to pass an absolute name or log a warning.
 
+
+ * inherited events
 
  * expand the module view to show the full module documentation - for example: http://lunrjs.com/docs/#lunr
 

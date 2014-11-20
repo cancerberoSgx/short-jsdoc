@@ -94,7 +94,9 @@ __p += '\n\n\n\n\n\n\t\t';
 __p += '\n\t\t<h3 class=\'methods\'>Methods</h3>\n\t\t<ul>\n\t\t';
 
 		_(this.methods).each(function(method) { 
-			var inherited = !JsDocMaker.classOwnsProperty(self.jsdoc, method); 
+			var inherited = !JsDocMaker.classOwnsProperty(self.jsdoc, method); 			
+			var inheritedByName = method.absoluteName.substring(0, method.absoluteName.lastIndexOf('.'));
+			var inheritedBy = self.application.data.classes[inheritedByName] || {};
 		;
 __p += '\n\n\t\t\t<li class="method ' +
 ((__t = ( inherited ? 'inherited' : '' )) == null ? '' : __t) +
@@ -108,7 +110,9 @@ __p += '\n\t\t\t\t\t<li class="param">\n\t\t\t\t\t\t<span class="param-name">' +
 ((__t = ( param.name )) == null ? '' : __t) +
 '</span>: \n\t\t\t\t\t\t<span class="param-type">' +
 ((__t = ( self.printTypeAsString(param.type) )) == null ? '' : __t) +
-'</span> \n\t\t\t\t\t</li>\n\t\t\t\t\t';
+'</span> \n\t\t\t\t\t\t' +
+((__t = ( !inherited ? '' : ('(inherited by ' + self.printTypeAsString(inheritedBy) + ')') )) == null ? '' : __t) +
+'\n\t\t\t\t\t</li>\n\t\t\t\t\t';
  }); ;
 __p += '\n\t\t\t\t</ol>\n\t\t\t\t';
  } ;
