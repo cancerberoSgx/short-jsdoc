@@ -19,12 +19,15 @@
   		"matchdep": "*",
   		"grunt-contrib-less": "*",
   		"grunt-contrib-jshint": "*",
+  		"del": "*",
 
 		"underscore": "*",
 		"esprima": "*"
 	}
 
-,  "bin": {
-    "shortjsdoc": "./src/shortjsdoc.js"
-  }
+,	"main": "./src/shortjsdoc.js"
+
+,	"bin": {
+    	"shortjsdoc": "./src/shortjsdoc.js"
+	}
 }

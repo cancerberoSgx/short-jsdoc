@@ -32,7 +32,12 @@ var uglifyLibFiles = [
 
 ];
 
-var concat_files = ['src/shortjsdoc-header.txt', 'src/typeParser.js', 'src/JsDocMaker.js', 'src/shortjsdoc-main.js'];
+var concat_node_distro_files = [
+	'src/shortjsdoc-header.txt'
+,	'src/typeParser.js'
+,	'src/JsDocMaker.js'
+,	'src/shortjsdoc-main.js'
+];
 
 module.exports = function (grunt) {
 
@@ -51,7 +56,7 @@ module.exports = function (grunt) {
 		}
 
 	,	concat: {
-			files : concat_files
+			files : concat_node_distro_files
 		,	tasks : [ 'concat']
 		}
 
@@ -110,7 +115,7 @@ module.exports = function (grunt) {
 			separator: ';',
 		},
 		dist: {
-			src: concat_files,
+			src: concat_node_distro_files,
 			dest: 'src/shortjsdoc.js',
 		},
 	}
