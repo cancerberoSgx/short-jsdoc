@@ -1,33 +1,52 @@
 {
-	"name": "short-jsdoc"
-,	"version": "0.1.0"
-,	"description": "short and simple jsdoc Object Oriented syntax format and implementation"
-,	"author": "Sebastián Gurin"
-
-,	"dependencies": {
-		"underscore": "*",
-		"esprima": "*"
-	}
-
-,	"devDependencies": {
-		"grunt": "*",
-    	"grunt-contrib-jst": "*",
-		"grunt-contrib-watch": "*",
-		"grunt-contrib-connect":"*",
-		"grunt-contrib-concat":"*",
-		"grunt-contrib-uglify":"*",
-  		"matchdep": "*",
-  		"grunt-contrib-less": "*",
-  		"grunt-contrib-jshint": "*",
-  		"del": "*",
-
-		"underscore": "*",
-		"esprima": "*"
-	}
-
-,	"main": "./src/shortjsdoc.js"
-
-,	"bin": {
-    	"shortjsdoc": "./src/shortjsdoc.js"
-	}
+  "name": "short-jsdoc",
+  "version": "0.1.0",
+  "description": "short and simple jsdoc Object Oriented syntax format and implementation",
+  "author": "Sebastián Gurin",
+  "dependencies": {
+    "underscore": "*",
+    "esprima": "*"
+  },
+  "devDependencies": {
+    "grunt": "*",
+    "grunt-contrib-jst": "*",
+    "grunt-contrib-watch": "*",
+    "grunt-contrib-connect": "*",
+    "grunt-contrib-concat": "*",
+    "grunt-contrib-uglify": "*",
+    "matchdep": "*",
+    "grunt-contrib-less": "*",
+    "grunt-contrib-jshint": "*",
+    "del": "*",
+    "underscore": "*",
+    "esprima": "*"
+  },
+  "main": "./src/shortjsdoc.js",
+  "bin": {
+    "shortjsdoc": "./src/shortjsdoc.js"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cancerberoSgx/short-jsdoc.git"
+  },
+  "keywords": [
+    "jsdoc",
+    "JavaScript",
+    "documentation",
+    "javadoc",
+    "source",
+    "code",
+    "annotation"
+  ],
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cancerberoSgx/short-jsdoc/issues"
+  },
+  "homepage": "https://github.com/cancerberoSgx/short-jsdoc"
 }

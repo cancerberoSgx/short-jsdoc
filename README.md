@@ -59,6 +59,19 @@ short-jsdoc is open sourced under the [MIT License](https://github.com/cancerber
 
 # Using it
 
+##Using it in nodejs
+
+    npm install short-jsdoc --save-dev
+
+And then from your build script you can use it like this:
+
+    var ShortJsDoc = require('short-jsdoc');
+
+    var tool = new ShortJsDoc();
+    tool.jsdoc(['./src'], 'jsdoc', {}); 
+
+That will create the folder jsdoc with the jsdoc generated from the src folder. 
+
 ## Installing 
 
 this project neds an simple initial installation:
