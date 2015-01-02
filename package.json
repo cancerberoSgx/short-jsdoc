@@ -4,22 +4,23 @@
   "description": "short and simple jsdoc Object Oriented syntax format and implementation",
   "author": "Sebastián Gurin",
   "dependencies": {
+    "esprima": "*",
     "underscore": "*",
-    "esprima": "*"
+    "yargs": "^1.3.3"
   },
   "devDependencies": {
-    "grunt": "*",
-    "grunt-contrib-jst": "*",
-    "grunt-contrib-watch": "*",
-    "grunt-contrib-connect": "*",
-    "grunt-contrib-concat": "*",
-    "grunt-contrib-uglify": "*",
-    "matchdep": "*",
-    "grunt-contrib-less": "*",
-    "grunt-contrib-jshint": "*",
     "del": "*",
-    "underscore": "*",
-    "esprima": "*"
+    "esprima": "*",
+    "grunt": "*",
+    "grunt-contrib-concat": "*",
+    "grunt-contrib-connect": "*",
+    "grunt-contrib-jshint": "*",
+    "grunt-contrib-jst": "*",
+    "grunt-contrib-less": "*",
+    "grunt-contrib-uglify": "*",
+    "grunt-contrib-watch": "*",
+    "matchdep": "*",
+    "underscore": "*"
   },
   "main": "./src/shortjsdoc.js",
   "bin": {

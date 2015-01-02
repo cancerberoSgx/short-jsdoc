@@ -1,15 +1,15 @@
+// @module shortjsdoc.node
 // nodejs command line utility for generating the .json definition scanning a given source folder or file. 
 // depends on src/JsDocMaker.js
-// Please don't use console.log here since the output is dumped to stdout
-// module jsdoc-cli
+// Please don't use console.log here since the output is dumped to stdout 
 
 var fs = require('fs')
 ,	path = require('path')
 ,	esprima = require('esprima')
-,	_ = require('underscore'); 
+,	_ = require('underscore')
+,	argv = require('yargs').argv;
 
 var JsDocMaker = this.JsDocMaker;
-// var ShortJsDocTypeParser = this.ShortJsDocTypeParser; 
  
 //@class ShortJsDoc main class for running jsdocmaker using node through the command line.
 var ShortJsDoc = function()
@@ -20,7 +20,7 @@ var ShortJsDoc = function()
 
 _(ShortJsDoc.prototype).extend({
 
-	//@method error @param {String} m
+	//@method error dumps an error @param {String} m
 	error: function (m)
 	{
 		console.log(m + '\nUSAGE:\n\tnode src/shortjsdoc.js home/my-js-project/ home/another-js-project/ ... > html/data.json'); 
@@ -35,8 +35,13 @@ _(ShortJsDoc.prototype).extend({
 			this.error('more parameters required'); 
 		} 
 
-		var argNumber = process.argv[0].indexOf('node')===-1 ? 1 : 2
-		,	inputDirs = _(process.argv).toArray().slice(argNumber, process.argv.length);
+		// var argNumber = process.argv[0].indexOf('node')===-1 ? 1 : 2
+		// ,	inputDirs = _(process.argv).toArray().slice(argNumber, process.argv.length);
+
+		var inputDirs = argv.input.split(','); 
+
+		//if the last passed file is a valid json then it is our configuration!
+		var options = this.tryToParseJsonFile(process.argv[process.argv.length-1]); 
 
 		var jsdoc = this.execute(inputDirs);
 
@@ -47,10 +52,25 @@ _(ShortJsDoc.prototype).extend({
 		console.log(JSON.stringify(jsdoc)); 
 	}
 
+	//@method tryToParseJsonFile @param {String} path
+,	tryToParseJsonFile: function(path)
+	{
+		try
+		{
+			var s = fs.readFileSync(path); 
+			return JSON.parse(s); 
+		}
+		catch(ex)
+		{
+			return null;
+		}
+	}
+
 	//@method execute public method that will parse the parsed folder's javascript files recursively and return the AST of the jsdoc. 
 	//@param {Array<String>} inputDirs
+	//@param {Object}options meta information about the project like title, url, license, etc. Hsa the same format as package.json file
 	//@return {Object} the jsdoc AST object of all the parsed files. 
-,	execute: function(inputDirs)
+,	execute: function(inputDirs, options)
 	{
 		var self=this; 
 
@@ -79,7 +99,9 @@ _(ShortJsDoc.prototype).extend({
 		return jsdoc;
 	}
 
-	// @param jsdoc public method meant to be called from user projects build-time code. It will perform all the job of soing the parse and generating a full html output project ready to be used. 
+	//@method jsdoc public method meant to be called from user projects build-time code. It will perform all the job of soing the parse and generating a full html output project ready to be used. 
+	//@param {Object}options meta information about the project like title, url, license, etc. Hsa the same format as package.json file
+	//@param {Array<String>} inputDirs
 ,	jsdoc: function(inputDirs, output, options)
 	{
 		//copy html folder
@@ -110,7 +132,8 @@ _(ShortJsDoc.prototype).extend({
 		this.maker.parseFile(buffer.join('\n\n'), 'ALL.js');
 	}
 
-	//@method buildSources
+	//@method buildSources parse all files in passed folders and returns the parsed results in t
+	//@param Array<String> inputDir @returns {Object} the parsed jsdoc AST object of all passed folders
 ,	buildSources: function buildSources(inputDir)
 	{	
 		var map = {}
@@ -144,8 +167,9 @@ _(ShortJsDoc.prototype).extend({
 //@method isValidMainCall @static
 ShortJsDoc.isValidMainCall = function()
 {
-	var argNumber = process.argv[0].indexOf('node')===-1 ? 1 : 2; 
-	return process.argv.length >= argNumber + 1; 
+	// var argNumber = process.argv[0].indexOf('node')===-1 ? 1 : 2; 
+	// return process.argv.length >= argNumber + 1; 
+	return argv.input && argv.input.split(',').length;
 }; 
 
 //@method getHtmlFolder @return {String} this module's folder path @static

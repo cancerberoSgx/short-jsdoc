@@ -1,5 +1,6 @@
 # TODO: ideas
 
+ * divide JsDocMaker in several files core, preprocessing, postprocessing, biding, etc.
 
  * IDEA: in src/libs-jsdoc with folders like javascript/mozilla jQuery/ Backbone/. Thes folders contains .js files with short jsdoc OO for each library and they can be optionally imported when processing a project.  
 
@@ -14,6 +15,7 @@
 
  * expand the module view to show the full module documentation - for example: http://lunrjs.com/docs/#lunr
 
+ * support globs in nodejs API
 
  * inherited fields should have the information from which class is inherited - this can be done easy using the name - done manually in the html app.
 

@@ -7,25 +7,27 @@
 #Features
 
 ##Short
-
 If you want you can define a whole method signature in one line like this:
 
-    //@method add adds a new tool @param {Tool} tool @return {Promise} solved when all ends
+    //@method add adds a new tool @param {Tool} tool something about the tool @return {Promise} solved when all ends
     ToolCollection.prototype.add = function(tool){...}
 
 ##Flexible comment syntax
 
-Support all comment types, like /* /** // 
+Support all comment types, like /* /** // . 
 
 ##Simple annotation syntax
 
-Simple annotation syntax based in a unique pattern @annotation {Type} name text. 
+Simple annotation syntax based in a unique pattern:
+
+    @annotation {Type} name text. 
 
 Also use the concept of primary annotations @module, @class, @method, @property that contains secondary annotations like @extends @returns @static
 
 The mission is that you can just add @annotations to existing source comments without having to re-write them or change its format. 
 
 ##Rich Object Oriented Concepts support
+
 short-jsdoc supports a rich set of Object oriented concepts out of the box: module, @class, @property, @method, @event, @constructor, @extend, and many more!
 
 ## Heavy type support
@@ -38,6 +40,8 @@ The parser generates a json file with all jsdoc meta data that can be consumed a
 
 Then there is an html5 single page application default implementation that shows this output in a very rich way and easy to customize. The jsdoc text support plain text, html or markdown. 
 
+This means you can write very compact jsdocs (like a full method description in a single line) or very rich jsdocs (with a full mardown/html page for a method or class text)
+
 ## Extendable
 
 The parser read the sources and generate a Abstract Syntax Tree (AST) of ALL the @annotations. THEN it is 'beautified' with shortcuts for properties and methods. But the original AST with ALL the annotations is there for those who want to define its own semantics and annotations.
@@ -47,32 +51,17 @@ The parser read the sources and generate a Abstract Syntax Tree (AST) of ALL the
 100% usable both in nodejs or in the browser.
 
 # Syntax
+
 [Some syntax notes](https://github.com/cancerberoSgx/short-jsdoc/blob/master/SYNTAX.md)
 
 ## License
+
 short-jsdoc is open sourced under the [MIT License](https://github.com/cancerberoSgx/short-jsdoc/blob/master/LICENSE). 
 
 
 
 
-
-
-# Using it
-
-##Using it in nodejs
-
-    npm install short-jsdoc --save-dev
-
-And then from your build script you can use it like this:
-
-    var ShortJsDoc = require('short-jsdoc');
-
-    var tool = new ShortJsDoc();
-    tool.jsdoc(['./src'], 'jsdoc', {}); 
-
-That will create the folder jsdoc with the jsdoc generated from the src folder. 
-
-## Installing 
+# Installing 
 
 this project neds an simple initial installation:
 
@@ -82,41 +71,74 @@ this project neds an simple initial installation:
     #optionally - install the command line shortcut
     sudo npm link
 
-## Generating documentation for a project in filesystem
+
+# Using it in nodejs 
+
+    npm install short-jsdoc --save-dev
+
+And then from your build script you can use it like this:
+
+    var tool = new ShortJsDoc()
+    ,   output_folder = 'jsdoc'
+    ,   config = {};
+    
+    tool.jsdoc(['./src'], output_folder, config); 
+
+That will create the folder jsdoc with the jsdoc generated from the src folder. 
+
+# Using it from command line
 
 Using node directly:
 
     cd short-jsdoc
-    node src/shortjsdoc.js /home/my-js-project/ > html/data.json
+    node src/shortjsdoc.js --input /src/folder1 > html/data.json
     cp html /home/my-js-project/apidocs
+
+or multiple input folders: 
+    
+    node src/shortjsdoc.js --input "/src/folder1,src/folder2" > html/data.json
 
 Using the command line shortcut (if you installed it)
 
-    shortjsdoc /home/my-project1/src/js > /home/my-project1/apidocs.json
+    shortjsdoc --input /home/my-project1/src/js > /home/my-project1/apidocs.json
 
 This will generate the ready to use html application /home/my-js-project/apidocs/index.html showing your project's classes. 
 
-More detailed explanation. What just happened is that the first command creates a data.json file with all your project js files jsdocs. The html application just reads this files and renders all its information in a navigable page. 
+More detailed explanation. What just happened is we first parsed some source folders into a data.json file and. The html application just reads this file and renders all its information in a rich web application.
 
 Feel free to put-copy this full project in your apidocs forlder. And of course feel free to modify to your needs. It is self contained and includes jQuery, bootstrap, underscorejs and backbonejs. In general you will be modifying the markup located in html/src/templates and the styles (very little included and writen in less).
 
+## Interesting commands
+
+    cd short-jsdoc
+
+Generates the test-project json data:
+
+    node src/shortjsdoc.js --input test/test-project/ > html/data.json
+
+Generates the front end js application jsdocs itself:
+
+    node src/shortjsdoc.js--input html/src/ > html/data.json 
+
+Or do both and add javascript API and some js library APIs:
+
+    node src/shortjsdoc.js --input "test/test-project/,html/src/,test/javascript-api-test/,test/javascript-lib-apis/" > html/data.json
+
+
+
+
 If you need to debug it use grunt run like explained below.
 
-## Running development web demo
+# Running development web demo
+
+Install grunt (only one time)
+
+    sudo npm install -g grunt
+
+then
 
     grunt run
     firefox http://localhost:8080/html
-
-## Interesting commands
-
-    # generates the test-project json data
-    node src/shortjsdoc.js test/test-project/ > html/data.json
-    # generates the front end js application jsdocs itself
-    node src/shortjsdoc.js html/src/ > html/data.json 
-    # or do both:
-    node src/shortjsdoc.js test/test-project/ html/src/js > html/data.json
-
-
 
 
 

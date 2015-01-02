@@ -1,6 +1,8 @@
 /*jshint laxcomma:true, evil:true*/
 /*global _:false, esprima:false, ShortJsDocTypeParser:false*/
 
+// @module shortjsdoc
+// @author sgurin
 
 (function(GLOBAL) 
 {
@@ -10,7 +12,7 @@
 // with classes and modules array that users can use to easily access jsdocs information, for example, parsed.classes.Apple.methods.getColor
 // use the parseFile method for this! This will return the AST, if you want to perform more enrichment and type binding, then use 
 // postProccess and postProccessBinding methods after.
-// @author sgurin
+
 //@constructor JsDocMaker
 var JsDocMaker = GLOBAL.JsDocMaker = function()
 {	
@@ -988,6 +990,8 @@ JsDocMaker.prototype.literalObjectInstall = function()
 	};
 	this.registerTypeParser(parser); 
 }; 
+
+
 
 
 

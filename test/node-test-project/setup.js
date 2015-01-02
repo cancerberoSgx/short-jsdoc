@@ -1,6 +1,7 @@
 var ShortJsDoc = require('short-jsdoc');
 
-var tool = new ShortJsDoc();
-tool.jsdoc(['./src'], 'jsdoc', {}); 
+var tool = new ShortJsDoc()
+,	output_folder = 'jsdoc'
+,	config = {};
 
-// console.log(ShortJsDoc.getHtmlFolder()); 
+tool.jsdoc(['./src'], output_folder, config); 
