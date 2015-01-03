@@ -1,4 +1,4 @@
-#Online HTML5 project demo. 
+#Online HTML5 project demo.  
 
 [Online Example Demo](http://cancerberosgx.github.io/short-jsdoc/html)
 
