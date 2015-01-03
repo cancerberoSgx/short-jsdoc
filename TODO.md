@@ -2,6 +2,8 @@
 
  * divide JsDocMaker in several files core, preprocessing, postprocessing, biding, etc.
 
+ * remove parseyourowncode,spec runner,etc from html application since this is particular of shortjsdoc. put it on readme.md or other app
+ 
  * IDEA: in src/libs-jsdoc with folders like javascript/mozilla jQuery/ Backbone/. Thes folders contains .js files with short jsdoc OO for each library and they can be optionally imported when processing a project.  
 
  * include events @properties ni the typeahead search
@@ -10,7 +12,10 @@
 
  * @extends won't work with repeated class names. allow to pass an absolute name or log a warning.
 
+ * use zepto instead jquery
 
+ * IDEA: vendor-jsdoc - define package.json for each so we can do dependency - html requre xml.... ALSO mark those jsdoc from vendor as VENDOR in a AST node property
+ 
  * inherited events
 
  * expand the module view to show the full module documentation - for example: http://lunrjs.com/docs/#lunr
@@ -73,6 +78,19 @@
  * issue, this text doesnt work:
      //@class A
      //Some text for class A
+
+* issue the following nodejs doesn't work:
+
+    var ShortJsDoc = require('./src/shortjsdoc.js'); //can't install short-jsdoc with npm on itself so we require like this
+    ShortJsDoc.make({
+        inputDirs: ['./src/JsDocMaker.js']
+    ,   output: 'jsdoc2'
+    }); 
+    ShortJsDoc.make({
+        inputDirs: ['./html']
+    ,   output: 'jsdochtml'
+    }); 
+
 
 
 

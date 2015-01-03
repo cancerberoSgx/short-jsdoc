@@ -415,7 +415,6 @@ LIST_OF_NAMES
 // use the parseFile method for this! This will return the AST, if you want to perform more enrichment and type binding, then use 
 // postProccess and postProccessBinding methods after.
 
-//@constructor JsDocMaker
 var JsDocMaker = GLOBAL.JsDocMaker = function()
 {	
 	//@property {Object<String,String>} customNativeTypes name to url map that the user can modify to register new native types b givin its url.
@@ -1488,6 +1487,11 @@ var ShortJsDoc = function()
 	this.sources = {};
 }; 
 
+ShortJsDoc.make = function(options)
+{
+	return (new ShortJsDoc()).jsdoc(options); 
+}; 
+
 _(ShortJsDoc.prototype).extend({
 
 	//@method error dumps an error @param {String} m
@@ -1511,9 +1515,9 @@ _(ShortJsDoc.prototype).extend({
 		var inputDirs = argv.input.split(','); 
 
 		//if the last passed file is a valid json then it is our configuration!
-		var options = this.tryToParseJsonFile(process.argv[process.argv.length-1]); 
+		// var options = this.tryToParseJsonFile(process.argv[process.argv.length-1]); 
 
-		var jsdoc = this.execute(inputDirs);
+		var jsdoc = this.execute({inputDirs:inputDirs});
 
 		// dump the output indented:
 		// console.log(JSON.stringify(jsdoc, null, 4)); 
@@ -1523,28 +1527,29 @@ _(ShortJsDoc.prototype).extend({
 	}
 
 	//@method tryToParseJsonFile @param {String} path
-,	tryToParseJsonFile: function(path)
-	{
-		try
-		{
-			var s = fs.readFileSync(path); 
-			return JSON.parse(s); 
-		}
-		catch(ex)
-		{
-			return null;
-		}
-	}
+// ,	tryToParseJsonFile: function(path)
+// 	{
+// 		try
+// 		{
+// 			var s = fs.readFileSync(path); 
+// 			return JSON.parse(s); 
+// 		}
+// 		catch(ex)
+// 		{
+// 			return null;
+// 		}
+// 	}
 
-	//@method execute public method that will parse the parsed folder's javascript files recursively and return the AST of the jsdoc. 
-	//@param {Array<String>} inputDirs
-	//@param {Object}options meta information about the project like title, url, license, etc. Hsa the same format as package.json file
+	//@method execute MAIN method to parse the parsed folder's javascript files recursively and return the AST of the jsdoc. 
+	//@param {JsDocOptions}options meta information about the project like title, url, license, etc. Hsa the same format as package.json file
 	//@return {Object} the jsdoc AST object of all the parsed files. 
-,	execute: function(inputDirs, options)
+,	execute: function(options)
 	{
 		var self=this; 
 
-		_(inputDirs).each(function(inputDir)
+		this.computeVendorDirs(options);
+
+		_(options.inputDirs).each(function(inputDir)
 		{
 			_(self.sources).extend(self.buildSources(inputDir)); 
 		}); 
@@ -1569,25 +1574,53 @@ _(ShortJsDoc.prototype).extend({
 		return jsdoc;
 	}
 
+	//@method computeVendorDirs @param {JsDocOptions} options
+,	computeVendorDirs: function(options)	
+	{
+		_(options.vendor).each(function(vendorName)
+		{
+			var f = path.join(ShortJsDoc.getThisFolder(), 'vendor-jsdoc', vendorName); 
+			var stats = null;
+			try
+			{
+				stats = fs.statSync(f);
+			}
+			catch(ex)
+			{
+				// console.log(ex)
+				//TODO: log vendor name nor found?
+			}
+			// console.log('stats', stats)
+			if(stats && (stats.isDirectory() || stats.isFile()))
+			{
+
+			
+				options.inputDirs.push(f);
+				// if(!_(options.inputDirs).contains(f))// {// }
+			}
+		});
+	}
+
 	//@method jsdoc public method meant to be called from user projects build-time code. It will perform all the job of soing the parse and generating a full html output project ready to be used. 
-	//@param {Object}options meta information about the project like title, url, license, etc. Hsa the same format as package.json file
-	//@param {Array<String>} inputDirs
-,	jsdoc: function(inputDirs, output, options)
+	//@param {JsDocOptions}options meta information about the project like title, url, license, etc. Hsa the same format as package.json file
+,	jsdoc: function(options)
 	{
 		//copy html folder
 		try
 		{
 			var del = require('del').sync; 
-			del(output); 
+			del(options.output); 
 		}
 		catch(ex)
-		{};		
+		{
+			
+		}
 		var htmlFolder = ShortJsDoc.getHtmlFolder();
-		ShortJsDoc.copyRecursiveSync(htmlFolder, output); 
+		ShortJsDoc.copyRecursiveSync(htmlFolder, options.output); 
 
 		//generate the data.json file
-		var jsdoc = this.execute(inputDirs); 
-		var f = path.join(output, 'data.json'); 
+		var jsdoc = this.execute(options); 
+		var f = path.join(options.output, 'data.json'); 
 		fs.writeFileSync(f, JSON.stringify(jsdoc)); 
 	} 
 
@@ -1642,12 +1675,18 @@ ShortJsDoc.isValidMainCall = function()
 	return argv.input && argv.input.split(',').length;
 }; 
 
-//@method getHtmlFolder @return {String} this module's folder path @static
+//@method getHtmlFolder @return {String} this module's html folder path @static
 ShortJsDoc.getHtmlFolder = function()
+{
+	var f = ShortJsDoc.getThisFolder();
+	return path.join(f, 'html');
+}; 
+//@method getThisFolder @return {String} this module's folder path @static
+ShortJsDoc.getThisFolder = function()
 {
 	var f = module.filename; 
 	f = f.substring(0, f.length - path.join('src','shortjsdoc.js').length);
-	return path.join(f, 'html');
+	return f;
 }; 
 
 
@@ -1728,3 +1767,10 @@ if(ShortJsDoc.isValidMainCall())
 ShortJsDoc.JsDocMaker = JsDocMaker;
 
 module.exports = ShortJsDoc;
+
+
+
+// @class JsDocOptions
+// @property {String} output output folder
+// @property {Array<String>} inputDirs the source code folders that will be parsed recursively.
+// @property {Array<String>} vendor include the jsdoc of libraries supported by short-jsdoc (see vendor-jsdoc folder). Example: vendor: ['javascript', 'html']

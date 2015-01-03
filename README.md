@@ -2,7 +2,7 @@
 
 [Online Example Demo](http://cancerberosgx.github.io/short-jsdoc/html)
 
-
+[Unit Tests - Descriptions](http://cancerberosgx.github.io/short-jsdoc/test/SpecRunner.html)
 
 #Features
 
@@ -81,10 +81,17 @@ And then from your build script you can use it like this:
     var tool = new ShortJsDoc()
     ,   output_folder = 'jsdoc'
     ,   config = {};
-    
     tool.jsdoc(['./src'], output_folder, config); 
 
 That will create the folder jsdoc with the jsdoc generated from the src folder. 
+Another example that will include jsdocs for javascript objects like Object, Array,String,Number,etc - jsdoc taken from dev.mozilla site will be part of your project class hierarchy documentation:
+
+    var ShortJsDoc = require('./src/shortjsdoc.js'); 
+    ShortJsDoc.make({
+        inputDirs: ['./src/JsDocMaker.js', './html']
+    ,   output: 'jsdoc'
+    ,   vendor: ['javascript', 'html', 'backbonejs', 'xml-dom']
+    }); 
 
 # Using it from command line
 
@@ -120,11 +127,13 @@ Generates the front end js application jsdocs itself:
 
     node src/shortjsdoc.js--input html/src/ > html/data.json 
 
-Or do both and add javascript API and some js library APIs:
+Or do both and add javascript API and js library APIs:
 
-    node src/shortjsdoc.js --input "test/test-project/,html/src/,test/javascript-api-test/,test/javascript-lib-apis/" > html/data.json
+    node src/shortjsdoc.js --input "test/test-project/,html/src/,test/javascript-api-test/,vendor-jsdoc/javascript" > html/data.json
 
+generate shortjsdoc documentation: 
 
+    node generate-apidocs.js
 
 
 If you need to debug it use grunt run like explained below.

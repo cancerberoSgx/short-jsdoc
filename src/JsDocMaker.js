@@ -13,7 +13,6 @@
 // use the parseFile method for this! This will return the AST, if you want to perform more enrichment and type binding, then use 
 // postProccess and postProccessBinding methods after.
 
-//@constructor JsDocMaker
 var JsDocMaker = GLOBAL.JsDocMaker = function()
 {	
 	//@property {Object<String,String>} customNativeTypes name to url map that the user can modify to register new native types b givin its url.
