@@ -71,7 +71,7 @@
 
  * TODO: let the user mark some comment block somehow to let the parser to ignore it.
 
- * issue seems to be failing wen text contains underscore template code: //@method renderTemplate renders underscore templates using a ShopperState context. 
+ * issue seems to be failing wen text contains underscore template code: //@method renderTemplate renders underscore templates using a ShopperState context.  
 
     // Example: state.renderTemplate("hello <%= get('item').get('_price')%>")
 

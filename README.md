@@ -4,6 +4,8 @@
 
 [Unit Tests - Descriptions](http://cancerberosgx.github.io/short-jsdoc/test/SpecRunner.html)
 
+[This own project jsdocs](http://cancerberosgx.github.io/short-jsdoc/jsdoc)
+
 #Features
 
 ##Short

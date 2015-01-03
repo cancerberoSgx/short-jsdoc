@@ -403,7 +403,7 @@ LIST_OF_NAMES
 })(this);;/*jshint laxcomma:true, evil:true*/
 /*global _:false, esprima:false, ShortJsDocTypeParser:false*/
 
-// @module shortjsdoc
+// @module shortjsdoc.core
 // @author sgurin
 
 (function(GLOBAL) 
@@ -1567,7 +1567,7 @@ _(ShortJsDoc.prototype).extend({
 		var jsdoc = this.maker.data;
 		if(options.projectMetadata)
 		{
-			var parsed = this.tryToParseJsonFile(argv.projectMetadata);
+			var parsed = this.tryToParseJsonFile(options.projectMetadata);
 
 			if (parsed)
 			{

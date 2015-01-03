@@ -1,6 +1,6 @@
 <% var data = this.application.data; %>
 
-<%= this.application.templates['project-metadata'].apply(this, arguments) %>
+<%= data.projectMetadata && this.application.templates['project-metadata'].apply(this, arguments) %>
 
 <%= this.application.templates['modules'].apply(this, arguments) %>
 

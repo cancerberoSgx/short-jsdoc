@@ -192,10 +192,13 @@ return __p
 
 this["shortjsdoc"]["header"] = function(obj) {
 obj || (obj = {});
-var __t, __p = '', __e = _.escape;
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
 with (obj) {
-__p += '<header class="main-header">\n\t<div class="row">\n\n\t\t<!-- <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> -->\n\t\t<span class="col-sm-5 col-xs-12">\n\t\t\t<span class="dropdown">\n\t\t\t\t<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">\n\t\t\t\t' +
-((__t = ( this.application.data.projectMetadata.name ||  'short-jsdoc demo' )) == null ? '' : __t) +
+
+ var metadata = this.application.data.projectMetadata; ;
+__p += '\n<header class="main-header">\n\t<div class="row">\n\n\t\t<!-- <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> -->\n\t\t<span class="col-sm-5 col-xs-12">\n\t\t\t<span class="dropdown">\n\t\t\t\t<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">\n\t\t\t\t' +
+((__t = ( (metadata && metadata.name) ||  'short-jsdoc demo' )) == null ? '' : __t) +
 '\n\t\t\t\t<span class="caret"></span>\n\t\t\t\t</button>\n\t\t\t\t<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">\n\t\t\t\t\t<li role="presentation"><a role="menuitem" tabindex="-1" href="#index">Index</a></li>\n\t\t\t\t\t<li role="presentation" class="divider"></li>\n\t\t\t\t\t<li role="presentation"><a role="menuitem" tabindex="-1" href="https://github.com/cancerberoSgx/short-jsdoc">short-jsdoc home page</a></li>\n\t\t\t\t</ul>.\n\t\t\t\t\n\t\t\t</span>\t\t\n\t\t</span>\n\n\t\t<!-- <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> -->\n\t\t<span class="col-sm-7 col-xs-12">\n\t\t\t<span class="main-search pull-right">\n\t\t\t<a role="menuitem" tabindex="-1" href="#index">Index</a>\n\t\t\t\tSearch <input class="typeahead1">\n\t\t\t</span>\t\t\n\t\t</span>\n\n\n\t</div>\n\n</header>';
 
 }
@@ -210,7 +213,7 @@ with (obj) {
 
  var data = this.application.data; ;
 __p += '\n\n' +
-((__t = ( this.application.templates['project-metadata'].apply(this, arguments) )) == null ? '' : __t) +
+((__t = ( data.projectMetadata && this.application.templates['project-metadata'].apply(this, arguments) )) == null ? '' : __t) +
 '\n\n' +
 ((__t = ( this.application.templates['modules'].apply(this, arguments) )) == null ? '' : __t) +
 '\n\n' +

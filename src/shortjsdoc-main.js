@@ -98,7 +98,7 @@ _(ShortJsDoc.prototype).extend({
 		var jsdoc = this.maker.data;
 		if(options.projectMetadata)
 		{
-			var parsed = this.tryToParseJsonFile(argv.projectMetadata);
+			var parsed = this.tryToParseJsonFile(options.projectMetadata);
 
 			if (parsed)
 			{

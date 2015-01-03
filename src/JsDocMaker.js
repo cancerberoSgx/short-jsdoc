@@ -1,7 +1,7 @@
 /*jshint laxcomma:true, evil:true*/
 /*global _:false, esprima:false, ShortJsDocTypeParser:false*/
 
-// @module shortjsdoc
+// @module shortjsdoc.core
 // @author sgurin
 
 (function(GLOBAL) 
