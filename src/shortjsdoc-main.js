@@ -40,15 +40,12 @@ _(ShortJsDoc.prototype).extend({
 			this.error('more parameters required'); 
 		} 
 
-		// var argNumber = process.argv[0].indexOf('node')===-1 ? 1 : 2
-		// ,	inputDirs = _(process.argv).toArray().slice(argNumber, process.argv.length);
-
 		var inputDirs = argv.input.split(','); 
 
-		//if the last passed file is a valid json then it is our configuration!
-		// var options = this.tryToParseJsonFile(process.argv[process.argv.length-1]); 
-
-		var jsdoc = this.execute({inputDirs:inputDirs});
+		var jsdoc = this.execute({
+			inputDirs: inputDirs
+		,	projectMetadata: argv.projectMetadata
+		});
 
 		// dump the output indented:
 		// console.log(JSON.stringify(jsdoc, null, 4)); 
@@ -57,19 +54,19 @@ _(ShortJsDoc.prototype).extend({
 		console.log(JSON.stringify(jsdoc)); 
 	}
 
-	//@method tryToParseJsonFile @param {String} path
-// ,	tryToParseJsonFile: function(path)
-// 	{
-// 		try
-// 		{
-// 			var s = fs.readFileSync(path); 
-// 			return JSON.parse(s); 
-// 		}
-// 		catch(ex)
-// 		{
-// 			return null;
-// 		}
-// 	}
+	// @method tryToParseJsonFile @param {String} path
+,	tryToParseJsonFile: function(path)
+	{
+		try
+		{
+			var s = fs.readFileSync(path); 
+			return JSON.parse(s); 
+		}
+		catch(ex)
+		{
+			return null;
+		}
+	}
 
 	//@method execute MAIN method to parse the parsed folder's javascript files recursively and return the AST of the jsdoc. 
 	//@param {JsDocOptions}options meta information about the project like title, url, license, etc. Hsa the same format as package.json file
@@ -99,6 +96,15 @@ _(ShortJsDoc.prototype).extend({
 		}
 
 		var jsdoc = this.maker.data;
+		if(options.projectMetadata)
+		{
+			var parsed = this.tryToParseJsonFile(argv.projectMetadata);
+
+			if (parsed)
+			{
+				jsdoc.projectMetadata = parsed;
+			}
+		}
 
 		this.maker.postProccess();
 		
@@ -121,13 +127,9 @@ _(ShortJsDoc.prototype).extend({
 				// console.log(ex)
 				//TODO: log vendor name nor found?
 			}
-			// console.log('stats', stats)
 			if(stats && (stats.isDirectory() || stats.isFile()))
-			{
-
-			
+			{			
 				options.inputDirs.push(f);
-				// if(!_(options.inputDirs).contains(f))// {// }
 			}
 		});
 	}

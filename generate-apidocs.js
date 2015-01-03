@@ -3,5 +3,6 @@ var ShortJsDoc = require('./src/shortjsdoc.js'); //can't install short-jsdoc wit
 ShortJsDoc.make({
 	inputDirs: ['./src/JsDocMaker.js', './html']
 ,	output: 'jsdoc'
+,	projectMetadata: './package.json'
 ,	vendor: ['javascript', 'html', 'backbonejs', 'xml-dom']
 }); 

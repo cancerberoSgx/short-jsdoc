@@ -1,8 +1,7 @@
 <% var data = this.application.data; %>
 
-<p>
-	#<%= _(this.application.data.modules).keys().length %> modules and #<%= _(this.application.data.classes).keys().length %> classes count.
-</p>
+<%= this.application.templates['project-metadata'].apply(this, arguments) %>
+
 <%= this.application.templates['modules'].apply(this, arguments) %>
 
 <%= this.application.templates['classes'].apply(this, arguments) %>

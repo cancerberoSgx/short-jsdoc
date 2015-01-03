@@ -101,7 +101,7 @@
 thigs moved here after solving - instead erasing it.
 
  * support comments like /** and in those remove ** prefix
- 
+ * project metainformaton from package.json file 
  * support the beauty /* * * * */ multiline block comments like eclipse's. Remove the first aster after a line.
  * support throw/throws
  * ISSUE: in the followin gorder doesn't work (return not shown) @throws {EquationError} @returns {Solution}  - - tip is I add a text after {EquationError} some text then it worls. tip: in the other order it works - this is right (but not desired) because returns is a second level and throws is first level. try to put return as a first level and see if it works

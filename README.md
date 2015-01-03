@@ -78,36 +78,36 @@ this project neds an simple initial installation:
 
 And then from your build script you can use it like this:
 
-    var tool = new ShortJsDoc()
-    ,   output_folder = 'jsdoc'
-    ,   config = {};
-    tool.jsdoc(['./src'], output_folder, config); 
-
-That will create the folder jsdoc with the jsdoc generated from the src folder. 
-Another example that will include jsdocs for javascript objects like Object, Array,String,Number,etc - jsdoc taken from dev.mozilla site will be part of your project class hierarchy documentation:
-
-    var ShortJsDoc = require('./src/shortjsdoc.js'); 
+    var ShortJsDoc = require('short-jsdoc');
     ShortJsDoc.make({
-        inputDirs: ['./src/JsDocMaker.js', './html']
+        inputDirs: ['./src/folder1', './src/folder2', './src/folder3/file.js']
     ,   output: 'jsdoc'
-    ,   vendor: ['javascript', 'html', 'backbonejs', 'xml-dom']
+    ,   projectMetadata: './package.json'
+    ,   vendor: ['javascript', 'html', 'backbonejs', 'jquery', 'xml-dom']
     }); 
+
+That will create the folder jsdoc with the jsdoc generated from the src folder.
+
+The optional vendor argument will make the tool to add the jsdoc of javascript reference objects like Array, Object, String, etc. Also we want to include the jsdoc of some libraries like backbonejs and jQuery.
+
+As you can see we are passing a package.json file to extract the target project metainformation like name, version, etc.
+
 
 # Using it from command line
 
 Using node directly:
 
     cd short-jsdoc
-    node src/shortjsdoc.js --input /src/folder1 > html/data.json
+    node src/shortjsdoc.js --input src/folder1 --project-metadata src/package.json > html/data.json
     cp html /home/my-js-project/apidocs
 
 or multiple input folders: 
     
-    node src/shortjsdoc.js --input "/src/folder1,src/folder2" > html/data.json
+    node src/shortjsdoc.js --input "src/folder1,src/folder2" --project-metadata src/package.json > html/data.json
 
 Using the command line shortcut (if you installed it)
 
-    shortjsdoc --input /home/my-project1/src/js > /home/my-project1/apidocs.json
+    shortjsdoc --input /home/my-project1/src/js --project-metadata /home/my-project1/package.json > /home/my-project1/apidocs.json
 
 This will generate the ready to use html application /home/my-js-project/apidocs/index.html showing your project's classes. 
 
@@ -121,15 +121,15 @@ Feel free to put-copy this full project in your apidocs forlder. And of course f
 
 Generates the test-project json data:
 
-    node src/shortjsdoc.js --input test/test-project/ > html/data.json
+    node src/shortjsdoc.js --input test/test-project/ --project-metadata ./package.json > html/data.json
 
 Generates the front end js application jsdocs itself:
 
-    node src/shortjsdoc.js--input html/src/ > html/data.json 
+    node src/shortjsdoc.js--input html/src/ --project-metadata ./package.json > html/data.json 
 
 Or do both and add javascript API and js library APIs:
 
-    node src/shortjsdoc.js --input "test/test-project/,html/src/,test/javascript-api-test/,vendor-jsdoc/javascript" > html/data.json
+    node src/shortjsdoc.js --input "test/test-project/,html/src/,test/javascript-api-test/,vendor-jsdoc/javascript" --project-metadata ./package.json > html/data.json
 
 generate shortjsdoc documentation: 
 

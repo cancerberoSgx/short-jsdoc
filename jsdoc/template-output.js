@@ -194,7 +194,9 @@ this["shortjsdoc"]["header"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<header class="main-header">\n\t<div class="row">\n\n\t\t<!-- <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> -->\n\t\t<span class="col-sm-5 col-xs-12">\n\t\t\t<span class="dropdown">\n\t\t\t\t<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">\n\t\t\t\tshort-jsdoc demo\n\t\t\t\t<span class="caret"></span>\n\t\t\t\t</button>\n\t\t\t\t<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">\n\t\t\t\t\t<li role="presentation"><a role="menuitem" tabindex="-1" href="#index">Index</a></li>\n\t\t\t\t\t<li role="presentation" class="divider"></li>\n\t\t\t\t\t<li role="presentation"><a role="menuitem" tabindex="-1" href="https://github.com/cancerberoSgx/short-jsdoc">short-jsdoc home page</a></li>\n\t\t\t\t</ul>.\n\t\t\t\t\n\t\t\t</span>\t\t\n\t\t</span>\n\n\t\t<!-- <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> -->\n\t\t<span class="col-sm-7 col-xs-12">\n\t\t\t<span class="main-search pull-right">\n\t\t\t<a role="menuitem" tabindex="-1" href="#index">Index</a>\n\t\t\t\tSearch <input class="typeahead1">\n\t\t\t</span>\t\t\n\t\t</span>\n\n\n\t</div>\n\n</header>';
+__p += '<header class="main-header">\n\t<div class="row">\n\n\t\t<!-- <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> -->\n\t\t<span class="col-sm-5 col-xs-12">\n\t\t\t<span class="dropdown">\n\t\t\t\t<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">\n\t\t\t\t' +
+((__t = ( this.application.data.projectMetadata.name ||  'short-jsdoc demo' )) == null ? '' : __t) +
+'\n\t\t\t\t<span class="caret"></span>\n\t\t\t\t</button>\n\t\t\t\t<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">\n\t\t\t\t\t<li role="presentation"><a role="menuitem" tabindex="-1" href="#index">Index</a></li>\n\t\t\t\t\t<li role="presentation" class="divider"></li>\n\t\t\t\t\t<li role="presentation"><a role="menuitem" tabindex="-1" href="https://github.com/cancerberoSgx/short-jsdoc">short-jsdoc home page</a></li>\n\t\t\t\t</ul>.\n\t\t\t\t\n\t\t\t</span>\t\t\n\t\t</span>\n\n\t\t<!-- <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> -->\n\t\t<span class="col-sm-7 col-xs-12">\n\t\t\t<span class="main-search pull-right">\n\t\t\t<a role="menuitem" tabindex="-1" href="#index">Index</a>\n\t\t\t\tSearch <input class="typeahead1">\n\t\t\t</span>\t\t\n\t\t</span>\n\n\n\t</div>\n\n</header>';
 
 }
 return __p
@@ -207,11 +209,9 @@ function print() { __p += __j.call(arguments, '') }
 with (obj) {
 
  var data = this.application.data; ;
-__p += '\n\n<p>\n\t#' +
-((__t = ( _(this.application.data.modules).keys().length )) == null ? '' : __t) +
-' modules and #' +
-((__t = ( _(this.application.data.classes).keys().length )) == null ? '' : __t) +
-' classes count.\n</p>\n' +
+__p += '\n\n' +
+((__t = ( this.application.templates['project-metadata'].apply(this, arguments) )) == null ? '' : __t) +
+'\n\n' +
 ((__t = ( this.application.templates['modules'].apply(this, arguments) )) == null ? '' : __t) +
 '\n\n' +
 ((__t = ( this.application.templates['classes'].apply(this, arguments) )) == null ? '' : __t) +
@@ -335,7 +335,7 @@ __p += '<div class="modules">\n\n<h3><a href="#modules">Modules</a></h3>\n\n';
 var self = this; ;
 __p += '\n<ul>\n';
  _(data.modules).each(function(moduleBody, moduleName) { ;
-__p += '\n\t<li ><a class=\'module-name\' href="#module/' +
+__p += '\n\t<li class="modules-module"><a class=\'module-name\' href="#module/' +
 ((__t = ( moduleName )) == null ? '' : __t) +
 '">' +
 ((__t = ( moduleName )) == null ? '' : __t) +
@@ -363,6 +363,33 @@ obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
 __p += '<h2>Parse your code online!</h2>\n<p>Please paste your commeted code in the following area and it will be loaded automatically. </p>\n<textarea data-type="inputcode">\n//@class Living Any living thing. @module Life. \n//@class Tree A tree is a living thing that contains some leafs and grow. \n//@extends Living @module Life \nfunction Tree(){}\n/**@method growLeaf makes the given leaf to gro a little more. @param {Leaf} leaf*/\nTree.prototype.growLeaf = function(leaf){}\n/*@class Apple a sweet fruit @module Life @extend Fruit grows in trees and can be eaten @module Life */ \nfunction Apple(){}\n\n//@class Rock @module Mineral\n//@method doShadow @param {Rectangle} shadowSize @return {Shadow} the new Shadow\n\n//@class Shadow @module Ideal\n//@class Good @module Ideal\n</textarea>\n<button data-action="inputcode_doit">do it</button>\n';
+
+}
+return __p
+};
+
+this["shortjsdoc"]["project-metadata"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+
+ var metaData = this.application.data.projectMetadata; ;
+__p += '\n\n<p>Project ' +
+((__t = ( metaData.name)) == null ? '' : __t) +
+' contains #' +
+((__t = ( _(this.application.data.modules).keys().length )) == null ? '' : __t) +
+' modules and #' +
+((__t = ( _(this.application.data.classes).keys().length )) == null ? '' : __t) +
+' classes.</p>\n\n<table>\n\t';
+ _(metaData).each(function(value, name) { ;
+__p += '\n\t<tr><td class="metadata-name">' +
+((__t = ( name)) == null ? '' : __t) +
+'</td><td class="metadata-value">' +
+((__t = ( _(value).isString() ? value : JSON.stringify(value))) == null ? '' : __t) +
+'</td></tr>\n\t';
+ }); ;
+__p += '\n</table>\n';
 
 }
 return __p
