@@ -23,6 +23,8 @@ if(typeof sentence === 'undefined')
 	console.log('alert'); 
 }
 
+// @method getState @returns {name:String,colors:Array<Color>,car:Car}
+
 
 //@method getOwners this method is useful for *blabla* blabla _blabla_ bab
 var s = 'these are just js sample sentences'; 

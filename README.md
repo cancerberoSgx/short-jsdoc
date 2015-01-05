@@ -9,20 +9,23 @@
 #Features
 
 ##Short
+
 If you want you can define a whole method signature in one line like this:
 
-    //@method add adds a new tool @param {Tool} tool something about the tool @return {Promise} solved when all ends
+    //@method add adds a new tool @param {Array<Tool>} tools @return {Promise} solved when all ends
     ToolCollection.prototype.add = function(tool){...}
 
-##Flexible comment syntax
+##Flexible comment syntax and rich text input
 
 Support all comment types, like /* /** // . 
+
+Also the jsdoc text can be written in in plain text, html or markdown. This means you are free to choose to be minimalistic (writing single-line comments) or very exaustive and styled (writing multiple paragraph html or mardown text), or what is best, do both things and choose where to put the big texts !
 
 ##Simple annotation syntax
 
 Simple annotation syntax based in a unique pattern:
 
-    @annotation {Type} name text. 
+    @annotation {Type} name text.  
 
 Also use the concept of primary annotations @module, @class, @method, @property that contains secondary annotations like @extends @returns @static
 
@@ -32,25 +35,27 @@ The mission is that you can just add @annotations to existing source comments wi
 
 short-jsdoc supports a rich set of Object oriented concepts out of the box: module, @class, @property, @method, @event, @constructor, @extend, and many more!
 
-## Heavy type support
+## Rich types support
 
 Heavy support for Types - they are optional but it is important for getting a navigable API. Support Type Generic syntax. multiple types, object literals and custom type definitions.
 
-## Rich output
+Read all at [Supported Types Guide](https://github.com/cancerberoSgx/short-jsdoc/blob/master/doc/TYPES.md)
 
-The parser generates a json file with all jsdoc meta data that can be consumed and shared easily.
+## Generic
 
-Then there is an html5 single page application default implementation that shows this output in a very rich way and easy to customize. The jsdoc text support plain text, html or markdown. 
-
-This means you can write very compact jsdocs (like a full method description in a single line) or very rich jsdocs (with a full mardown/html page for a method or class text)
+The parser read the sources and generate a Abstract Syntax Tree (AST) of ALL the @annotations. THEN it is 'beautified' with shortcuts for properties and methods. But the original AST with ALL the annotations is there for those who want to define its own semantics and annotations. 
 
 ## Extendable
 
-The parser read the sources and generate a Abstract Syntax Tree (AST) of ALL the @annotations. THEN it is 'beautified' with shortcuts for properties and methods. But the original AST with ALL the annotations is there for those who want to define its own semantics and annotations.
+User can subscribe to interesting processing 'moments' to add its own semantics. Read all at [Complete Extensibility Guide](https://github.com/cancerberoSgx/short-jsdoc/blob/master/doc/EXTENSIBILITY-GUIDE.md)
 
 ## Browser and nodejs
 
-100% usable both in nodejs or in the browser.
+Jsdoc generator is usable both in nodejs or in the browser.
+
+## Rich output
+
+The parser generates a json file with all jsdoc meta data that can be consumed and shared easily. By default a a nice html5 single page application is delivered that shows generated jsdocs in a very rich way and easy to customize.
 
 # Syntax
 
@@ -166,167 +171,6 @@ The other important part of the project is an html5 application that shows this 
 At last there is a little nodejs tool for the end-user to extract its code jsdocs and generate this html5 application showing it.
 
 
-
-
-
-# Heavy type support
-
-##Types Generics
-
-Heavy support for Types - they are optional but it is important for getting a navigable API. Features: 
- * customizable native types (by default pointing to mozilla site)
- * generics syntax support - Array is not as descriptive as Array<Object<String,Apple>>. Generics are optional but there and are based on javadocs and have a flexible syntax.
-
-    //@class Farmer a human that harvest food @extends Human 
-    //@method harvest @param {Object<String,Resource>} resources the resources to be harvested b the farmer, by id. 
-    //@return {Object<String,Food>} the harvested food units.
-    Farmer.prototype.harvest = function(resources){...}
-
-##Multiple types
-
-Also multiple types syntax is supported. In a non typed language like javascript, often, method signatures support different kind of parameter types. For example, a method's parameter can be a String or an HTMLElement or a jQuery object. This type of syntax is supported using the '|' character like this:
-
-    @method @html
-    @param {String|HTMLElement|jQuery|Array<String>} el
-
-That would be interpreted as 'param method can be any of String, HTMLElement, jQuery object or an Array of strings'. Notice that generics and multiple types syntax can be mixed arbitrarily.
-
-##Object Literal types definition
-
-Another type supported is a literal description of an object properties. Support you want to describe a JSON Object returned or consumed  by one of your methods or classes but you don't want to define a whole new Class for this. Instead you could do something like this:
-
-    @method getState @returns {name:String,colors:Array<Color>,car:Car}
-
-This means that the method getState returns an Object with properties name of type String, colors of type Array and car of type Car. 
-
-Object literal types definition like this support arbitrary use of generics but it is not recursive ad it does not support multiple types with |, not yet. 
-
-
-
-
-
-# Extendable
-
-## Extensibility 1: jsdoc AST Postprocessing
-
-The parser read the sources and generate a Abstract Syntax Tree (AST) of ALL the @annotations. THEN it is 'beautified' with shortcuts for properties and methods. But the AST is there for those who want to define its own semantics and annotations. For example, you want to use your own custom annotation, let's say, @versionfoo to indicate you method's, classes', properties etc version you could do something like the following (ready to run) test
-
-    // the code to be parsed - note that it contains some custom @versionfoo annotations
-    var code = 
-        '//@module office @versionfoo 3.2' + '\n' + 
-        '//@class Computer' + '\n' +
-        '//you can do excel here' + '\n' +
-        '//@versionfoo 1.2' + '\n' +
-        '//@method putmusic @param {Object<String,Array<Song>>} songs' + '\n' + 
-        '//@versionfoo 1.0' + '\n' +
-        '';
-
-    //instantiate the parser and parse
-    var maker = new JsDocMaker();
-    maker.parseFile(code); 
-    maker.postProccess();
-    maker.postProccessBinding();    
-    var jsdoc = maker.data;
-
-    // we define a function to visit each AST node - we will search for a children @versionfoo and if any set as a property
-    var astVisitor = function(node)
-    {
-        var versionfoo = _(node.children||[]).find(function(child)
-        {
-            return child.annotation === 'versionfoo'; 
-        });
-        if(versionfoo && versionfoo.name)
-        {
-            node.versionfoo = versionfoo.name; 
-        }
-    }; 
-    maker.recurseAST(astVisitor); 
-    expect(jsdoc.modules.office.versionfoo).toBe('3.2');
-
-After this we can easily access the @versionfoo of any node like for example, the following expression:
-
-    jsdoc.modules.office.versionfoo === '3.2'
-
-
-
-## Extensibility 2: Source comments preprocessing
-
-Also another kind of extension / plugin is available for preprocessing the source comments, for example for removing or adding something. In the following example we remove a string and add some extra information to all our comments of type line:
-
-    var code = 
-        '//@module stuff3' + '\n' + 
-        '/**@class Vanilla some text @author sgx */' + '\n'; 
-        
-    var maker = new JsDocMaker();
-    
-    //define a comment preprocessor
-    var my_preprocessor = function()
-    {
-        for (var i = 0; i < this.comments.length; i++) 
-        {
-            var node = this.comments[i]; 
-            node.value = node.value.replace(/@author\s+\w+/gi, '') + ' @author thief'; 
-        }
-    }; 
-    //and install it
-    maker.commentPreprocessors.push(my_preprocessor);
-    
-    //then do the parsing
-    maker.parseFile(code); 
-    maker.postProccess();
-    maker.postProccessBinding();
-    var jsdoc = maker.data;
-    
-    var Vanilla = jsdoc.classes['stuff3.Vanilla'];
-    var author = _(Vanilla.children).find(function(c){return c.annotation === 'author'; });
-    expect(author.name).toBe('thief');
-
-
-
-##Extensibility 3: Custom type sytax
-
-shortjsdoc supports a general way of defining Custom types. In gneral we register a custom type that defines its name and a function that will process the custom type input string and output the type object. 
-
-In the following example we define a custom type syntax like @returns {#lemmon(acid,yellow)} that will parse that string in an object like {type:'Object', lemmonProperties:['acid','yellow']}. As you can see the AST type object semantics is defined 100% by the parser:
-
-    var code = 
-        '//@module customTypeParsers' + '\n' +  
-        '/*@class Vanilla some text ' + '\n' +  
-        '@method method1' + '\n' +  
-        '@return {#lemmon(acid,lazy,green)} */' + '\n' +
-        ''; 
-
-    var maker = new JsDocMaker();
-
-    // define and regiter a custom type syntax:
-    var customTypeParser = {
-        name: 'lemmon'  
-    ,   parse: function(s)
-        {
-            // variable s is the text body of the custom type for example 'acid,lazy,green'.
-            // we return the following object as this type obejct implementation.
-            return {
-                name: 'Object'
-            ,   lemmonProperties: s.split(',')
-            }; 
-        }
-    };
-    maker.registerTypeParser(customTypeParser); 
-
-    //then do the parsing
-    maker.parseFile(code); 
-    maker.postProccess();
-    maker.postProccessBinding();
-    var jsdoc = maker.data;
-
-    var Vanilla = jsdoc.classes['customTypeParsers.Vanilla'];
-    var return1 = Vanilla.methods.method1.returns.type; 
-    expect(return1.lemmonProperties[0]).toBe('acid'); 
-    expect(return1.lemmonProperties[1]).toBe('lazy'); 
-    expect(return1.lemmonProperties[2]).toBe('green'); 
-    expect(return1.name).toBe('Object'); 
-
-Notice that the literal object type syntax '{#obj(name:String)}' is just one of these custom-type-plugins. 
 
 
 
