@@ -19,7 +19,6 @@ var uglifyLibFiles = [
 	'lib/esprima.js'
 ,	'lib/underscore.js'
 ,	'src/JsDocMaker.js'
-// ,	'src/typeParser.js'
 ,	'src/literalObjectParser.js'
 
 ,	'html/lib/jquery/jquery-2.0.3.min.js'
@@ -33,8 +32,7 @@ var uglifyLibFiles = [
 ];
 
 var concat_node_distro_files = [
-	'src/shortjsdoc-header.txt'
-,	'src/typeParser.js'
+	'src/typeParser.js'
 ,	'src/JsDocMaker.js'
 ,	'src/shortjsdoc-main.js'
 ];

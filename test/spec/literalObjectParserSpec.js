@@ -11,6 +11,13 @@ describe("type parsers", function()
 			expect(parsed.params[1].params[0]).toBe('Apple'); 
 		}); 
 
+		it("parseType with strange chars", function() 
+		{
+			var parsed = JsDocMaker.parseType('Hello.Wo_rld<Foo.Bar_min>'); 
+			expect(parsed.name).toBe('Hello.Wo_rld'); 
+			expect(parsed.params[0]).toBe('Foo.Bar_min'); 
+		}); 
+
 		it("parseLiteralObjectType", function() 
 		{
 			var parsed = JsDocMaker.parseLiteralObjectType('{prop1:Map<String,Array<Apple>>,prop2:String}'); 

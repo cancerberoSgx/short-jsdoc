@@ -123,7 +123,7 @@ Feel free to put-copy this full project in your apidocs forlder. And of course f
 
 Generates the test-project json data:
 
-    node src/shortjsdoc.js --input test/test-project/ --project-metadata ./package.json > html/data.json
+    node src/shortjsdoc.js --input test/test-project/ --project-metadata ./test/test-project/package.json > html/data.json
 
 Generates the front end js application jsdocs itself:
 
@@ -131,7 +131,7 @@ Generates the front end js application jsdocs itself:
 
 Or do both and add javascript API and js library APIs:
 
-    node src/shortjsdoc.js --input "test/test-project/,html/src/,test/javascript-api-test/,vendor-jsdoc/javascript" --project-metadata ./package.json > html/data.json
+    node src/shortjsdoc.js --input "test/test-project/,html/src/,vendor-jsdoc/javascript" --project-metadata ./test/test-project/package.json > html/data.json
 
 generate shortjsdoc documentation: 
 

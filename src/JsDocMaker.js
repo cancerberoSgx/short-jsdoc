@@ -267,13 +267,13 @@ JsDocMaker.prototype.parseUnitSimple = function(str, comment)
 	if(comment.type==='Line')
 	{
 		str = JsDocMaker.stringFullTrim(str); 
-		regexp = /\s*@(\w+)\s*(\{[\w<>\|, #:\(\)]+\}){0,1}\s*([\w\._\$]+){0,1}(.*)\s*/i; 
+		regexp = /\s*@(\w+)\s*(\{[\w<>\|, #:\(\)\.]+\}){0,1}\s*([\w\._\$]+){0,1}(.*)\s*/i; 
 		result = regexp.exec(str);
 	}
 	else
 	{
 		str = JsDocMaker.stringTrim(str); 
-		regexp = /\s*@(\w+)\s*(\{[\w<>\|, #:\(\)]+\}){0,1}\s*([\w\._\$]+){0,1}([.\s\w\W]*)/gmi;
+		regexp = /\s*@(\w+)\s*(\{[\w<>\|, #:\(\)\.]+\}){0,1}\s*([\w\._\$]+){0,1}([.\s\w\W]*)/gmi;
 		//TODO: I have to put this regexp inline here - if not the second time I call exec on the instance it won't match :-??
 		result = regexp.exec(str); 
 	}
@@ -454,8 +454,11 @@ JsDocMaker.prototype.postProccessBinding = function()
 		else 
 		{
 			c.extends = self.bindClass(extend.name, c);
-			c.children = _(c.children).without(extend);			
+			c.children = _(c.children).without(extend);	//TODO: why we would want to do this? - remove this line
 		}
+
+
+		//setup methods & constructors
 
 		var methods = _(c.methods).clone() || {};
 		if(c.constructors) 
@@ -468,7 +471,6 @@ JsDocMaker.prototype.postProccessBinding = function()
             }
         }
 
-		//setup methods
 		_(methods).each(function(method)
 		{
 			//method.param property
@@ -593,7 +595,8 @@ JsDocMaker.prototype.parseSingleTypeString = function(typeString2, baseClass)
 	_(a).each(function(typeString)
 	{
 		// first look for custom types which have the syntax: #command1(param1,2)
-		var customType = /^#(\w+)\(([^\()]+)\)/.exec(typeString)
+		var regex = /^#(\w+)\(([^\()]+)\)/
+		,	customType = regex.exec(typeString)
 		,	type_binded = null; 
 
 		if(customType && customType.length === 3)
@@ -692,7 +695,10 @@ JsDocMaker.prototype.bindClass = function(name, baseClass)
 		return JsDocMaker.startsWith(c.module.name, baseClass.module.name); 
 	}); 
 
+	//TODO: performance - classesWithName could be compauted only if moduleClasses is empty
+
 	var c = moduleClasses.length ? moduleClasses[0] : classesWithName[0]; 
+
 	if(!c)
 	{
 		//TODO: look at native types
@@ -723,6 +729,10 @@ JsDocMaker.prototype.simpleName = function(name)
 
 
 
+
+
+
+
 //TYPE PARSING
 
 //@method parseType parse a type string like 'Map<String,Array<Apple>>' or 'String' and return an object like {name: 'Map',params:['String',{name: 'Array',params:['Apple']}]}. This is the default type parser. 
@@ -733,8 +743,6 @@ JsDocMaker.parseType = function(s)
 	var parsed = JsDocMaker.parseLiteralObjectType(ss);
 	var ret = parsed.name; 
 	return ret;
-	
-	// return ShortJsDocTypeParser.parse(s);//old code
 }; 
 // @method parse a object literal type string like '' @return {Object} the parsed object @static
 JsDocMaker.parseLiteralObjectType = function(s)

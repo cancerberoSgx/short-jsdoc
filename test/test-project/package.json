@@ -1,0 +1,11 @@
+{
+  "name": "my-personal-project",
+  "version": "0.1.1",
+  "description": "This porject contains some javascript source files that uses short-jsdoc for documenting all known supported cases and combinations. ",
+  "author": "Sebastián Gurin",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/cancerberoSgx/short-jsdoc/issues"
+  },
+  "homepage": "https://github.com/cancerberoSgx/short-jsdoc"
+}

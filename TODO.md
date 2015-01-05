@@ -18,6 +18,8 @@
  
  * inherited events
 
+ * generic types params types are not binded, this is, for @property {Array<Apple>}, property.params[1].type is undefined. 
+ 
  * expand the module view to show the full module documentation - for example: http://lunrjs.com/docs/#lunr
 
  * support globs in nodejs API

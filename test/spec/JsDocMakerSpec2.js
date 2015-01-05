@@ -1,6 +1,6 @@
 
 
-describe("talking about the same class in different places", function() 
+describe("referring classes with special names", function() 
 {
 	var jsdoc, maker; 
 
@@ -9,21 +9,17 @@ describe("talking about the same class in different places", function()
 		var code = 
 			'//@module mymodule' + '\n' +
 
-			'//@class MyClass some text for myclass' + '\n' +
-			'var MyClass = function(){}' + '\n' +
+			'//@class Easy easy named class' + '\n' +
 
-			'//@method m1 blabalbal @param p1 @param p2' + '\n' +
-			'MyClass.prototype.m1 = function(p1, p2){};' + '\n' +
+			'//@class MiniBike.Futuristic_2 a class using all allowed characters' + '\n' +
+			'var MiniBikeFuturistic_2  = function(){}' + '\n' +
 
-			'//@class OtherClass some text for the other class' + '\n' +
-			'var MyClass = function(){}' + '\n' +
+			'//@class MiniBike.Futuristic_3 class extending a class with strange name @extends MiniBike.Futuristic_2' + '\n' +
 
-			'//@method m3 blabalbal @param a @param b' + '\n' +
-			'MyClass.prototype.m3 = function(a, b){};' + '\n' +
+			'//@method foo_bar @return MiniBike.Futuristic_2' + '\n' +
 
-			'//@class MyClass' + '\n' +
-			'//@method m2 blabalbal @param c @param d' + '\n' +
-			'MyClass.prototype.m2 = function(c, d){};' + '\n' +
+			'//@property {Array<MiniBike.Futuristic_3>} something' + '\n' +
+			'//@property {Array<Easy>} easy' + '\n' +
 			''; 
 
 		maker = new JsDocMaker();
@@ -33,10 +29,17 @@ describe("talking about the same class in different places", function()
 		jsdoc = maker.data;
 	});
 
-	it("Two definitions of the same module or class should preserve all the texts", function() 
+	it("classes with all accepted chars referred from complex objects", function() 
 	{
-		var MyClass = jsdoc.classes['mymodule.MyClass']; 
-		debugger;
+		var C1 = jsdoc.classes['mymodule.MiniBike.Futuristic_2']; 
+		var C2 = jsdoc.classes['mymodule.MiniBike.Futuristic_3']; 
+		var p1 = C2.properties.something;
+		var p2 = C2.properties.easy;
+		expect(C1.name).toBe('MiniBike.Futuristic_2');
+		expect(C1.absoluteName).toBe('mymodule.MiniBike.Futuristic_2');
+
+		expect(C2.extends.name).toBe('MiniBike.Futuristic_2'); 
+		expect(p1.type.params[0].name).toBe('MiniBike.Futuristic_3'); 
 	});
 
 });
