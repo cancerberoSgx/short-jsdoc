@@ -34,12 +34,11 @@ That would be interpreted as 'param method can be any of String, HTMLElement, jQ
 
 Another type supported is a literal description of an object properties. Support you want to describe a JSON Object returned or consumed  by one of your methods or classes but you don't want to define a whole new Class for this. Instead you could do something like this:
 
-    @method getState @returns {name:String,colors:Array<Color>,car:Car}
+    @method getState @returns {#obj(name:String,colors:Array<Color>,car:Car)}
 
 This means that the method getState returns an Object with properties name of type String, colors of type Array and car of type Car. 
 
 Object literal types definition like this support arbitrary use of generics but it is not recursive ad it does not support multiple types with |, not yet. 
 
-
-
+This is in fact a shortjsdoc plugin, that's why it uses the #obj notation. Read [Complete Extensibility Guide](https://github.com/cancerberoSgx/short-jsdoc/blob/master/doc/EXTENSIBILITY-GUIDE.md) to know how to implement your own / now types syntax. 
 

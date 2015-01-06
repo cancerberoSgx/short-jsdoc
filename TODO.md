@@ -1,11 +1,12 @@
 # TODO: ideas
 
+ * remove asterix from package.json dependency versions
+
+ 
  * divide JsDocMaker in several files core, preprocessing, postprocessing, biding, etc.
 
  * remove parseyourowncode,spec runner,etc from html application since this is particular of shortjsdoc. put it on readme.md or other app
  
- * IDEA: in src/libs-jsdoc with folders like javascript/mozilla jQuery/ Backbone/. Thes folders contains .js files with short jsdoc OO for each library and they can be optionally imported when processing a project.  
-
  * include events @properties ni the typeahead search
 
  * define a syntax and support varargs - like {num1, ..., numN}
@@ -23,8 +24,6 @@
  * expand the module view to show the full module documentation - for example: http://lunrjs.com/docs/#lunr
 
  * support globs in nodejs API
-
- * inherited fields should have the information from which class is inherited - this can be done easy using the name - done manually in the html app.
 
  * @link preprocessed comment that is replaced by html or mardown link at preprocessing.
 
@@ -109,7 +108,8 @@ thigs moved here after solving - instead erasing it.
  * ISSUE: in the followin gorder doesn't work (return not shown) @throws {EquationError} @returns {Solution}  - - tip is I add a text after {EquationError} some text then it worls. tip: in the other order it works - this is right (but not desired) because returns is a second level and throws is first level. try to put return as a first level and see if it works
  * module can now contain dots
  * lasses can now defined in different texts, even it text.
-
+ * IDEA: in src/libs-jsdoc with folders like javascript/mozilla jQuery/ Backbone/. Thes folders contains .js files with short jsdoc OO for each library and they can be optionally imported when processing a project.  
+ * inherited fields should have the information from which class is inherited - this can be done easy using the name - done manually in the html app.
 
 
 

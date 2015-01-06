@@ -1,11 +1,16 @@
 /*jshint laxcomma:true, evil:true*/
 /*global _:false, esprima:false, ShortJsDocTypeParser:false*/
 
-// @module shortjsdoc.core
+// @module shortjsdoc.parser
 // @author sgurin
 
 (function(GLOBAL) 
 {
+
+
+
+
+
 
 // @class JsDocMaker
 // Main jsdoc parser utility. It accepts a valid js source code String and returns a JavaScript object with a jsdoc AST, this is an object
@@ -19,6 +24,7 @@ var JsDocMaker = GLOBAL.JsDocMaker = function()
 	this.customNativeTypes = this.customNativeTypes || {};
 	this.annotationRegexp = /(\s+@\w+)/gi;
 	this.typeParsers = {};
+	this.inputSource = [];
 }; 
 
 
@@ -35,11 +41,19 @@ JsDocMaker.prototype.postProccessors = [];
 JsDocMaker.prototype.commentPreprocessors = []; 
 
 
+
+
+
+
+
+
 //PARSING AND PREPROCESSING
 
-//@method parseFile @return {Object} the parsed object @param {String} source @param {String} filename
-JsDocMaker.prototype.parseFile = function(source, fileName)
+//@method jsdoc the public method to parse all the added files with addFile. @return {Object} the parsed object @param {String} source . Optional
+JsDocMaker.prototype.jsdoc = function(source)
 {
+	//@property {Array<String>} all the input added included @filename annotations
+	source = source || this.inputSource.join('');
 	this.data = this.data || {}; 
 	this.data.source = source;
 
@@ -50,26 +64,43 @@ JsDocMaker.prototype.parseFile = function(source, fileName)
 	,	comment: true		
 	});
 
-	var parsed = this.parse(this.syntax.comments, fileName);
+	this.parse(this.syntax.comments);
 
-	return parsed; 
+	return this.data;
+}; 
+
+//@method parseFile a public method for parsing a single file. Note if you want to parse more than one file please use addFile() and the jsdoc() 
+//@return {Object} the parsed object @param {String} source @param {String} filename
+JsDocMaker.prototype.parseFile = function(source, fileName)
+{
+	this.addFile(source, fileName); 
+	return this.jsdoc(); 
+}; 
+
+//@method addFile @param {String}source the source code of the file @param  {String} the file name
+JsDocMaker.prototype.addFile = function(source, fileName)
+{
+	this.inputSource.push('\n\n//@filename {Foo} fileName ' + fileName+'\n\n');
+	this.inputSource.push(source);
 }; 
 
 //@property {String} ignoreCommentPrefix
 JsDocMaker.prototype.ignoreCommentPrefix = '?';
 
 //@method parse	@return {Array} array of class description - with methods, and methods containing params. 
-JsDocMaker.prototype.parse = function(comments, fileName)
+JsDocMaker.prototype.parse = function(comments)
 {
 	var self = this
 	,	currentClass = null
 	,	currentMethod = null
-	,	currentModule = null;
+	,	currentModule = null
+	,	currentFile = null;
 
 	this.comments = comments;
 	this.data = this.data || {}; 
 	this.data.classes = this.data.classes || {}; 
 	this.data.modules = this.data.modules || {}; 
+	this.data.filenames = this.data.filenames || {}; 
 
 	_(this.commentPreprocessors).each(function(preprocessor)
 	{
@@ -78,7 +109,7 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 
 	_(this.comments).each(function(node)
 	{
-		var regex = /((?:@class)|(?:@method)|(?:@property)|(?:@method)|(?:@module)|(?:@event)|(?:@constructor))/gi; 
+		var regex = /((?:@class)|(?:@method)|(?:@property)|(?:@method)|(?:@module)|(?:@event)|(?:@constructor)|(?:@filename))/gi; 
 		var a = JsDocMaker.splitAndPreserve(node.value || '', regex); 
 		a = _(a).filter(function(v)  //delete empties and trim
 		{
@@ -91,7 +122,7 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 			_(parsed_array).each(function(parsed)
 			{
 				parsed.commentRange = node.range;
-				parsed.fileName = fileName;
+				parsed.file = currentFile;
 
 				delete parsed.theRestString; 
 
@@ -125,7 +156,12 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 						delete self.data.classes[parsed.name];
 						currentClass = parsed; 
 					}
+				}
 
+				if(parsed.annotation === 'filename') 
+				{
+					currentFile = parsed; 
+					currentFile.fileName = parsed.text; 
 				}
 
 				else if(parsed.annotation === 'module')
@@ -187,35 +223,6 @@ JsDocMaker.prototype.parse = function(comments, fileName)
 						currentMethod.params[parsed.name] = parsed; 
 					}
 				}
-
-				//? @throw is children of @method
-				// else if((parsed.annotation === 'throw' || parsed.annotation === 'throws') && currentClass)
-				// {
-				// 	if(!currentMethod)
-				// 	{
-				// 		self.error('param before method: ', parsed);
-				// 	}
-				// 	else
-				// 	{						
-				// 		currentMethod.throws = currentMethod.throws || {};
-				// 		currentMethod.throws[parsed.name] = parsed; 
-				// 	}
-				// }	
-
-				//? @return is children of @method
-				// else if((parsed.annotation === 'returns' || parsed.annotation === 'return') && currentClass)
-				// {
-				// 	if(!currentMethod)
-				// 	{
-				// 		self.error('returns before method: ', parsed);
-				// 	}
-				// 	else
-				// 	{						
-				// 		currentMethod.throws = currentMethod.throws || {};
-				// 		currentMethod.throws[parsed.name] = parsed; 
-				// 	}
-				// }	
-
 			}); 
 		});
 		
@@ -254,7 +261,7 @@ JsDocMaker.prototype.parseUnit = function(str, comment)
 	return ret; 
 }; 
 
-//@method parseUnitSimple @param {String} str @param comment
+//@method parseUnitSimple @param {String} str @param {ASTSprimaNode} comment
 JsDocMaker.prototype.parseUnitSimple = function(str, comment) 
 {	
 	if(!str)
@@ -294,10 +301,12 @@ JsDocMaker.prototype.parseUnitSimple = function(str, comment)
 	,	theRestString: JsDocMaker.stringTrim(splitted.join(''))
 	};
 
-	// console.error(str, ret);
-	// debugger;
 	return ret;
 }; 
+
+
+
+
 
 
 
@@ -359,7 +368,6 @@ JsDocMaker.prototype.fixUnamedAnnotations = function()
 JsDocMaker.prototype.commentPreprocessors.push(JsDocMaker.prototype.fixUnamedAnnotations); 
 
 
-
 // @method unifyLineComments unify adjacents Line comment nodes into one in the ns.syntax.coments generated after visiting. 
 JsDocMaker.prototype.unifyLineComments = function()
 {
@@ -386,8 +394,14 @@ JsDocMaker.prototype.unifyLineComments = function()
 		}
 	}
 }; 
+
 //install it as comment preprocessor plugin!
 JsDocMaker.prototype.commentPreprocessors.push(JsDocMaker.prototype.unifyLineComments); 
+
+
+
+
+
 
 
 
@@ -547,6 +561,13 @@ JsDocMaker.prototype.postProccessBinding = function()
 		_(c.events).each(propertySetup);
 	});
 };
+
+
+
+
+
+
+
 
 
 
@@ -733,6 +754,9 @@ JsDocMaker.prototype.simpleName = function(name)
 
 
 
+
+
+
 //TYPE PARSING
 
 //@method parseType parse a type string like 'Map<String,Array<Apple>>' or 'String' and return an object like {name: 'Map',params:['String',{name: 'Array',params:['Apple']}]}. This is the default type parser. 
@@ -757,6 +781,9 @@ JsDocMaker.prototype.registerTypeParser = function(typeParser)
 	this.typeParsers = this.typeParsers || {};
 	this.typeParsers[typeParser.name] = typeParser; 
 }; 
+
+
+
 
 
 
@@ -790,6 +817,8 @@ JsDocMaker.prototype.getNativeTypeUrl = function(name)
 	});
 	return customTypeUrl;
 }; 
+
+
 
 
 
@@ -927,7 +956,8 @@ JsDocMaker.classOwnsProperty = function(aClass, prop)
 
 //custom postproccess
 
-//@method recurseAST visit all the ast nodes with given function @param {Function} fn
+//@method recurseAST An utility method that can be used in extensions to visit all the ast nodes with given function 
+//@param {Function} fn
 JsDocMaker.prototype.recurseAST = function(fn)
 {
 	var self = this;
@@ -1006,7 +1036,7 @@ JsDocMaker.prototype.literalObjectInstall = function()
 
 
 
-//UTILITIES
+// STATIC UTILITIES
 
 // @method splitAndPreserve search for given regexp and split the given string but preserving the matches
 // @param {Regexp} regexp must contain a capturing group (like /(\s+@\w+)/gi)
