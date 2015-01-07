@@ -419,13 +419,14 @@ LIST_OF_NAMES
 // use the parseFile method for this! This will return the AST, if you want to perform more enrichment and type binding, then use 
 // postProccess and postProccessBinding methods after.
 
-var JsDocMaker = GLOBAL.JsDocMaker = function()
+var JsDocMaker = GLOBAL.JsDocMaker = function(options)
 {	
 	//@property {Object<String,String>} customNativeTypes name to url map that the user can modify to register new native types b givin its url.
 	this.customNativeTypes = this.customNativeTypes || {};
 	this.annotationRegexp = /(\s+@\w+)/gi;
 	this.typeParsers = {};
 	this.inputSource = [];
+	this.options = options || {};
 }; 
 
 
@@ -437,9 +438,15 @@ JsDocMaker.MULTIPLE_TEXT_SEPARATOR = '\n\n';
 //@property {Array<Function>}postProccessors
 JsDocMaker.prototype.postProccessors = []; 
 
-
 //@property {Array<Function>}commentPreprocessors
 JsDocMaker.prototype.commentPreprocessors = []; 
+
+
+
+
+
+
+
 
 
 
@@ -682,7 +689,7 @@ JsDocMaker.prototype.parseUnitSimple = function(str, comment)
 	{
 		str = JsDocMaker.stringTrim(str); 
 		regexp = /\s*@(\w+)\s*(\{[\w<>\|, #:\(\)\.]+\}){0,1}\s*([\w\._\$]+){0,1}([.\s\w\W]*)/gmi;
-		//TODO: I have to put this regexp inline here - if not the second time I call exec on the instance it won't match :-??
+		//TODO: I have to put this regexp inline here - if not the second time I call exec on the instance it won't match. This is because the 'g' modifier.
 		result = regexp.exec(str); 
 	}
 	if(!result || result.length<4)
@@ -704,6 +711,8 @@ JsDocMaker.prototype.parseUnitSimple = function(str, comment)
 
 	return ret;
 }; 
+
+
 
 
 
@@ -798,6 +807,8 @@ JsDocMaker.prototype.unifyLineComments = function()
 
 //install it as comment preprocessor plugin!
 JsDocMaker.prototype.commentPreprocessors.push(JsDocMaker.prototype.unifyLineComments); 
+
+
 
 
 
@@ -972,6 +983,8 @@ JsDocMaker.prototype.postProccessBinding = function()
 
 
 
+
+
 // BINDING / post processing
 
 //@class TypeBinding a datatype with an association between types names in source code and parsed class nodes. 
@@ -1010,16 +1023,20 @@ JsDocMaker.prototype.parseTypeString = function(typeString, baseClass)
 	}	
 }; 
 
-JsDocMaker.prototype.parseSingleTypeString = function(typeString2, baseClass)
+// @method parseSingleTypeString @param {String} typeStr
+JsDocMaker.prototype.parseSingleTypeString = function(typeStr, baseClass)
 {
-	var a = typeString2.split('|'), ret = [], self=this;
+	var a = typeStr.split('|'), ret = [], self = this;
 
 	_(a).each(function(typeString)
 	{
-		// first look for custom types which have the syntax: #command1(param1,2)
+	
+		// is this a custom type, like #custom(1,2) ? 
+
 		var regex = /^#(\w+)\(([^\()]+)\)/
 		,	customType = regex.exec(typeString)
-		,	type_binded = null; 
+		,	type_binded = null
+		,	type = null;
 
 		if(customType && customType.length === 3)
 		{
@@ -1034,8 +1051,7 @@ JsDocMaker.prototype.parseSingleTypeString = function(typeString2, baseClass)
 					if(parsed)
 					{
 						// TODO bind type ? 
-
-						//BIG PROBLEM HERE - this code executes at parsing time and here we are minding - do this binding in a post processing ast
+						//BIG PROBLEM HERE - this code executes at parsing time and here we are binding - do this binding in a post processing ast
 						//TODO probably all this code should be moved to postprocessing ast phase and here we only dump the original type string.
 						type_binded = self.bindParsedType(parsed, baseClass); 
 						ret.push(type_binded); 
@@ -1044,14 +1060,34 @@ JsDocMaker.prototype.parseSingleTypeString = function(typeString2, baseClass)
 				catch(ex)
 				{
 					self.error('Invalid Custom Type: '+typeString, ', baseClass: ', JSON.stringify(baseClass)); 
-				}	
-				
+				}				
 			}
 		}
 
+		//it is a literal object type, like {a:String,b:Number}? 
+
+		else if(typeString.indexOf(':')!==-1 && typeString.indexOf('#')===-1 ) //and is not a custom type #cus
+		{
+			type = null; 
+			try
+			{
+				var props = JsDocMaker.parseType(typeString);
+				type = {name: 'Object', properties: props}; 
+				type_binded = self.bindParsedType(type, baseClass);
+				ret.push(type_binded); 
+			}
+			catch(ex)
+			{
+				self.error('Invalid Type: '+typeString, ', baseClass: ', JSON.stringify(baseClass)); 
+			}	
+		}
+
+
+		// it is a generic type like Array<String> ? 
+
 		else if(typeString.indexOf('<')!==-1)
 		{
-			var type = null;
+			type = null;
 			try
 			{
 				type = JsDocMaker.parseType(typeString);
@@ -1085,15 +1121,33 @@ JsDocMaker.prototype.bindParsedType = function(typeObject, baseClass)
 	}
 	else if(typeObject && typeObject.name)
 	{
-		c = this.bindClass(typeObject.name, baseClass); 
-		//recurse on params!
-		var new_params = [];
-		_(out.params).each(function(param)
+
+		//recurse on params for generic types like M<T,K>!
+		if(out.params)
+		{			
+			var new_params = [];
+
+			c = this.bindClass(typeObject.name, baseClass); 
+
+			_(out.params).each(function(param)
+			{
+				var new_param = self.bindParsedType(param, baseClass);
+				new_params.push(new_param);
+			}); 
+			out.params = new_params;	
+		}
+
+		//recurse on properties for literal object type like name:String,config:Config
+		if(out.properties)
 		{
-			var new_param = self.bindParsedType(param, baseClass);
-			new_params.push(new_param);
-		}); 
-		out.params = new_params;
+			var new_properties = {};
+			_(out.properties).each(function(value, name)
+			{
+				var new_property = self.bindParsedType(value, baseClass);
+				new_properties[name] = new_property; 
+			}); 
+			out.properties = new_properties;	
+		}
 	}
 	if(c)
 	{
@@ -1164,11 +1218,21 @@ JsDocMaker.prototype.simpleName = function(name)
 //It depends on type parser file typeParser.js @static
 JsDocMaker.parseType = function(s)
 {
-	var ss = '{name:'+s+'}'; 
-	var parsed = JsDocMaker.parseLiteralObjectType(ss);
-	var ret = parsed.name; 
-	return ret;
+	var parsed, ss;
+	if(s.indexOf(':')!==-1)
+	{
+		ss = '{'+s+'}'; 
+		parsed = JsDocMaker.parseLiteralObjectType(ss);
+	}
+	else
+	{
+		ss ='{name:'+s+'}'; 
+		parsed = JsDocMaker.parseLiteralObjectType(ss);
+		parsed = parsed.name; 
+	}	
+	return parsed;
 }; 
+
 // @method parse a object literal type string like '' @return {Object} the parsed object @static
 JsDocMaker.parseLiteralObjectType = function(s)
 {
@@ -1188,12 +1252,88 @@ JsDocMaker.prototype.registerTypeParser = function(typeParser)
 
 
 
+// STATIC UTILITIES
+
+// @method splitAndPreserve search for given regexp and split the given string but preserving the matches
+// @param {Regexp} regexp must contain a capturing group (like /(\s+@\w+)/gi)
+// @return {Array of string}
+// @static
+JsDocMaker.splitAndPreserve = function(string, replace)
+{
+	string = string || '';
+	var marker = '_%_%_';
+	var splitted = string.replace(replace, marker+'$1');
+	if(splitted.length<2)
+	{
+		return null; //TODO: notify error?
+	}
+	splitted = splitted.split(marker);
+	return splitted; 
+}; 
+
+//@method stringFullTrim @param {String} s @static
+JsDocMaker.stringFullTrim = function(s)
+{
+	return (s||'').replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,'').replace(/\s+/g,' ');
+};
+//@method stringTrim @param {String} s @static
+JsDocMaker.stringTrim = function(str)
+{
+	var whitespace = ' \n\r\t\f\x0b\xa0\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u200b\u2028\u2029\u3000';
+	for (var i = 0; i < str.length; i++) {
+		if (whitespace.indexOf(str.charAt(i)) === -1) {
+			str = str.substring(i);
+			break;
+		}
+	}
+	for (i = str.length - 1; i >= 0; i--) {
+		if (whitespace.indexOf(str.charAt(i)) === -1) {
+			str = str.substring(0, i + 1);
+			break;
+		}
+	}
+	return whitespace.indexOf(str.charAt(0)) === -1 ? str : '';
+};
+//@method stringEndsWith @static
+JsDocMaker.stringEndsWith = function(str, suffix) 
+{
+	str = str || '';
+	return str.indexOf(suffix, str.length - suffix.length) !== -1;
+}; 
+//@method stringEndsWith @static
+JsDocMaker.startsWith = function(s, prefix)
+{
+	s = s || '';
+	return s.indexOf(prefix)===0;
+}; 
+
+//@mmethod error @param {String}msg
+JsDocMaker.prototype.error = function(msg)
+{
+	console.error('Error detected: ' + msg); 
+	throw msg;
+}; 
 
 
 
 
 
-// NATIVE TYPES LINKING / post processing
+
+
+
+
+
+//all the folllowing content is optional but nice to have.
+
+
+
+
+
+
+
+
+
+// NATIVE TYPES LINKING / post processing. Optional
 
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String
 JsDocMaker.NATIVE_TYPES = ['String', 'Object', 'Array', 'Date', 'Regex', 'Function', 
@@ -1228,7 +1368,7 @@ JsDocMaker.prototype.getNativeTypeUrl = function(name)
 
 
 
-//MODIFIERS postproccessing- like static, private, final
+//MODIFIERS postproccessing- like static, private, final. Optional module
 
 //@property {Array<String>}MODIFIERS @static
 JsDocMaker.MODIFIERS = ['static', 'private', 'final', 'deprecated', 'experimental', 'optional', 'abstract']; 
@@ -1253,7 +1393,7 @@ JsDocMaker.prototype.installModifiers = function(node)
 
 
 
-// INHERITED methods&properties postproccessing
+// INHERITED methods&properties postproccessing. Optional
 
 //@method postProccessInherited calculates inherited methods&properties and put it in class'properties inheritedMethods and inheritedProperties
 JsDocMaker.prototype.postProccessInherited = function()
@@ -1355,7 +1495,22 @@ JsDocMaker.classOwnsProperty = function(aClass, prop)
 
 
 
-//custom postproccess
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// all the rest of this file is custom postproccess plugins and extension utilities (optional)
 
 //@method recurseAST An utility method that can be used in extensions to visit all the ast nodes with given function 
 //@param {Function} fn
@@ -1388,23 +1543,24 @@ JsDocMaker.prototype.recurseAST = function(fn)
 
 
 
-//CUSTOM TYPE literalObject - requires literalObjectParser.js
-//syntax: {#obj(prop1:String,prop2:Array<Apple>)}
-//@method literalObjectParse
+
+// CUSTOM TPE PLUGIN literalObjectParse - requires literalObjectParser.js - it adds support 
+// for the custom type syntax #obj({p1:P1,p2:P2,...})to express literal objects
+// syntax: {#obj(prop1:String,prop2:Array<Apple>)}
+// DEPRECATED - turn it into a unit test showing an  example of plugin 
+// @method literalObjectParse
 JsDocMaker.prototype.literalObjectParse = function(s, baseClass)
 {
 	var parsed = null
 	,	self=this
-	,	objectProperties = {};
+	,	properties = {};
 	try
 	{
 		var result  = JsDocMaker.parseLiteralObjectType('{' + s + '}');
-		// console.error(result)
-		// var result = eval('('+parsed+')');
 		_(result).each(function(value, key)
 		{
 			var valueBinded = self.bindParsedType(value, baseClass);
-			objectProperties[key] = valueBinded; 
+			properties[key] = valueBinded; 
 		}); 
 	}
 	catch(ex)
@@ -1414,8 +1570,8 @@ JsDocMaker.prototype.literalObjectParse = function(s, baseClass)
 	}
 	return {
 		name: 'Object'
-	,	objectProperties: objectProperties
-	,	objectPropertiesOriginal: parsed
+	,	properties: properties
+	,	propertiesOriginal: parsed
 	}; 
 };
 
@@ -1431,73 +1587,6 @@ JsDocMaker.prototype.literalObjectInstall = function()
 
 
 
-
-
-
-
-
-
-// STATIC UTILITIES
-
-// @method splitAndPreserve search for given regexp and split the given string but preserving the matches
-// @param {Regexp} regexp must contain a capturing group (like /(\s+@\w+)/gi)
-// @return {Array of string}
-// @static
-JsDocMaker.splitAndPreserve = function(string, replace)
-{
-	string = string || '';
-	var marker = '_%_%_';
-	var splitted = string.replace(replace, marker+'$1');
-	if(splitted.length<2)
-	{
-		return null; //TODO: notify error?
-	}
-	splitted = splitted.split(marker);
-	return splitted; 
-}; 
-
-//@method stringFullTrim @param {String} s @static
-JsDocMaker.stringFullTrim = function(s)
-{
-	return (s||'').replace(/(?:(?:^|\n)\s+|\s+(?:$|\n))/g,'').replace(/\s+/g,' ');
-};
-//@method stringTrim @param {String} s @static
-JsDocMaker.stringTrim = function(str)
-{
-	var whitespace = ' \n\r\t\f\x0b\xa0\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200a\u200b\u2028\u2029\u3000';
-	for (var i = 0; i < str.length; i++) {
-		if (whitespace.indexOf(str.charAt(i)) === -1) {
-			str = str.substring(i);
-			break;
-		}
-	}
-	for (i = str.length - 1; i >= 0; i--) {
-		if (whitespace.indexOf(str.charAt(i)) === -1) {
-			str = str.substring(0, i + 1);
-			break;
-		}
-	}
-	return whitespace.indexOf(str.charAt(0)) === -1 ? str : '';
-};
-//@method stringEndsWith @static
-JsDocMaker.stringEndsWith = function(str, suffix) 
-{
-	str = str || '';
-	return str.indexOf(suffix, str.length - suffix.length) !== -1;
-}; 
-//@method stringEndsWith @static
-JsDocMaker.startsWith = function(s, prefix)
-{
-	s = s || '';
-	return s.indexOf(prefix)===0;
-}; 
-
-//@mmethod error @param {String}msg
-JsDocMaker.prototype.error = function(msg)
-{
-	console.error('Error detected: ' + msg); 
-	throw msg;
-}; 
 
 
 

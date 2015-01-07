@@ -1,41 +1,48 @@
-# TODO: ideas
+# TODO: ideas - 
 
+from more important to less
+
+
+ * support globs in nodejs API
+ 
  * remove asterix from package.json dependency versions
 
- 
+ * markdown in Line comments 
+
  * divide JsDocMaker in several files core, preprocessing, postprocessing, biding, etc.
 
  * remove parseyourowncode,spec runner,etc from html application since this is particular of shortjsdoc. put it on readme.md or other app
  
- * include events @properties ni the typeahead search
+ * include events @properties in the typeahead search
+ 
+ * browserify the html application js
 
  * define a syntax and support varargs - like {num1, ..., numN}
 
  * @extends won't work with repeated class names. allow to pass an absolute name or log a warning.
 
- * use zepto instead jquery
+ * //TODO: test if we can get correct source comment location relative to the @filename. all nodes should have it- we have the file name but we need information about string fragment of the file of the particular comment
 
  * IDEA: vendor-jsdoc - define package.json for each so we can do dependency - html requre xml.... ALSO mark those jsdoc from vendor as VENDOR in a AST node property
  
  * inherited events
 
+ *  in the data.json, if empty text or theRestString are empty, don't dump it so file is shorter.
+
  * generic types params types are not binded, this is, for @property {Array<Apple>}, property.params[1].type is undefined. 
  
  * expand the module view to show the full module documentation - for example: http://lunrjs.com/docs/#lunr
-
- * support globs in nodejs API
 
  * @link preprocessed comment that is replaced by html or mardown link at preprocessing.
 
  * idea: prove how extendable is short-jsdoc    
  * literal object syntax with types: @return {name: String, colors: Array<Color>}.
 
-
+ * use zepto instead jquery in html app
+ 
  * ISSUE: parser fail to parse more than two modifiers like these @final @static @myownmodifier - see issues spec.js
 
-
  * more gneeral idea: be able to register type-parser plugins, for example @param {#obj(name:String,colors:Array<Color>)} a - so this is a custom type parser - the user must also provide a function that returns the type object, like return {name: 'Object', objectProperties: {name: {name:'String'}, colors: {name:Array,params: {...}}}}
-
 
  * ISSUE: Resource not found page should have the header.
 
@@ -53,6 +60,9 @@
  * support multiple inheritance.
 
  * configurable option boolean showSources
+
+
+ * @function primary
  
  * if an extension loop occurs a maximun call stack size exceeded exception ocurrs. Detect this more friendly.
  
@@ -62,7 +72,9 @@
  
  * class hierarchy in classview
 
- * support name alias - for example map the name Map to match Object.
+ * support name alias - for example map the name Map to match Object. as an example show shortkuts like Arr<Obj> or even a<o>
+ 
+ * in the part of currentView, module etc of parsing put another plugin/hook container so we can take some action to modify the nodes in that current{View,Module,etc} context
 
  * support types like {String|HTMLElement|jQuery}
 

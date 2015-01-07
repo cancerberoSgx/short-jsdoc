@@ -24,23 +24,21 @@ var Application = function(data)
 	//@property {Object} templates The templates dictionary (given by template-output.js)
 	this.templates = shortjsdoc; 
 
-	/*@property {Object} data is the data.json object outputed by running:
-	
+	/*@property {Object} data is the data.json object outputed by running:	
+
 		var maker = new JsDocMaker();
 		maker.parseFile(myCodeString);
 		maker.postProccess();
 		var data = maker.data; 
-
 	*/
 	this.data = data; 
 
 
-
 	//@property {JsDocMaker} maker the JsDocMaker instance we will use for loading the parsed data and doing some post processing stage (type binding and so)
 	this.maker = new JsDocMaker();
-	this.maker.data = data;
+	this.maker.data = data;	
 
-
+	this.maker.postProccess();
 	this.maker.postProccessBinding();
 	this.maker.postProccessInherited(); // <-- important - explicitly ask the framework to calculate inherited methods&properties
 

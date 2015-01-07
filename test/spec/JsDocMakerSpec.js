@@ -1,666 +1,585 @@
 describe("JsDocMaker", function() 
 {
-	describe("Basic jsdoc parser", function() 
+
+
+
+
+describe("Basic jsdoc parser", function() 
+{
+	var jsdoc, maker, Apple, Lion, Lemon; 
+
+	beforeEach(function() 
 	{
-		var jsdoc, maker, Apple, Lion, Lemon; 
+		var code = 
+			'//@class Lemon'+'\n'+
+			'//this is a no module class'+'\n'+
+			'//@constructor the Lemon public constructor signature @param {Color} color'+'\n'+
+			'//@constructor another constructor for the Lemon class @param {Number} size'+'\n'+
+			'//?@method tricky this comment should be ignored b the parser because it starts with the special prefix ?'+'\n'+
+			'//@method glow'+'\n'+
 
-		beforeEach(function() 
-		{
-			var code = 
-				'//@class Lemon'+'\n'+
-				'//this is a no module class'+'\n'+
-				'//@constructor the Lemon public constructor signature @param {Color} color'+'\n'+
-				'//@constructor another constructor for the Lemon class @param {Number} size'+'\n'+
-				'//?@method tricky this comment should be ignored b the parser because it starts with the special prefix ?'+'\n'+
-				'//@method glow'+'\n'+
-
-				'//@module livingThings'+'\n'+
-				
-				'//@class Apple @extend Fruit '+'\n'+
-				'/*@method beEatenBy apples have this privilege @param {Mouth} mouth the mouth to be used @param {Int} amount @return {String} the bla*/' + '\n' +
-				'//@property {Color} color the main color of this fruit'+'\n'+
-				'//@class Lion the lion class is on living things'+'\n'+
-				'//@event angry triggered when the lion gets angry'+'\n'+
-				'';
-			maker = new JsDocMaker();
-			maker.parseFile(code, 'textarea');
-			maker.postProccess();
-			maker.postProccessBinding();
-			jsdoc = maker.data;
-		});
-
-		it("init", function() 
-		{
-			Apple = jsdoc.classes['livingThings.Apple'];
-			expect(Apple).toBeDefined();
+			'//@module livingThings'+'\n'+
 			
-			Lion = jsdoc.classes['livingThings.Lion']; 
-			expect(Lion).toBeDefined();
+			'//@class Apple @extend Fruit '+'\n'+
+			'/*@method beEatenBy apples have this privilege @param {Mouth} mouth the mouth to be used @param {Int} amount @return {String} the bla*/' + '\n' +
+			'//@property {Color} color the main color of this fruit'+'\n'+
+			'//@class Lion the lion class is on living things'+'\n'+
+			'//@event angry triggered when the lion gets angry'+'\n'+
+			'';
+		maker = new JsDocMaker();
+		maker.parseFile(code, 'textarea');
+		maker.postProccess();
+		maker.postProccessBinding();
+		jsdoc = maker.data;
+	});
 
-			Lemon = jsdoc.classes['__DefaultModule.Lemon']; 
-			expect(Lemon).toBeDefined();
-		});
+	it("init", function() 
+	{
+		Apple = jsdoc.classes['livingThings.Apple'];
+		expect(Apple).toBeDefined();
+		
+		Lion = jsdoc.classes['livingThings.Lion']; 
+		expect(Lion).toBeDefined();
 
-		it("classes and modules", function() 
-		{
-			expect(Lemon.extends.name).toBe('Object');
-			expect(jsdoc.modules.livingThings).toBeDefined();
+		Lemon = jsdoc.classes['__DefaultModule.Lemon']; 
+		expect(Lemon).toBeDefined();
+	});
 
-			expect(Apple.module.name).toBe('livingThings');
-			expect(Apple.absoluteName).toBe('livingThings.Apple');
+	it("classes and modules", function() 
+	{
+		expect(Lemon.extends.name).toBe('Object');
+		expect(jsdoc.modules.livingThings).toBeDefined();
 
-			//extends is not binded because we never declared the parent class
-			expect(Apple.extends.name).toBe('Fruit');
-			expect(Apple.extends.error).toBe('NAME_NOT_FOUND');
+		expect(Apple.module.name).toBe('livingThings');
+		expect(Apple.absoluteName).toBe('livingThings.Apple');
 
-			expect(Lion.module.name).toBe('livingThings'); 
-		});
+		//extends is not binded because we never declared the parent class
+		expect(Apple.extends.name).toBe('Fruit');
+		expect(Apple.extends.error).toBe('NAME_NOT_FOUND');
 
-		it("methods", function() 
-		{
-			expect(Apple.methods.beEatenBy).toBeDefined();
-			expect(Apple.methods.beEatenBy.absoluteName).toBe('livingThings.Apple.beEatenBy');
-		});
+		expect(Lion.module.name).toBe('livingThings'); 
+	});
 
-		it("properties", function() 
-		{
-			expect(Apple.properties.color.name).toBe('color');
-			expect(Apple.properties.color.type.name).toBe('Color');
-			expect(Apple.properties.color.text).toBe('the main color of this fruit');
-		});	
+	it("methods", function() 
+	{
+		expect(Apple.methods.beEatenBy).toBeDefined();
+		expect(Apple.methods.beEatenBy.absoluteName).toBe('livingThings.Apple.beEatenBy');
+	});
 
-		it("events", function() 
-		{
-			expect(Lion.events.angry.name).toBe('angry');
-			expect(Lion.events.angry.absoluteName).toBe('livingThings.Lion.angry');
-			expect(Lion.events.angry.text).toBe('triggered when the lion gets angry');
-		});	
+	it("properties", function() 
+	{
+		expect(Apple.properties.color.name).toBe('color');
+		expect(Apple.properties.color.type.name).toBe('Color');
+		expect(Apple.properties.color.text).toBe('the main color of this fruit');
+	});	
 
-		it("constructors", function() 
-		{
-			expect(Lemon.constructors.length).toBe(2); 
-			expect(Lemon.constructors[0].name).toBe('0'); 
-			expect(Lemon.constructors[0].absoluteName).toBe('__DefaultModule.Lemon.0'); 
-			expect(Lemon.constructors[0].text).toBe('the Lemon public constructor signature');
-			expect(Lemon.constructors[0].params[0].name).toBe('color');
-			expect(Lemon.constructors[0].params[0].type.name).toBe('Color');
-			expect(Lemon.constructors[1].text).toBe('another constructor for the Lemon class');
-			/*'//@constructor the Lemon public constructor signature @param {Color} color'+'\n'+
-			'//@constructor another constructor for the Lemon class @param {Number} size'+'\n'+*/
+	it("events", function() 
+	{
+		expect(Lion.events.angry.name).toBe('angry');
+		expect(Lion.events.angry.absoluteName).toBe('livingThings.Lion.angry');
+		expect(Lion.events.angry.text).toBe('triggered when the lion gets angry');
+	});	
 
-		});	
+	it("constructors", function() 
+	{
+		expect(Lemon.constructors.length).toBe(2); 
+		expect(Lemon.constructors[0].name).toBe('0'); 
+		expect(Lemon.constructors[0].absoluteName).toBe('__DefaultModule.Lemon.0'); 
+		expect(Lemon.constructors[0].text).toBe('the Lemon public constructor signature');
+		expect(Lemon.constructors[0].params[0].name).toBe('color');
+		expect(Lemon.constructors[0].params[0].type.name).toBe('Color');
+		expect(Lemon.constructors[1].text).toBe('another constructor for the Lemon class');
+		/*'//@constructor the Lemon public constructor signature @param {Color} color'+'\n'+
+		'//@constructor another constructor for the Lemon class @param {Number} size'+'\n'+*/
 
-		it("should ignore comments starting with '?' character", function() 
-		{
-			expect(Lemon.methods.glow.name).toBe('glow');
-			expect(Lemon.methods.tricky).toBe(undefined); 
-		});	
+	});	
 
-		it("method's params", function() 
-		{
-			expect(Apple.methods.beEatenBy.params.length).toBe(2);
-			expect(Apple.methods.beEatenBy.params[0].name).toBe('mouth');
-			expect(Apple.methods.beEatenBy.params[0].type.name).toBe('Mouth');
-			expect(Apple.methods.beEatenBy.params[0].type.error).toBe('NAME_NOT_FOUND'); //because it was never declared
-			expect(Apple.methods.beEatenBy.params[0].text).toBe('the mouth to be used');		
+	it("should ignore comments starting with '?' character", function() 
+	{
+		expect(Lemon.methods.glow.name).toBe('glow');
+		expect(Lemon.methods.tricky).toBe(undefined); 
+	});	
 
-			expect(Apple.methods.beEatenBy.params[1].name).toBe('amount');
-			expect(Apple.methods.beEatenBy.params[1].type.name).toBe('Int');
-		});
+	it("method's params", function() 
+	{
+		expect(Apple.methods.beEatenBy.params.length).toBe(2);
+		expect(Apple.methods.beEatenBy.params[0].name).toBe('mouth');
+		expect(Apple.methods.beEatenBy.params[0].type.name).toBe('Mouth');
+		expect(Apple.methods.beEatenBy.params[0].type.error).toBe('NAME_NOT_FOUND'); //because it was never declared
+		expect(Apple.methods.beEatenBy.params[0].text).toBe('the mouth to be used');		
 
-		it("method's return", function() 
-		{
-			expect(Apple.methods.beEatenBy.returns.type.name).toBe('String');
-			expect(Apple.methods.beEatenBy.returns.text).toBe('the bla');
-		});
+		expect(Apple.methods.beEatenBy.params[1].name).toBe('amount');
+		expect(Apple.methods.beEatenBy.params[1].type.name).toBe('Int');
+	});
+
+	it("method's return", function() 
+	{
+		expect(Apple.methods.beEatenBy.returns.type.name).toBe('String');
+		expect(Apple.methods.beEatenBy.returns.text).toBe('the bla');
+	});
+});
+
+
+
+
+describe("type binding & generics", function() 
+{
+	var jsdoc, maker; 
+
+	beforeEach(function() 
+	{
+		var code = 
+			'//@module livingThings2' + '\n' +
+			'//@class Animal ' + '\n' +
+			'//@method run @param {int} amount in kilometers @final @static' + '\n' + 
+			'//@class Monkey @extend Animal @module livingThings2' + '\n' +
+			'//@method eat way of feeding' + '\n' +
+			'//@param {Int} amount' + '\n' +
+			'//@param {Food} food what is eaten' + '\n' +
+			'//@return {Energy} the total energy generated afte rthe proccess' + '\n' +
+			''; 
+		maker = new JsDocMaker();
+
+		maker.parseFile(code, 'textarea'); 
+		maker.postProccess();
+		maker.postProccessBinding();
+		jsdoc = maker.data;
+	});
+
+	it("should be able to parse some javascript code", function() 
+	{
+		expect(jsdoc.modules.livingThings2).toBeDefined();
+		var Monkey = jsdoc.classes['livingThings2.Monkey']; 
+		expect(Monkey).toBeDefined();
+		expect(Monkey.absoluteName).toBe('livingThings2.Monkey');
+		expect(Monkey.name).toBe('Monkey');
+
+		expect(Monkey.extends.name).toBe('Animal');
+		expect(Monkey.extends.absoluteName).toBe('livingThings2.Animal');
+		expect(Monkey.extends.name).toBe('Animal');
+		expect(Monkey.extends.methods.run.params.length).toBe(1);
+		expect(_(Monkey.extends.methods.run.modifiers).contains('final')).toBe(true);
+		expect(_(Monkey.extends.methods.run.modifiers).contains('static')).toBe(true);	
+	});
+});
+
+
+
+
+describe("custom native types", function() 
+{
+	var jsdoc, maker; 
+
+	beforeEach(function() 
+	{
+		var code = 
+			'//@module office' + '\n' +	
+
+			'//@class Machine' + '\n' +
+			'//TODO some text documenting the machine here please' + '\n' +
+
+			'//@method calculate @param {Object<String,Array<HomeFinance>>} finances' + '\n' + 
+			'//@property {Bag<Eye>} eye' + '\n' +
+			'//@class Eye a reutilizable eye' + '\n' +	
+			'';
+		maker = new JsDocMaker();
+
+		//before parsing we register the custom native types Bag and HomeFinance. Just give an url.
+		_(maker.customNativeTypes).extend({
+			Bag: 'http://mylang.com/api/Bag'
+		,	HomeFinance: 'http://mylang.com/api/HomeFinance'
+		}); 
+
+		maker.parseFile(code, 'genericstest1'); 
+		maker.postProccess();
+		maker.postProccessBinding();
+		jsdoc = maker.data;
+	});
+
+	it("custom natives should be binded", function() 
+	{
+		var Machine = jsdoc.classes['office.Machine'];
+		expect(Machine.text).toBe('TODO some text documenting the machine here please');
+		var param1 = Machine.methods.calculate.params[0].type.params[1].params[0];
+		expect(param1.name).toBe('HomeFinance');
+		expect(param1.nativeTypeUrl).toBe('http://mylang.com/api/HomeFinance');
+		var param2 = Machine.properties.eye.type; 
+		expect(param2.name).toBe('Bag');
+		expect(param2.nativeTypeUrl).toBe('http://mylang.com/api/Bag');
+	});
+});
+
+
+
+
+
+describe("Block comments shouln't remove the indentation chars", function() 
+{
+	var jsdoc, maker, Apple, Lion, Lemon; 
+
+	beforeEach(function() 
+	{
+		var code = 
+			'/*'+'\n'+
+			'@class Apple'+'\n'+
+			'This is a comment that includes'+'\n'+
+			'new lines and'+'\n'+
+			'	some'+'\n'+
+			'		indentation'+'\n'+
+			''+'\n'+
+			''+'\n'+
+			'	var a = {a:1};'+'\n'+
+
+			'@extends Vegetable'+'\n'+
+			'*/'+'\n'+
+
+			'/*@method beEatenBy apples have this privilege @param {Mouth} mouth the mouth to be used @param {Int} amount @return {String} the bla*/' + '\n' +	
+			'';
+		maker = new JsDocMaker();
+		maker.parseFile(code, 'textarea');
+		maker.postProccess();
+		maker.postProccessBinding();
+		jsdoc = maker.data;
+	});
+
+	it("init", function() 
+	{
+		Apple = jsdoc.classes['__DefaultModule.Apple']; 
+		expect(Apple).toBeDefined();
+		expect(Apple.text.indexOf('\n\tsome')>0).toBe(true);
+		expect(Apple.text.indexOf('\n\t\tindentation')>0).toBe(true); 
+		expect(Apple.text.indexOf('\n\n\tvar a = {a:1};')>0).toBe(true); 
+		
+	});
+});
+
+
+
+
+describe("lineCommentSeparator configurable property", function() 
+{
+	var jsdoc, maker, C1; 
+
+	beforeEach(function() 
+	{
+		var code = 
+			'//@module m1'+'\n'+
+			'//@class C1'+'\n'+
+			'//Some C1 class text'+'\n'+
+			'//Some other C1 class text'+'\n'+
+			'';
+		maker = new JsDocMaker();
+		maker.lineCommentSeparator = '888898888';
+		maker.parseFile(code, 'file1');
+		maker.postProccess();
+		maker.postProccessBinding();
+		jsdoc = maker.data;
+	});
+
+	it("user can replace the strings between adjacent Line Comments", function() 
+	{
+		C1 = jsdoc.classes['m1.C1']; 
+		expect(C1.text).toBe("888898888 Some C1 class text 888898888 Some other C1 class text");
+	});
+});
+
+
+
+
+
+describe("module and class names can contain chars . and _", function() 
+{
+	var jsdoc, maker, C1; 
+
+	beforeEach(function() 
+	{
+		var code = 
+			'//@module org.sgx.myprogram1'+'\n'+
+			'//some text for this module'+'\n'+
+			'//@class Program1'+'\n'+
+			'//Some Program1 class text'+'\n'+
+			'//@class Program1.Layout some other text'+'\n'+
+
+			'//@module other_module this module name is separated with _'+'\n'+
+			'//@class My_Program some other _ text @extends Program1.Layout'+'\n'+
+			'';
+		maker = new JsDocMaker();
+		maker.parseFile(code, 'file1');
+		maker.postProccess();
+		maker.postProccessBinding();
+		jsdoc = maker.data;
+	});
+
+	it(". should be able to be used in class and module names", function() 
+	{
+		var module = jsdoc.modules['org.sgx.myprogram1'];
+		expect(module.name).toBe('org.sgx.myprogram1');
+		expect(module.text).toBe('some text for this module');
+
+		var Program1 = jsdoc.classes['org.sgx.myprogram1.Program1'];
+		expect(Program1.name).toBe('Program1');
+		expect(Program1.text).toBe('Some Program1 class text');
+
+		var Program1Layout = jsdoc.classes['org.sgx.myprogram1.Program1.Layout'];
+		expect(Program1Layout.name).toBe('Program1.Layout');
+		expect(Program1Layout.text).toBe('some other text');
+	});
+
+	it("_ should be able to be used in class and module names", function() 
+	{
+		var other_module = jsdoc.modules.other_module;
+		expect(other_module.name).toBe('other_module');
+		expect(other_module.text).toBe('this module name is separated with _');
+
+		var My_Program = jsdoc.classes['other_module.My_Program']; 
+		expect(My_Program.name).toBe('My_Program');
+		expect(My_Program.text).toBe('some other _ text');
+		expect(My_Program.extends.absoluteName).toBe('org.sgx.myprogram1.Program1.Layout');
+	});
+});
+
+
+
+
+
+describe("inherited methods and properties", function() 
+{
+	var jsdoc, maker; 
+
+	beforeEach(function() 
+	{
+		var code = 
+
+			'//@module vehicles' + '\n' +
+
+			'//@class Vehicle' + '\n' +
+			'//@method move all vehicles move. Subclasses must override this. @param {Vector2D} direction @param {Nmber}' + '\n' +
+			'//@property {Number} mass the mass of this Vehicle' + '\n' +				
+			'//@event hit triggered whenever this vehicle hits another object' + '\n' +	
+
+			'//@class Car @extends Vehicle' + '\n' +
+			'//@method balance @param {String} eficiency' + '\n' +
+
+			'//@class VMW @extends Car' + '\n' +
+			'//@method deployAirbag' + '\n' +
+
+			'//@class MotorBike @extends Vehicle' + '\n' +
+			'//@method doTheWilly' + '\n' +
+			'';
+		maker = new JsDocMaker();
+
+		maker.parseFile(code, 'genericstest1'); 
+		maker.postProccess();
+		maker.postProccessBinding();
+		maker.postProccessInherited(); // <-- important - explicitlyask the framework to calculate inherited methods&properties
+		
+		jsdoc = maker.data;
+	});
+
+	it("inherited methods, properties and events. We have the method JsDocMaker.classOwnsProperty to know if a property is inherited", function() 
+	{
+		var Vehicle = jsdoc.classes['vehicles.Vehicle'];
+		expect(Vehicle.inherited.properties.mass).not.toBeDefined();
+		expect(Vehicle.events.hit.text).toBe('triggered whenever this vehicle hits another object');
+		expect(Vehicle.inherited.events.hit).not.toBeDefined();
+
+		var Car = jsdoc.classes['vehicles.Car'];
+		expect(Car.inherited.methods.move.absoluteName).toBe('vehicles.Vehicle.move'); 
+		expect(Car.inherited.methods.move.ownerClass).toBe('vehicles.Vehicle'); 
+		expect(Car.inherited.methods.move.text).toBe('all vehicles move. Subclasses must override this.'); 
+		expect(Car.inherited.balance).not.toBeDefined();			
+		expect(Car.inherited.properties.mass.type.name).toBe('Number');
+		expect(Car.inherited.properties.mass.text).toBe('the mass of this Vehicle');
+
+		var VMW = jsdoc.classes['vehicles.VMW'];
+		expect(VMW.inherited.methods.move.absoluteName).toBe('vehicles.Vehicle.move'); 
+		expect(VMW.inherited.methods.move.ownerClass).toBe('vehicles.Vehicle'); 
+		expect(VMW.inherited.methods.move.text).toBe('all vehicles move. Subclasses must override this.'); 
+		expect(VMW.inherited.methods.balance.absoluteName).toBe('vehicles.Car.balance'); 
+		expect(VMW.inherited.methods.balance.params[0].type.name).toBe('String'); 
+		// expect(VMW.inherited.methods.balance.inheritedFrom.absoluteName).toBe('vehicles.Car'); 
+		expect(VMW.inherited.properties.mass.absoluteName).toBe('vehicles.Vehicle.mass'); 
+		expect(VMW.inherited.events.hit.text).toBe('triggered whenever this vehicle hits another object');
+		// expect(VMW.inherited.events.hit.inheritedFrom.absoluteName).toBe('vehicles.Vehicle');
 	});
 
 
-
-	describe("type binding & generics", function() 
+	it("We have the method JsDocMaker.classOwnsProperty to know if a property is inherited", function() 
 	{
-		var jsdoc, maker; 
+		var VMW = jsdoc.classes['vehicles.VMW'];
 
-		beforeEach(function() 
-		{
-			var code = 
-				'//@module livingThings2' + '\n' +
-				'//@class Animal ' + '\n' +
-				'//@method run @param {int} amount in kilometers @final @static' + '\n' + 
-				'//@class Monkey @extend Animal @module livingThings2' + '\n' +
-				'//@method eat way of feeding' + '\n' +
-				'//@param {Int} amount' + '\n' +
-				'//@param {Food} food what is eaten' + '\n' +
-				'//@return {Energy} the total energy generated afte rthe proccess' + '\n' +
-				''; 
-			maker = new JsDocMaker();
+		expect(JsDocMaker.classOwnsProperty(VMW, VMW.inherited.methods.move)).toBe(false); 
+		expect(JsDocMaker.classOwnsProperty(VMW, VMW.methods.deployAirbag)).toBe(true); 
 
-			maker.parseFile(code, 'textarea'); 
-			maker.postProccess();
-			maker.postProccessBinding();
-			jsdoc = maker.data;
-		});
-
-		it("should be able to parse some javascript code", function() 
-		{
-			expect(jsdoc.modules.livingThings2).toBeDefined();
-			var Monkey = jsdoc.classes['livingThings2.Monkey']; 
-			expect(Monkey).toBeDefined();
-			expect(Monkey.absoluteName).toBe('livingThings2.Monkey');
-			expect(Monkey.name).toBe('Monkey');
-
-			expect(Monkey.extends.name).toBe('Animal');
-			expect(Monkey.extends.absoluteName).toBe('livingThings2.Animal');
-			expect(Monkey.extends.name).toBe('Animal');
-			expect(Monkey.extends.methods.run.params.length).toBe(1);
-			expect(_(Monkey.extends.methods.run.modifiers).contains('final')).toBe(true);
-			expect(_(Monkey.extends.methods.run.modifiers).contains('static')).toBe(true);	
-		});
 	});
+});
 
 
 
-
-	describe("custom native types", function() 
+describe("custom annotations", function() 
+{
+	it("user can use recurseAST to install a visitor for doing its own post processing", function() 
 	{
-		var jsdoc, maker; 
 
-		beforeEach(function() 
+		var code = 
+			'//@module office @versionfoo 3.2' + '\n' +	
+			'//@class Computer' + '\n' +
+			'//you can do excel here' + '\n' +
+			'//@versionfoo 1.2' + '\n' +
+			'//@method putmusic @param {Object<String,Array<Song>>} songs' + '\n' + 
+			'//@versionfoo 1.0' + '\n' +
+			'';
+		var maker = new JsDocMaker();
+		maker.parseFile(code); 
+		maker.postProccess();
+		maker.postProccessBinding();
+
+		var jsdoc = maker.data;
+
+		// we define a function to visit each AST node - we will search for a children @versionfoo and if any set as a property
+		var astVisitor = function(node)
 		{
-			var code = 
-				'//@module office' + '\n' +	
+			var versionfoo = _(node.children||[]).find(function(child)
+			{
+				return child.annotation === 'versionfoo'; 
+			});
+			if(versionfoo && versionfoo.name)
+			{
+				node.versionfoo = versionfoo.name; 
+			}
+		}; 
+		maker.recurseAST(astVisitor); 
 
-				'//@class Machine' + '\n' +
-				'//TODO some text documenting the machine here please' + '\n' +
-
-				'//@method calculate @param {Object<String,Array<HomeFinance>>} finances' + '\n' + 
-				'//@property {Bag<Eye>} eye' + '\n' +
-				'//@class Eye a reutilizable eye' + '\n' +	
-				'';
-			maker = new JsDocMaker();
-
-			//before parsing we register the custom native types Bag and HomeFinance. Just give an url.
-			_(maker.customNativeTypes).extend({
-				Bag: 'http://mylang.com/api/Bag'
-			,	HomeFinance: 'http://mylang.com/api/HomeFinance'
-			}); 
-
-			maker.parseFile(code, 'genericstest1'); 
-			maker.postProccess();
-			maker.postProccessBinding();
-			jsdoc = maker.data;
-		});
-
-		it("custom natives should be binded", function() 
-		{
-			var Machine = jsdoc.classes['office.Machine'];
-			expect(Machine.text).toBe('TODO some text documenting the machine here please');
-			var param1 = Machine.methods.calculate.params[0].type.params[1].params[0];
-			expect(param1.name).toBe('HomeFinance');
-			expect(param1.nativeTypeUrl).toBe('http://mylang.com/api/HomeFinance');
-			var param2 = Machine.properties.eye.type; 
-			expect(param2.name).toBe('Bag');
-			expect(param2.nativeTypeUrl).toBe('http://mylang.com/api/Bag');
-		});
+		expect(jsdoc.modules.office.versionfoo).toBe('3.2');
 	});
+});
 
 
-
-
-
-	describe("Block comments shouln't remove the indentation chars", function() 
+describe("multiple types", function() 
+{
+	it("user can indicate multiple optional types by separating with |", function() 
 	{
-		var jsdoc, maker, Apple, Lion, Lemon; 
+		var code = 
+			'//@module cssutils' + '\n' +	
+			'//@class CSSExtractor' + '\n' +
+			'//@method extract @param {String|HTMLElement|jQuery|Array<HTMLElement>|Object<String,Array<String>>} el @return {Object}' + '\n' + 
+			'';
+		var maker = new JsDocMaker();
+		maker.parseFile(code); 
+		maker.postProccess();
+		maker.postProccessBinding();
+		var jsdoc = maker.data;
 
-		beforeEach(function() 
-		{
-			var code = 
-				'/*'+'\n'+
-				'@class Apple'+'\n'+
-				'This is a comment that includes'+'\n'+
-				'new lines and'+'\n'+
-				'	some'+'\n'+
-				'		indentation'+'\n'+
-				''+'\n'+
-				''+'\n'+
-				'	var a = {a:1};'+'\n'+
+		var type = jsdoc.classes['cssutils.CSSExtractor'].methods.extract.params[0].type; 
+		expect(_(type).isArray()).toBe(true); 
+		expect(type.length).toBe(5); 
+		expect(type[0].name).toBe('String');
+		expect(_(type[0].nativeTypeUrl).isString()).toBe(true); 
 
-				'@extends Vegetable'+'\n'+
-				'*/'+'\n'+
+		expect(type[1].name).toBe('HTMLElement');
+		expect(type[2].name).toBe('jQuery');
 
-				'/*@method beEatenBy apples have this privilege @param {Mouth} mouth the mouth to be used @param {Int} amount @return {String} the bla*/' + '\n' +	
-				'';
-			maker = new JsDocMaker();
-			maker.parseFile(code, 'textarea');
-			maker.postProccess();
-			maker.postProccessBinding();
-			jsdoc = maker.data;
-		});
+		expect(type[3].name).toBe('Array');
+		expect(_(type[3].nativeTypeUrl).isString()).toBe(true); 
+		expect(type[3].params.length).toBe(1);
+		expect(type[3].params[0].name).toBe('HTMLElement');
 
-		it("init", function() 
-		{
-			Apple = jsdoc.classes['__DefaultModule.Apple']; 
-			expect(Apple).toBeDefined();
-			expect(Apple.text.indexOf('\n\tsome')>0).toBe(true);
-			expect(Apple.text.indexOf('\n\t\tindentation')>0).toBe(true); 
-			expect(Apple.text.indexOf('\n\n\tvar a = {a:1};')>0).toBe(true); 
-			
-		});
+
+		expect(type[4].name).toBe('Object');
+		expect(type[4].params.length).toBe(2);
+		expect(type[4].params[0].name).toBe('String');
+		expect(type[4].params[1].name).toBe('Array');
+		expect(type[4].params[1].params[0].name).toBe('String');
+	
 	});
+});
 
 
 
 
-	describe("lineCommentSeparator configurable property", function() 
+
+
+describe("types with spaces", function() 
+{
+	it("types can contain spaces", function() 
 	{
-		var jsdoc, maker, C1; 
+		var code = 
+			'//@module stuff1' + '\n' +	
+			'//@class Something' + '\n' +				
+			'//@property {Object<String, Array<String > >} aProperty' + '\n' +'';
 
-		beforeEach(function() 
-		{
-			var code = 
-				'//@module m1'+'\n'+
-				'//@class C1'+'\n'+
-				'//Some C1 class text'+'\n'+
-				'//Some other C1 class text'+'\n'+
-				'';
-			maker = new JsDocMaker();
-			maker.lineCommentSeparator = '888898888';
-			maker.parseFile(code, 'file1');
-			maker.postProccess();
-			maker.postProccessBinding();
-			jsdoc = maker.data;
-		});
+		var maker = new JsDocMaker();
+		maker.parseFile(code); 
+		maker.postProccess();
+		maker.postProccessBinding();
+		var jsdoc = maker.data;
 
-		it("user can replace the strings between adjacent Line Comments", function() 
-		{
-			C1 = jsdoc.classes['m1.C1']; 
-			expect(C1.text).toBe("888898888 Some C1 class text 888898888 Some other C1 class text");
-		});
+		var type = jsdoc.classes['stuff1.Something'].properties.aProperty.type;
+		expect(type.name).toBe('Object'); 
+		expect(type.params[0].name).toBe('String'); 
+		expect(type.params[1].name).toBe('Array'); 
+		expect(type.params[1].params[0].name).toBe('String'); 
 	});
+});
 
 
 
 
 
-	describe("module and class names can contain chars . and _", function() 
+
+
+
+describe("support alternative comment block syntax", function() 
+{
+		
+	describe("block commments with style", function() 
 	{
-		var jsdoc, maker, C1; 
-
-		beforeEach(function() 
+		it("/** style blocks", function() 
 		{
 			var code = 
-				'//@module org.sgx.myprogram1'+'\n'+
-				'//some text for this module'+'\n'+
-				'//@class Program1'+'\n'+
-				'//Some Program1 class text'+'\n'+
-				'//@class Program1.Layout some other text'+'\n'+
+				'//@module stuff2' + '\n' +	
+				'/**@class Sky\n * some text\n * and another line\n */' + '\n'; 
 
-				'//@module other_module this module name is separated with _'+'\n'+
-				'//@class My_Program some other _ text @extends Program1.Layout'+'\n'+
-				'';
-			maker = new JsDocMaker();
-			maker.parseFile(code, 'file1');
-			maker.postProccess();
-			maker.postProccessBinding();
-			jsdoc = maker.data;
-		});
-
-		it(". should be able to be used in class and module names", function() 
-		{
-			var module = jsdoc.modules['org.sgx.myprogram1'];
-			expect(module.name).toBe('org.sgx.myprogram1');
-			expect(module.text).toBe('some text for this module');
-
-			var Program1 = jsdoc.classes['org.sgx.myprogram1.Program1'];
-			expect(Program1.name).toBe('Program1');
-			expect(Program1.text).toBe('Some Program1 class text');
-
-			var Program1Layout = jsdoc.classes['org.sgx.myprogram1.Program1.Layout'];
-			expect(Program1Layout.name).toBe('Program1.Layout');
-			expect(Program1Layout.text).toBe('some other text');
-		});
-
-		it("_ should be able to be used in class and module names", function() 
-		{
-			var other_module = jsdoc.modules.other_module;
-			expect(other_module.name).toBe('other_module');
-			expect(other_module.text).toBe('this module name is separated with _');
-
-			var My_Program = jsdoc.classes['other_module.My_Program']; 
-			expect(My_Program.name).toBe('My_Program');
-			expect(My_Program.text).toBe('some other _ text');
-			expect(My_Program.extends.absoluteName).toBe('org.sgx.myprogram1.Program1.Layout');
-		});
-	});
-
-
-
-
-
-	describe("inherited methods and properties", function() 
-	{
-		var jsdoc, maker; 
-
-		beforeEach(function() 
-		{
-			var code = 
-
-				'//@module vehicles' + '\n' +
-
-				'//@class Vehicle' + '\n' +
-				'//@method move all vehicles move. Subclasses must override this. @param {Vector2D} direction @param {Nmber}' + '\n' +
-				'//@property {Number} mass the mass of this Vehicle' + '\n' +				
-				'//@event hit triggered whenever this vehicle hits another object' + '\n' +	
-
-				'//@class Car @extends Vehicle' + '\n' +
-				'//@method balance @param {String} eficiency' + '\n' +
-
-				'//@class VMW @extends Car' + '\n' +
-				'//@method deployAirbag' + '\n' +
-
-				'//@class MotorBike @extends Vehicle' + '\n' +
-				'//@method doTheWilly' + '\n' +
-				'';
-			maker = new JsDocMaker();
-
-			maker.parseFile(code, 'genericstest1'); 
-			maker.postProccess();
-			maker.postProccessBinding();
-			maker.postProccessInherited(); // <-- important - explicitlyask the framework to calculate inherited methods&properties
-			
-			jsdoc = maker.data;
-		});
-
-		it("inherited methods, properties and events. We have the method JsDocMaker.classOwnsProperty to know if a property is inherited", function() 
-		{
-			var Vehicle = jsdoc.classes['vehicles.Vehicle'];
-			expect(Vehicle.inherited.properties.mass).not.toBeDefined();
-			expect(Vehicle.events.hit.text).toBe('triggered whenever this vehicle hits another object');
-			expect(Vehicle.inherited.events.hit).not.toBeDefined();
-
-			var Car = jsdoc.classes['vehicles.Car'];
-			expect(Car.inherited.methods.move.absoluteName).toBe('vehicles.Vehicle.move'); 
-			expect(Car.inherited.methods.move.ownerClass).toBe('vehicles.Vehicle'); 
-			expect(Car.inherited.methods.move.text).toBe('all vehicles move. Subclasses must override this.'); 
-			expect(Car.inherited.balance).not.toBeDefined();			
-			expect(Car.inherited.properties.mass.type.name).toBe('Number');
-			expect(Car.inherited.properties.mass.text).toBe('the mass of this Vehicle');
-
-			var VMW = jsdoc.classes['vehicles.VMW'];
-			expect(VMW.inherited.methods.move.absoluteName).toBe('vehicles.Vehicle.move'); 
-			expect(VMW.inherited.methods.move.ownerClass).toBe('vehicles.Vehicle'); 
-			expect(VMW.inherited.methods.move.text).toBe('all vehicles move. Subclasses must override this.'); 
-			expect(VMW.inherited.methods.balance.absoluteName).toBe('vehicles.Car.balance'); 
-			expect(VMW.inherited.methods.balance.params[0].type.name).toBe('String'); 
-			// expect(VMW.inherited.methods.balance.inheritedFrom.absoluteName).toBe('vehicles.Car'); 
-			expect(VMW.inherited.properties.mass.absoluteName).toBe('vehicles.Vehicle.mass'); 
-			expect(VMW.inherited.events.hit.text).toBe('triggered whenever this vehicle hits another object');
-			// expect(VMW.inherited.events.hit.inheritedFrom.absoluteName).toBe('vehicles.Vehicle');
-		});
-
-
-		it("We have the method JsDocMaker.classOwnsProperty to know if a property is inherited", function() 
-		{
-			var VMW = jsdoc.classes['vehicles.VMW'];
-
-			expect(JsDocMaker.classOwnsProperty(VMW, VMW.inherited.methods.move)).toBe(false); 
-			expect(JsDocMaker.classOwnsProperty(VMW, VMW.methods.deployAirbag)).toBe(true); 
-
-		});
-	});
-
-
-
-	describe("custom annotations", function() 
-	{
-		it("user can use recurseAST to install a visitor for doing its own post processing", function() 
-		{
-
-			var code = 
-				'//@module office @versionfoo 3.2' + '\n' +	
-				'//@class Computer' + '\n' +
-				'//you can do excel here' + '\n' +
-				'//@versionfoo 1.2' + '\n' +
-				'//@method putmusic @param {Object<String,Array<Song>>} songs' + '\n' + 
-				'//@versionfoo 1.0' + '\n' +
-				'';
 			var maker = new JsDocMaker();
 			maker.parseFile(code); 
 			maker.postProccess();
 			maker.postProccessBinding();
-
 			var jsdoc = maker.data;
 
-			// we define a function to visit each AST node - we will search for a children @versionfoo and if any set as a property
-			var astVisitor = function(node)
+			var Sky = jsdoc.classes['stuff2.Sky'];
+			expect(Sky.text).toBe('some text\n and another line');
+		});
+	});
+
+});
+
+
+
+
+
+describe("support comment preprocessor", function() 
+{			
+	describe("for example one can install a pcomment preprocessor for adding/removing fragment to comments", function() 
+	{
+		it("/** style blocks", function() 
+		{
+			var code = 
+				'//@module stuff3' + '\n' +	
+				'/**@class Vanilla some text @author sgx */' + '\n'; 
+
+			var maker = new JsDocMaker();
+
+			//define a comment preprocessor
+			var my_preprocessor = function()
 			{
-				var versionfoo = _(node.children||[]).find(function(child)
+				for (var i = 0; i < this.comments.length; i++) 
 				{
-					return child.annotation === 'versionfoo'; 
-				});
-				if(versionfoo && versionfoo.name)
-				{
-					node.versionfoo = versionfoo.name; 
+					var node = this.comments[i]; 
+					node.value = node.value.replace(/@author\s+\w+/gi, '') + ' @author thief'; 
 				}
 			}; 
-			maker.recurseAST(astVisitor); 
-
-			expect(jsdoc.modules.office.versionfoo).toBe('3.2');
-		});
-	});
-
-
-	describe("multiple types", function() 
-	{
-		it("user can indicate multiple optional types by separating with |", function() 
-		{
-			var code = 
-				'//@module cssutils' + '\n' +	
-				'//@class CSSExtractor' + '\n' +
-				'//@method extract @param {String|HTMLElement|jQuery|Array<HTMLElement>|Object<String,Array<String>>} el @return {Object}' + '\n' + 
-				'';
-			var maker = new JsDocMaker();
-			maker.parseFile(code); 
-			maker.postProccess();
-			maker.postProccessBinding();
-			var jsdoc = maker.data;
-
-			var type = jsdoc.classes['cssutils.CSSExtractor'].methods.extract.params[0].type; 
-			expect(_(type).isArray()).toBe(true); 
-			expect(type.length).toBe(5); 
-			expect(type[0].name).toBe('String');
-			expect(_(type[0].nativeTypeUrl).isString()).toBe(true); 
-
-			expect(type[1].name).toBe('HTMLElement');
-			expect(type[2].name).toBe('jQuery');
-
-			expect(type[3].name).toBe('Array');
-			expect(_(type[3].nativeTypeUrl).isString()).toBe(true); 
-			expect(type[3].params.length).toBe(1);
-			expect(type[3].params[0].name).toBe('HTMLElement');
-
-
-			expect(type[4].name).toBe('Object');
-			expect(type[4].params.length).toBe(2);
-			expect(type[4].params[0].name).toBe('String');
-			expect(type[4].params[1].name).toBe('Array');
-			expect(type[4].params[1].params[0].name).toBe('String');
-		
-		});
-	});
-
-
-
-
-	
-
-	describe("types with spaces", function() 
-	{
-		it("types can contain spaces", function() 
-		{
-			var code = 
-				'//@module stuff1' + '\n' +	
-				'//@class Something' + '\n' +				
-				'//@property {Object<String, Array<String > >} aProperty' + '\n' +'';
-
-			var maker = new JsDocMaker();
-			maker.parseFile(code); 
-			maker.postProccess();
-			maker.postProccessBinding();
-			var jsdoc = maker.data;
-
-			var type = jsdoc.classes['stuff1.Something'].properties.aProperty.type;
-			expect(type.name).toBe('Object'); 
-			expect(type.params[0].name).toBe('String'); 
-			expect(type.params[1].name).toBe('Array'); 
-			expect(type.params[1].params[0].name).toBe('String'); 
-		});
-	});
-
-
-
-
-
-
-
-
-	describe("support alternative comment block syntax", function() 
-	{
-			
-		describe("block commments with style", function() 
-		{
-			it("/** style blocks", function() 
-			{
-				var code = 
-					'//@module stuff2' + '\n' +	
-					'/**@class Sky\n * some text\n * and another line\n */' + '\n'; 
-
-				var maker = new JsDocMaker();
-				maker.parseFile(code); 
-				maker.postProccess();
-				maker.postProccessBinding();
-				var jsdoc = maker.data;
-
-				var Sky = jsdoc.classes['stuff2.Sky'];
-				expect(Sky.text).toBe('some text\n and another line');
-			});
-		});
-
-	});
-
-
-
-
-
-	describe("support comment preprocessor", function() 
-	{			
-		describe("for example one can install a pcomment preprocessor for adding/removing fragment to comments", function() 
-		{
-			it("/** style blocks", function() 
-			{
-				var code = 
-					'//@module stuff3' + '\n' +	
-					'/**@class Vanilla some text @author sgx */' + '\n'; 
-
-				var maker = new JsDocMaker();
-
-				//define a comment preprocessor
-				var my_preprocessor = function()
-				{
-					for (var i = 0; i < this.comments.length; i++) 
-					{
-						var node = this.comments[i]; 
-						node.value = node.value.replace(/@author\s+\w+/gi, '') + ' @author thief'; 
-					}
-				}; 
-				//and install it
-				maker.commentPreprocessors.push(my_preprocessor);
-
-				//then do the parsing
-				maker.parseFile(code); 
-				maker.postProccess();
-				maker.postProccessBinding();
-				var jsdoc = maker.data;
-
-				var Vanilla = jsdoc.classes['stuff3.Vanilla'];
-				var author = _(Vanilla.children).find(function(c){return c.annotation === 'author'; });
-				expect(author.name).toBe('thief');
-			});
-		});
-	});
-
-
-
-
-
-
-
-	describe("support custom type parsers", function() 
-	{			
-		describe("same", function() 
-		{
-			it("example1: we define the custom type syntax {#lemmon(prop1)} that returns a relevant type object", function() 
-			{
-				var code = 
-					'//@module customTypeParsers' + '\n' +	
-					'/*@class Vanilla some text ' + '\n' +	
-					'@method method1' + '\n' +	
-					'@return {#lemmon(acid,lazy,green)} */' + '\n' +
-					''; 
-
-				var maker = new JsDocMaker();
-
-				// define and regiter a custom type syntax:
-				var customTypeParser = {
-					name: 'lemmon'	
-				,	parse: function(s)
-					{
-						// variable s is the text body of the custom type for example 'acid,lazy,green'.
-						// we return the following object as this type obejct implementation.
-						return {
-							name: 'Object'
-						,	lemmonProperties: s.split(',')
-						}; 
-					}
-				};
-				maker.registerTypeParser(customTypeParser); 
-
-				//then do the parsing
-				maker.parseFile(code); 
-				maker.postProccess();
-				maker.postProccessBinding();
-				var jsdoc = maker.data;
-
-				var Vanilla = jsdoc.classes['customTypeParsers.Vanilla'];
-				var return1 = Vanilla.methods.method1.returns.type; 
-				expect(return1.lemmonProperties[0]).toBe('acid'); 
-				expect(return1.lemmonProperties[1]).toBe('lazy'); 
-				expect(return1.lemmonProperties[2]).toBe('green'); 
-				expect(return1.name).toBe('Object'); 
-			});
-		});
-
-
-	});
-
-	
-
-
-
-	describe("support a literal object custom type implementation", function() 
-	{	
-		it("the type {#obj(prop1:Type1,...)} is supported out of the box", function() 
-		{
-			var code = 
-				'//@module customTypeParsers2' + '\n' +	
-				'/*@class Vanilla2 some text ' + '\n' +	
-				'@method method1' + '\n' +	
-				'@return {#obj(prop:Type,prop2:Type2<Type3>)} some text*/' + '\n' +
-				'//@method method2 blabla' + '\n' +	
-				'//@param {#obj(id:String,objectDic:Object<String>)} param1 some text' + '\n' +	
-				''; 
-
-			var maker = new JsDocMaker();
+			//and install it
+			maker.commentPreprocessors.push(my_preprocessor);
 
 			//then do the parsing
 			maker.parseFile(code); 
@@ -668,110 +587,196 @@ describe("JsDocMaker", function()
 			maker.postProccessBinding();
 			var jsdoc = maker.data;
 
-			var Vanilla = jsdoc.classes['customTypeParsers2.Vanilla2'];
-			var returns = Vanilla.methods.method1.returns; 
-			expect(returns.type.name).toBe('Object');
-			expect(returns.type.objectProperties.prop.name).toBe('Type');
-			expect(returns.type.objectProperties.prop2.name).toBe('Type2');
-			expect(returns.type.objectProperties.prop2.params[0].name).toBe('Type3');
-
-			var param1 = Vanilla.methods.method2.params[0];
-			expect(param1.type.name).toBe('Object'); 
-			expect(param1.type.objectProperties.id.name).toBe('String'); 
-			expect(param1.type.objectProperties.objectDic.name).toBe('Object'); 
+			var Vanilla = jsdoc.classes['stuff3.Vanilla'];
+			var author = _(Vanilla.children).find(function(c){return c.annotation === 'author'; });
+			expect(author.name).toBe('thief');
 		});
 	});
+});
 
 
 
-	describe("method throw exception", function() 
+
+
+
+
+describe("support custom type parsers", function() 
+{			
+	describe("same", function() 
 	{
-		var jsdoc, maker; 
-
-		beforeEach(function() 
+		it("example1: we define the custom type syntax {#lemmon(prop1)} that returns a relevant type object", function() 
 		{
 			var code = 
-				'//@module throwtest1' + '\n' +
-				'//@class CompilerException special exception for compiler errors @extends IOException ' + '\n' +
-				// '//@param {Number} error_line @param {String} error_msg' + '\n' +
-				'//@class IOException throwed when an IO error occurs @extends Error ' + '\n' +
-				'//@class Thrower ' + '\n' +
-				'//@method method1 @param {String} p some text' + '\n' + 
-				'//@param {Number} p1 sdf sdf' + '\n' +
-				'//@throws {IOException} if a IO error occurs' + '\n' + 
-				'//@param {Number} p3' + '\n' +
-				'//@throws {CompilerException} if a compiler error error occurs' + '\n' +
-				'//@returns {SomeResult} or null in case of an error' + '\n' +
+				'//@module customTypeParsers' + '\n' +	
+				'/*@class Vanilla some text ' + '\n' +	
+				'@method method1' + '\n' +	
+				'@return {#lemmon(acid,lazy,green)} */' + '\n' +
 				''; 
-			maker = new JsDocMaker();
-			maker.parseFile(code, 'textarea'); 
+
+			var maker = new JsDocMaker();
+
+			// define and regiter a custom type syntax:
+			var customTypeParser = {
+				name: 'lemmon'	
+			,	parse: function(s)
+				{
+					// variable s is the text body of the custom type for example 'acid,lazy,green'.
+					// we return the following object as this type obejct implementation.
+					return {
+						name: 'Object'
+					,	lemmonProperties: s.split(',')
+					}; 
+				}
+			};
+			maker.registerTypeParser(customTypeParser); 
+
+			//then do the parsing
+			maker.parseFile(code); 
 			maker.postProccess();
 			maker.postProccessBinding();
-			jsdoc = maker.data;
+			var jsdoc = maker.data;
+
+			var Vanilla = jsdoc.classes['customTypeParsers.Vanilla'];
+			var return1 = Vanilla.methods.method1.returns.type; 
+			expect(return1.lemmonProperties[0]).toBe('acid'); 
+			expect(return1.lemmonProperties[1]).toBe('lazy'); 
+			expect(return1.lemmonProperties[2]).toBe('green'); 
+			expect(return1.name).toBe('Object'); 
 		});
-
-		it("@throws nodes have a type and text", function() 
-		{
-			var method1 = jsdoc.classes['throwtest1.Thrower'].methods.method1;
-			expect(method1.throws[0].type.name).toBe('IOException'); 
-			expect(method1.throws[0].text).toBe('if a IO error occurs'); 
-			expect(method1.throws[0].type.text).toBe('throwed when an IO error occurs'); 
-			expect(method1.throws[0].type.extends.name).toBe('Error'); 
-
-			expect(method1.throws[1].type.name).toBe('CompilerException'); 
-			expect(method1.throws[1].text).toBe('if a compiler error error occurs'); 
-			expect(method1.throws[1].type.text).toBe('special exception for compiler errors'); 
-			expect(method1.throws[1].type.extends.name).toBe('IOException'); 
-
-			expect(method1.params[0].name).toBe('p'); 
-			expect(method1.params[1].name).toBe('p1'); 
-			expect(method1.params[2].name).toBe('p3'); 
-
-			expect(method1.returns.type.name).toBe('SomeResult'); 
-
-		});
-
 	});
 
 
+});
 
 
 
 
 
-
-	describe("custom base class", function() 
+describe("support a literal object custom type implementation", function() 
+{	
+	it("the type {#obj(prop1:Type1,...)} is supported out of the box", function() 
 	{
-		var jsdoc, maker; 
+		var code = 
+			'//@module customTypeParsers2' + '\n' +	
+			'/*@class Vanilla2 some text ' + '\n' +	
+			'@method method1' + '\n' +	
+			'@return {#obj(prop:Type,prop2:Type2<Type3>)} some text*/' + '\n' +
+			'//@method method2 blabla' + '\n' +	
+			'//@param {#obj(id:String,objectDic:Object<String>)} param1 some text' + '\n' +	
+			''; 
 
-		beforeEach(function() 
-		{
-			var code = 
-				'//@module custombaseclass1' + '\n' +
-				'//@class Test1 blabla ' + '\n' +
-				'//@class Object yes I can go crazy and make Object just a concrete common name @extends Test1 ' + '\n' +
-				''; 
+		var maker = new JsDocMaker();
 
-			JsDocMaker.DEFAULT_CLASS = 'MyDefaultClass'; 
-			maker = new JsDocMaker();
-			maker.parseFile(code, 'textarea'); 
-			maker.postProccess();
-			maker.postProccessBinding();
-			jsdoc = maker.data;
-		});
+		//then do the parsing
+		maker.parseFile(code); 
+		maker.postProccess();
+		maker.postProccessBinding();
+		var jsdoc = maker.data;
 
-		it("yes now Object is no longer the default-base class", function() 
-		{
-			var Test1 = jsdoc.classes['custombaseclass1.Test1']; 
-			expect(Test1.extends.name).toBe('MyDefaultClass'); 
-		});
-		it("is just a concrete class", function() 
-		{
-			var _Object = jsdoc.classes['custombaseclass1.Object']; 
-			expect(_Object.extends.name).toBe('Test1'); 
-		});
+		var Vanilla = jsdoc.classes['customTypeParsers2.Vanilla2'];
+		var returns = Vanilla.methods.method1.returns; 
+		expect(returns.type.name).toBe('Object');
+		expect(returns.type.properties.prop.name).toBe('Type');
+		expect(returns.type.properties.prop2.name).toBe('Type2');
+		expect(returns.type.properties.prop2.params[0].name).toBe('Type3');
+
+		var param1 = Vanilla.methods.method2.params[0];
+		expect(param1.type.name).toBe('Object'); 
+		expect(param1.type.properties.id.name).toBe('String'); 
+		expect(param1.type.properties.objectDic.name).toBe('Object'); 
+	});
+});
+
+
+
+describe("method throw exception", function() 
+{
+	var jsdoc, maker; 
+
+	beforeEach(function() 
+	{
+		var code = 
+			'//@module throwtest1' + '\n' +
+			'//@class CompilerException special exception for compiler errors @extends IOException ' + '\n' +
+			// '//@param {Number} error_line @param {String} error_msg' + '\n' +
+			'//@class IOException throwed when an IO error occurs @extends Error ' + '\n' +
+			'//@class Thrower ' + '\n' +
+			'//@method method1 @param {String} p some text' + '\n' + 
+			'//@param {Number} p1 sdf sdf' + '\n' +
+			'//@throws {IOException} if a IO error occurs' + '\n' + 
+			'//@param {Number} p3' + '\n' +
+			'//@throws {CompilerException} if a compiler error error occurs' + '\n' +
+			'//@returns {SomeResult} or null in case of an error' + '\n' +
+			''; 
+		maker = new JsDocMaker();
+		maker.parseFile(code, 'textarea'); 
+		maker.postProccess();
+		maker.postProccessBinding();
+		jsdoc = maker.data;
+	});
+
+	it("@throws nodes have a type and text", function() 
+	{
+		var method1 = jsdoc.classes['throwtest1.Thrower'].methods.method1;
+		expect(method1.throws[0].type.name).toBe('IOException'); 
+		expect(method1.throws[0].text).toBe('if a IO error occurs'); 
+		expect(method1.throws[0].type.text).toBe('throwed when an IO error occurs'); 
+		expect(method1.throws[0].type.extends.name).toBe('Error'); 
+
+		expect(method1.throws[1].type.name).toBe('CompilerException'); 
+		expect(method1.throws[1].text).toBe('if a compiler error error occurs'); 
+		expect(method1.throws[1].type.text).toBe('special exception for compiler errors'); 
+		expect(method1.throws[1].type.extends.name).toBe('IOException'); 
+
+		expect(method1.params[0].name).toBe('p'); 
+		expect(method1.params[1].name).toBe('p1'); 
+		expect(method1.params[2].name).toBe('p3'); 
+
+		expect(method1.returns.type.name).toBe('SomeResult'); 
 
 	});
+
+});
+
+
+
+
+
+
+
+
+describe("custom base class", function() 
+{
+	var jsdoc, maker; 
+
+	beforeEach(function() 
+	{
+		var code = 
+			'//@module custombaseclass1' + '\n' +
+			'//@class Test1 blabla ' + '\n' +
+			'//@class Object yes I can go crazy and make Object just a concrete common name @extends Test1 ' + '\n' +
+			''; 
+
+		JsDocMaker.DEFAULT_CLASS = 'MyDefaultClass'; 
+		maker = new JsDocMaker();
+		maker.parseFile(code, 'textarea'); 
+		maker.postProccess();
+		maker.postProccessBinding();
+		jsdoc = maker.data;
+	});
+
+	it("yes now Object is no longer the default-base class", function() 
+	{
+		var Test1 = jsdoc.classes['custombaseclass1.Test1']; 
+		expect(Test1.extends.name).toBe('MyDefaultClass'); 
+	});
+	it("is just a concrete class", function() 
+	{
+		var _Object = jsdoc.classes['custombaseclass1.Object']; 
+		expect(_Object.extends.name).toBe('Test1'); 
+	});
+
+});
 
 
 
@@ -937,10 +942,10 @@ describe("parsing multiple files using addFile and jsdoc()", function()
 				'//@method getState @returns {Car}' + '\n' +
 				''
 		,	'/opt/lamp/code2.js':
-			'//@module mymodule2' + '\n' +
-			'//@class Easy2 easy named class' + '\n' +
-			'//@method getState2 @returns {Car2}' + '\n' +
-			''
+				'//@module mymodule2' + '\n' +
+				'//@class Easy2 easy named class' + '\n' +
+				'//@method getState2 @returns {Car2}' + '\n' +
+				''
 		}; 
 
 		maker = new JsDocMaker();
@@ -953,14 +958,58 @@ describe("parsing multiple files using addFile and jsdoc()", function()
 		jsdoc = maker.jsdoc();
 	});
 
-	it("classes with all accepted chars referred from complex objects", function() 
+	it("parsed AST should contain references to file names and file location", function() 
 	{
 		var m = jsdoc.classes['mymodule.Easy'].methods.getState;
 		expect(jsdoc.classes['mymodule.Easy'].file.fileName).toBe('code1.js'); 
 		expect(jsdoc.classes['mymodule2.Easy2'].methods.getState2.file.fileName).toBe('/opt/lamp/code2.js'); 
+
+		//TODO: test if we can get correct source location.
 	});
 
 });
+
+
+
+
+
+
+describe("object literal notation", function() 
+{
+	var jsdoc, maker; 
+
+	beforeEach(function() 
+	{
+		var code = 
+			'//@module mymodule' + '\n' +
+			'//@class Easy easy named class' + '\n' +
+			'//@method getState @returns {sname:String,soptions:EasyConfiguration,complex1:Array<Object>}' + '\n' +
+			'//@property {name:String,options:EasyConfiguration} p ' + '\n' +
+			'';
+
+		maker = new JsDocMaker();
+		maker.addFile(code, 'name.js');
+		jsdoc = maker.jsdoc();
+		maker.postProccess();
+		maker.postProccessBinding();
+	});
+	
+	it("any type support the syntax {a:A,b:B} with recursive evaluation", function() 
+	{
+		var t1 = jsdoc.classes['mymodule.Easy'].properties.p.type; 
+
+		expect(t1.name).toBe('Object');
+		expect(t1.properties.name.name).toBe('String');
+		expect(t1.properties.options.name).toBe('EasyConfiguration');
+
+		var t2 = jsdoc.classes['mymodule.Easy'].methods.getState.returns.type; 
+
+		expect(t2.properties.complex1.name).toBe('Array');
+		expect(t2.properties.complex1.params[0].name).toBe('Object');
+	});
+});
+
+
 
 
 });

@@ -22,8 +22,14 @@ if(typeof sentence === 'undefined')
 {
 	console.log('alert'); 
 }
+// @method getState0 @returns {a:B231,c:D231,s:String}
+// @method getState2 @returns {a:B231,c:D231}
+// @method getState3 @re turns {#obj(color:String)}
+// @method getState4 @returns {name:String,colors:Array<Color>,car:Car}
+// @method getState get's the current state of this pool
+// @returns {id:String,objectDic:Object<String>} bla bla bla
+var getState=function(){};
 
-// @method getState @returns {name:String,colors:Array<Color>,car:Car}
 
 
 //@method getOwners this method is useful for *blabla* blabla _blabla_ bab
@@ -33,9 +39,7 @@ if(typeof sentence === 'undefined')
 	console.log('alert'); 
 }
 
-// @method getState get's the current state of this pool
-// @returns {#obj(id:String,objectDic:Object<String>)} bla bla bla
-var getState=function(){};
+
 
 // @event objectCreated event fired when an object is created in this pool.
 var s = 'these are just js sample sentences'; 

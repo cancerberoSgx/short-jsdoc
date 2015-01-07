@@ -1,39 +1,36 @@
 
-
-describe("parsing multiple files using addFile and jsdoc()", function() 
+describe("object literal notation", function() 
 {
 	var jsdoc, maker; 
 
 	beforeEach(function() 
 	{
-		var files = {
-			'code1.js':
-				'//@module mymodule' + '\n' +
-				'//@class Easy easy named class' + '\n' +
-				'//@method getState @returns {Car}' + '\n' +
-				''
-		,	'/opt/lamp/code2.js':
-			'//@module mymodule2' + '\n' +
-			'//@class Easy2 easy named class' + '\n' +
-			'//@method getState2 @returns {Car2}' + '\n' +
-			''
-		}; 
+		var code = 
+			'//@module mymodule' + '\n' +
+			'//@class Easy easy named class' + '\n' +
+			'//@method getState @returns {sname:String,soptions:EasyConfiguration,complex1:Array<Object>}' + '\n' +
+			'//@property {name:String,options:EasyConfiguration} p ' + '\n' +
+			'';
 
 		maker = new JsDocMaker();
-
-		_(files).each(function(value, name)
-		{
-			maker.addFile(value, name);
-		}); 
-
+		maker.addFile(code, 'name.js');
 		jsdoc = maker.jsdoc();
+		maker.postProccess();
+		maker.postProccessBinding();
 	});
 
 	it("classes with all accepted chars referred from complex objects", function() 
 	{
-		var m = jsdoc.classes['mymodule.Easy'].methods.getState;
-		expect(jsdoc.classes['mymodule.Easy'].file.fileName).toBe('code1.js'); 
-		expect(jsdoc.classes['mymodule2.Easy2'].methods.getState2.file.fileName).toBe('/opt/lamp/code2.js'); 
+		var t1 = jsdoc.classes['mymodule.Easy'].properties.p.type; 
+
+		expect(t1.name).toBe('Object');
+		expect(t1.properties.name.name).toBe('String');
+		expect(t1.properties.options.name).toBe('EasyConfiguration');
+
+		var t2 = jsdoc.classes['mymodule.Easy'].methods.getState.returns.type; 
+
+		expect(t2.properties.complex1.name).toBe('Array');
+		expect(t2.properties.complex1.params[0].name).toBe('Object');
 	});
 
 });

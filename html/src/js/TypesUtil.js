@@ -65,17 +65,27 @@ _(AbstractView.prototype).extend({
 
 ,	printLiteralObjectType: function(context)
 	{
+
 		var self = this;
 		var buf = []; 
-		context.buffer.push(this.printType(context.type, true) + '{');
-		_(context.type.objectProperties).each(function(value, key)
+		context.buffer.push(this.printType(context.type, true));
+		if(context.type.name==='Object')
 		{
-			buf.push(key + ': ' + self.printSingleTypeAsString(value));
-		}); 
-		context.buffer.push(buf.join(', ')); 
+			context.buffer.push('{')
+			_(context.type.properties).each(function(value, key)
+			{
+				buf.push(key + ': ' + self.printSingleTypeAsString(value, true));
+			}); 
+		}
+		context.buffer.push(buf.join(', '));
+		if(context.type.name==='Object')
+		{
+			context.buffer.push('}'); 
+		}
 	}
 	
-	//@method printType prints a type as html support generic@param {Object}context  @return {String} the type html
+	// @method printType prints a type as html support generic. This is really a html template function
+	// @param {Object}context  @return {String} the type html
 ,	printType: function(context, ignoreLiteralObject)
 	{
 		if(!context || !context.type)
@@ -83,22 +93,20 @@ _(AbstractView.prototype).extend({
 			return ''; 
 		}
 
-		if(context.type.objectProperties && !ignoreLiteralObject)
-		{
-			this.printLiteralObjectType(context); 
-		}
-
 		var self = this;
 		var href = context.type.nativeTypeUrl || '#class/'+context.type.absoluteName; 
 		var htmlText = context.type.name; 
-		// htmlText += (context.type.nativeTypeUrl ? '<span class="external-label">(external)</span>' : '');
-		// htmlText += (context.type.nativeTypeUrl ? '<span class="glyphicon glyphicon-star"></span>' : '');
 		var aclass = (context.type.nativeTypeUrl ? ' type external ' : ' type ');
 		var iconHtml = context.type.nativeTypeUrl ? '<span class="glyphicon glyphicon-share"></span>' : ''; 
 
 		context.buffer.push('<a class="'+aclass+'" href="'+href+'">'+iconHtml+htmlText+'</a>');
 
-		if(context.type.params) 
+		if(context.type.properties && !ignoreLiteralObject)
+		{
+			this.printLiteralObjectType(context); 
+		}
+
+		else if(context.type.params) 
 		{ 
 			context.buffer.push('&lt;');
 			for (var i = 0; i < (context.type.params||[]).length; i++) 
@@ -118,10 +126,11 @@ _(AbstractView.prototype).extend({
 	}
 
 	//@method printTypeAsString this is the public method for printing a type - supports any type @param {String} type @return {String}  @return {String} the type html
-,	printSingleTypeAsString: function(type)
+,	printSingleTypeAsString: function(type, dontRecurse)
 	{
 		var buffer = [];
 		var context = {type: type, typeTemplate: this.printType, buffer: buffer}; 
+
 		this.printType(context); 
 		var typeOutput = buffer.join(''); 
 		return typeOutput; 

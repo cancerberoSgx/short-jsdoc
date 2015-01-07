@@ -36,7 +36,6 @@ var MethodView = AbstractView.extend({
 
 		this.jsdoc.textHtml = this.getTextHtml(this.jsdoc);
 		this.ownerClass = this.application.data.classes[this.jsdoc.ownerClass]; 
-
 	}
 
 });
