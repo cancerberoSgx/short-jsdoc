@@ -1,4 +1,5 @@
-
+var JsDocMaker = require('./class'); 
+var _ = require('underscore'); 
 
 // BINDING / post processing
 

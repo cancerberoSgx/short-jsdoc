@@ -1,3 +1,6 @@
+var JsDocMaker = require('../core/class'); 
+var _ = require('underscore'); 
+
 // this should be commented
 // it is an exmaple of a plugin that parse literal types like @param {#obj({p1:P1,p2:P2,...})} param1
 

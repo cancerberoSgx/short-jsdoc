@@ -18,7 +18,7 @@ var uglifyLibFiles = [
 
 	'lib/esprima.js'
 ,	'lib/underscore.js'
-,	'src/JsDocMaker.js'
+// ,	'src/JsDocMaker.js'
 ,	'src/literalObjectParser.js'
 
 ,	'html/lib/jquery/jquery-2.0.3.min.js'
@@ -31,11 +31,11 @@ var uglifyLibFiles = [
 
 ];
 
-var concat_node_distro_files = [
-	'src/typeParser.js'
-,	'src/JsDocMaker.js'
-,	'src/shortjsdoc-main.js'
-];
+// var concat_node_distro_files = [
+// 	'src/typeParser.js'
+// // ,	'src/JsDocMaker.js'
+// ,	'src/shortjsdoc-main.js'
+// ];
 
 module.exports = function (grunt) {
 
@@ -53,10 +53,10 @@ module.exports = function (grunt) {
 		,	tasks : [ 'jst']
 		}
 
-	,	concat: {
-			files : concat_node_distro_files
-		,	tasks : [ 'concat']
-		}
+	// ,	concat: {
+	// 		files : concat_node_distro_files
+	// 	,	tasks : [ 'concat']
+	// 	}
 
 	,	less: {
 			files : 'html/src/styles/**/*.less'
@@ -108,15 +108,15 @@ module.exports = function (grunt) {
 	}
 
 	// we concat to generate the nodejs application
-,	concat: {
-		options: {
-			separator: ';',
-		},
-		dist: {
-			src: concat_node_distro_files,
-			dest: 'src/shortjsdoc.js',
-		},
-	}
+// ,	concat: {
+// 		options: {
+// 			separator: ';',
+// 		},
+// 		dist: {
+// 			src: concat_node_distro_files,
+// 			dest: 'src/shortjsdoc.js',
+// 		},
+// 	}
 
 ,	less: {
 		development: {
@@ -127,9 +127,15 @@ module.exports = function (grunt) {
 	}
 
 ,	browserify: {
-		client: {
+		options: {
+			ignore:[
+				'esprima'
+			// , 'underscore'
+			]
+		}
+	,	client: {
 			src: ['src/jsdocmaker/main.js'],
-			dest: 'src/JsDocMaker_browser.js'
+			dest: 'html/src/JsDocMaker_browser.js'
 		}
     }
 
@@ -149,7 +155,11 @@ module.exports = function (grunt) {
 
 
 ,	jshint: {
-		all: ['Gruntfile.js', 'src/JsDocMaker.js', 'html/src/js/**/*.js']
+		all: [
+			'Gruntfile.js'
+		// ,	'src/JsDocMaker.js'
+		,	'html/src/js/**/*.js'
+		]
 	,	options: {
 			forin:true
 		,	noarg:true
@@ -170,8 +180,8 @@ module.exports = function (grunt) {
 
 	});
 
-	grunt.registerTask('run', [ 'jst', 'browserify', 'concat', 'uglify', 'connect', 'watch' ]);
+	grunt.registerTask('run', [ 'jst', 'browserify'/*, 'concat'*/, 'uglify', 'connect', 'watch' ]);
 
-	grunt.registerTask('compile', [ 'jst', 'browserify', 'concat', 'uglify' ]);
+	grunt.registerTask('compile', [ 'jst', 'browserify'/*, 'concat'*/, 'uglify' ]);
 
 };

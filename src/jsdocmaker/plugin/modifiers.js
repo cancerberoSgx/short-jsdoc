@@ -1,3 +1,5 @@
+var JsDocMaker = require('../core/class'); 
+var _ = require('underscore'); 
 
 //MODIFIERS postproccessing- like static, private, final. Optional module
 

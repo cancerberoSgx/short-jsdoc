@@ -1,3 +1,5 @@
+var JsDocMaker = require('../core/class'); 
+var _ = require('underscore'); 
 
 // NATIVE TYPES LINKING / post processing. Optional
 

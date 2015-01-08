@@ -2,6 +2,8 @@
 
 from more important to less
 
+ * issue - injection, the html class view has this bug Class TerranObject
+Extends Object{prototype: prototype} - types are printing wrong.
 
  * support globs in nodejs API
  
@@ -21,6 +23,8 @@ from more important to less
 
  * @extends won't work with repeated class names. allow to pass an absolute name or log a warning.
 
+ * @module foo bla bla bla @exports {ParserException:Error,parse:Function} bla bla bla
+ 
  * //TODO: test if we can get correct source comment location relative to the @filename. all nodes should have it- we have the file name but we need information about string fragment of the file of the particular comment
 
  * IDEA: vendor-jsdoc - define package.json for each so we can do dependency - html requre xml.... ALSO mark those jsdoc from vendor as VENDOR in a AST node property

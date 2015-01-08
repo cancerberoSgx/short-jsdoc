@@ -1,3 +1,6 @@
+var JsDocMaker = require('./class'); 
+var esprima = JsDocMaker.require('esprima');
+var _ = require('underscore'); 
 
 //PARSING AND PREPROCESSING
 

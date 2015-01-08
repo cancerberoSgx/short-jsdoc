@@ -4,4 +4,7 @@ var JsDocMaker = require('./core/main');
 
 require('./plugin/main.js'); 
 
-module.export = JsDocMaker;
+
+// console.log('SEBAAA22', JsDocMaker)
+
+module.exports = JsDocMaker;

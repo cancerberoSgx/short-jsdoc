@@ -4,6 +4,8 @@
 // use the parseFile method for this! This will return the AST, if you want to perform more enrichment and type binding, then use 
 // postProccess and postProccessBinding methods after.
 
+var _ = require('underscore'); 
+
 var JsDocMaker = function(options)
 {	
 	//@property {Object<String,String>} customNativeTypes name to url map that the user can modify to register new native types b givin its url.
@@ -13,6 +15,7 @@ var JsDocMaker = function(options)
 	this.inputSource = [];
 	this.options = options || {};
 }; 
+
 
 JsDocMaker.DEFAULT_CLASS = 'Object'; 
 JsDocMaker.DEFAULT_MODULE = '__DefaultModule'; 
@@ -25,3 +28,12 @@ if(typeof(window) !== 'undefined')
 {
 	window.JsDocMaker = JsDocMaker; 
 }
+
+
+//@method require perform an intelligent require n browser&nodejs, needed for esprima. Ugly :(
+JsDocMaker.require = function(name)
+{
+	return (typeof(window) != 'undefined' && window[name]) ? window[name] : require(name);
+}; 
+
+module.exports = JsDocMaker; 

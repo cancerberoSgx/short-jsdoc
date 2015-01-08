@@ -1,3 +1,5 @@
+var JsDocMaker = require('./class'); 
+var _ = require('underscore'); 
 
 //COMMENT PREPROCESSORS
 

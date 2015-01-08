@@ -1,4 +1,6 @@
+var JsDocMaker = require('./class'); 
 var shortjsdocParseLiteralObject = require('../objectTypeParser/parser.js');
+var _ = require('underscore'); 
 
 //TYPE PARSING
 

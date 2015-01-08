@@ -1,3 +1,5 @@
+var JsDocMaker = require('../core/class'); 
+var _ = require('underscore'); 
 
 //@method recurseAST An utility method that can be used in extensions to visit all the ast nodes with given function 
 //@param {Function} fn
