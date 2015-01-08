@@ -16,7 +16,7 @@ var _ = require('underscore');
 JsDocMaker.prototype.parseTypeString = function(typeString, baseClass)
 {
 	if(!typeString || !baseClass)
-	{
+	{ 
 		return null;
 	}
 	//first remove the '{}'

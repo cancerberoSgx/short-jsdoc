@@ -2,6 +2,7 @@
 
 from more important to less
 
+ 
  * issue - injection, the html class view has this bug Class TerranObject
 Extends Object{prototype: prototype} - types are printing wrong.
 
@@ -13,6 +14,8 @@ Extends Object{prototype: prototype} - types are printing wrong.
 
  * divide JsDocMaker in several files core, preprocessing, postprocessing, biding, etc.
 
+ * issue: html app inherited props: only the super class inherited props are shown but not super-super class... also inherited classes should be grouped.
+
  * remove parseyourowncode,spec runner,etc from html application since this is particular of shortjsdoc. put it on readme.md or other app
  
  * include events @properties in the typeahead search
@@ -21,6 +24,8 @@ Extends Object{prototype: prototype} - types are printing wrong.
 
  * define a syntax and support varargs - like {num1, ..., numN}
 
+ * move src/shortjsdoc.js to src/node/shortjsdoc.js and let src/shortjsdoc only contains the main() call.
+ 
  * @extends won't work with repeated class names. allow to pass an absolute name or log a warning.
 
  * @module foo bla bla bla @exports {ParserException:Error,parse:Function} bla bla bla

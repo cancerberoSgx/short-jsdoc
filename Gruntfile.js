@@ -18,7 +18,6 @@ var uglifyLibFiles = [
 
 	'lib/esprima.js'
 ,	'lib/underscore.js'
-// ,	'src/JsDocMaker.js'
 ,	'src/literalObjectParser.js'
 
 ,	'html/lib/jquery/jquery-2.0.3.min.js'
@@ -30,12 +29,6 @@ var uglifyLibFiles = [
 ,	'html/lib/prettify/prettify.js'
 
 ];
-
-// var concat_node_distro_files = [
-// 	'src/typeParser.js'
-// // ,	'src/JsDocMaker.js'
-// ,	'src/shortjsdoc-main.js'
-// ];
 
 module.exports = function (grunt) {
 
@@ -53,20 +46,23 @@ module.exports = function (grunt) {
 		,	tasks : [ 'jst']
 		}
 
-	// ,	concat: {
-	// 		files : concat_node_distro_files
-	// 	,	tasks : [ 'concat']
-	// 	}
-
 	,	less: {
 			files : 'html/src/styles/**/*.less'
 		,	tasks : [ 'less']
 		}
 
-	,	uglify: {
-			files : 'html/src/js/**/*.js'
-		// ,	tasks : [ 'reload']
+	// ,	uglify: {
+	// 		files : 'html/stylesrc/js/**/*.js'
+	// 	,	tasks : [ 'uglify']
+	// 	}
+
+
+	,	browserify: {
+			files : 'src/jsdocmaker/**/*.js'
+		,	tasks : [ 'browserify']
 		}
+
+
 
 	}
 	
@@ -75,21 +71,9 @@ module.exports = function (grunt) {
 			options : {
 				port : 8080
 			,	base : '.'
-			// ,	livereload: true
 			}
 		}
 	}
-
-
-  		// "grunt-reload": "*",
-// ,	reload: {
-// 		port: 35729
-		// proxy: {
-		// 	host: 'localhost'
-		// ,	port: '8080'
-		// ,	includeReloadScript: true
-		// }
-	// }
 
 ,	jst : {
 		compile : {
@@ -106,17 +90,6 @@ module.exports = function (grunt) {
 			}
 		}
 	}
-
-	// we concat to generate the nodejs application
-// ,	concat: {
-// 		options: {
-// 			separator: ';',
-// 		},
-// 		dist: {
-// 			src: concat_node_distro_files,
-// 			dest: 'src/shortjsdoc.js',
-// 		},
-// 	}
 
 ,	less: {
 		development: {
@@ -157,7 +130,6 @@ module.exports = function (grunt) {
 ,	jshint: {
 		all: [
 			'Gruntfile.js'
-		// ,	'src/JsDocMaker.js'
 		,	'html/src/js/**/*.js'
 		]
 	,	options: {
@@ -180,8 +152,8 @@ module.exports = function (grunt) {
 
 	});
 
-	grunt.registerTask('run', [ 'jst', 'browserify'/*, 'concat'*/, 'uglify', 'connect', 'watch' ]);
+	grunt.registerTask('run', [ 'jst', 'browserify' /*, 'concat'*/, 'uglify', 'connect', 'watch' ]);
 
-	grunt.registerTask('compile', [ 'jst', 'browserify'/*, 'concat'*/, 'uglify' ]);
+	grunt.registerTask('default', [ 'jst', 'browserify' /*, 'concat'*/, 'uglify' ]);
 
 };

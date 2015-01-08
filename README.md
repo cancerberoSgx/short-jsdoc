@@ -59,11 +59,13 @@ The parser generates a json file with all jsdoc meta data that can be consumed a
 
 # Syntax
 
-[Some syntax notes](https://github.com/cancerberoSgx/short-jsdoc/blob/master/SYNTAX.md)
+[Some syntax notes](https://github.com/cancerberoSgx/short-jsdoc/blob/master/doc/SYNTAX.md)
 
 ## License
 
 short-jsdoc is open sourced under the [MIT License](https://github.com/cancerberoSgx/short-jsdoc/blob/master/LICENSE). 
+
+Do what you need with this project, if you can, contribute you enhancements back :)
 
 
 
@@ -118,9 +120,22 @@ Using the command line shortcut (if you installed it)
 
 This will generate the ready to use html application /home/my-js-project/apidocs/index.html showing your project's classes. 
 
-More detailed explanation. What just happened is we first parsed some source folders into a data.json file and. The html application just reads this file and renders all its information in a rich web application.
+More detailed explanation: What just happened is we first parsed some source folders into a data.json file and. The html application just reads this file and renders all its information in a rich web application.
 
 Feel free to put-copy this full project in your apidocs forlder. And of course feel free to modify to your needs. It is self contained and includes jQuery, bootstrap, underscorejs and backbonejs. In general you will be modifying the markup located in html/src/templates and the styles (very little included and writen in less).
+
+# Running development web demo
+
+If you want to taste this project then you should do it in a development environment: First, install grunt (only one time)
+
+    sudo npm install -g grunt
+
+then we can invoke grunt from command line and debug the apps in the browser
+
+    grunt run
+    firefox http://localhost:8080/html/index-dev.html
+
+Or execute the Unit tests - located in folder /test/spec/ : http://localhost:8080/test/SpecRunner.html
 
 ## Interesting commands
 
@@ -146,22 +161,20 @@ full rebuild and recreate
 
     grunt compile; rm  html/data.json; node src/shortjsdoc.js --input "test/test-project/,html/src/,vendor-jsdoc/javascript" --project-metadata ./test/test-project/package.json > html/data.json
 
+Generate and run a full distro from github:
 
-
-# Running development web demo
-
-If you need to debug it use grunt run like explained below just install grunt (only one time)
-
-    sudo npm install -g grunt
-
-then
-
+    git clone https://github.com/cancerberoSgx/short-jsdoc.git
+    cd short-jsdoc
+    npm install
     grunt run
     firefox http://localhost:8080/html/index-dev.html
 
 
 #Motivation notes
-[These are some notes about my initial motivation when started the project](https://github.com/cancerberoSgx/short-jsdoc/blob/master/MOTIVATION.md)
+[These are some notes about my initial motivation when started the project](https://github.com/cancerberoSgx/short-jsdoc/blob/master/doc/MOTIVATION.md)
+
+# TODO
+[TODO file](https://github.com/cancerberoSgx/short-jsdoc/blob/master/TODO.md) is a very important file at this 'current age' of the project.
 
 # Dependencies 
 

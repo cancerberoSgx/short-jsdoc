@@ -1434,7 +1434,7 @@ var _ = require('underscore');
 JsDocMaker.prototype.parseTypeString = function(typeString, baseClass)
 {
 	if(!typeString || !baseClass)
-	{
+	{ 
 		return null;
 	}
 	//first remove the '{}'
@@ -2323,17 +2323,11 @@ JsDocMaker.prototype.error = function(msg)
 
 
 },{"./class":3,"underscore":1}],10:[function(require,module,exports){
-'strict mode'; 
-
 var JsDocMaker = require('./core/main'); 
 
 require('./plugin/main.js'); 
 
-
-// console.log('SEBAAA22', JsDocMaker)
-
 module.exports = JsDocMaker;
-
 },{"./core/main":4,"./plugin/main.js":14}],11:[function(require,module,exports){
 /*
 
