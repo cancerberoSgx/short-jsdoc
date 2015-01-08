@@ -126,6 +126,13 @@ module.exports = function (grunt) {
 		}
 	}
 
+,	browserify: {
+		client: {
+			src: ['src/jsdocmaker/main.js'],
+			dest: 'src/JsDocMaker_browser.js'
+		}
+    }
+
 ,	uglify: {
 		project: {
 			options: {
@@ -163,8 +170,8 @@ module.exports = function (grunt) {
 
 	});
 
-	grunt.registerTask('run', [ 'jst', 'concat', 'uglify', 'connect', 'watch' ]);
+	grunt.registerTask('run', [ 'jst', 'browserify', 'concat', 'uglify', 'connect', 'watch' ]);
 
-	grunt.registerTask('compile', [ 'jshint', 'jst', 'concat', 'uglify' ]);
+	grunt.registerTask('compile', [ 'jst', 'browserify', 'concat', 'uglify' ]);
 
 };

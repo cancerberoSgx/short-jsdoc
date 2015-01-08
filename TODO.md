@@ -61,6 +61,9 @@ from more important to less
 
  * configurable option boolean showSources
 
+ * Some secondary features of jsdocmaker like installModifiers, NATIVE_TYPES, should be if(full plugins and be optional. i.e. don't do installModifiers){} in core code.
+
+ * native types declaration: @declareNativeClass QuickSort http://foo.bar.org/external-api/QuickSort.html
 
  * @function primary
  
@@ -71,8 +74,19 @@ from more important to less
  * search for class, modules, methods, methods that return or accept a type. subclasses of..., classes overriding a method... be able to find the classes that uses a certain class in a property or parameter or return type...
  
  * class hierarchy in classview
+ 
+ * crazy idea - store native types pages : at build time capture native types html and attach into generated docs and change links that point to those.
 
- * support name alias - for example map the name Map to match Object. as an example show shortkuts like Arr<Obj> or even a<o>
+ * support name alias - for example map the name Map to match Object. as an example show how to make shortkuts like Arr<Obj> or even a<o>. The classes Arr o a won't be generated in the output. Both will be replaced with Array, for this @alias class Arr Array
+    @alias method get_apples getApples
+that means that when a method named 'get_apples' is found in the jsdoc, the name will be replaced with 'getApples'. Other example:
+    @alias class Backbone.View BackboneView
+Backbone.View references will be renamed to BackboneView. Take in account that in the output Backbone.View won't exists - only BackboneView
+
+ * Support annotation alias, example
+    @alias annotation task module
+now you can use @task and it will be replaced to @module !
+
  
  * in the part of currentView, module etc of parsing put another plugin/hook container so we can take some action to modify the nodes in that current{View,Module,etc} context
 

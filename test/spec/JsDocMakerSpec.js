@@ -861,7 +861,7 @@ describe("talking about the same class in different places", function()
 		jsdoc = maker.data;
 	});
 
-	it("Two definitions of the same module or class should preserve all the texts", function() 
+	it("be able to add more information to the same class later in the code", function() 
 	{
 		var MyClass = jsdoc.classes['mymodule.MyClass']; 
 		expect(_(MyClass.methods).keys().length).toBe(2);
@@ -875,6 +875,7 @@ describe("talking about the same class in different places", function()
 		expect(MyClass.methods.m2.params[1].name).toBe('d');
 	});
 
+//TODO: the same should be for modules
 });
 
 

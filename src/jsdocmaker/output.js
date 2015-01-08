@@ -1,4 +1,4 @@
-(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
+(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 
 
 // BINDING / post processing
@@ -891,179 +891,15 @@ require('./plugin/main.js');
 
 module.export = JsDocMaker;
 
-},{"./core/main":3,"./plugin/main.js":12}],10:[function(require,module,exports){
-
-// INHERITED methods&properties postproccessing. Optional
-
-//@method postProccessInherited calculates inherited methods&properties and put it in class'properties inheritedMethods and inheritedProperties
-JsDocMaker.prototype.postProccessInherited = function()
-{
-	var self = this;
-	_(self.data.classes).each(function(c)
-	{
-		c.inherited	= c.inherited || {}; 
-		var inheritedData = {}; 
-
-		c.inherited.methods = c.inherited.methods || {};
-		self.extractInherited(c, c.extends, 'method', inheritedData);
-		_(c.inherited.methods).extend(inheritedData); 
-
-		inheritedData = {}; 
-		c.inherited.properties = c.inherited.properties || {};
-		self.extractInherited(c, c.extends, 'property', inheritedData);
-		_(c.inherited.properties).extend(inheritedData); 
-
-		inheritedData = {}; 
-		c.inherited.events = c.inherited.events || {};
-		self.extractInherited(c, c.extends, 'event', inheritedData);
-		_(c.inherited.events).extend(inheritedData); 
-	});
-};
-
-//@method extractInherited @param baseClass @param c @param what @para data
-JsDocMaker.prototype.extractInherited = function(baseClass, c, what, data)
-{
-	var self = this;
-	if(!c || c.nativeTypeUrl)
-	{
-		return;
-	}
-	what = what || 'method'; 
-	if(what === 'method')
-	{		
-		_(c.methods).each(function(method, name)
-		{
-			baseClass.methods = baseClass.methods || {};
-			if(!baseClass.methods[name])
-			{
-				data[name] = method;
-				// TODO: here we can act and clone the inherited nodes and add more info about the owner
-				// data[name].inherited = true; 
-				// data[name].inheritedFrom = c; 
-			}
-		});
-	}
-	else if(what === 'property')
-	{
-		_(c.properties).each(function(p, name)
-		{
-			baseClass.properties = baseClass.properties || {};
-			if(!baseClass.properties[name])
-			{
-				data[name] = p;
-				// TODO: here we can act and clone the inherited nodes and add more info about the owner
-				// data[name].inherited = true; 
-				// data[name].inheritedFrom = c; 
-			}
-		});
-	}
-	else if(what === 'event')
-	{
-		_(c.events).each(function(p, name)
-		{
-			baseClass.events = baseClass.events || {};
-			if(!baseClass.events[name])
-			{
-				data[name] = p;
-				// TODO: here we can act and clone the inherited nodes and add more info about the owner	
-				// data[name].inherited = true; 
-				// data[name].inheritedFrom = c; 
-			}
-		});
-	}
-
-	if(c.extends && c !== c.extends) //recurse!
-	{
-		self.extractInherited(baseClass, c.extends, what, data);
-	}
-};
-
-//@method isClassOwner utility method for knowing if a property is defined in given class or is inherithed
-//@static @param aClass @param prop
-JsDocMaker.classOwnsProperty = function(aClass, prop)
-{
-	var result = prop.absoluteName && aClass.absoluteName && prop.absoluteName.indexOf(aClass.absoluteName) === 0; 
-	return result;
-}; 
-
-},{}],11:[function(require,module,exports){
-// this should be commented
-// it is an exmaple of a plugin that parse literal types like @param {#obj({p1:P1,p2:P2,...})} param1
-
-// CUSTOM TPE PLUGIN literalObjectParse - requires literalObjectParser.js - it adds support 
-// for the custom type syntax #obj({p1:P1,p2:P2,...})to express literal objects
-// syntax: {#obj(prop1:String,prop2:Array<Apple>)}
-// DEPRECATED - turn it into a unit test showing an  example of plugin 
-// @method literalObjectParse
-JsDocMaker.prototype.literalObjectParse = function(s, baseClass)
-{
-	var parsed = null
-	,	self=this
-	,	properties = {};
-	try
-	{
-		var result  = JsDocMaker.parseLiteralObjectType('{' + s + '}');
-		_(result).each(function(value, key)
-		{
-			var valueBinded = self.bindParsedType(value, baseClass);
-			properties[key] = valueBinded; 
-		}); 
-	}
-	catch(ex)
-	{
-		JsDocMaker.prototype.error('Failed to parse literal object ' + s);
-		throw ex;
-	}
-	return {
-		name: 'Object'
-	,	properties: properties
-	,	propertiesOriginal: parsed
-	}; 
-};
-
-JsDocMaker.prototype.literalObjectInstall = function()
-{	
-	this.typeParsers = this.typeParsers || {}; 
-	var parser = {
-		name: 'obj'
-	,	parse: _(this.literalObjectParse).bind(this)
-	};
-	this.registerTypeParser(parser); 
-}; 
-
-
-},{}],12:[function(require,module,exports){
+},{"./core/main":3,"./plugin/main.js":10}],10:[function(require,module,exports){
 'strict mode'; 
 
 var JsDocMaker = require('../core/main.js'); 
 
 require('./native-types.js'); 
-require('./modifiers.js'); 
-require('./inherited.js');
-require('./util.js');
-require('./literal-object.js');
 
 module.exports = JsDocMaker; 
-},{"../core/main.js":3,"./inherited.js":10,"./literal-object.js":11,"./modifiers.js":13,"./native-types.js":14,"./util.js":15}],13:[function(require,module,exports){
-
-//MODIFIERS postproccessing- like static, private, final. Optional module
-
-//@property {Array<String>}MODIFIERS @static
-JsDocMaker.MODIFIERS = ['static', 'private', 'final', 'deprecated', 'experimental', 'optional', 'abstract']; 
-//@method installModifiers sets the property modifiers to the node according its children
-JsDocMaker.prototype.installModifiers = function(node)
-{
-	node.modifiers = node.modifiers || []; 
-	_(node.children).each(function(child)
-	{
-		if(_(JsDocMaker.MODIFIERS).contains(child.annotation))
-		{
-			node.modifiers.push(child.annotation); 
-		}
-	});
-}; 
-
-},{}],14:[function(require,module,exports){
+},{"../core/main.js":3,"./native-types.js":11}],11:[function(require,module,exports){
 
 // NATIVE TYPES LINKING / post processing. Optional
 
@@ -1091,32 +927,4 @@ JsDocMaker.prototype.getNativeTypeUrl = function(name)
 	return customTypeUrl;
 }; 
 
-},{}],15:[function(require,module,exports){
-
-//@method recurseAST An utility method that can be used in extensions to visit all the ast nodes with given function 
-//@param {Function} fn
-JsDocMaker.prototype.recurseAST = function(fn)
-{
-	var self = this;
-	_(self.data.classes).each(function(c)
-	{
-		_(c.methods).each(function(m)
-		{
-			fn.apply(m, [m]); 
-			//TODO: params
-		}); 
-
-		_(c.properties).each(function(p)
-		{
-			fn.apply(p, [p]); 
-		}); 
-		//TODO: events
-	});
-	_(self.data.modules).each(function(m)
-	{
-		fn.apply(m, [m]); 
-	});
-}; 
-
-
-},{}]},{},[9]);
+},{}]},{},[9])

@@ -12,6 +12,7 @@
     "del": "*",
     "esprima": "*",
     "grunt": "*",
+    "grunt-browserify": "^3.2.1",
     "grunt-contrib-concat": "*",
     "grunt-contrib-connect": "*",
     "grunt-contrib-jshint": "*",
