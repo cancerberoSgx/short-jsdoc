@@ -4,20 +4,16 @@
 
 Listed from more important to less important:
  
- * issue - injection, the html class view has this bug Class TerranObject
-Extends Object{prototype: prototype} - types are printing wrong.
-
  * support globs in nodejs API
 
  * support the node application to define module automatically using input folder structure. 
 
  * remove asterix from package.json dependency versions
 
+ * escape @ in text
+ 
  * markdown in Line comments 
 
- * divide JsDocMaker in several files core, preprocessing, postprocessing, biding, etc.
-
- * issue: html app inherited props: only the super class inherited props are shown but not super-super class... also inherited classes should be grouped.
 
  * remove parseyourowncode,spec runner,etc from html application since this is particular of shortjsdoc. put it on readme.md or other app
  
@@ -33,7 +29,10 @@ Extends Object{prototype: prototype} - types are printing wrong.
  
  * @extends won't work with repeated class names. allow to pass an absolute name or log a warning.
 
- * @module foo bla bla bla @exports {ParserException:Error,parse:Function} bla bla bla
+ * @reference an entity like class/module/property/method can have a child @reference .THen it will have a references property showing locations in the code where that is used. for example
+    //@module m @class c @property p1
+    ....
+    //@reference m.c.p1
 
  
  * //TODO: test if we can get correct source comment location relative to the @filename. all nodes should have it- we have the file name but we need information about string fragment of the file of the particular comment
@@ -50,25 +49,12 @@ Extends Object{prototype: prototype} - types are printing wrong.
 
  * @link preprocessed comment that is replaced by html or mardown link at preprocessing.
 
- * idea: prove how extendable is short-jsdoc    
- * literal object syntax with types: @return {name: String, colors: Array<Color>}.
  
  * There is no class / module composite support. Classes inside classes and submodules. There is no way of expressing 'module myapp contains module view that contains module home. Only artificially by naming convention, this is @module myapp @module myapp.view @module myapp.view.home
 
  * use zepto instead jquery in html app
  
- * ISSUE: parser fail to parse more than two modifiers like these @final @static @myownmodifier - see issues spec.js
-
  * more gneeral idea: be able to register type-parser plugins, for example @param {#obj(name:String,colors:Array<Color>)} a - so this is a custom type parser - the user must also provide a function that returns the type object, like return {name: 'Object', objectProperties: {name: {name:'String'}, colors: {name:Array,params: {...}}}}
-
- * ISSUE: Resource not found page should have the header.
-
- * ISSUE: doing the following will fail parsing the param:
- /*@method1 blabla
- @returns {T} blabla*/
- //@param {R} param1
-
- * ISSUE: names with $
 
  * make jsdoc for javascript objects liek with methods, etc and offer the possibility to use that information jsdocs instead links to the nativemozilla document like now. This gives the possibility to really see all js attributes inherited from js api.
 
@@ -116,6 +102,49 @@ now you can use @task and it will be replaced to @module !
 
  * TODO: let the user mark some comment block somehow to let the parser to ignore it.
 
+
+
+
+
+##DONES - 
+
+thigs moved here after solving - instead erasing it.
+
+ * support comments like /** and in those remove ** prefix
+ * project metainformaton from package.json file 
+ * support the beauty /* * * * */ multiline block comments like eclipse's. Remove the first aster after a line.
+ * support throw/throws
+ * ISSUE: in the followin gorder doesn't work (return not shown) @throws {EquationError} @returns {Solution}  - - tip is I add a text after {EquationError} some text then it worls. tip: in the other order it works - this is right (but not desired) because returns is a second level and throws is first level. try to put return as a first level and see if it works
+ * module can now contain dots
+ * lasses can now defined in different texts, even it text.
+ * IDEA: in src/libs-jsdoc with folders like javascript/mozilla jQuery/ Backbone/. Thes folders contains .js files with short jsdoc OO for each library and they can be optionally imported when processing a project.  
+ * inherited fields should have the information from which class is inherited - this can be done easy using the name - done manually in the html app.
+ * literal object syntax with types: @return {name: String, colors: Array<Color>}.
+ * divide JsDocMaker in several files core, preprocessing, postprocessing, biding, etc.
+ * @module foo bla bla bla @exports {ParserException:Error,parse:Function} bla bla bla
+
+
+
+#ISSUES
+
+From most important to less:
+
+ * issue - injection, the html class view has this bug Class TerranObject
+Extends Object{prototype: prototype} - types are printing wrong.
+
+ * issue: html app inherited props: only the super class inherited props are shown but not super-super class... also inherited classes should be grouped.
+
+ * ISSUE: parser fail to parse more than two modifiers like these @final @static @myownmodifier - see issues spec.js
+
+ * ISSUE: Resource not found page should have the header.
+
+ * ISSUE: doing the following will fail parsing the param:
+ /*@method1 blabla
+ @returns {T} blabla*/
+ //@param {R} param1
+
+ * ISSUE: names with $
+
  * issue seems to be failing wen text contains underscore template code: //@method renderTemplate renders underscore templates using a ShopperState context.  
 
     // Example: state.renderTemplate("hello <%= get('item').get('_price')%>")
@@ -136,24 +165,6 @@ now you can use @task and it will be replaced to @module !
     ,   output: 'jsdochtml'
     }); 
 
-
-
-
-
-
-##done:
-
-thigs moved here after solving - instead erasing it.
-
- * support comments like /** and in those remove ** prefix
- * project metainformaton from package.json file 
- * support the beauty /* * * * */ multiline block comments like eclipse's. Remove the first aster after a line.
- * support throw/throws
- * ISSUE: in the followin gorder doesn't work (return not shown) @throws {EquationError} @returns {Solution}  - - tip is I add a text after {EquationError} some text then it worls. tip: in the other order it works - this is right (but not desired) because returns is a second level and throws is first level. try to put return as a first level and see if it works
- * module can now contain dots
- * lasses can now defined in different texts, even it text.
- * IDEA: in src/libs-jsdoc with folders like javascript/mozilla jQuery/ Backbone/. Thes folders contains .js files with short jsdoc OO for each library and they can be optionally imported when processing a project.  
- * inherited fields should have the information from which class is inherited - this can be done easy using the name - done manually in the html app.
 
 
 

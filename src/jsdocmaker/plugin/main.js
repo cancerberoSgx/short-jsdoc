@@ -7,5 +7,6 @@ require('./modifiers.js');
 require('./inherited.js');
 require('./util.js');
 require('./literal-object.js');
+require('./module-exports.js');
 
 module.exports = JsDocMaker; 

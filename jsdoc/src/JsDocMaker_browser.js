@@ -1791,15 +1791,10 @@ JsDocMaker.prototype.parse = function(comments)
 	this.data.modules = this.data.modules || {}; 
 	this.data.filenames = this.data.filenames || {}; 
 
-	// _(this.commentPreprocessors).each(function(preprocessor)
-	// {
-	// 	preprocessor.apply(self, [self]); 
-	// });
 	self.allCommentPreprocessorPlugins.execute({node: self.comments, jsdocMaker: self}); 
 
 	_(self.comments).each(function(node)
 	{
-
 		self.commentPreprocessorPlugins.execute({node: node, jsdocMaker: self}); 
 
 		var regex = /((?:@class)|(?:@method)|(?:@property)|(?:@method)|(?:@module)|(?:@event)|(?:@constructor)|(?:@filename))/gi; 
@@ -1815,15 +1810,15 @@ JsDocMaker.prototype.parse = function(comments)
 			_(parsed_array).each(function(parsed)
 			{
 				parsed.commentRange = node.range;
-				parsed.file = currentFile;
+				parsed.file = (currentFile && currentFile.name) ? currentFile.name : undefined;
 
 				delete parsed.theRestString; 
 
-				//Note: here is the (only) place were the 'primary tags' are implemented 
+				self.beforeParseNodePlugins.execute({node:parsed, jsdocmaker:self}); 
+
+				//Note: the following lines is the (only) place were the 'primary annotations' (class,module,method,property) are implemented 
 				//We get primary tags like class,module,method,property and form the first primary AST (a module contains classes which contain methods and properties)
 				//All the other annotations are treated as secondary, this means they will be assigned as childresn to the last primary annotation.
-
-				self.beforeParseNodePlugins.execute({node:parsed, jsdocmaker:self}); 
 
 				if(parsed.annotation === 'class') 
 				{
@@ -1857,6 +1852,8 @@ JsDocMaker.prototype.parse = function(comments)
 				{
 					currentFile = parsed; 
 					currentFile.fileName = parsed.text; 
+					delete parsed.text;
+					self.data.filenames[parsed.name] = parsed;
 				}
 
 				else if(parsed.annotation === 'module')
@@ -1918,6 +1915,16 @@ JsDocMaker.prototype.parse = function(comments)
 						currentMethod.params[parsed.name] = parsed; 
 					}
 				}
+
+				self.afterParseNodePlugins.execute({
+					node: parsed
+				,	jsdocMaker: self
+					//add loop context information to plugins
+				,	currentClass: currentClass
+				,	currentMethod: currentMethod
+				,	currentModule: currentModule
+				,	currentFile: currentFile
+				});
 			}); 
 		});
 		
@@ -1999,6 +2006,18 @@ JsDocMaker.prototype.parseUnitSimple = function(str, comment)
 	return ret;
 }; 
 
+
+
+// at last we want to document the output ast data that the parser returns:
+
+// @property {JsDocMaker.Data} data the main data on which the parser and plugins will be working on. This is the resulting AST of jsdoc.
+
+// @class JsDocMaker.Data
+// @property {Object<String, JsDocASTNode>} methods
+// @property {Object<JsDocASTNode>} classes
+// @property {Array<JsDocASTNode>} classes
+
+//@class JsDocASTNode all the jsdoc parsed information is stored as nodes one containing others. modules contains classes, @class contains methods and @method contains @param and @returns
 },{"./class":3,"./plugin":6,"underscore":1}],6:[function(require,module,exports){
 // @module shortjsdoc.plugin
 var JsDocMaker = require('./class')
@@ -2014,7 +2033,7 @@ var PluginContainer = function()
 //expose
 JsDocMaker.PluginContainer = PluginContainer; 
 
-//@method
+//@method add @param {JsDocMakerPlugin} plugin
 PluginContainer.prototype.add = function(plugin)
 {
 	this.plugins.push(plugin); 
@@ -2033,22 +2052,26 @@ PluginContainer.prototype.execute = function(options, input)
 
 // TODO: priority
 
-// @class Plugin
+
+//@method globalPlugins @static
+// JsDocMaker.registerGlobalPlugin = function(pluginContainerName, plugin)
+// {
+// 	JsDocMaker.prototype.plugins = JsDocMaker.prototype.plugins || {};
+// 	JsDocMaker.globalPlugins[pluginContainerName] = JsDocMaker.globalPlugins[pluginContainerName] || {}; 
+// }; 
+// //@method initializePluginContainers called in the constructor - will install all static plugins registered with JsDocMaker.registerGlobalPlugin
+// JsDocMaker.prototype.initializePluginContainers = function()
+// {
+// }
+
+
+
+
+
+// @class JsDocMakerPlugin
+// @property {String} name
 // @method execute execute this plugin @param{Object}options @param {Any}result 
 // @returns{Any} result possible enriched by the plugin in the chain
-
-//@@method globalPlugins @static
-JsDocMaker.registerGlobalPlugin = function(pluginContainerName, plugin)
-{
-	JsDocMaker.globalPlugins = JsDocMaker.globalPlugins || {};
-	JsDocMaker.globalPlugins[pluginContainerName] = JsDocMaker.globalPlugins[pluginContainerName] || {}; 
-}; 
-
-//@method initializePluginContainers called in the constructor - will install all static plugins registered with JsDocMaker.registerGlobalPlugin
-JsDocMaker.prototype.initializePluginContainers = function()
-{
-
-}
 
 module.exports = PluginContainer;
 },{"./class":3,"underscore":1}],7:[function(require,module,exports){
@@ -2231,13 +2254,21 @@ JsDocMaker.prototype.postProccessBinding = function()
 };
 
 },{"./class":3,"./plugin":6,"underscore":1}],8:[function(require,module,exports){
-// @module shortjsdoc @class JsDocMaker
+/* @module shortjsdoc
+
+#Comment Preprocessors
+
+The core of comment preprocessing is done ba couple of plugins executed at allCommentPreprocessorPlugins and 
+ingeneral normalizes the comments text, delete non relevant comments, unify line comments into a single one, etc
+
+*/
 var JsDocMaker = require('./class'); 
 var _ = require('underscore'); 
 
 //COMMENT PREPROCESSORS
 
-//@me   thod preprocessComments do an initial preprocesing on the comments erasing those marked to be ignored, and fixing its text to support alternative syntax.
+//@class PreprocessCommentsPlugin1 @extends JsDocMakerPlugin  this plugin is registered in JsDocMaker.prototype.allCommentPreprocessorPlugins plugin container
+// and do an initial preprocesing on the comments erasing those marked comments to be ignored, and fixing its text to support alternative syntax.
 var preprocessCommentsPlugin1 = {
 	name: 'preprocessCommentsPlugin1'
 ,	execute: function(options)
@@ -2270,8 +2301,8 @@ var preprocessCommentsPlugin1 = {
 JsDocMaker.prototype.allCommentPreprocessorPlugins.add(preprocessCommentsPlugin1);//.push(JsDocMaker.prototype.preprocessComments); 
 
 
-//@met  hod fixUnamedAnnotations - our regexp format expect an anotation with a name. So for enabling unamed annotations we do this dirty fix, this is add a name to 
-//precondition
+//@class FixUnamedAnnotationsPlugin @extends JsDocMakerPlugin This plugin is installed at JsDocMaker.prototype.commentPreprocessorPlugins and and solves the following problem: 
+//Our regexp format expect an anotation with a name. So for enabling unamed annotations we do this dirty fix, this is add a name to precondition
 var fixUnamedAnnotationsPlugin = {
 	name: 'fixUnamedAnnotationsPlugin'
 ,	execute: function(options)
@@ -2290,6 +2321,8 @@ var fixUnamedAnnotationsPlugin = {
 //install it as comment preprocessor plugin!
 JsDocMaker.prototype.commentPreprocessorPlugins.add(fixUnamedAnnotationsPlugin); 
 
+//@class UnifyLineCommentsPlugin @extends JsDocMakerPlugin this is a very important plugin for normalize our js input Line comments 
+// It is executed at JsDocMaker.prototype.allCommentPreprocessorPlugins
 var unifyLineCommentsPlugin = {
 	name: 'unifyLineCommentsPlugin'
 ,	execute: function(options)
@@ -2322,36 +2355,6 @@ var unifyLineCommentsPlugin = {
 }; 
 JsDocMaker.prototype.allCommentPreprocessorPlugins.add(unifyLineCommentsPlugin); 
 
-
-// @m  ethod unifyLineComments unify adjacents Line comment nodes into one in the ns.syntax.coments generated after visiting. 
-// JsDocMaker.prototype.unifyLineComments = function()
-// {
-// 	var i = 0;
-	
-// 	//@property {String} lineCommentSeparator used to separate each Line comment type text
-// 	this.lineCommentSeparator = this.lineCommentSeparator || ' '; 
-
-// 	while(i < this.comments.length - 1)
-// 	{
-// 		var c = this.comments[i]
-// 		,	next = this.comments[i+1]; 
-
-// 		var sss = JsDocMaker.stringFullTrim(this.data.source.substring(c.range[1], next.range[0])); 
-// 		if (c.type==='Line' && next.type==='Line' && !sss)
-// 		{
-// 			c.value += ' ' + this.lineCommentSeparator + ' ' + next.value; 
-// 			c.range[1] = next.range[1]; 
-// 			this.comments.splice(i+1, 1); 
-// 		}
-// 		else
-// 		{
-// 			i++;
-// 		}
-// 	}
-// }; 
-
-//install it as comment preprocessor plugin!
-// JsDocMaker.prototype.commentPreprocessors.push(JsDocMaker.prototype.unifyLineComments); 
 
 },{"./class":3,"underscore":1}],9:[function(require,module,exports){
 /* jshint evil:true */
@@ -3178,9 +3181,10 @@ require('./modifiers.js');
 require('./inherited.js');
 require('./util.js');
 require('./literal-object.js');
+require('./module-exports.js');
 
 module.exports = JsDocMaker; 
-},{"../core/main.js":4,"./inherited.js":13,"./literal-object.js":14,"./modifiers.js":16,"./native-types.js":17,"./util.js":18}],16:[function(require,module,exports){
+},{"../core/main.js":4,"./inherited.js":13,"./literal-object.js":14,"./modifiers.js":16,"./module-exports.js":17,"./native-types.js":18,"./util.js":19}],16:[function(require,module,exports){
 // @module shortjsdoc @class JsDocMaker
 var JsDocMaker = require('../core/class'); 
 var _ = require('underscore'); 
@@ -3203,6 +3207,65 @@ JsDocMaker.prototype.installModifiers = function(node)
 }; 
 
 },{"../core/class":3,"underscore":1}],17:[function(require,module,exports){
+/* @module shortjsdoc.plugins
+
+#@module @exports
+the module AST will contain a property exports pointing to a type that can be complex. Example:
+
+	@module module1 blabla
+	@class MyTool1
+	@exports {version:String,Tool:MyTool1}
+*/
+
+var JsDocMaker = require('../core/class'); 
+var _ = require('underscore'); 
+
+
+var plugin_beforeParser = {
+	name: '@exports support - before parser'
+,	execute: function(options)
+	{
+		var node = options.node
+		,	jsdocMaker = options.jsdocmaker; 
+		if(node.annotation!='module')
+		{
+			return;
+		}
+		var exports = _(node.children).select(function(child)
+		{
+			return child.annotation=='exports';
+		}) || null;
+
+		if(exports && exports.length)
+		{
+			exports = exports[0]; 
+			node.exports = exports;
+			//name is part of the text
+			exports.text = exports.name + ' ' + exports.text; 
+		}
+	}
+}; 
+
+JsDocMaker.prototype.beforeTypeBindingPlugins.add(plugin_beforeParser); 
+
+var plugin_beforeTypeBinding = {
+	name: '@exports supprot - before type binding'
+,	execute: function(options)
+	{
+		var node = options.node
+		,	jsdocMaker = options.jsdocmaker; 
+		if(node.annotation!='module' || !node.exports || !node.exports.type)
+		{
+			return;
+		}
+		var parsedType = jsdocMaker.parseTypeString(node.exports.type, node);
+		node.exports.typeString = node.exports.type;
+		node.exports.type = parsedType;
+	}
+}; 
+
+JsDocMaker.prototype.beforeTypeBindingPlugins.add(plugin_beforeTypeBinding); 
+},{"../core/class":3,"underscore":1}],18:[function(require,module,exports){
 // @module shortjsdoc @class JsDocMaker
 var JsDocMaker = require('../core/class'); 
 var _ = require('underscore'); 
@@ -3233,7 +3296,7 @@ JsDocMaker.prototype.getNativeTypeUrl = function(name)
 	return customTypeUrl;
 }; 
 
-},{"../core/class":3,"underscore":1}],18:[function(require,module,exports){
+},{"../core/class":3,"underscore":1}],19:[function(require,module,exports){
 // @module shortjsdoc @class JsDocMaker
 var JsDocMaker = require('../core/class'); 
 var _ = require('underscore'); 

@@ -44,19 +44,25 @@ _(ShortJsDoc.prototype).extend({
 
 		var inputDirs = argv.input.split(','); 
 
+		var projectMetadata = {};
+		if(argv.projectMetadata)
+		{
+			projectMetadata = this.tryToParseJsonFile(argv.projectMetadata) || {};
+		}
+
 		var jsdoc = this.execute({
 			inputDirs: inputDirs
-		,	projectMetadata: argv.projectMetadata
+		,	projectMetadata: projectMetadata
 		});
 
-		// if(typeof(projectMetadata)!== 'undefined' && projectMetadata.jsdoc && projectMetadata.jsdoc.dontMinifyOutput)
-		// {		
-		// 	console.log(JSON.stringify(jsdoc, null, 4)); // dump the output indented:
-		// }
-		// else
-		// {			
+		if(argv.dontMinifyOutput || projectMetadata.jsdoc && projectMetadata.jsdoc.dontMinifyOutput)
+		{		
+			console.log(JSON.stringify(jsdoc, null, 4)); // dump the output indented:
+		}
+		else
+		{			
 			console.log(JSON.stringify(jsdoc)); // dump the output minified:
-		// }
+		}
 
 	}
 
@@ -102,15 +108,8 @@ _(ShortJsDoc.prototype).extend({
 		}
 
 		var jsdoc = this.maker.data;
-		if(options.projectMetadata)
-		{
-			var parsed = this.tryToParseJsonFile(options.projectMetadata);
 
-			if (parsed)
-			{
-				jsdoc.projectMetadata = parsed;
-			}
-		}
+		jsdoc.projectMetadata = options.projectMetadata || {name: 'Untitled Project'};
 
 		this.maker.postProccess();
 		

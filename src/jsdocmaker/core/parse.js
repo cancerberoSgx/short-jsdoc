@@ -76,17 +76,12 @@ JsDocMaker.prototype.parse = function(comments)
 	this.data = this.data || {}; 
 	this.data.classes = this.data.classes || {}; 
 	this.data.modules = this.data.modules || {}; 
-	this.data.filenames = this.data.filenames || {}; 
+	this.data.files = this.data.files || {}; 
 
-	// _(this.commentPreprocessors).each(function(preprocessor)
-	// {
-	// 	preprocessor.apply(self, [self]); 
-	// });
 	self.allCommentPreprocessorPlugins.execute({node: self.comments, jsdocMaker: self}); 
 
 	_(self.comments).each(function(node)
 	{
-
 		self.commentPreprocessorPlugins.execute({node: node, jsdocMaker: self}); 
 
 		var regex = /((?:@class)|(?:@method)|(?:@property)|(?:@method)|(?:@module)|(?:@event)|(?:@constructor)|(?:@filename))/gi; 
@@ -102,15 +97,15 @@ JsDocMaker.prototype.parse = function(comments)
 			_(parsed_array).each(function(parsed)
 			{
 				parsed.commentRange = node.range;
-				parsed.file = currentFile;
+				parsed.fileName = (currentFile && currentFile.fileName) ? currentFile.fileName : undefined;
 
 				delete parsed.theRestString; 
 
-				//Note: here is the (only) place were the 'primary tags' are implemented 
+				self.beforeParseNodePlugins.execute({node:parsed, jsdocmaker:self}); 
+
+				//Note: the following lines is the (only) place were the 'primary annotations' (class,module,method,property) are implemented 
 				//We get primary tags like class,module,method,property and form the first primary AST (a module contains classes which contain methods and properties)
 				//All the other annotations are treated as secondary, this means they will be assigned as childresn to the last primary annotation.
-
-				self.beforeParseNodePlugins.execute({node:parsed, jsdocmaker:self}); 
 
 				if(parsed.annotation === 'class') 
 				{
@@ -144,6 +139,8 @@ JsDocMaker.prototype.parse = function(comments)
 				{
 					currentFile = parsed; 
 					currentFile.fileName = parsed.text; 
+					delete parsed.text;
+					self.data.files[currentFile.fileName] = currentFile;
 				}
 
 				else if(parsed.annotation === 'module')
@@ -205,6 +202,16 @@ JsDocMaker.prototype.parse = function(comments)
 						currentMethod.params[parsed.name] = parsed; 
 					}
 				}
+
+				self.afterParseNodePlugins.execute({
+					node: parsed
+				,	jsdocMaker: self
+					//add loop context information to plugins
+				,	currentClass: currentClass
+				,	currentMethod: currentMethod
+				,	currentModule: currentModule
+				,	currentFile: currentFile
+				});
 			}); 
 		});
 		
@@ -285,3 +292,16 @@ JsDocMaker.prototype.parseUnitSimple = function(str, comment)
 
 	return ret;
 }; 
+
+
+
+// at last we want to document the output ast data that the parser returns:
+
+// @property {JsDocMaker.Data} data the main data on which the parser and plugins will be working on. This is the resulting AST of jsdoc.
+
+// @class JsDocMaker.Data
+// @property {Object<String, JsDocASTNode>} methods
+// @property {Object<JsDocASTNode>} classes
+// @property {Array<JsDocASTNode>} classes
+
+//@class JsDocASTNode all the jsdoc parsed information is stored as nodes one containing others. modules contains classes, @class contains methods and @method contains @param and @returns

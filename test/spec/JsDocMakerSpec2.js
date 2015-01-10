@@ -1,39 +1,42 @@
 
-describe("beforeParseNodePlugins", function() 
+
+describe("parsing multiple files using addFile and jsdoc()", function() 
 {
 	var jsdoc, maker; 
 
 	beforeEach(function() 
 	{
-		var code = 
-			'//@module mymodule bla bla ' + '\n' +
-			'//@exports {MainClass1} this is all text explaining the reason of exporting this value' + '\n' +
-			'//@class MainClass1 bla bla ' + '\n' +
-
-			'//@module mymodule2 bla bla ' + '\n' +
-			'//@exports {version:String,Class:UtilityClass1} this is all text explaining the reason of exporting this value' + '\n' +
-			'//@class UtilityClass1 bla bla ' + '\n' +
-			'';
+		var files = {
+			'code1.js':
+				'//@module mymodule' + '\n' +
+				'//@class Easy easy named class' + '\n' +
+				'//@method getState @returns {Car}' + '\n' +
+				''
+		,	'/opt/lamp/code2.js':
+				'//@module mymodule2' + '\n' +
+				'//@class Easy2 easy named class' + '\n' +
+				'//@method getState2 @returns {Car2}' + '\n' +
+				''
+		}; 
 
 		maker = new JsDocMaker();
-		
 
-		maker.addFile(code, 'name.js');
+		_(files).each(function(value, name)
+		{
+			maker.addFile(value, name);
+		}); 
+
 		jsdoc = maker.jsdoc();
-		maker.postProccess();
-		maker.postProccessBinding();
 	});
 
-	it("classes with all accepted chars referred from complex objects", function() 
+	it("parsed AST should contain references to file names and file location", function() 
 	{
-		var m = jsdoc.modules.mymodule;
-		expect(m.exports.text).toBe('this is all text explaining the reason of exporting this value'); 
-		expect(m.exports.type.absoluteName).toBe('mymodule.MainClass1'); 
+		var m = jsdoc.classes['mymodule.Easy'].methods.getState;
+		debugger;
+		expect(jsdoc.classes['mymodule.Easy'].fileName).toBe('code1.js'); 
+		expect(jsdoc.classes['mymodule2.Easy2'].methods.getState2.fileName).toBe('/opt/lamp/code2.js'); 
 
-		var m2 = jsdoc.modules.mymodule2;
-		expect(m2.exports.type.name).toBe('Object'); 
-		expect(m2.exports.type.properties.version.name).toBe('String'); 
-		expect(m2.exports.type.properties.Class.absoluteName).toBe('mymodule2.UtilityClass1'); 
+		//TODO: test if we can get correct source location.
 	});
 
 });

@@ -12,7 +12,7 @@ var PluginContainer = function()
 //expose
 JsDocMaker.PluginContainer = PluginContainer; 
 
-//@method
+//@method add @param {JsDocMakerPlugin} plugin
 PluginContainer.prototype.add = function(plugin)
 {
 	this.plugins.push(plugin); 
@@ -31,21 +31,25 @@ PluginContainer.prototype.execute = function(options, input)
 
 // TODO: priority
 
-// @class Plugin
+
+//@method globalPlugins @static
+// JsDocMaker.registerGlobalPlugin = function(pluginContainerName, plugin)
+// {
+// 	JsDocMaker.prototype.plugins = JsDocMaker.prototype.plugins || {};
+// 	JsDocMaker.globalPlugins[pluginContainerName] = JsDocMaker.globalPlugins[pluginContainerName] || {}; 
+// }; 
+// //@method initializePluginContainers called in the constructor - will install all static plugins registered with JsDocMaker.registerGlobalPlugin
+// JsDocMaker.prototype.initializePluginContainers = function()
+// {
+// }
+
+
+
+
+
+// @class JsDocMakerPlugin
+// @property {String} name
 // @method execute execute this plugin @param{Object}options @param {Any}result 
 // @returns{Any} result possible enriched by the plugin in the chain
-
-//@@method globalPlugins @static
-JsDocMaker.registerGlobalPlugin = function(pluginContainerName, plugin)
-{
-	JsDocMaker.globalPlugins = JsDocMaker.globalPlugins || {};
-	JsDocMaker.globalPlugins[pluginContainerName] = JsDocMaker.globalPlugins[pluginContainerName] || {}; 
-}; 
-
-//@method initializePluginContainers called in the constructor - will install all static plugins registered with JsDocMaker.registerGlobalPlugin
-JsDocMaker.prototype.initializePluginContainers = function()
-{
-
-}
 
 module.exports = PluginContainer;

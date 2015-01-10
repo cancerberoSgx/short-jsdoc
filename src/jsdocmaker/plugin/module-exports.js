@@ -1,5 +1,16 @@
+/* @module shortjsdoc.plugins
+
+#@module @exports
+the module AST will contain a property exports pointing to a type that can be complex. Example:
+
+	@module module1 blabla
+	@class MyTool1
+	@exports {version:String,Tool:MyTool1}
+*/
+
 var JsDocMaker = require('../core/class'); 
 var _ = require('underscore'); 
+
 
 var plugin_beforeParser = {
 	name: '@exports support - before parser'
@@ -25,7 +36,8 @@ var plugin_beforeParser = {
 		}
 	}
 }; 
-maker.beforeTypeBindingPlugins.add(plugin_beforeParser); 
+  
+JsDocMaker.prototype.beforeTypeBindingPlugins.add(plugin_beforeParser); 
 
 var plugin_beforeTypeBinding = {
 	name: '@exports supprot - before type binding'
@@ -43,4 +55,4 @@ var plugin_beforeTypeBinding = {
 	}
 }; 
 
-maker.beforeTypeBindingPlugins.add(plugin_beforeTypeBinding); 
+JsDocMaker.prototype.beforeTypeBindingPlugins.add(plugin_beforeTypeBinding); 

@@ -63,12 +63,14 @@ describe("Basic jsdoc parser", function()
 	it("methods", function() 
 	{
 		expect(Apple.methods.beEatenBy).toBeDefined();
+		expect(Apple.methods.beEatenBy.name).toBe('beEatenBy');
 		expect(Apple.methods.beEatenBy.absoluteName).toBe('livingThings.Apple.beEatenBy');
 	});
 
 	it("properties", function() 
 	{
 		expect(Apple.properties.color.name).toBe('color');
+		expect(Apple.properties.color.absoluteName).toBe('livingThings.Apple.color');
 		expect(Apple.properties.color.type.name).toBe('Color');
 		expect(Apple.properties.color.text).toBe('the main color of this fruit');
 	});	
@@ -84,7 +86,7 @@ describe("Basic jsdoc parser", function()
 	{
 		expect(Lemon.constructors.length).toBe(2); 
 		expect(Lemon.constructors[0].name).toBe('0'); 
-		expect(Lemon.constructors[0].absoluteName).toBe('__DefaultModule.Lemon.0'); 
+		expect(Lemon.constructors[0].absoluteName.indexOf('Lemon.0')>0).toBe(true); 
 		expect(Lemon.constructors[0].text).toBe('the Lemon public constructor signature');
 		expect(Lemon.constructors[0].params[0].name).toBe('color');
 		expect(Lemon.constructors[0].params[0].type.name).toBe('Color');
@@ -610,51 +612,46 @@ describe("support comment preprocessor", function()
 
 
 describe("support custom type parsers", function() 
-{			
-	describe("same", function() 
+{
+	it("example1: we define the custom type syntax {#lemmon(prop1)} that returns a relevant type object", function() 
 	{
-		it("example1: we define the custom type syntax {#lemmon(prop1)} that returns a relevant type object", function() 
-		{
-			var code = 
-				'//@module customTypeParsers' + '\n' +	
-				'/*@class Vanilla some text ' + '\n' +	
-				'@method method1' + '\n' +	
-				'@return {#lemmon(acid,lazy,green)} */' + '\n' +
-				''; 
+		var code = 
+			'//@module customTypeParsers' + '\n' +	
+			'/*@class Vanilla some text ' + '\n' +	
+			'@method method1' + '\n' +	
+			'@return {#lemmon(acid,lazy,green)} */' + '\n' +
+			''; 
 
-			var maker = new JsDocMaker();
+		var maker = new JsDocMaker();
 
-			// define and regiter a custom type syntax:
-			var customTypeParser = {
-				name: 'lemmon'	
-			,	parse: function(s)
-				{
-					// variable s is the text body of the custom type for example 'acid,lazy,green'.
-					// we return the following object as this type obejct implementation.
-					return {
-						name: 'Object'
-					,	lemmonProperties: s.split(',')
-					}; 
-				}
-			};
-			maker.registerTypeParser(customTypeParser); 
+		// define and regiter a custom type syntax:
+		var customTypeParser = {
+			name: 'lemmon'	
+		,	parse: function(s)
+			{
+				// variable s is the text body of the custom type for example 'acid,lazy,green'.
+				// we return the following object as this type obejct implementation.
+				return {
+					name: 'Object'
+				,	lemmonProperties: s.split(',')
+				}; 
+			}
+		};
+		maker.registerTypeParser(customTypeParser); 
 
-			//then do the parsing
-			maker.parseFile(code); 
-			maker.postProccess();
-			maker.postProccessBinding();
-			var jsdoc = maker.data;
+		//then do the parsing
+		maker.parseFile(code); 
+		maker.postProccess();
+		maker.postProccessBinding();
+		var jsdoc = maker.data;
 
-			var Vanilla = jsdoc.classes['customTypeParsers.Vanilla'];
-			var return1 = Vanilla.methods.method1.returns.type; 
-			expect(return1.lemmonProperties[0]).toBe('acid'); 
-			expect(return1.lemmonProperties[1]).toBe('lazy'); 
-			expect(return1.lemmonProperties[2]).toBe('green'); 
-			expect(return1.name).toBe('Object'); 
-		});
+		var Vanilla = jsdoc.classes['customTypeParsers.Vanilla'];
+		var return1 = Vanilla.methods.method1.returns.type; 
+		expect(return1.lemmonProperties[0]).toBe('acid'); 
+		expect(return1.lemmonProperties[1]).toBe('lazy'); 
+		expect(return1.lemmonProperties[2]).toBe('green'); 
+		expect(return1.name).toBe('Object'); 
 	});
-
-
 });
 
 
@@ -971,8 +968,12 @@ describe("parsing multiple files using addFile and jsdoc()", function()
 	it("parsed AST should contain references to file names and file location", function() 
 	{
 		var m = jsdoc.classes['mymodule.Easy'].methods.getState;
-		expect(jsdoc.classes['mymodule.Easy'].file.fileName).toBe('code1.js'); 
-		expect(jsdoc.classes['mymodule2.Easy2'].methods.getState2.file.fileName).toBe('/opt/lamp/code2.js'); 
+		expect(jsdoc.classes['mymodule.Easy'].fileName).toBe('code1.js'); 
+		expect(jsdoc.classes['mymodule2.Easy2'].methods.getState2.fileName).toBe('/opt/lamp/code2.js'); 
+
+		//wecaan access all the information about a file 
+		var f2 = jsdoc.files[jsdoc.classes['mymodule2.Easy2'].methods.getState2.fileName];
+		expect(f2.fileName).toBe('/opt/lamp/code2.js'); 
 
 		//TODO: test if we can get correct source location.
 	});
@@ -1022,6 +1023,42 @@ describe("object literal notation", function()
 
 
 
+describe("@module @exports {Type}", function() 
+{
+	var jsdoc, maker; 
+
+	beforeEach(function() 
+	{
+		var code = 
+			'//@module mymodule bla bla ' + '\n' +
+			'//@exports {MainClass1} this is all text explaining the reason of exporting this value' + '\n' +
+			'//@class MainClass1 bla bla ' + '\n' +
+
+			'//@module mymodule2 bla bla ' + '\n' +
+			'//@exports {version:String,Class:UtilityClass1} this is all text explaining the reason of exporting this value' + '\n' +
+			'//@class UtilityClass1 bla bla ' + '\n' +
+			'';
+
+		maker = new JsDocMaker();
+		maker.addFile(code, 'name.js');
+		jsdoc = maker.jsdoc();
+		maker.postProccess();
+		maker.postProccessBinding();
+	});
+
+	it("@module can have @export tags that accept a type and text", function() 
+	{
+		var m = jsdoc.modules.mymodule;
+		expect(m.exports.text).toBe('this is all text explaining the reason of exporting this value'); 
+		expect(m.exports.type.absoluteName).toBe('mymodule.MainClass1'); 
+
+		var m2 = jsdoc.modules.mymodule2;
+		expect(m2.exports.type.name).toBe('Object'); 
+		expect(m2.exports.type.properties.version.name).toBe('String'); 
+		expect(m2.exports.type.properties.Class.absoluteName).toBe('mymodule2.UtilityClass1'); 
+	});
+
+});
 });
 
 

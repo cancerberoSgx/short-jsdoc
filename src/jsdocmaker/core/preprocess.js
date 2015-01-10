@@ -1,10 +1,18 @@
-// @module shortjsdoc @class JsDocMaker
+/* @module shortjsdoc
+
+#Comment Preprocessors
+
+The core of comment preprocessing is done ba couple of plugins executed at allCommentPreprocessorPlugins and 
+ingeneral normalizes the comments text, delete non relevant comments, unify line comments into a single one, etc
+
+*/
 var JsDocMaker = require('./class'); 
 var _ = require('underscore'); 
 
 //COMMENT PREPROCESSORS
 
-//@me   thod preprocessComments do an initial preprocesing on the comments erasing those marked to be ignored, and fixing its text to support alternative syntax.
+//@class PreprocessCommentsPlugin1 @extends JsDocMakerPlugin  this plugin is registered in JsDocMaker.prototype.allCommentPreprocessorPlugins plugin container
+// and do an initial preprocesing on the comments erasing those marked comments to be ignored, and fixing its text to support alternative syntax.
 var preprocessCommentsPlugin1 = {
 	name: 'preprocessCommentsPlugin1'
 ,	execute: function(options)
@@ -37,8 +45,8 @@ var preprocessCommentsPlugin1 = {
 JsDocMaker.prototype.allCommentPreprocessorPlugins.add(preprocessCommentsPlugin1);//.push(JsDocMaker.prototype.preprocessComments); 
 
 
-//@met  hod fixUnamedAnnotations - our regexp format expect an anotation with a name. So for enabling unamed annotations we do this dirty fix, this is add a name to 
-//precondition
+//@class FixUnamedAnnotationsPlugin @extends JsDocMakerPlugin This plugin is installed at JsDocMaker.prototype.commentPreprocessorPlugins and and solves the following problem: 
+//Our regexp format expect an anotation with a name. So for enabling unamed annotations we do this dirty fix, this is add a name to precondition
 var fixUnamedAnnotationsPlugin = {
 	name: 'fixUnamedAnnotationsPlugin'
 ,	execute: function(options)
@@ -57,6 +65,8 @@ var fixUnamedAnnotationsPlugin = {
 //install it as comment preprocessor plugin!
 JsDocMaker.prototype.commentPreprocessorPlugins.add(fixUnamedAnnotationsPlugin); 
 
+//@class UnifyLineCommentsPlugin @extends JsDocMakerPlugin this is a very important plugin for normalize our js input Line comments 
+// It is executed at JsDocMaker.prototype.allCommentPreprocessorPlugins
 var unifyLineCommentsPlugin = {
 	name: 'unifyLineCommentsPlugin'
 ,	execute: function(options)
@@ -89,33 +99,3 @@ var unifyLineCommentsPlugin = {
 }; 
 JsDocMaker.prototype.allCommentPreprocessorPlugins.add(unifyLineCommentsPlugin); 
 
-
-// @m  ethod unifyLineComments unify adjacents Line comment nodes into one in the ns.syntax.coments generated after visiting. 
-// JsDocMaker.prototype.unifyLineComments = function()
-// {
-// 	var i = 0;
-	
-// 	//@property {String} lineCommentSeparator used to separate each Line comment type text
-// 	this.lineCommentSeparator = this.lineCommentSeparator || ' '; 
-
-// 	while(i < this.comments.length - 1)
-// 	{
-// 		var c = this.comments[i]
-// 		,	next = this.comments[i+1]; 
-
-// 		var sss = JsDocMaker.stringFullTrim(this.data.source.substring(c.range[1], next.range[0])); 
-// 		if (c.type==='Line' && next.type==='Line' && !sss)
-// 		{
-// 			c.value += ' ' + this.lineCommentSeparator + ' ' + next.value; 
-// 			c.range[1] = next.range[1]; 
-// 			this.comments.splice(i+1, 1); 
-// 		}
-// 		else
-// 		{
-// 			i++;
-// 		}
-// 	}
-// }; 
-
-//install it as comment preprocessor plugin!
-// JsDocMaker.prototype.commentPreprocessors.push(JsDocMaker.prototype.unifyLineComments); 
