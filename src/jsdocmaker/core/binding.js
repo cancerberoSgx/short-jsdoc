@@ -1,3 +1,4 @@
+// @module shortjsdoc @class JsDocMaker
 var JsDocMaker = require('./class'); 
 var _ = require('underscore'); 
 
@@ -176,6 +177,8 @@ JsDocMaker.prototype.bindParsedType = function(typeObject, baseClass)
 //TODO: using a internal map this could be done faster
 JsDocMaker.prototype.bindClass = function(name, baseClass)
 {
+	var moduleName = baseClass.annotation === 'module' ? baseClass.name : baseClass.module.name; 
+	
 	//search all classes that matches the name
 	var classesWithName = _(_(this.data.classes).values()).filter(function(c)
 	{
@@ -184,7 +187,7 @@ JsDocMaker.prototype.bindClass = function(name, baseClass)
 	//search classes of the module
 	var moduleClasses = _(classesWithName).filter(function(c)
 	{
-		return JsDocMaker.startsWith(c.module.name, baseClass.module.name); 
+		return JsDocMaker.startsWith(c.module.name, moduleName); 
 	}); 
 
 	//TODO: performance - classesWithName could be compauted only if moduleClasses is empty

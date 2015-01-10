@@ -1,4 +1,4 @@
-//@module shortjsdoc
+//@module shortjsdoc.html
 //@class ParseView @extends AbstractView
 var ParseView = AbstractView.extend({
 

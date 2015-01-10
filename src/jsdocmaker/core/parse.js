@@ -1,11 +1,29 @@
+// @module shortjsdoc @class JsDocMaker
 var JsDocMaker = require('./class'); 
+var PluginContainer = require('./plugin'); 
 var esprima = JsDocMaker.require('esprima');
 var _ = require('underscore'); 
 
 //PARSING AND PREPROCESSING
 
-//@property {Array<Function>}commentPreprocessors
-JsDocMaker.prototype.commentPreprocessors = []; 
+// @property {PluginContainer} allCommentPreprocessorPlugins these plugins accept an object like 
+// {node:parsed:jsdocmaker:self} and perform some modification to esprima comment node - 
+// this is the FIRST stage of the parser. This is the same as commentPreprocessorPlugins but all comments nodes are passed for those plugins that need some context about the comments. 
+JsDocMaker.prototype.allCommentPreprocessorPlugins = new PluginContainer(); 
+
+// @property {PluginContainer} commentPreprocessorPlugins these plugins accept an object like 
+// {node:parsed:jsdocmaker:self} and perform some modification to esprima comment node - this is the FIRST stage of the parser
+JsDocMaker.prototype.commentPreprocessorPlugins = new PluginContainer(); 
+
+// @property {PluginContainer} beforeParseNodePlugins these plugins accept an object like 
+// {node:parsed:jsdocmaker:self} and perform some modification to passed node:parsed instance.
+// This is done just before the first parsing is done on the first AST node
+JsDocMaker.prototype.beforeParseNodePlugins = new PluginContainer(); 
+
+// @property {PluginContainer} parsePreprocessors these plugins accept an object like 
+// {node:parsed:jsdocmaker:self} and perform some modification to passed node:parsed instance.
+// This is done just after the first parsing is done on the first AST node
+JsDocMaker.prototype.afterParseNodePlugins = new PluginContainer();
 
 //@method jsdoc the public method to parse all the added files with addFile. @return {Object} the parsed object @param {String} source . Optional
 JsDocMaker.prototype.jsdoc = function(source)
@@ -60,13 +78,17 @@ JsDocMaker.prototype.parse = function(comments)
 	this.data.modules = this.data.modules || {}; 
 	this.data.filenames = this.data.filenames || {}; 
 
-	_(this.commentPreprocessors).each(function(preprocessor)
-	{
-		preprocessor.apply(self, [self]); 
-	});
+	// _(this.commentPreprocessors).each(function(preprocessor)
+	// {
+	// 	preprocessor.apply(self, [self]); 
+	// });
+	self.allCommentPreprocessorPlugins.execute({node: self.comments, jsdocMaker: self}); 
 
-	_(this.comments).each(function(node)
+	_(self.comments).each(function(node)
 	{
+
+		self.commentPreprocessorPlugins.execute({node: node, jsdocMaker: self}); 
+
 		var regex = /((?:@class)|(?:@method)|(?:@property)|(?:@method)|(?:@module)|(?:@event)|(?:@constructor)|(?:@filename))/gi; 
 		var a = JsDocMaker.splitAndPreserve(node.value || '', regex); 
 		a = _(a).filter(function(v)  //delete empties and trim
@@ -87,6 +109,8 @@ JsDocMaker.prototype.parse = function(comments)
 				//Note: here is the (only) place were the 'primary tags' are implemented 
 				//We get primary tags like class,module,method,property and form the first primary AST (a module contains classes which contain methods and properties)
 				//All the other annotations are treated as secondary, this means they will be assigned as childresn to the last primary annotation.
+
+				self.beforeParseNodePlugins.execute({node:parsed, jsdocmaker:self}); 
 
 				if(parsed.annotation === 'class') 
 				{

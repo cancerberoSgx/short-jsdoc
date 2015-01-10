@@ -1,4 +1,4 @@
-//@module shortjsdoc
+//@module shortjsdoc.html
 //@class HeaderView @extends AbstractView
 var HeaderView = AbstractView.extend({
 

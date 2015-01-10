@@ -569,17 +569,26 @@ describe("support comment preprocessor", function()
 
 			var maker = new JsDocMaker();
 
-			//define a comment preprocessor
-			var my_preprocessor = function()
-			{
-				for (var i = 0; i < this.comments.length; i++) 
-				{
-					var node = this.comments[i]; 
-					node.value = node.value.replace(/@author\s+\w+/gi, '') + ' @author thief'; 
+			var plugin = {
+				name: 'author replace my example'
+			,	execute: function(options)
+				{					
+					options.node.value = options.node.value.replace(/@author\s+\w+/gi, '') + ' @author thief'; 
 				}
 			}; 
+			maker.commentPreprocessorPlugins.add(plugin); 
+
+			//define a comment preprocessor
+			// var my_preprocessor = function()
+			// {
+			// 	for (var i = 0; i < this.comments.length; i++) 
+			// 	{
+			// 		var node = this.comments[i]; 
+			// 		node.value = node.value.replace(/@author\s+\w+/gi, '') + ' @author thief'; 
+			// 	}
+			// }; 
 			//and install it
-			maker.commentPreprocessors.push(my_preprocessor);
+			// maker.commentPreprocessors.push(my_preprocessor);
 
 			//then do the parsing
 			maker.parseFile(code); 

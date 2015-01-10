@@ -1,13 +1,16 @@
-# TODO: ideas - 
+# TODOs and ideas 
 
-from more important to less
+(an important file in this early project stage)
 
+Listed from more important to less important:
  
  * issue - injection, the html class view has this bug Class TerranObject
 Extends Object{prototype: prototype} - types are printing wrong.
 
  * support globs in nodejs API
- 
+
+ * support the node application to define module automatically using input folder structure. 
+
  * remove asterix from package.json dependency versions
 
  * markdown in Line comments 
@@ -22,6 +25,8 @@ Extends Object{prototype: prototype} - types are printing wrong.
  
  * browserify the html application js
 
+ * plugin idea - post propcessing - : @module mod1 bla bla @exports {AClass} bla bla
+
  * define a syntax and support varargs - like {num1, ..., numN}
 
  * move src/shortjsdoc.js to src/node/shortjsdoc.js and let src/shortjsdoc only contains the main() call.
@@ -29,6 +34,7 @@ Extends Object{prototype: prototype} - types are printing wrong.
  * @extends won't work with repeated class names. allow to pass an absolute name or log a warning.
 
  * @module foo bla bla bla @exports {ParserException:Error,parse:Function} bla bla bla
+
  
  * //TODO: test if we can get correct source comment location relative to the @filename. all nodes should have it- we have the file name but we need information about string fragment of the file of the particular comment
 
@@ -46,6 +52,8 @@ Extends Object{prototype: prototype} - types are printing wrong.
 
  * idea: prove how extendable is short-jsdoc    
  * literal object syntax with types: @return {name: String, colors: Array<Color>}.
+ 
+ * There is no class / module composite support. Classes inside classes and submodules. There is no way of expressing 'module myapp contains module view that contains module home. Only artificially by naming convention, this is @module myapp @module myapp.view @module myapp.view.home
 
  * use zepto instead jquery in html app
  
@@ -93,9 +101,10 @@ that means that when a method named 'get_apples' is found in the jsdoc, the name
 Backbone.View references will be renamed to BackboneView. Take in account that in the output Backbone.View won't exists - only BackboneView
 
  * Support annotation alias, example
-    @alias annotation task module
+    @alias annotation task class
 now you can use @task and it will be replaced to @module !
 
+ * if no modules are declared that's OK and the html app whoulld show all the classes instead modules.
  
  * in the part of currentView, module etc of parsing put another plugin/hook container so we can take some action to modify the nodes in that current{View,Module,etc} context
 

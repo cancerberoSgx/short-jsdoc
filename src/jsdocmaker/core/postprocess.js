@@ -1,11 +1,14 @@
+// @module shortjsdoc @class JsDocMaker
 var JsDocMaker = require('./class'); 
 var _ = require('underscore'); 
+var PluginContainer = require('./plugin'); 
 
 //POST PROCESSING
 
-
-//@property {Array<Function>}postProccessors
-JsDocMaker.prototype.postProccessors = []; 
+// @property {PluginContainer} beforeTypeBindingPlugins these plugins accept an object like 
+// {node:parsed:jsdocmaker:self} and perform some modification to passed node:parsed instance.
+// This is done just before doing the type binding.
+JsDocMaker.prototype.beforeTypeBindingPlugins = new PluginContainer(); 
 
 // @method postProccess so the data is already parsed but we want to normalize some 
 // children like @extend and @ module to be properties of the unit instead children.
@@ -17,11 +20,11 @@ JsDocMaker.prototype.postProccessors = [];
 JsDocMaker.prototype.postProccess = function()
 {
 	var self = this;
-
 	// set params and throws of constructors
 	_(self.data.classes).each(function(c)
 	{
-		_(c.constructors).each(function(co){
+		_(c.constructors).each(function(co)
+		{
 			co.params = _(co.children||[]).filter(function(child)
 			{
 				return child.annotation === 'param'; 
@@ -44,10 +47,16 @@ JsDocMaker.prototype.postProccessBinding = function()
 		this.literalObjectInstall(); 
 	}
 	var self = this;
+
+	_(self.data.modules).each(function(m)
+	{
+		self.beforeTypeBindingPlugins.execute({node: m, jsdocmaker: self});
+	});
 	
 	//at this points we have all our modules and classes - now we normalize extend, methods and params and also do the type binding. 
 	_(self.data.classes).each(function(c)
 	{
+		self.beforeTypeBindingPlugins.execute({node: c, jsdocmaker: self});
 		//class.extends property
 		var extend = _(c.children||[]).find(function(child)
 		{
@@ -80,6 +89,7 @@ JsDocMaker.prototype.postProccessBinding = function()
 
 		_(methods).each(function(method)
 		{
+			self.beforeTypeBindingPlugins.execute({node: method, jsdocmaker: self});
 			//method.param property
 			var params = _(method.children||[]).filter(function(child)
 			{
@@ -93,6 +103,8 @@ JsDocMaker.prototype.postProccessBinding = function()
 
 			_(method.params).each(function(param)
 			{
+				self.beforeTypeBindingPlugins.execute({node: param, jsdocmaker: self});
+
 				if(_(param.type).isString())
 				{
 					param.typeOriginalString = param.type; 
@@ -111,6 +123,8 @@ JsDocMaker.prototype.postProccessBinding = function()
 			// method.absoluteName = c.absoluteName + JsDocMaker.ABSOLUTE_NAME_SEPARATOR + method.name; 
 			_(method.throws).each(function(t)
 			{
+				self.beforeTypeBindingPlugins.execute({node: t, jsdocmaker: self});
+
 				//because @throws doesn't have a name it breaks our simple grammar, so we merge the name with its text.
 				t.text = (t.name ? t.name+' ' : '') + (t.text||''); 
 				if(_(t.type).isString())
@@ -122,7 +136,8 @@ JsDocMaker.prototype.postProccessBinding = function()
 
 			//method.returns property
 			var returns = _(method.children||[]).filter(function(child)
-			{
+			{				
+				self.beforeTypeBindingPlugins.execute({node: child, jsdocmaker: self});
 				child.text = JsDocMaker.stringTrim(child.text||''); 
 				return child.annotation === 'returns' || child.annotation === 'return'; 
 			}); 

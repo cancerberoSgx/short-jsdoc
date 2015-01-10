@@ -1,4 +1,4 @@
-//@module shortjsdoc
+//@module shortjsdoc.html
 //@class AbstractView @extend Backbone.View @module shortjsdoc
 
 var AbstractView = Backbone.View.extend({

@@ -1,8 +1,10 @@
-// @module shortjsdoc.node
-// nodejs command line utility for generating the .json definition scanning a given source folder or file. 
-// depends on src/JsDocMaker.js
-// Please don't use console.log here since the output is dumped to stdout 
+/* @module shortjsdoc.node
+nodejs command line utility for generating the .json definition scanning a given source folder or file. 
 
+Depends on src/JsDocMaker.js
+
+*IMPORTANTP* don't use console.log here since the output is dumped to stdout 
+*/
 var fs = require('fs')
 ,	path = require('path')
 ,	esprima = require('esprima')

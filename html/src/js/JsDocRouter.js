@@ -1,4 +1,4 @@
-//@module shortjsdoc
+//@module shortjsdoc.html
 //@class JsDocRouter @extends BackboneRouter
 var JsDocRouter = Backbone.Router.extend({
 

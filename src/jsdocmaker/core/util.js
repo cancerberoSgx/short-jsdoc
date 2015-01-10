@@ -1,3 +1,4 @@
+// @module shortjsdoc @class JsDocMaker
 var JsDocMaker = require('./class'); 
 var _ = require('underscore'); 
 

@@ -1,4 +1,4 @@
-//@module shortjsdoc
+//@module shortjsdoc.html
 // this file add methods to Abstract Application for dealing with types and html markup. 
 // @class AbstractView @extends BackboneView
 

@@ -1,18 +1,23 @@
 
-describe("object literal notation", function() 
+describe("beforeParseNodePlugins", function() 
 {
 	var jsdoc, maker; 
 
 	beforeEach(function() 
 	{
 		var code = 
-			'//@module mymodule' + '\n' +
-			'//@class Easy easy named class' + '\n' +
-			'//@method getState @returns {sname:String,soptions:EasyConfiguration,complex1:Array<Object>}' + '\n' +
-			'//@property {name:String,options:EasyConfiguration} p ' + '\n' +
+			'//@module mymodule bla bla ' + '\n' +
+			'//@exports {MainClass1} this is all text explaining the reason of exporting this value' + '\n' +
+			'//@class MainClass1 bla bla ' + '\n' +
+
+			'//@module mymodule2 bla bla ' + '\n' +
+			'//@exports {version:String,Class:UtilityClass1} this is all text explaining the reason of exporting this value' + '\n' +
+			'//@class UtilityClass1 bla bla ' + '\n' +
 			'';
 
 		maker = new JsDocMaker();
+		
+
 		maker.addFile(code, 'name.js');
 		jsdoc = maker.jsdoc();
 		maker.postProccess();
@@ -21,16 +26,14 @@ describe("object literal notation", function()
 
 	it("classes with all accepted chars referred from complex objects", function() 
 	{
-		var t1 = jsdoc.classes['mymodule.Easy'].properties.p.type; 
+		var m = jsdoc.modules.mymodule;
+		expect(m.exports.text).toBe('this is all text explaining the reason of exporting this value'); 
+		expect(m.exports.type.absoluteName).toBe('mymodule.MainClass1'); 
 
-		expect(t1.name).toBe('Object');
-		expect(t1.properties.name.name).toBe('String');
-		expect(t1.properties.options.name).toBe('EasyConfiguration');
-
-		var t2 = jsdoc.classes['mymodule.Easy'].methods.getState.returns.type; 
-
-		expect(t2.properties.complex1.name).toBe('Array');
-		expect(t2.properties.complex1.params[0].name).toBe('Object');
+		var m2 = jsdoc.modules.mymodule2;
+		expect(m2.exports.type.name).toBe('Object'); 
+		expect(m2.exports.type.properties.version.name).toBe('String'); 
+		expect(m2.exports.type.properties.Class.absoluteName).toBe('mymodule2.UtilityClass1'); 
 	});
 
 });

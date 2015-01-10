@@ -1,4 +1,4 @@
-//@module shortjsdoc
+//@module shortjsdoc.html
 //@class PropertyView @extends AbstractView
 var PropertyView = AbstractView.extend({
 

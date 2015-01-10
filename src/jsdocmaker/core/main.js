@@ -8,9 +8,11 @@ require('./parse');
 
 require('./preprocess'); 
 
+require('./type-parsing'); 
+
 require('./postprocess'); 
 
 require('./binding'); 
-require('./type-parsing'); 
+
 
 module.exports = JsDocMaker;
