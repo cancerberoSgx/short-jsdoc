@@ -1,10 +1,32 @@
-// @module shortjsdoc @class JsDocMaker
+/* @module shortjsdoc @class JsDocMaker
+
+#Parsing and processing 
+
+The first thing done with source code is parsing its comments to extract general information about annotations. This implies
+
+ * parse the sources with exprima and work with the comments array.
+ * preprocess the comments array for normalization before start parsing them. Call preprocessing plugins. 
+ * iterate the comments text and split using PRIMARY annotations
+
+##Primary annotations
+For representing some logic of JSDOC like 'a class contains methods that contains parameters' we have the concept of PRIMARY ANNOTATIONS. 
+*These are @class @module @method @property*
+
+These are the concepts that contains the stuff. All the other annotations are children of one primary annotation. For example @return, @param, @extend, @static are SECOND LEVEL ANNOTATIONS
+and are always children of one primary annotation.
+
+But this is the only logic contained in the core parsing. Then a general AST, using this primary container names logic, is returned. 
+
+ALL declared annotations will be outputed (unless a plugin remove something)
+
+*/
+
+
 var JsDocMaker = require('./class'); 
 var PluginContainer = require('./plugin'); 
 var esprima = JsDocMaker.require('esprima');
 var _ = require('underscore'); 
 
-//PARSING AND PREPROCESSING
 
 // @property {PluginContainer} allCommentPreprocessorPlugins these plugins accept an object like 
 // {node:parsed:jsdocmaker:self} and perform some modification to esprima comment node - 
@@ -205,7 +227,7 @@ JsDocMaker.prototype.parse = function(comments)
 
 				self.afterParseNodePlugins.execute({
 					node: parsed
-				,	jsdocMaker: self
+				,	jsdocmaker: self
 					//add loop context information to plugins
 				,	currentClass: currentClass
 				,	currentMethod: currentMethod

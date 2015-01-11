@@ -8,5 +8,6 @@ require('./inherited.js');
 require('./util.js');
 require('./literal-object.js');
 require('./module-exports.js');
+require('./alias.js');
 
 module.exports = JsDocMaker; 

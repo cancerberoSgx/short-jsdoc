@@ -1,42 +1,40 @@
 
-
-describe("parsing multiple files using addFile and jsdoc()", function() 
+describe("@alias", function() 
 {
-	var jsdoc, maker; 
 
-	beforeEach(function() 
+	it("creating shortcuts with alias", function() 
 	{
-		var files = {
-			'code1.js':
-				'//@module mymodule' + '\n' +
-				'//@class Easy easy named class' + '\n' +
-				'//@method getState @returns {Car}' + '\n' +
-				''
-		,	'/opt/lamp/code2.js':
-				'//@module mymodule2' + '\n' +
-				'//@class Easy2 easy named class' + '\n' +
-				'//@method getState2 @returns {Car2}' + '\n' +
-				''
-		}; 
+		var jsdoc, maker; 
+		var code = 
+			'//@module mymodule bla bla ' + '\n' +
+			'//@alias class O Object' + '\n' +
+			'//@alias class S String' + '\n' +
+			'//@alias class A Array' + '\n' +
+			'//@alias class N Number' + '\n' +
+			'//@alias class Og Orange' + '\n' +
+
+			'//@class Fruit living thing' + '\n' +
+			'//@class Orange some text for orang @extend Fruit @property {O<S,N>} smell' + '\n' +
+
+			'//@class Something' + '\n' +
+			'//@property {A<S>} prop1' + '\n' +
+			'//@property {Og} prop2' + '\n' +
+
+			'';
 
 		maker = new JsDocMaker();
-
-		_(files).each(function(value, name)
-		{
-			maker.addFile(value, name);
-		}); 
-
+		maker.addFile(code, 'name.js');
 		jsdoc = maker.jsdoc();
-	});
+		maker.postProccess();
+		maker.postProccessBinding();
 
-	it("parsed AST should contain references to file names and file location", function() 
-	{
-		var m = jsdoc.classes['mymodule.Easy'].methods.getState;
-		debugger;
-		expect(jsdoc.classes['mymodule.Easy'].fileName).toBe('code1.js'); 
-		expect(jsdoc.classes['mymodule2.Easy2'].methods.getState2.fileName).toBe('/opt/lamp/code2.js'); 
+		var prop1 = jsdoc.classes['mymodule.Something'].properties.prop1;
+		expect(prop1.type.name).toBe('Array');
+		expect(prop1.type.params[0].name).toBe('String');
 
-		//TODO: test if we can get correct source location.
+		var prop2 = jsdoc.classes['mymodule.Something'].properties.prop2;
+		expect(prop2.type.name).toBe('Orange'); 
+		expect(prop2.type.extends.name).toBe('Fruit'); 
 	});
 
 });

@@ -6,7 +6,6 @@ Listed from more important to less important:
  
  * support globs in nodejs API
 
- * support the node application to define module automatically using input folder structure. 
 
  * remove asterix from package.json dependency versions
 
@@ -14,14 +13,15 @@ Listed from more important to less important:
  
  * markdown in Line comments 
 
-
+ * include the source only of files that contain annotations
+ 
  * remove parseyourowncode,spec runner,etc from html application since this is particular of shortjsdoc. put it on readme.md or other app
  
  * include events @properties in the typeahead search
  
  * browserify the html application js
 
- * plugin idea - post propcessing - : @module mod1 bla bla @exports {AClass} bla bla
+ * support the node application to define module automatically using input folder structure. 
 
  * define a syntax and support varargs - like {num1, ..., numN}
 
@@ -29,7 +29,7 @@ Listed from more important to less important:
  
  * @extends won't work with repeated class names. allow to pass an absolute name or log a warning.
 
- * @reference an entity like class/module/property/method can have a child @reference .THen it will have a references property showing locations in the code where that is used. for example
+ * @reference an entity like class/module/property/method y absolute name using @reference annotatino in another part of the code. can have a child @reference .THen it will have a references property showing locations in the code where that is used. for example
     //@module m @class c @property p1
     ....
     //@reference m.c.p1
@@ -80,15 +80,6 @@ Listed from more important to less important:
  
  * crazy idea - store native types pages : at build time capture native types html and attach into generated docs and change links that point to those.
 
- * support name alias - for example map the name Map to match Object. as an example show how to make shortkuts like Arr<Obj> or even a<o>. The classes Arr o a won't be generated in the output. Both will be replaced with Array, for this @alias class Arr Array
-    @alias method get_apples getApples
-that means that when a method named 'get_apples' is found in the jsdoc, the name will be replaced with 'getApples'. Other example:
-    @alias class Backbone.View BackboneView
-Backbone.View references will be renamed to BackboneView. Take in account that in the output Backbone.View won't exists - only BackboneView
-
- * Support annotation alias, example
-    @alias annotation task class
-now you can use @task and it will be replaced to @module !
 
  * if no modules are declared that's OK and the html app whoulld show all the classes instead modules.
  
@@ -102,26 +93,6 @@ now you can use @task and it will be replaced to @module !
 
  * TODO: let the user mark some comment block somehow to let the parser to ignore it.
 
-
-
-
-
-##DONES - 
-
-thigs moved here after solving - instead erasing it.
-
- * support comments like /** and in those remove ** prefix
- * project metainformaton from package.json file 
- * support the beauty /* * * * */ multiline block comments like eclipse's. Remove the first aster after a line.
- * support throw/throws
- * ISSUE: in the followin gorder doesn't work (return not shown) @throws {EquationError} @returns {Solution}  - - tip is I add a text after {EquationError} some text then it worls. tip: in the other order it works - this is right (but not desired) because returns is a second level and throws is first level. try to put return as a first level and see if it works
- * module can now contain dots
- * lasses can now defined in different texts, even it text.
- * IDEA: in src/libs-jsdoc with folders like javascript/mozilla jQuery/ Backbone/. Thes folders contains .js files with short jsdoc OO for each library and they can be optionally imported when processing a project.  
- * inherited fields should have the information from which class is inherited - this can be done easy using the name - done manually in the html app.
- * literal object syntax with types: @return {name: String, colors: Array<Color>}.
- * divide JsDocMaker in several files core, preprocessing, postprocessing, biding, etc.
- * @module foo bla bla bla @exports {ParserException:Error,parse:Function} bla bla bla
 
 
 
@@ -164,6 +135,41 @@ Extends Object{prototype: prototype} - types are printing wrong.
         inputDirs: ['./html']
     ,   output: 'jsdochtml'
     }); 
+
+
+
+
+
+
+##DONES - 
+
+thigs moved here after solving - instead erasing it.
+
+ * support comments like /** and in those remove ** prefix
+ * project metainformaton from package.json file 
+ * support the beauty /* * * * */ multiline block comments like eclipse's. Remove the first aster after a line.
+ * support throw/throws
+ * ISSUE: in the followin gorder doesn't work (return not shown) @throws {EquationError} @returns {Solution}  - - tip is I add a text after {EquationError} some text then it worls. tip: in the other order it works - this is right (but not desired) because returns is a second level and throws is first level. try to put return as a first level and see if it works
+ * module can now contain dots
+ * lasses can now defined in different texts, even it text.
+ * IDEA: in src/libs-jsdoc with folders like javascript/mozilla jQuery/ Backbone/. Thes folders contains .js files with short jsdoc OO for each library and they can be optionally imported when processing a project.  
+ * inherited fields should have the information from which class is inherited - this can be done easy using the name - done manually in the html app.
+ * literal object syntax with types: @return {name: String, colors: Array<Color>}.
+ * divide JsDocMaker in several files core, preprocessing, postprocessing, biding, etc.
+ * @module foo bla bla bla @exports {ParserException:Error,parse:Function} bla bla bla
+ * support name alias - for example map the name Map to match Object. as an example show how to make shortkuts like Arr<Obj> or even a<o>. The classes Arr o a won't be generated in the output. Both will be replaced with Array, for this @alias class Arr Array
+    @alias method get_apples getApples
+that means that when a method named 'get_apples' is found in the jsdoc, the name will be replaced with 'getApples'. Other example:
+    @alias class Backbone.View BackboneView
+Backbone.View references will be renamed to BackboneView. Take in account that in the output Backbone.View won't exists - only BackboneView
+
+ * plugin idea - post propcessing - : @module mod1 bla bla @exports {AClass} bla bla
+ * 
+ * Support annotation alias, example
+    @alias annotation task class
+now you can use @task and it will be replaced to @module !
+
+
 
 
 

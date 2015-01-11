@@ -4,6 +4,8 @@
 // use the parseFile method for this! This will return the AST, if you want to perform more enrichment and type binding, then use 
 // postProccess and postProccessBinding methods after.
 
+/* jshint evil:true*/
+
 var _ = require('underscore'); 
 
 var JsDocMaker = function(options)
@@ -21,14 +23,19 @@ var JsDocMaker = function(options)
 	}
 }; 
 
-
+// @property {String} DEFAULT_CLASS @static
 JsDocMaker.DEFAULT_CLASS = 'Object'; 
+
+// @property {String} DEFAULT_MODULE @static
 JsDocMaker.DEFAULT_MODULE = '__DefaultModule'; 
+
+// @property {String} ABSOLUTE_NAME_SEPARATOR @static
 JsDocMaker.ABSOLUTE_NAME_SEPARATOR = '.'; 
+
+// @property {String} MULTIPLE_TEXT_SEPARATOR @static
 JsDocMaker.MULTIPLE_TEXT_SEPARATOR = '\n\n'; 
 
 //expose
-/* jshint evil:true*/
 if(typeof(window) !== 'undefined')
 {
 	window.JsDocMaker = JsDocMaker; 

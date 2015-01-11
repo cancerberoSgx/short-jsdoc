@@ -65,3 +65,12 @@ JsDocMaker.prototype.error = function(msg)
 }; 
 
 
+// JsDocMaker.getChildren = function(node, compareProperties)
+// {
+// 	var a = []
+// }; 
+// JsDocMaker.getAChildren = function(node, compareProperties)
+// {
+// 	var c = JsDocMaker.getChildren(node, compareProperties);
+// 	return (c && c.length) ? return c[0] : null;
+// }; 

@@ -10,6 +10,11 @@ var PluginContainer = require('./plugin');
 // This is done just before doing the type binding.
 JsDocMaker.prototype.beforeTypeBindingPlugins = new PluginContainer(); 
 
+// @property {PluginContainer} afterTypeBindingPlugins these plugins accept an object like 
+// {node:parsed:jsdocmaker:self} and perform some modification to passed node:parsed instance.
+// This is done just after doing the type binding.
+JsDocMaker.prototype.afterTypeBindingPlugins = new PluginContainer(); 
+
 // @method postProccess so the data is already parsed but we want to normalize some 
 // children like @extend and @ module to be properties of the unit instead children.
 // Also we enforce explicit  parent reference, this is a class must reference its 
@@ -173,5 +178,8 @@ JsDocMaker.prototype.postProccessBinding = function()
 		}; 
 		_(c.properties).each(propertySetup);
 		_(c.events).each(propertySetup);
+
+		
+		self.afterTypeBindingPlugins.execute({jsdocmaker: self});
 	});
 };

@@ -12,4 +12,6 @@
  * add support to multiple file loading using addFile() and jsdoc() methods. This is the default way of including multiple file projects. Unit test.
  * Added support to @filename annotation. 
  * object literal type fully support {a:Array<String>}
- * added browserify and refactored in the parser in several files
+ * added browserify and refactored in the parser in several files. Remoed hardcoded file names from gruntfile.
+ * @module @exports
+ * @alias for classes.

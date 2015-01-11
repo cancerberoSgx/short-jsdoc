@@ -1,4 +1,4 @@
-/* @module shortjsdoc.plugins
+/* @module shortjsdoc.plugin.module-export
 
 #@module @exports
 the module AST will contain a property exports pointing to a type that can be complex. Example:
@@ -11,9 +11,9 @@ the module AST will contain a property exports pointing to a type that can be co
 var JsDocMaker = require('../core/class'); 
 var _ = require('underscore'); 
 
-
-var plugin_beforeParser = {
-	name: '@exports support - before parser'
+//@class ModuleExportsPlugin @extends JsDocMakerPlugin
+var plugin_beforeTypeBinding = {
+	name: '@module @exports - beforeTypeBinding'
 ,	execute: function(options)
 	{
 		var node = options.node
@@ -33,26 +33,13 @@ var plugin_beforeParser = {
 			node.exports = exports;
 			//name is part of the text
 			exports.text = exports.name + ' ' + exports.text; 
+
+			//type binding
+			var parsedType = jsdocMaker.parseTypeString(node.exports.type, node);
+			node.exports.typeString = node.exports.type;
+			node.exports.type = parsedType;
 		}
 	}
 }; 
   
-JsDocMaker.prototype.beforeTypeBindingPlugins.add(plugin_beforeParser); 
-
-var plugin_beforeTypeBinding = {
-	name: '@exports supprot - before type binding'
-,	execute: function(options)
-	{
-		var node = options.node
-		,	jsdocMaker = options.jsdocmaker; 
-		if(node.annotation!='module' || !node.exports || !node.exports.type)
-		{
-			return;
-		}
-		var parsedType = jsdocMaker.parseTypeString(node.exports.type, node);
-		node.exports.typeString = node.exports.type;
-		node.exports.type = parsedType;
-	}
-}; 
-
 JsDocMaker.prototype.beforeTypeBindingPlugins.add(plugin_beforeTypeBinding); 

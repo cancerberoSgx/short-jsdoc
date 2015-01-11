@@ -8,11 +8,13 @@ var _ = require('underscore');
 //It support generic types (recursive)
 //@property {TypeBinding} type
 //@property {Array<TypeBinding>} params - the generic types params array. For example the params for {Map<String,Apple>} is [StringBynding]
-//@property {String} nativeTypeUrl - if this is a native type - this 
+//@property {Object<String,TypeBinding>} properties - the properties literal object declaration binding, {a:A,b:B}
+//@property {String} nativeTypeUrl the url for native type only
 
 
 //@class JsDocMaker
-//@method parseTypeString @return {TypeBinding} or nulll in case the given type cannot be parsed
+//@method parseTypeString public, do a type binding @return {TypeBinding} the object binding to the original r
+//eferenced AST node. Or null in case the given type cannot be parsed
 //TODO: support multiple generics and generics anidation like in
 JsDocMaker.prototype.parseTypeString = function(typeString, baseClass)
 {
@@ -30,6 +32,7 @@ JsDocMaker.prototype.parseTypeString = function(typeString, baseClass)
 	typeString = inner[1]; 
 	typeString = typeString.replace(/\s+/gi, '');
 	var ret = this.parseSingleTypeString(typeString, baseClass); 
+	// console.log('parseTypeString', ret)
 	if(ret && ret.length===1)
 	{
 		return ret[0]; 
@@ -130,7 +133,10 @@ JsDocMaker.prototype.parseSingleTypeString = function(typeStr, baseClass)
 //@param {Object} typeObject @param {Object} baseClass @return {Object}
 JsDocMaker.prototype.bindParsedType = function(typeObject, baseClass)
 {
-	var c = null, out = typeObject, self=this;
+	var c = null
+	,	out = typeObject
+	,	self = this;
+
 	if(typeObject && _(typeObject).isString())
 	{
 		c = this.bindClass(typeObject, baseClass); 
@@ -138,7 +144,6 @@ JsDocMaker.prototype.bindParsedType = function(typeObject, baseClass)
 	}
 	else if(typeObject && typeObject.name)
 	{
-
 		//recurse on params for generic types like M<T,K>!
 		if(out.params)
 		{			
@@ -173,10 +178,42 @@ JsDocMaker.prototype.bindParsedType = function(typeObject, baseClass)
 	return out;
 }; 
 
+
+
+var PluginContainer = require('./plugin'); 
+
+
+
+//POST PROCESSING
+
+// @property {PluginContainer} beforeBindClassPlugins these plugins accept an object like 
+// {name:name,baseClass:JsDocASTNode,jsdocmaker:JsDocMaker} and perform some modification to passed node:parsed instance.
+// This is done just before a class name is binding to an actual AST class node.
+JsDocMaker.prototype.beforeBindClassPlugins = new PluginContainer(); 
+
+// @property {PluginContainer} afterBindClassPlugins these plugins accept an object like 
+// {name:name,baseClass:JsDocASTNode,jsdocmaker:JsDocMaker} and perform some modification to passed node:parsed instance.
+// This is done just after a class name is binding to an actual AST class node.
+JsDocMaker.prototype.afterBindClassPlugins = new PluginContainer(); 
+
+
+
 //@method bindClass @param {String}name @param {Object} baseClass
 //TODO: using a internal map this could be done faster
 JsDocMaker.prototype.bindClass = function(name, baseClass)
 {
+	var context = {
+		name:name
+	,	baseClass: baseClass
+	,	jsdocmaker: this
+	}; 
+
+	this.beforeBindClassPlugins.execute(context); 
+
+	// beforeBindClassPlugins have the oportunity of changing the context
+	name = context.name || name;
+	baseClass = context.baseClass || baseClass;
+
 	var moduleName = baseClass.annotation === 'module' ? baseClass.name : baseClass.module.name; 
 	
 	//search all classes that matches the name
@@ -207,12 +244,13 @@ JsDocMaker.prototype.bindClass = function(name, baseClass)
 		{
 			o.error = 'NAME_NOT_FOUND'; 
 		}
-		return o;		
+		c = o;		
 	}
-	else
-	{
-		return c;
-	}
+
+	this.afterBindClassPlugins.execute({name:name, binded: c, baseClass: baseClass, jsdocmaker: this});
+
+	return c;
+
 }; 
 
 // @method simpleName @param {String} name @return {String}

@@ -1426,11 +1426,13 @@ var _ = require('underscore');
 //It support generic types (recursive)
 //@property {TypeBinding} type
 //@property {Array<TypeBinding>} params - the generic types params array. For example the params for {Map<String,Apple>} is [StringBynding]
-//@property {String} nativeTypeUrl - if this is a native type - this 
+//@property {Object<String,TypeBinding>} properties - the properties literal object declaration binding, {a:A,b:B}
+//@property {String} nativeTypeUrl the url for native type only
 
 
 //@class JsDocMaker
-//@method parseTypeString @return {TypeBinding} or nulll in case the given type cannot be parsed
+//@method parseTypeString public, do a type binding @return {TypeBinding} the object binding to the original r
+//eferenced AST node. Or null in case the given type cannot be parsed
 //TODO: support multiple generics and generics anidation like in
 JsDocMaker.prototype.parseTypeString = function(typeString, baseClass)
 {
@@ -1448,6 +1450,7 @@ JsDocMaker.prototype.parseTypeString = function(typeString, baseClass)
 	typeString = inner[1]; 
 	typeString = typeString.replace(/\s+/gi, '');
 	var ret = this.parseSingleTypeString(typeString, baseClass); 
+	// console.log('parseTypeString', ret)
 	if(ret && ret.length===1)
 	{
 		return ret[0]; 
@@ -1548,7 +1551,10 @@ JsDocMaker.prototype.parseSingleTypeString = function(typeStr, baseClass)
 //@param {Object} typeObject @param {Object} baseClass @return {Object}
 JsDocMaker.prototype.bindParsedType = function(typeObject, baseClass)
 {
-	var c = null, out = typeObject, self=this;
+	var c = null
+	,	out = typeObject
+	,	self = this;
+
 	if(typeObject && _(typeObject).isString())
 	{
 		c = this.bindClass(typeObject, baseClass); 
@@ -1556,7 +1562,6 @@ JsDocMaker.prototype.bindParsedType = function(typeObject, baseClass)
 	}
 	else if(typeObject && typeObject.name)
 	{
-
 		//recurse on params for generic types like M<T,K>!
 		if(out.params)
 		{			
@@ -1591,10 +1596,42 @@ JsDocMaker.prototype.bindParsedType = function(typeObject, baseClass)
 	return out;
 }; 
 
+
+
+var PluginContainer = require('./plugin'); 
+
+
+
+//POST PROCESSING
+
+// @property {PluginContainer} beforeBindClassPlugins these plugins accept an object like 
+// {name:name,baseClass:JsDocASTNode,jsdocmaker:JsDocMaker} and perform some modification to passed node:parsed instance.
+// This is done just before a class name is binding to an actual AST class node.
+JsDocMaker.prototype.beforeBindClassPlugins = new PluginContainer(); 
+
+// @property {PluginContainer} afterBindClassPlugins these plugins accept an object like 
+// {name:name,baseClass:JsDocASTNode,jsdocmaker:JsDocMaker} and perform some modification to passed node:parsed instance.
+// This is done just after a class name is binding to an actual AST class node.
+JsDocMaker.prototype.afterBindClassPlugins = new PluginContainer(); 
+
+
+
 //@method bindClass @param {String}name @param {Object} baseClass
 //TODO: using a internal map this could be done faster
 JsDocMaker.prototype.bindClass = function(name, baseClass)
 {
+	var context = {
+		name:name
+	,	baseClass: baseClass
+	,	jsdocmaker: this
+	}; 
+
+	this.beforeBindClassPlugins.execute(context); 
+
+	// beforeBindClassPlugins have the oportunity of changing the context
+	name = context.name || name;
+	baseClass = context.baseClass || baseClass;
+
 	var moduleName = baseClass.annotation === 'module' ? baseClass.name : baseClass.module.name; 
 	
 	//search all classes that matches the name
@@ -1625,12 +1662,13 @@ JsDocMaker.prototype.bindClass = function(name, baseClass)
 		{
 			o.error = 'NAME_NOT_FOUND'; 
 		}
-		return o;		
+		c = o;		
 	}
-	else
-	{
-		return c;
-	}
+
+	this.afterBindClassPlugins.execute({name:name, binded: c, baseClass: baseClass, jsdocmaker: this});
+
+	return c;
+
 }; 
 
 // @method simpleName @param {String} name @return {String}
@@ -1646,12 +1684,14 @@ JsDocMaker.prototype.simpleName = function(name)
 
 
 
-},{"./class":3,"underscore":1}],3:[function(require,module,exports){
+},{"./class":3,"./plugin":6,"underscore":1}],3:[function(require,module,exports){
 // @module shortjsdoc @class JsDocMaker
 // Main jsdoc parser utility. It accepts a valid js source code String and returns a JavaScript object with a jsdoc AST, this is an object
 // with classes and modules array that users can use to easily access jsdocs information, for example, parsed.classes.Apple.methods.getColor
 // use the parseFile method for this! This will return the AST, if you want to perform more enrichment and type binding, then use 
 // postProccess and postProccessBinding methods after.
+
+/* jshint evil:true*/
 
 var _ = require('underscore'); 
 
@@ -1670,14 +1710,19 @@ var JsDocMaker = function(options)
 	}
 }; 
 
-
+// @property {String} DEFAULT_CLASS @static
 JsDocMaker.DEFAULT_CLASS = 'Object'; 
+
+// @property {String} DEFAULT_MODULE @static
 JsDocMaker.DEFAULT_MODULE = '__DefaultModule'; 
+
+// @property {String} ABSOLUTE_NAME_SEPARATOR @static
 JsDocMaker.ABSOLUTE_NAME_SEPARATOR = '.'; 
+
+// @property {String} MULTIPLE_TEXT_SEPARATOR @static
 JsDocMaker.MULTIPLE_TEXT_SEPARATOR = '\n\n'; 
 
 //expose
-/* jshint evil:true*/
 if(typeof(window) !== 'undefined')
 {
 	window.JsDocMaker = JsDocMaker; 
@@ -1711,13 +1756,35 @@ require('./binding');
 
 module.exports = JsDocMaker;
 },{"./binding":2,"./class":3,"./parse":5,"./postprocess":7,"./preprocess":8,"./type-parsing":9,"./util":10}],5:[function(require,module,exports){
-// @module shortjsdoc @class JsDocMaker
+/* @module shortjsdoc @class JsDocMaker
+
+#Parsing and processing 
+
+The first thing done with source code is parsing its comments to extract general information about annotations. This implies
+
+ * parse the sources with exprima and work with the comments array.
+ * preprocess the comments array for normalization before start parsing them. Call preprocessing plugins. 
+ * iterate the comments text and split using PRIMARY annotations
+
+##Primary annotations
+For representing some logic of JSDOC like 'a class contains methods that contains parameters' we have the concept of PRIMARY ANNOTATIONS. 
+*These are @class @module @method @property*
+
+These are the concepts that contains the stuff. All the other annotations are children of one primary annotation. For example @return, @param, @extend, @static are SECOND LEVEL ANNOTATIONS
+and are always children of one primary annotation.
+
+But this is the only logic contained in the core parsing. Then a general AST, using this primary container names logic, is returned. 
+
+ALL declared annotations will be outputed (unless a plugin remove something)
+
+*/
+
+
 var JsDocMaker = require('./class'); 
 var PluginContainer = require('./plugin'); 
 var esprima = JsDocMaker.require('esprima');
 var _ = require('underscore'); 
 
-//PARSING AND PREPROCESSING
 
 // @property {PluginContainer} allCommentPreprocessorPlugins these plugins accept an object like 
 // {node:parsed:jsdocmaker:self} and perform some modification to esprima comment node - 
@@ -1918,7 +1985,7 @@ JsDocMaker.prototype.parse = function(comments)
 
 				self.afterParseNodePlugins.execute({
 					node: parsed
-				,	jsdocMaker: self
+				,	jsdocmaker: self
 					//add loop context information to plugins
 				,	currentClass: currentClass
 				,	currentMethod: currentMethod
@@ -2087,6 +2154,11 @@ var PluginContainer = require('./plugin');
 // This is done just before doing the type binding.
 JsDocMaker.prototype.beforeTypeBindingPlugins = new PluginContainer(); 
 
+// @property {PluginContainer} afterTypeBindingPlugins these plugins accept an object like 
+// {node:parsed:jsdocmaker:self} and perform some modification to passed node:parsed instance.
+// This is done just after doing the type binding.
+JsDocMaker.prototype.afterTypeBindingPlugins = new PluginContainer(); 
+
 // @method postProccess so the data is already parsed but we want to normalize some 
 // children like @extend and @ module to be properties of the unit instead children.
 // Also we enforce explicit  parent reference, this is a class must reference its 
@@ -2250,6 +2322,9 @@ JsDocMaker.prototype.postProccessBinding = function()
 		}; 
 		_(c.properties).each(propertySetup);
 		_(c.events).each(propertySetup);
+
+		
+		self.afterTypeBindingPlugins.execute({jsdocmaker: self});
 	});
 };
 
@@ -2467,14 +2542,22 @@ JsDocMaker.prototype.error = function(msg)
 }; 
 
 
-
+// JsDocMaker.getChildren = function(node, compareProperties)
+// {
+// 	var a = []
+// }; 
+// JsDocMaker.getAChildren = function(node, compareProperties)
+// {
+// 	var c = JsDocMaker.getChildren(node, compareProperties);
+// 	return (c && c.length) ? return c[0] : null;
+// }; 
 },{"./class":3,"underscore":1}],11:[function(require,module,exports){
 var JsDocMaker = require('./core/main'); 
 
 require('./plugin/main.js'); 
 
 module.exports = JsDocMaker;
-},{"./core/main":4,"./plugin/main.js":15}],12:[function(require,module,exports){
+},{"./core/main":4,"./plugin/main.js":16}],12:[function(require,module,exports){
 /*
 
 This is a syntax definition compiled to JavaScript that parses an expression like 
@@ -3024,6 +3107,131 @@ module.exports = (function() {
   };
 })();
 },{}],13:[function(require,module,exports){
+// @module shortjsdoc.plugin.alias 
+/*
+#Alias plugin
+
+this plugin allow to define an alias for annotations and classes. This means we can add name 
+alias to annotations or classes. Alias can override previous defined ones. 
+
+##Class alias
+
+Class alias can be used to shortcut class names, like 
+
+	@alias class A Array
+	@alias class O Object
+	@alias class S String
+	@alias class N Number
+	@alias class B Boolean
+
+Or just use the shortcut
+
+	@alias class A Array O Object S String
+
+After this I just can write my types like this:
+
+	@property {config:O<S,N>,tools:A<Tool>} complex
+
+Note that these plugins perform two tasks using two different plugins: 
+1) replace aliases initial annotation with original ones on parsing - the plugin runs on beforeParseNodePlugins
+2) but also perform the aliasing on type binding. This is done on beforeBindClassPlugins
+
+IMPORTANT. alias to complex types are not supported, only alias to simple types. The following is WRONG: @alias class MySuper Array<Leg>
+
+##annotation alias
+@alias annotation task method
+
+*/
+
+
+var JsDocMaker = require('../core/class'); 
+var _ = require('underscore'); 
+
+//@class AliasBeforeParseNodePlugin @extends JsDocMakerPlugin a plugin executed at beforeParseNodePlugins. 
+var aliasBeforeParseNodePlugin = {
+
+	name: 'alias'
+
+,	execute: function(options)
+	{
+		var node = options.node
+		,	context = options.jsdocmaker
+		,	self = this;
+
+		context.aliasClassDict = context.aliasClassDict || {}; 
+
+		var aliasList = []; //its a list because node can have many alias children inside. @alias is a second-level AST node
+			
+		if (node.annotation=='alias')
+		{			
+			aliasList = [node];
+		}
+		else 
+		{
+			aliasList = _(node.children).select(function(c)
+			{
+				return c.annotation=='alias';
+			}); 
+		}
+
+		_(aliasList).each(function(alias)
+		{
+			self.parseAlias(alias, context, true); 
+		}); 
+
+		//then check for other annotations for @alias annotation TODO
+		// if(context.aliasClassDict[node.annotation])
+
+		//TODO: remove the alias node from comments array
+
+	}
+
+	//@method parseAlias @return {JSDocASTNode} the enhanced node with property *alias* enhanced
+	//@param {JSDocASTNode} alias @param {JsDocMaker} context @param {Boolean} install  @return {Array<JSDocASTNode>} contained in the annotation text.
+,	parseAlias: function(alias, context, install)
+	{
+		if(!alias)
+		{
+			return;
+		}
+		var a = alias.text.split(/\s+/)
+		,	parsed = [];
+		for (var i = 0; i < a.length; i+=2) 
+		{
+			var o = {name: a[i], target: a[i+1]};
+			parsed.push(o); 
+			// debugger;
+			if(install)
+			{
+				context.aliasClassDict[o.name] = o;
+			}
+		}
+		return parsed;
+	}
+
+}; 
+
+JsDocMaker.prototype.beforeParseNodePlugins.add(aliasBeforeParseNodePlugin); 
+
+
+//@class AliasBeforeBindClassPlugin @extends JsDocMakerPlugin a plugin executed at beforeBindClass 
+var aliasBeforeBindClassPlugin = {
+	name: 'aliasAfterTypeBindingPlugin'
+
+	//@param {name:name, baseClass: baseClass, jsdocmaker: this} context  this plugin has the change of chainging the context.
+,	execute: function(context)
+	{
+		var alias = context.jsdocmaker.aliasClassDict[context.name]; 
+		if(alias)
+		{
+			context.name = alias.target; //alias only sypport targetting single types!
+		}
+	}
+}; 
+
+JsDocMaker.prototype.beforeBindClassPlugins.add(aliasBeforeBindClassPlugin); 
+
+},{"../core/class":3,"underscore":1}],14:[function(require,module,exports){
 // @module shortjsdoc @class JsDocMaker
 var JsDocMaker = require('../core/class'); 
 var _ = require('underscore'); 
@@ -3121,7 +3329,7 @@ JsDocMaker.classOwnsProperty = function(aClass, prop)
 	return result;
 }; 
 
-},{"../core/class":3,"underscore":1}],14:[function(require,module,exports){
+},{"../core/class":3,"underscore":1}],15:[function(require,module,exports){
 // @module shortjsdoc @class JsDocMaker
 var JsDocMaker = require('../core/class'); 
 var _ = require('underscore'); 
@@ -3171,7 +3379,7 @@ JsDocMaker.prototype.literalObjectInstall = function()
 }; 
 
 
-},{"../core/class":3,"underscore":1}],15:[function(require,module,exports){
+},{"../core/class":3,"underscore":1}],16:[function(require,module,exports){
 'strict mode'; 
 
 var JsDocMaker = require('../core/main.js'); 
@@ -3182,9 +3390,10 @@ require('./inherited.js');
 require('./util.js');
 require('./literal-object.js');
 require('./module-exports.js');
+require('./alias.js');
 
 module.exports = JsDocMaker; 
-},{"../core/main.js":4,"./inherited.js":13,"./literal-object.js":14,"./modifiers.js":16,"./module-exports.js":17,"./native-types.js":18,"./util.js":19}],16:[function(require,module,exports){
+},{"../core/main.js":4,"./alias.js":13,"./inherited.js":14,"./literal-object.js":15,"./modifiers.js":17,"./module-exports.js":18,"./native-types.js":19,"./util.js":20}],17:[function(require,module,exports){
 // @module shortjsdoc @class JsDocMaker
 var JsDocMaker = require('../core/class'); 
 var _ = require('underscore'); 
@@ -3206,8 +3415,8 @@ JsDocMaker.prototype.installModifiers = function(node)
 	});
 }; 
 
-},{"../core/class":3,"underscore":1}],17:[function(require,module,exports){
-/* @module shortjsdoc.plugins
+},{"../core/class":3,"underscore":1}],18:[function(require,module,exports){
+/* @module shortjsdoc.plugin.module-export
 
 #@module @exports
 the module AST will contain a property exports pointing to a type that can be complex. Example:
@@ -3220,9 +3429,9 @@ the module AST will contain a property exports pointing to a type that can be co
 var JsDocMaker = require('../core/class'); 
 var _ = require('underscore'); 
 
-
-var plugin_beforeParser = {
-	name: '@exports support - before parser'
+//@class ModuleExportsPlugin @extends JsDocMakerPlugin
+var plugin_beforeTypeBinding = {
+	name: '@module @exports - beforeTypeBinding'
 ,	execute: function(options)
 	{
 		var node = options.node
@@ -3242,30 +3451,17 @@ var plugin_beforeParser = {
 			node.exports = exports;
 			//name is part of the text
 			exports.text = exports.name + ' ' + exports.text; 
+
+			//type binding
+			var parsedType = jsdocMaker.parseTypeString(node.exports.type, node);
+			node.exports.typeString = node.exports.type;
+			node.exports.type = parsedType;
 		}
 	}
 }; 
   
-JsDocMaker.prototype.beforeTypeBindingPlugins.add(plugin_beforeParser); 
-
-var plugin_beforeTypeBinding = {
-	name: '@exports supprot - before type binding'
-,	execute: function(options)
-	{
-		var node = options.node
-		,	jsdocMaker = options.jsdocmaker; 
-		if(node.annotation!='module' || !node.exports || !node.exports.type)
-		{
-			return;
-		}
-		var parsedType = jsdocMaker.parseTypeString(node.exports.type, node);
-		node.exports.typeString = node.exports.type;
-		node.exports.type = parsedType;
-	}
-}; 
-
 JsDocMaker.prototype.beforeTypeBindingPlugins.add(plugin_beforeTypeBinding); 
-},{"../core/class":3,"underscore":1}],18:[function(require,module,exports){
+},{"../core/class":3,"underscore":1}],19:[function(require,module,exports){
 // @module shortjsdoc @class JsDocMaker
 var JsDocMaker = require('../core/class'); 
 var _ = require('underscore'); 
@@ -3296,28 +3492,49 @@ JsDocMaker.prototype.getNativeTypeUrl = function(name)
 	return customTypeUrl;
 }; 
 
-},{"../core/class":3,"underscore":1}],19:[function(require,module,exports){
+},{"../core/class":3,"underscore":1}],20:[function(require,module,exports){
 // @module shortjsdoc @class JsDocMaker
 var JsDocMaker = require('../core/class'); 
 var _ = require('underscore'); 
 
-//@method recurseAST An utility method that can be used in extensions to visit all the ast nodes with given function 
-//@param {Function} fn
-JsDocMaker.prototype.recurseAST = function(fn)
+//@method recurseAST An utility method that can be used in extensions to visit all the ast nodes and types of the AST recursively. Children are visited first. JsDocMaker.recurseAST can be used for visiting nodes through AST. The same for Types, this is visiting all subtypes of a complex type. 
+//@param {Function} fn a visitor for all the nodes
+//@param {Function} fn_type a visitor for all the nodes' types
+JsDocMaker.prototype.recurseAST = function(fn, fn_type)
 {
 	var self = this;
 	_(self.data.classes).each(function(c)
 	{
+		if(!c)
+		{
+			return;
+		}
 		_(c.methods).each(function(m)
 		{
 			fn.apply(m, [m]); 
-			//TODO: params
+			_(m.params).each(function(p)
+			{
+				fn.apply(p, [p]); 
+				JsDocMaker.recurseType(p.type, fn_type); 
+			}); 
+			if(m.returns)
+			{
+				fn.apply(m.returns, [m.returns]);
+				JsDocMaker.recurseType(m.returns.type, fn_type); 
+			}
+			// TODO: throws
 		}); 
 
 		_(c.properties).each(function(p)
 		{
-			fn.apply(p, [p]); 
+			fn.apply(p, [p]);
+			JsDocMaker.recurseType(p.type, fn_type);
 		}); 
+		if(c.extends)
+		{
+			fn.apply(c.extends, [c.extends]);
+			JsDocMaker.recurseType(c.extends.type, fn_type);
+		}
 		//TODO: events
 	});
 	_(self.data.modules).each(function(m)
@@ -3326,5 +3543,29 @@ JsDocMaker.prototype.recurseAST = function(fn)
 	});
 }; 
 
+//will recurse the type AST - children first.
+JsDocMaker.recurseType = function(type, fn)
+{
+	if(!type || !fn)
+	{
+		return;
+	}
+	if(_(type).isArray())
+	{
+		_(type).each(function(t)
+		{
+			JsDocMaker.recurseType(t, fn); 
+		}); 
+	}
+	_(type.properties).each(function(prop)
+	{
+		JsDocMaker.recurseType(prop, fn); 
+	}); 
+	_(type.params).each(function(param)
+	{
+		JsDocMaker.recurseType(param, fn); 
+	}); 
 
+	fn(type); 
+}; 
 },{"../core/class":3,"underscore":1}]},{},[11]);

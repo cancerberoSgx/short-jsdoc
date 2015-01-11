@@ -418,9 +418,43 @@ describe("inherited methods and properties", function()
 
 
 
-describe("custom annotations", function() 
+describe("plugin utilities for recursing", function() 
 {
-	it("user can use recurseAST to install a visitor for doing its own post processing", function() 
+	var jsdoc, maker; 
+
+	
+	it("JsDocMaker.recurseAST visit nodes and types of the AST - children first", function() 
+	{
+		var code = 
+			'//@module office '+ '\n' +	
+			'//@class Computer' + '\n' +
+			'//@method putmusic @param {Object<String,Array<Song>>} songs' + '\n' + 
+			'//@method prepareMate @param {mate:Mate,termo:Termo,heat:Array<Source>} mateConfiguration' + '\n' + 
+			'';
+		maker = new JsDocMaker();
+		maker.parseFile(code); 
+		maker.postProccess();
+		maker.postProccessBinding();
+
+		jsdoc = maker.data;
+
+		// we define a function to visit each AST node - we will search for a children @versionfoo and if any set as a property
+		var output = []; 
+		var nodeVisitor = function(node)
+		{
+			output.push(node.name + '--');
+		}; 
+		var typeVisitor = function(type)
+		{
+			output.push(type.name + ',');
+		}; 
+		maker.recurseAST(nodeVisitor, typeVisitor);
+
+		expect(output.join('')).toBe('putmusic--songs--String,Song,Array,Object,--prepareMate--mateConfiguration--Mate,Termo,Source,Array,Object,--Object--office--'); 
+		
+	});
+
+	it("example 1: user can use recurseAST to install a visitor for doing its own post processing", function() 
 	{
 
 		var code = 
@@ -431,12 +465,12 @@ describe("custom annotations", function()
 			'//@method putmusic @param {Object<String,Array<Song>>} songs' + '\n' + 
 			'//@versionfoo 1.0' + '\n' +
 			'';
-		var maker = new JsDocMaker();
+		maker = new JsDocMaker();
 		maker.parseFile(code); 
 		maker.postProccess();
 		maker.postProccessBinding();
 
-		var jsdoc = maker.data;
+		jsdoc = maker.data;
 
 		// we define a function to visit each AST node - we will search for a children @versionfoo and if any set as a property
 		var astVisitor = function(node)
@@ -453,6 +487,43 @@ describe("custom annotations", function()
 		maker.recurseAST(astVisitor); 
 
 		expect(jsdoc.modules.office.versionfoo).toBe('3.2');
+	});
+
+
+	it("JsDocMaker.recurseType: recursing complex types children - for doing it ony in a single type object", function() 
+	{
+		var code = 
+			'//@module mymodule bla bla ' + '\n' +
+			'//@class C bla bla ' + '\n' +
+			'//@property {S} p bla bla ' + '\n' +
+			'//@property {Apple<String,Apple>} prop1  bla ' + '\n' +
+
+			'//@property {a:String,b:Apple,c:Array<Apple<Object,Animal>>} prop2  bla ' + '\n' +
+			'//@property {Array<String>|Apple|Object<String,Array<String>>} prop3  bla ' + '\n' +
+			'';
+
+		maker = new JsDocMaker();
+		maker.addFile(code, 'name.js');
+		jsdoc = maker.jsdoc();
+		maker.postProccess();
+		maker.postProccessBinding();
+
+		var t1 = jsdoc.classes['mymodule.C'].properties.prop2.type;
+		var t2 = jsdoc.classes['mymodule.C'].properties.prop3.type;
+
+		var output = [];
+		JsDocMaker.recurseType(t1, function(type)
+		{
+			output.push(type.name);
+		}); 
+		expect(output.join(',')).toBe('String,Apple,Object,Animal,Apple,Array,Object');
+
+		output = [];
+		JsDocMaker.recurseType(t2, function(type)
+		{
+			output.push(type.name);
+		}); 
+		expect(output.join(',')).toBe('String,Array,Apple,String,String,Array,Object,');
 	});
 });
 
@@ -579,18 +650,6 @@ describe("support comment preprocessor", function()
 				}
 			}; 
 			maker.commentPreprocessorPlugins.add(plugin); 
-
-			//define a comment preprocessor
-			// var my_preprocessor = function()
-			// {
-			// 	for (var i = 0; i < this.comments.length; i++) 
-			// 	{
-			// 		var node = this.comments[i]; 
-			// 		node.value = node.value.replace(/@author\s+\w+/gi, '') + ' @author thief'; 
-			// 	}
-			// }; 
-			//and install it
-			// maker.commentPreprocessors.push(my_preprocessor);
 
 			//then do the parsing
 			maker.parseFile(code); 
@@ -1059,6 +1118,51 @@ describe("@module @exports {Type}", function()
 	});
 
 });
+
+
+
+
+describe("@alias", function() 
+{
+
+	it("creating shortcuts with alias", function() 
+	{
+		var jsdoc, maker; 
+		var code = 
+			'//@module mymodule bla bla ' + '\n' +
+			'//@alias class O Object' + '\n' +
+			'//@alias class S String' + '\n' +
+			'//@alias class A Array' + '\n' +
+			'//@alias class N Number' + '\n' +
+			'//@alias class Og Orange' + '\n' +
+
+			'//@class Fruit living thing' + '\n' +
+			'//@class Orange some text for orang @extend Fruit @property {O<S,N>} smell' + '\n' +
+
+			'//@class Something' + '\n' +
+			'//@property {A<S>} prop1' + '\n' +
+			'//@property {Og} prop2' + '\n' +
+
+			'';
+
+		maker = new JsDocMaker();
+		maker.addFile(code, 'name.js');
+		jsdoc = maker.jsdoc();
+		maker.postProccess();
+		maker.postProccessBinding();
+
+		var prop1 = jsdoc.classes['mymodule.Something'].properties.prop1;
+		expect(prop1.type.name).toBe('Array');
+		expect(prop1.type.params[0].name).toBe('String');
+
+		var prop2 = jsdoc.classes['mymodule.Something'].properties.prop2;
+		expect(prop2.type.name).toBe('Orange'); 
+		expect(prop2.type.extends.name).toBe('Fruit'); 
+	});
+
+});
+
+
 });
 
 
