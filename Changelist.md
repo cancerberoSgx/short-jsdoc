@@ -15,3 +15,4 @@
  * added browserify and refactored in the parser in several files. Remoed hardcoded file names from gruntfile.
  * @module @exports
  * @alias for classes.
+ * JsDocMaker.recurseAST visit nodes and types of the AST - children firs
