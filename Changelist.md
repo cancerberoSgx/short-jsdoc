@@ -15,4 +15,7 @@
  * added browserify and refactored in the parser in several files. Remoed hardcoded file names from gruntfile.
  * @module @exports
  * @alias for classes.
- * JsDocMaker.recurseAST visit nodes and types of the AST - children firs
+ * JsDocMaker.recurseAST visit nodes and types of the AST - children first
+ * issue - injection, the html class view has this bug Class TerranObject Extends Object{prototype: prototype} - types are printing wrong.
+
+##0.1.4

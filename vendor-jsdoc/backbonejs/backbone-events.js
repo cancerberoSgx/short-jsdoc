@@ -39,7 +39,7 @@ Here's the complete list of built-in Backbone events, with arguments. You're als
 	"all" — this special event fires for any triggered event, passing the event name as the first argument.
 Generally speaking, when calling a function that emits an event (model.set, collection.add, and so on...), if you'd like to prevent the event from being triggered, you may pass {silent: true} as an option. Note that this is rarely, perhaps even never, a good idea. Passing through a specific flag in the options for your event callback to look at, and choose to ignore, will usually work out better.
 
-
+@alias class Backbone.Events BackboneEvents
 */
 
 

@@ -26,6 +26,8 @@ The following is a contrived example, but it demonstrates defining a model with 
 
 @extends BackboneEvents
 
+
+@alias class Backbone.Model BackboneModel
 */
 
 

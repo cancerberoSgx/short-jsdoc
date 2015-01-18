@@ -1,8 +1,0 @@
-<% var data = this.application.data; %>
-
-<h3><a href="#classes">Classes</a></h3>
-<ul>
-<% _(data.classes).each(function(c) { %>
-	<li><a href="#class/<%= c.absoluteName %>"><%= c.name %></a></li>
-<% }); %>
-</ul>

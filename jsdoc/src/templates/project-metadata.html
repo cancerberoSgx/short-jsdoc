@@ -1,9 +1,0 @@
-<% var metaData = this.application.data.projectMetadata; %>
-
-<p>Project <%= metaData.name%> contains #<%= _(this.application.data.modules).keys().length %> modules and #<%= _(this.application.data.classes).keys().length %> classes.</p>
-
-<table>
-	<% _(metaData).each(function(value, name) { %>
-	<tr><td class="metadata-name"><%= name%></td><td class="metadata-value"><%= _(value).isString() ? value : JSON.stringify(value)%></td></tr>
-	<% }); %>
-</table>

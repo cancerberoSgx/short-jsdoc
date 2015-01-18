@@ -75,6 +75,7 @@ var aliasBeforeParseNodePlugin = {
 
 		//TODO: remove the alias node from comments array
 
+		// console.log	('\n\n', context.aliasClassDict, '\n\n')
 	}
 
 	//@method parseAlias @return {JSDocASTNode} the enhanced node with property *alias* enhanced
@@ -112,6 +113,8 @@ var aliasBeforeBindClassPlugin = {
 	//@param {name:name, baseClass: baseClass, jsdocmaker: this} context  this plugin has the change of chainging the context.
 ,	execute: function(context)
 	{
+		context.jsdocmaker.aliasClassDict = context.jsdocmaker.aliasClassDict || {}; 
+		// if(!context.jsdocmaker.aliasClassDict){debugger}
 		var alias = context.jsdocmaker.aliasClassDict[context.name]; 
 		if(alias)
 		{

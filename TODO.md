@@ -100,8 +100,6 @@ Listed from more important to less important:
 
 From most important to less:
 
- * issue - injection, the html class view has this bug Class TerranObject
-Extends Object{prototype: prototype} - types are printing wrong.
 
  * issue: html app inherited props: only the super class inherited props are shown but not super-super class... also inherited classes should be grouped.
 
@@ -170,6 +168,8 @@ Backbone.View references will be renamed to BackboneView. Take in account that i
 now you can use @task and it will be replaced to @module !
 
 
+ * issue - injection, the html class view has this bug Class TerranObject
+Extends Object{prototype: prototype} - types are printing wrong.
 
 
 

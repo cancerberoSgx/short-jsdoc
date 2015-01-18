@@ -69,12 +69,17 @@ _(AbstractView.prototype).extend({
 		var self = this;
 		var buf = []; 
 		context.buffer.push(this.printType(context.type, true));
+		var has_only_proto = _(context.type.properties).keys().length===1 && context.type.properties.prototype; 
+		if(has_only_proto) //dirty hack to resolve incompatibility between literal types and Object class inherited props
+		{
+			return;
+		}
 		if(context.type.name==='Object')
 		{
 			context.buffer.push('{')
 			_(context.type.properties).each(function(value, key)
 			{
-				buf.push(key + ': ' + self.printSingleTypeAsString(value, true));
+				buf.push(key + ': ' + self.printSingleTypeAsString(value, true));				
 			}); 
 		}
 		context.buffer.push(buf.join(', '));
@@ -245,7 +250,6 @@ _(AbstractView.prototype).extend({
 ,	getModuleClasses: function(moduleName, data)
 	{
 		var a = [];
-		// return a;//data ; //return this.application.data.classes;
 		_(data.classes).each(function(c)
 		{
 			if(c.absoluteName.indexOf(moduleName)===0)
