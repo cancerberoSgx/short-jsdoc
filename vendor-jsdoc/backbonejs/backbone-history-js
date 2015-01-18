@@ -1,6 +1,6 @@
 /*@module Backbone
 
-@class BackboneHistory
+@class Backbone.History
 
 *History* serves as a global router (per frame) to handle hashchange events or pushState, match the appropriate route, and trigger callbacks. You shouldn't ever have to create one of these yourself since Backbone.history already contains one.
 

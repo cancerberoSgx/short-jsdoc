@@ -19,3 +19,6 @@
  * issue - injection, the html class view has this bug Class TerranObject Extends Object{prototype: prototype} - types are printing wrong.
 
 ##0.1.4
+ * renamed vendor BackboneModel to Backbone.Model , same for Backbone.View, Backbone.Router, etc
+
+##0.1.5

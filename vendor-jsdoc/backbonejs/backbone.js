@@ -62,7 +62,7 @@ As an example, a Rails handler responding to an "update" call from Backbone migh
 One more tip for integrating Rails versions prior to 3.1 is to disable the default namespacing for to_json calls on models by setting ActiveRecord::Base.include_root_in_json = false
 
 @param {String}method
-@param {BackboneModel} model
+@param {Backbone.Model} model
 @param {Object} options optional
 @static
 

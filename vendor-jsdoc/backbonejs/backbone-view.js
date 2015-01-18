@@ -2,11 +2,11 @@
 
 @module Backbone
 
-@class BackboneView
+@class Backbone.View
 
 Backbone views are almost more convention than they are code — they don't determine anything about your HTML or CSS for you, and can be used with any JavaScript templating library. The general idea is to organize your interface into logical views, backed by models, each of which can be updated independently when the model changes, without having to redraw the page. Instead of digging into a JSON object, looking up an element in the DOM, and updating the HTML by hand, you can bind your view's render function to the model's "change" event — and now everywhere that model data is displayed in the UI, it is always immediately up to date.
 
-@extend BackboneEvents
+@extend Backbone.Events
 
 */
 

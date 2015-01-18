@@ -1,7 +1,7 @@
 /*
 
 @module Backbone
-@class BackboneCollection
+@class Backbone.Collection
 
 Collections are ordered sets of models. You can bind "change" events to be notified when any model in the collection has been modified, listen for "add" and "remove" events, fetch the collection from the server, and use a full suite of Underscore.js methods.
 
@@ -86,7 +86,7 @@ Uses Backbone.sync to persist the state of a collection to the server. Can be ov
 
 
 @param {String} method
-@param {BackboneCollection} collection
+@param {Backbone.Collection} collection
 @param {Object} options optional
 
 */

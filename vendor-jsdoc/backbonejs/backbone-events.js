@@ -2,7 +2,7 @@
 //@module Backbone
 
 /*
-@class BackboneEvents
+@class Backbone.Events
 
 Events is a module that can be mixed in to any object, giving the object the ability to bind and trigger custom named events. Events do not have to be declared before they are bound, and may take passed arguments. For example:
 
@@ -39,7 +39,6 @@ Here's the complete list of built-in Backbone events, with arguments. You're als
 	"all" — this special event fires for any triggered event, passing the event name as the first argument.
 Generally speaking, when calling a function that emits an event (model.set, collection.add, and so on...), if you'd like to prevent the event from being triggered, you may pass {silent: true} as an option. Note that this is rarely, perhaps even never, a good idea. Passing through a specific flag in the options for your event callback to look at, and choose to ignore, will usually work out better.
 
-@alias class Backbone.Events BackboneEvents
 */
 
 
@@ -118,7 +117,7 @@ Tell an object to listen to a particular event on an other object. The advantage
 
 	view.listenTo(model, 'change', view.render);
 
-@param {BackboneEvents} other
+@param {Backbone.Events} other
 @param {String} event
 @param {Function} calback
 */
@@ -135,7 +134,7 @@ Tell an object to stop listening to events. Either call stopListening with no ar
 	view.stopListening(model);
 
 
-@param {BackboneEvents} other optional
+@param {Backbone.Events} other optional
 @param {String} event optional
 @param {Function} calback optional
 

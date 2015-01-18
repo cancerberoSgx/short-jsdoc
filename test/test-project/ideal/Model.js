@@ -31,9 +31,6 @@ if(typeof sentence === 'undefined')
 // @returns {id:String,objectDic:Object<String>} bla bla bla
 var getState=function(){};
 
-// @class MyBBModel @extends BackboneModel
-// @class MyBB.Model @extends Backbone.Model
-
 //@method getOwners this method is useful for *blabla* blabla _blabla_ bab
 var s = 'these are just js sample sentences'; 
 if(typeof sentence === 'undefined')

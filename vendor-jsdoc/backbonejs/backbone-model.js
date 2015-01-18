@@ -1,6 +1,6 @@
 /*
 @module Backbone
-@class BackboneModel 
+@class Backbone.Model 
 
 
 Models are the heart of any JavaScript application, containing the interactive data as well as a large part of the logic surrounding it: conversions, validations, computed properties, and access control. You extend Backbone.Model with your domain-specific methods, and Model provides a basic set of functionality for managing changes.
@@ -24,10 +24,8 @@ The following is a contrived example, but it demonstrates defining a model with 
 
 	sidebar.promptColor();
 
-@extends BackboneEvents
+@extends Backbone.Events
 
-
-@alias class Backbone.Model BackboneModel
 */
 
 
@@ -280,7 +278,7 @@ Return a shallow copy of the model's attributes for JSON stringification. This c
 @method sync
 Uses Backbone.sync to persist the state of a model to the server. Can be overridden for custom behavior.
 @param {String} method
-@param {BackboneModel} model
+@param {Backbone.Model} model
 @param {Object} options Optional
 @static
 */

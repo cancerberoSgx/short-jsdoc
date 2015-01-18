@@ -1,7 +1,6 @@
-//@module shortjsdoc.html
+// @module shortjsdoc.html
 // this file add methods to Abstract Application for dealing with types and html markup. 
-// @class AbstractView @extends BackboneView
-
+// @class AbstractView @extends Backbone.View
 _(AbstractView.prototype).extend({
 
 	//@method printTag
