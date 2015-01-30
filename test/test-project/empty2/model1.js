@@ -8,3 +8,10 @@
 // @property {Backbone.View} p 
 
 // @class MyModel @extends Backbone.Model
+
+/**
+ * @module funnycomments
+ * @class Letsseehow this outputed
+ * a new line for this class
+ * and another one
+ */

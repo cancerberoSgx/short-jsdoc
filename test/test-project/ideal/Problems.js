@@ -25,3 +25,10 @@
 // @class Solution
 
 // @class EquationError @extends Error
+
+// @alias class A Array
+// @alias class O Object
+// @alias class S String 
+// @alias class N Number
+
+// @method mutualCmpare @param {A<O>|A<O<S,N>>}

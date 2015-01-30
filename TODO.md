@@ -6,7 +6,6 @@ Listed from more important to less important:
  
  * support globs in nodejs API
 
-
  * remove asterix from package.json dependency versions
 
  * escape @ in text
@@ -14,6 +13,23 @@ Listed from more important to less important:
  * markdown in Line comments 
 
  * include the source only of files that contain annotations
+
+ * IMPORTANTE : @alias not working in ns app
+
+ * app/UI : sources should be collapsed by defuault because it contaiminates visuals. 
+
+ * annotation names dont support mayus, i.e. @memberOf Apple wont work
+
+* @module @module.foo @module.bar - then , in the app module contains all the classes of @moule.foo and @module.bar - fix this in the ModuleView class
+
+* when navigating do scroll to top automatically
+
+* I as a user want to support custom name regex, for example I want to be able to write annotation names with characters like []
+
+* @param {Array<String>|Array<Apple>} is printing wrong - first is array of array of string
+
+* IMPORTANT by default, delete the property  theRestOfTheString that is dumping in the data.json  to minimize its size
+
  
  * remove parseyourowncode,spec runner,etc from html application since this is particular of shortjsdoc. put it on readme.md or other app
  

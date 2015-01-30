@@ -20,5 +20,6 @@
 
 ##0.1.4
  * renamed vendor BackboneModel to Backbone.Model , same for Backbone.View, Backbone.Router, etc
+ * fixed shortjsdoc to allow passing the metadata right - i.e. dontMinifyOutout now works when calling from outside main()
 
 ##0.1.5

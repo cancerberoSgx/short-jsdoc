@@ -3,7 +3,7 @@ nodejs command line utility for generating the .json definition scanning a given
 
 Depends on src/JsDocMaker.js
 
-*IMPORTANTP* don't use console.log here since the output is dumped to stdout 
+*IMPORTANT* don't use console.log here since the output is dumped to stdout 
 */
 var fs = require('fs')
 ,	path = require('path')
@@ -17,6 +17,7 @@ var fs = require('fs')
 var ShortJsDoc = function()
 {
 	this.maker = new JsDocMaker();
+	this.projectMetadata = {};
 	this.sources = {};
 }; 
 
@@ -44,26 +45,20 @@ _(ShortJsDoc.prototype).extend({
 
 		var inputDirs = argv.input.split(','); 
 
-		var projectMetadata = {};
+		// var projectMetadata = {};
 		if(argv.projectMetadata)
 		{
-			projectMetadata = this.tryToParseJsonFile(argv.projectMetadata) || {};
+			this.projectMetadata = this.tryToParseJsonFile(argv.projectMetadata) || {};
 		}
 
 		var jsdoc = this.execute({
 			inputDirs: inputDirs
-		,	projectMetadata: projectMetadata
+		,	projectMetadata: this.projectMetadata
 		});
 
-		if(argv.dontMinifyOutput || projectMetadata.jsdoc && projectMetadata.jsdoc.dontMinifyOutput)
-		{		
-			console.log(JSON.stringify(jsdoc, null, 4)); // dump the output indented:
-		}
-		else
-		{			
-			console.log(JSON.stringify(jsdoc)); // dump the output minified:
-		}
+		this.projectMetadata.jsdoc.dontMinifyOutput = argv.dontMinifyOutput || this.projectMetadata.jsdoc.dontMinifyOutput;
 
+		console.log(this.dumpJSON(jsdoc)); 
 	}
 
 	// @method tryToParseJsonFile @param {String} path
@@ -109,7 +104,7 @@ _(ShortJsDoc.prototype).extend({
 
 		var jsdoc = this.maker.data;
 
-		jsdoc.projectMetadata = options.projectMetadata || {name: 'Untitled Project'};
+		this.projectMetadata = jsdoc.projectMetadata = options.projectMetadata || {name: 'Untitled Project'};
 
 		this.maker.postProccess();
 		
@@ -159,8 +154,21 @@ _(ShortJsDoc.prototype).extend({
 		//generate the data.json file
 		var jsdoc = this.execute(options); 
 		var f = path.join(options.output, 'data.json'); 
-		fs.writeFileSync(f, JSON.stringify(jsdoc)); 
+		fs.writeFileSync(f, this.dumpJSON(jsdoc)); 
 	} 
+
+	// @method dumpJSON dont to json string give ast object using settings like this.projectMetadata.jsdoc.dontMinifyOutput
+,	dumpJSON: function(jsdoc) 
+	{
+		if(this.projectMetadata.jsdoc && this.projectMetadata.jsdoc.dontMinifyOutput)
+		{		
+			return JSON.stringify(jsdoc, null, 4); // dump the output indented:
+		}
+		else
+		{
+			return JSON.stringify(jsdoc); // dump the output minified:
+		}
+	}
 
 	//@method parseSources
 ,	parseSources: function()
