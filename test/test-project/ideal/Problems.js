@@ -31,4 +31,13 @@
 // @alias class S String 
 // @alias class N Number
 
-// @method mutualCmpare @param {A<O>|A<O<S,N>>}
+// @method mutualCmpare @param {A<O>|A<O<S,N>>} p1 @param {S}p2 @param {N|S}p3
+
+
+
+// @alias class a Array
+// @alias class o Object
+// @alias class s String 
+// @alias class n Number
+
+// @method anotherComparission @param {a<o>|a<o<s,n>>}

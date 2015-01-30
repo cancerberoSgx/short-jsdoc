@@ -3141,6 +3141,11 @@ IMPORTANT. alias to complex types are not supported, only alias to simple types.
 ##annotation alias
 @alias annotation task method
 
+##Implementation notes
+
+at preprocessing the alias meta information will be stored in the AST under the 'alias' property. 
+Then this information will be consumed at binding time in the second plugin
+
 */
 
 
@@ -3155,12 +3160,12 @@ var aliasBeforeParseNodePlugin = {
 ,	execute: function(options)
 	{
 		var node = options.node
-		,	context = options.jsdocmaker
+		,	context = options.jsdocmaker.data
 		,	self = this;
 
-		context.aliasClassDict = context.aliasClassDict || {}; 
+		context.alias = context.alias || {}; 
 
-		var aliasList = []; //its a list because node can have many alias children inside. @alias is a second-level AST node
+		var aliasList = []; //its a list because node can have many alias children inside. alias is a second-level AST node
 			
 		if (node.annotation=='alias')
 		{			
@@ -3179,12 +3184,7 @@ var aliasBeforeParseNodePlugin = {
 			self.parseAlias(alias, context, true); 
 		}); 
 
-		//then check for other annotations for @alias annotation TODO
-		// if(context.aliasClassDict[node.annotation])
-
-		//TODO: remove the alias node from comments array
-
-		// console.log	('\n\n', context.aliasClassDict, '\n\n')
+		//TODO: remove the alias node from comments array ? 
 	}
 
 	//@method parseAlias @return {JSDocASTNode} the enhanced node with property *alias* enhanced
@@ -3204,7 +3204,7 @@ var aliasBeforeParseNodePlugin = {
 			// debugger;
 			if(install)
 			{
-				context.aliasClassDict[o.name] = o;
+				context.alias[o.name] = o;
 			}
 		}
 		return parsed;
@@ -3222,9 +3222,9 @@ var aliasBeforeBindClassPlugin = {
 	//@param {name:name, baseClass: baseClass, jsdocmaker: this} context  this plugin has the change of chainging the context.
 ,	execute: function(context)
 	{
-		context.jsdocmaker.aliasClassDict = context.jsdocmaker.aliasClassDict || {}; 
-		// if(!context.jsdocmaker.aliasClassDict){debugger}
-		var alias = context.jsdocmaker.aliasClassDict[context.name]; 
+		context.jsdocmaker.data.alias = context.jsdocmaker.data.alias || {}; 
+		var alias = context.jsdocmaker.data.alias[context.name]; 
+
 		if(alias)
 		{
 			context.name = alias.target; //alias only sypport targetting single types!

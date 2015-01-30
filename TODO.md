@@ -14,8 +14,6 @@ Listed from more important to less important:
 
  * include the source only of files that contain annotations
 
- * IMPORTANTE : @alias not working in ns app
-
  * app/UI : sources should be collapsed by defuault because it contaiminates visuals. 
 
  * annotation names dont support mayus, i.e. @memberOf Apple wont work
@@ -30,6 +28,7 @@ Listed from more important to less important:
 
 * IMPORTANT by default, delete the property  theRestOfTheString that is dumping in the data.json  to minimize its size
 
+* alias not working in generic types. i.e. this works: {a}, this works: {a|n} this also seems to work: {a<o>} but this doesn't : {a<o<s,n>>}
  
  * remove parseyourowncode,spec runner,etc from html application since this is particular of shortjsdoc. put it on readme.md or other app
  
@@ -178,15 +177,14 @@ that means that when a method named 'get_apples' is found in the jsdoc, the name
 Backbone.View references will be renamed to BackboneView. Take in account that in the output Backbone.View won't exists - only BackboneView
 
  * plugin idea - post propcessing - : @module mod1 bla bla @exports {AClass} bla bla
- * 
  * Support annotation alias, example
     @alias annotation task class
 now you can use @task and it will be replaced to @module !
 
-
  * issue - injection, the html class view has this bug Class TerranObject
 Extends Object{prototype: prototype} - types are printing wrong.
 
+ * IMPORTANTE : @alias not working in ns app
 
 
 

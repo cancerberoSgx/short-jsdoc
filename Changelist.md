@@ -13,13 +13,17 @@
  * Added support to @filename annotation. 
  * object literal type fully support {a:Array<String>}
  * added browserify and refactored in the parser in several files. Remoed hardcoded file names from gruntfile.
+
+##0.1.4
  * @module @exports
  * @alias for classes.
  * JsDocMaker.recurseAST visit nodes and types of the AST - children first
  * issue - injection, the html class view has this bug Class TerranObject Extends Object{prototype: prototype} - types are printing wrong.
 
-##0.1.4
+##0.1.5
  * renamed vendor BackboneModel to Backbone.Model , same for Backbone.View, Backbone.Router, etc
  * fixed shortjsdoc to allow passing the metadata right - i.e. dontMinifyOutout now works when calling from outside main()
+ * fix error in alias when using app - alias metainfo now persisted on the ast
 
-##0.1.5
+
+##0.1.6

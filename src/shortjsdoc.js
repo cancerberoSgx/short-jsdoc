@@ -17,7 +17,7 @@ var fs = require('fs')
 var ShortJsDoc = function()
 {
 	this.maker = new JsDocMaker();
-	this.projectMetadata = {};
+	this.projectMetadata = {jsdoc: {}};
 	this.sources = {};
 }; 
 
@@ -55,6 +55,8 @@ _(ShortJsDoc.prototype).extend({
 			inputDirs: inputDirs
 		,	projectMetadata: this.projectMetadata
 		});
+
+		this.projectMetadata.jsdoc = this.projectMetadata.jsdoc || {}; 
 
 		this.projectMetadata.jsdoc.dontMinifyOutput = argv.dontMinifyOutput || this.projectMetadata.jsdoc.dontMinifyOutput;
 
