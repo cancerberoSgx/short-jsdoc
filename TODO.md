@@ -15,6 +15,7 @@ Listed from more important to less important:
  * include the source only of files that contain annotations
 
  * app/UI : sources should be collapsed by defuault because it contaiminates visuals. 
+ * in some plugins like comment indentator we are ssumming files have unix end to line. we should pre process all commments first. 
 
  * annotation names dont support mayus, i.e. @memberOf Apple wont work
 

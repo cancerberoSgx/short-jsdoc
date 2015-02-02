@@ -1,0 +1,9 @@
+<% var data = this.application.data; %>
+
+<%= data.projectMetadata && this.application.templates['project-metadata'].apply(this, arguments) %>
+
+<button data-action="expand-all">Expand all</button>
+
+<button data-action="collapse-all">Collapse all</button>
+
+<div class="the-tree"></div>

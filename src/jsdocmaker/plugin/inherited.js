@@ -2,6 +2,7 @@
 var JsDocMaker = require('../core/class'); 
 var _ = require('underscore'); 
 
+// TODO : turn this into a normal plugin - right now it is mixing itself in JsDocMaker
 // INHERITED methods&properties postproccessing. Optional
 
 //@method postProccessInherited calculates inherited methods&properties and put it in class'properties inheritedMethods and inheritedProperties

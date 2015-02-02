@@ -1,19 +1,18 @@
 <h2>Parse your code online!</h2>
 <p>Please paste your commeted code in the following area and it will be loaded automatically. </p>
 <textarea data-type="inputcode">
-//@class Living Any living thing. @module Life. 
+//@module life @class Living Any living thing
 //@class Tree A tree is a living thing that contains some leafs and grow. 
-//@extends Living @module Life 
+//@extends Living 
 function Tree(){}
 /**@method growLeaf makes the given leaf to gro a little more. @param {Leaf} leaf*/
 Tree.prototype.growLeaf = function(leaf){}
 /*@class Apple a sweet fruit @module Life @extend Fruit grows in trees and can be eaten @module Life */ 
 function Apple(){}
-
-//@class Rock @module Mineral
+//@module Mineral @class Stone 
 //@method doShadow @param {Rectangle} shadowSize @return {Shadow} the new Shadow
-
 //@class Shadow @module Ideal
 //@class Good @module Ideal
 </textarea>
+<input type="checkbox" data-action="clean" >Clean previous data ?</input>
 <button data-action="inputcode_doit">do it</button>

@@ -2557,7 +2557,7 @@ var JsDocMaker = require('./core/main');
 require('./plugin/main.js'); 
 
 module.exports = JsDocMaker;
-},{"./core/main":4,"./plugin/main.js":16}],12:[function(require,module,exports){
+},{"./core/main":4,"./plugin/main.js":17}],12:[function(require,module,exports){
 /*
 
 This is a syntax definition compiled to JavaScript that parses an expression like 
@@ -3235,10 +3235,58 @@ var aliasBeforeBindClassPlugin = {
 JsDocMaker.prototype.beforeBindClassPlugins.add(aliasBeforeBindClassPlugin); 
 
 },{"../core/class":3,"underscore":1}],14:[function(require,module,exports){
+/*
+@module shortjsdoc.plugin.comment.indentation 
+#Comment indentation plugin
+Takes care of respecting the original indentation of block comments. 
+It will erase the initial spaces of each line according to the comment indentation.
+*/
+
+var JsDocMaker = require('../core/class'); 
+var _ = require('underscore'); 
+
+
+//@class AliasBeforeParseNodePlugin @extends JsDocMakerPlugin a plugin executed at beforeParseNodePlugins. 
+var commentIndentationPlugin = {
+
+	name: 'commentIndentation'
+
+,	execute: function(options)
+	{
+		if(!options.node.text)
+		{
+			return;
+		}
+		var fileSource = options.jsdocmaker.data.files[options.currentFile.fileName]
+		var beforeCommentText = options.jsdocmaker.data.source.substring(0, options.node.commentRange[0]); 
+
+		var result = /([ \t]+)$/.exec(beforeCommentText)
+		,	prefix = 0;
+		if(result && result.length) 
+		{
+			prefix = result[0];
+
+			// TODO we are ssumming files have unix end to line. we should pre process all commments first. 
+			options.node.text = replaceAll('\n' + options.node.text, prefix, '\n'); 
+		}	
+	}
+}
+JsDocMaker.prototype.afterParseNodePlugins.add(commentIndentationPlugin); 
+
+
+function escapeRegExp(string) {
+    return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+}
+function replaceAll(string, find, replace) {
+  return string.replace(new RegExp(escapeRegExp(find), 'g'), replace);
+}
+
+},{"../core/class":3,"underscore":1}],15:[function(require,module,exports){
 // @module shortjsdoc @class JsDocMaker
 var JsDocMaker = require('../core/class'); 
 var _ = require('underscore'); 
 
+// TODO : turn this into a normal plugin - right now it is mixing itself in JsDocMaker
 // INHERITED methods&properties postproccessing. Optional
 
 //@method postProccessInherited calculates inherited methods&properties and put it in class'properties inheritedMethods and inheritedProperties
@@ -3332,18 +3380,18 @@ JsDocMaker.classOwnsProperty = function(aClass, prop)
 	return result;
 }; 
 
-},{"../core/class":3,"underscore":1}],15:[function(require,module,exports){
+},{"../core/class":3,"underscore":1}],16:[function(require,module,exports){
 // @module shortjsdoc @class JsDocMaker
 var JsDocMaker = require('../core/class'); 
 var _ = require('underscore'); 
 
-// this should be commented
+//
 // it is an exmaple of a plugin that parse literal types like @param {#obj({p1:P1,p2:P2,...})} param1
 
 // CUSTOM TPE PLUGIN literalObjectParse - requires literalObjectParser.js - it adds support 
 // for the custom type syntax #obj({p1:P1,p2:P2,...})to express literal objects
 // syntax: {#obj(prop1:String,prop2:Array<Apple>)}
-// DEPRECATED - turn it into a unit test showing an  example of plugin 
+// DEPRECATED - turn it into a unit test showing an  example of plugin making. this file will be delete.
 // @method literalObjectParse
 JsDocMaker.prototype.literalObjectParse = function(s, baseClass)
 {
@@ -3382,7 +3430,7 @@ JsDocMaker.prototype.literalObjectInstall = function()
 }; 
 
 
-},{"../core/class":3,"underscore":1}],16:[function(require,module,exports){
+},{"../core/class":3,"underscore":1}],17:[function(require,module,exports){
 'strict mode'; 
 
 var JsDocMaker = require('../core/main.js'); 
@@ -3394,9 +3442,10 @@ require('./util.js');
 require('./literal-object.js');
 require('./module-exports.js');
 require('./alias.js');
+require('./comment-indentation.js');
 
 module.exports = JsDocMaker; 
-},{"../core/main.js":4,"./alias.js":13,"./inherited.js":14,"./literal-object.js":15,"./modifiers.js":17,"./module-exports.js":18,"./native-types.js":19,"./util.js":20}],17:[function(require,module,exports){
+},{"../core/main.js":4,"./alias.js":13,"./comment-indentation.js":14,"./inherited.js":15,"./literal-object.js":16,"./modifiers.js":18,"./module-exports.js":19,"./native-types.js":20,"./util.js":21}],18:[function(require,module,exports){
 // @module shortjsdoc @class JsDocMaker
 var JsDocMaker = require('../core/class'); 
 var _ = require('underscore'); 
@@ -3418,7 +3467,7 @@ JsDocMaker.prototype.installModifiers = function(node)
 	});
 }; 
 
-},{"../core/class":3,"underscore":1}],18:[function(require,module,exports){
+},{"../core/class":3,"underscore":1}],19:[function(require,module,exports){
 /* @module shortjsdoc.plugin.module-export
 
 #@module @exports
@@ -3464,7 +3513,7 @@ var plugin_beforeTypeBinding = {
 }; 
   
 JsDocMaker.prototype.beforeTypeBindingPlugins.add(plugin_beforeTypeBinding); 
-},{"../core/class":3,"underscore":1}],19:[function(require,module,exports){
+},{"../core/class":3,"underscore":1}],20:[function(require,module,exports){
 // @module shortjsdoc @class JsDocMaker
 var JsDocMaker = require('../core/class'); 
 var _ = require('underscore'); 
@@ -3495,7 +3544,7 @@ JsDocMaker.prototype.getNativeTypeUrl = function(name)
 	return customTypeUrl;
 }; 
 
-},{"../core/class":3,"underscore":1}],20:[function(require,module,exports){
+},{"../core/class":3,"underscore":1}],21:[function(require,module,exports){
 // @module shortjsdoc @class JsDocMaker
 var JsDocMaker = require('../core/class'); 
 var _ = require('underscore'); 

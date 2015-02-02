@@ -9,5 +9,6 @@ require('./util.js');
 require('./literal-object.js');
 require('./module-exports.js');
 require('./alias.js');
+require('./comment-indentation.js');
 
 module.exports = JsDocMaker; 

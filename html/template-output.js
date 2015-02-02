@@ -199,7 +199,7 @@ with (obj) {
  var metadata = this.application.data.projectMetadata; ;
 __p += '\n<header class="main-header">\n\t<div class="row">\n\n\t\t<!-- <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> -->\n\t\t<span class="col-sm-5 col-xs-12">\n\t\t\t<span class="dropdown">\n\t\t\t\t<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">\n\t\t\t\t' +
 ((__t = ( (metadata && metadata.name) ||  'short-jsdoc demo' )) == null ? '' : __t) +
-'\n\t\t\t\t<span class="caret"></span>\n\t\t\t\t</button>\n\t\t\t\t<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">\n\t\t\t\t\t<li role="presentation"><a role="menuitem" tabindex="-1" href="#index">Index</a></li>\n\t\t\t\t\t<li role="presentation" class="divider"></li>\n\t\t\t\t\t<li role="presentation"><a role="menuitem" tabindex="-1" href="https://github.com/cancerberoSgx/short-jsdoc">short-jsdoc home page</a></li>\n\t\t\t\t</ul>.\n\t\t\t\t\n\t\t\t</span>\t\t\n\t\t</span>\n\n\t\t<!-- <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> -->\n\t\t<span class="col-sm-7 col-xs-12">\n\t\t\t<span class="main-search pull-right">\n\t\t\t<a role="menuitem" tabindex="-1" href="#index">Index</a>\n\t\t\t\tSearch <input class="typeahead1">\n\t\t\t</span>\t\t\n\t\t</span>\n\n\n\t</div>\n\n</header>';
+'\n\t\t\t\t<span class="caret"></span>\n\t\t\t\t</button>\n\t\t\t\t<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">\n\t\t\t\t\t\n\t\t\t\t\t<li role="presentation"><a role="menuitem" tabindex="-1" href="#index">Index</a></li>\t\t\n\t\t\t\t\t<li role="presentation"><a role="menuitem" tabindex="-1" href="#parse">Parse your code !</a></li>\n\t\t\t\t\t<li role="presentation" class="divider"></li>\n\t\t\t\t\t<li role="presentation"><a role="menuitem" tabindex="-1" href="https://github.com/cancerberoSgx/short-jsdoc">short-jsdoc home page</a></li>\n\t\t\t\t\t<li role="presentation"><a role="menuitem" tabindex="-1" href="../test/SpecRunner.html">Run short-jsdoc Specs</a></li>\n\n\t\t\t\t</ul>.\n\t\t\t\t\n\t\t\t</span>\t\t\n\t\t</span>\n\n\t\t<!-- <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> -->\n\t\t<span class="col-sm-7 col-xs-12">\n\t\t\t<span class="main-search pull-right">\n\t\t\t<a role="menuitem" tabindex="-1" href="#index">Index</a>\n\t\t\t\tSearch <input class="typeahead1">\n\t\t\t</span>\t\t\n\t\t</span>\n\n\n\t</div>\n\n</header>';
 
 }
 return __p
@@ -214,11 +214,11 @@ with (obj) {
  var data = this.application.data; ;
 __p += '\n\n' +
 ((__t = ( data.projectMetadata && this.application.templates['project-metadata'].apply(this, arguments) )) == null ? '' : __t) +
-'\n\n' +
+'\n\n<p>Take a look at the <a href="#tree">Full Abstract Syntax Tree (AST) View</a></p>\n\n' +
 ((__t = ( this.application.templates['modules'].apply(this, arguments) )) == null ? '' : __t) +
 '\n\n' +
 ((__t = ( this.application.templates['classes'].apply(this, arguments) )) == null ? '' : __t) +
-'\n\n<p><a href="#parse"><b>Parse</b> your own code! --></a></p>\n\n<p>(devel)<a href="../test/SpecRunner.html">Specs</a></p> \n\n\n';
+'\n\n\n\n\n';
 
 }
 return __p
@@ -365,7 +365,7 @@ this["shortjsdoc"]["parse"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<h2>Parse your code online!</h2>\n<p>Please paste your commeted code in the following area and it will be loaded automatically. </p>\n<textarea data-type="inputcode">\n//@class Living Any living thing. @module Life. \n//@class Tree A tree is a living thing that contains some leafs and grow. \n//@extends Living @module Life \nfunction Tree(){}\n/**@method growLeaf makes the given leaf to gro a little more. @param {Leaf} leaf*/\nTree.prototype.growLeaf = function(leaf){}\n/*@class Apple a sweet fruit @module Life @extend Fruit grows in trees and can be eaten @module Life */ \nfunction Apple(){}\n\n//@class Rock @module Mineral\n//@method doShadow @param {Rectangle} shadowSize @return {Shadow} the new Shadow\n\n//@class Shadow @module Ideal\n//@class Good @module Ideal\n</textarea>\n<button data-action="inputcode_doit">do it</button>\n';
+__p += '<h2>Parse your code online!</h2>\n<p>Please paste your commeted code in the following area and it will be loaded automatically. </p>\n<textarea data-type="inputcode">\n//@module life @class Living Any living thing\n//@class Tree A tree is a living thing that contains some leafs and grow. \n//@extends Living \nfunction Tree(){}\n/**@method growLeaf makes the given leaf to gro a little more. @param {Leaf} leaf*/\nTree.prototype.growLeaf = function(leaf){}\n/*@class Apple a sweet fruit @module Life @extend Fruit grows in trees and can be eaten @module Life */ \nfunction Apple(){}\n//@module Mineral @class Stone \n//@method doShadow @param {Rectangle} shadowSize @return {Shadow} the new Shadow\n//@class Shadow @module Ideal\n//@class Good @module Ideal\n</textarea>\n<input type="checkbox" data-action="clean" >Clean previous data ?</input>\n<button data-action="inputcode_doit">do it</button>\n';
 
 }
 return __p
@@ -434,6 +434,21 @@ with (obj) {
 __p += '<h3>Sources <button data-type="goto-source" class="btn btn-link ">goto def</button></h3>\n\n<pre class="prettyprint linenums">' +
 __e( this.sourceSubset ) +
 '</pre>';
+
+}
+return __p
+};
+
+this["shortjsdoc"]["tree"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+
+ var data = this.application.data; ;
+__p += '\n\n' +
+((__t = ( data.projectMetadata && this.application.templates['project-metadata'].apply(this, arguments) )) == null ? '' : __t) +
+'\n\n<button data-action="expand-all">Expand all</button>\n\n<button data-action="collapse-all">Collapse all</button>\n\n<div class="the-tree"></div>\n';
 
 }
 return __p

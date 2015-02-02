@@ -19,6 +19,8 @@ var JsDocRouter = Backbone.Router.extend({
 	,	'classes': 'showClasses'
 
 	,	'parse': 'showParse'
+
+	,	'tree': 'showTree'
 	}
 
 ,	initialize: function(application) 
@@ -112,6 +114,13 @@ var JsDocRouter = Backbone.Router.extend({
 ,	showIndex: function() 
 	{
 		var view = new IndexView(this.application);
+		this.application.showView(view); 
+	}
+
+	//@method showIndex
+,	showTree: function()
+	{		
+		var view = new TreeView(this.application);
 		this.application.showView(view); 
 	}
 
