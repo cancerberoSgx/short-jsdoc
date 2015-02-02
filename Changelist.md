@@ -27,3 +27,5 @@
 
 
 ##0.1.6
+ * comment-indentation plugin to preserve original comment indentation. 
+ * UI TreeView index initial contrib. 
