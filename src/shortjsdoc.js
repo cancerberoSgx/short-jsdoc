@@ -189,6 +189,10 @@ _(ShortJsDoc.prototype).extend({
 	{	
 		var map = {}
 		,	self = this;
+		if(!inputDir)
+		{
+			return;
+		}
 		if(!fs.statSync(inputDir).isDirectory())
 		{
 			self.readSource(inputDir, map);
