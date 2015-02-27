@@ -10,7 +10,6 @@
   },
   "devDependencies": {
     "del": "*",
-    "esprima": "*",
     "grunt": "*",
     "grunt-browserify": "^3.2.1",
     "grunt-contrib-concat": "*",
@@ -20,8 +19,7 @@
     "grunt-contrib-less": "*",
     "grunt-contrib-uglify": "*",
     "grunt-contrib-watch": "*",
-    "matchdep": "*",
-    "underscore": "*"
+    "matchdep": "*"
   },
   "main": "./src/shortjsdoc.js",
   "directories": {

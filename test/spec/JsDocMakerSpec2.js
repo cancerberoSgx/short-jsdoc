@@ -1,40 +1,32 @@
 
-describe("@alias", function() 
+describe("text marks", function() 
 {
 
-	it("creating shortcuts with alias", function() 
-	{
-		var jsdoc, maker; 
-		var code = 
-			'//@module mymodule bla bla ' + '\n' +
-			'//@alias class O Object' + '\n' +
-			'//@alias class S String' + '\n' +
-			'//@alias class A Array' + '\n' +
-			'//@alias class N Number' + '\n' +
-			'//@alias class Og Orange' + '\n' +
+it("using @?something arguments inside text to create named marks inside.", function() 
+{
+	var jsdoc, maker; 
+	var code = 
+		'//@module fruits bla bla ' + '\n' +
+		'//@class Banana bla bla bla' + '\n' +
+		'//@method paint ble balskdj laks' + '\n' +
+		'//@module trees' + '\n' +
+		'//@class  Bananero' + '\n' +
+		'//@method strange this methods do the strange thing what is related \n'+
+		'//with @?ref fruits.Banana and @?foo fruits.Banana.paint because of the destiny' + '\n' +
+		'';
 
-			'//@class Fruit living thing' + '\n' +
-			'//@class Orange some text for orang @extend Fruit @property {O<S,N>} smell' + '\n' +
+	maker = new JsDocMaker();
+	maker.addFile(code, 'name.js');
+	jsdoc = maker.jsdoc();
+	// maker.postProccess();
+	// maker.postProccessBinding();
 
-			'//@class Something' + '\n' +
-			'//@property {A<S>} prop1' + '\n' +
-			'//@property {Og} prop2' + '\n' +
-
-			'';
-
-		maker = new JsDocMaker();
-		maker.addFile(code, 'name.js');
-		jsdoc = maker.jsdoc();
-		maker.postProccess();
-		maker.postProccessBinding();
-
-		var prop1 = jsdoc.classes['mymodule.Something'].properties.prop1;
-		expect(prop1.type.name).toBe('Array');
-		expect(prop1.type.params[0].name).toBe('String');
-
-		var prop2 = jsdoc.classes['mymodule.Something'].properties.prop2;
-		expect(prop2.type.name).toBe('Orange'); 
-		expect(prop2.type.extends.name).toBe('Fruit'); 
-	});
+	var strange = jsdoc.classes['trees.Bananero'].methods.strange;
+	expect(strange.text).toBe('this methods do the strange thing what is related with _shortjsdoc_textmarkplugin_1 and _shortjsdoc_textmarkplugin_2 because of the destiny'); 
+	expect(strange.textMarks._shortjsdoc_textmarkplugin_1.name).toBe('ref');
+	expect(strange.textMarks._shortjsdoc_textmarkplugin_1.arg).toBe('fruits.Banana');
+	expect(strange.textMarks._shortjsdoc_textmarkplugin_2.arg).toBe('fruits.Banana.paint');
+	expect(strange.textMarks._shortjsdoc_textmarkplugin_2.name).toBe('foo');
+});
 
 });

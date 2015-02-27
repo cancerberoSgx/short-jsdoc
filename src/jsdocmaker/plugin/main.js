@@ -11,4 +11,6 @@ require('./module-exports.js');
 require('./alias.js');
 require('./comment-indentation.js');
 
+require('./text-marks.js');
+
 module.exports = JsDocMaker; 

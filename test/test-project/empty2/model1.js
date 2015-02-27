@@ -7,7 +7,7 @@
 // @class R @extends Backbone.Router
 // @property {Backbone.View} p 
 
-// @class MyModel @extends Backbone.Model
+// @class MyModel for more info please refeer to @?ref empty2.MyView because it uses @extends Backbone.Model
 
 /**
  * @module funnycomments

@@ -191,6 +191,7 @@ _(ShortJsDoc.prototype).extend({
 		,	self = this;
 		if(!inputDir)
 		{
+			console.log('ERROR invalid null input directory'); 
 			return;
 		}
 		if(!fs.statSync(inputDir).isDirectory())
@@ -246,44 +247,28 @@ ShortJsDoc.getThisFolder = function()
 //UTILITIES
 
 // @method folderWalk General function for walking a folder recusively and sync @static 
-ShortJsDoc.folderWalk = function (dir, action) {
-	// Assert that it's a function
+ShortJsDoc.folderWalk = function (dir, action) 
+{
 	if (typeof action !== "function")
 	{
 		action = function (error, file) { };
 	}	
 
-	// Read the directory
-
 	var list = fs.readdirSync(dir);
-	// fs.readdir(dir, function (err, list) {
 
-	// Return the error if something went wrong
-	// if (err)
-	// return action(err);
-
-	// For every file in the list
-	list.forEach(function (file) {
-		// Full path of that file
+	list.forEach(function (file) 
+	{
 		var path = dir + "/" + file;
-		// Get the file's stats
 		var stat = fs.statSync(path); 
-		// fs.stat(path, function (err, stat) {
-		// console.log(stat);
-		// If the file is a directory
 		if (stat && stat.isDirectory())
 		{
-			// Dive into the directory
 			ShortJsDoc.folderWalk(path, action);
 		}			
 		else
 		{
-			// Call the action
 			action(null, path);
-		}			
-		// });
+		}
 	});
-	// });
 };
 
 // @method copyRecursiveSync copy directories recursively just like cp -r @static
