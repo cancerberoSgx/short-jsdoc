@@ -8,6 +8,8 @@ it("using @?something arguments inside text to create named marks inside.", func
 	var code = 
 		'//@module fruits bla bla ' + '\n' +
 		'//@class Banana bla bla bla' + '\n' +
+		'//@property {Array<String>} flavor bla bla bla' + '\n' +
+		'//@event afterSomething bla bla bla' + '\n' +
 		'//@class Pineapple bla bla bla' + '\n' +
 		'//@method paint ble balskdj laks @param {String} color' + '\n' +
 		'//@module trees' + '\n' +
@@ -15,6 +17,9 @@ it("using @?something arguments inside text to create named marks inside.", func
 		'//@method strange this methods do the strange thing what is related \n'+
 		'//with @?class fruits.Banana and @?class Pineapple because of the destiny' + '\n' +
 		'//also @?module fruits is related to this problem and of cource @?method fruits.Pineapple.paint method references are allowed' + '\n' +
+		'//@param {String} param2 any tags can also contain @?event fruits.Banana.afterSomething text marks. Events and properties like @?property fruits.Banana.flavor can be contained' + '\n' +
+		'//@param {String} p3 this one contain a @?ref trees.Bananero to a class and a @?ref trees.Bananero.strange to a method.\n'+
+		'//@return {Array}\n'+
 		'';
 
 	maker = new JsDocMaker();
@@ -44,11 +49,20 @@ it("using @?something arguments inside text to create named marks inside.", func
 	expect(strange.textMarks._shortjsdoc_textmarkplugin_2.binding.methods.paint.params[0].name).toBe('color');
 	expect(strange.textMarks._shortjsdoc_textmarkplugin_3.binding.name).toBe('fruits');
 
-	expect(strange.textMarks._shortjsdoc_textmarkplugin_4.binding.annotation).toBe('method')
-	expect(strange.textMarks._shortjsdoc_textmarkplugin_4.binding.absoluteName).toBe('fruits.Pineapple.paint')
-	expect(strange.textMarks._shortjsdoc_textmarkplugin_4.binding.params[0].name).toBe('color')
-	expect(strange.textMarks._shortjsdoc_textmarkplugin_4.binding.params[0].type.name).toBe('String')
-    
+	expect(strange.textMarks._shortjsdoc_textmarkplugin_4.binding.annotation).toBe('method'); 
+	expect(strange.textMarks._shortjsdoc_textmarkplugin_4.binding.absoluteName).toBe('fruits.Pineapple.paint'); 
+	expect(strange.textMarks._shortjsdoc_textmarkplugin_4.binding.params[0].name).toBe('color'); 
+	expect(strange.textMarks._shortjsdoc_textmarkplugin_4.binding.params[0].type.name).toBe('String'); 
+
+	var strangeParam = strange.params[0]; 
+	expect(strangeParam.textMarks._shortjsdoc_textmarkplugin_5.binding.annotation).toBe('event'); 
+	expect(strangeParam.textMarks._shortjsdoc_textmarkplugin_6.binding.annotation).toBe('property'); 
+
+	strangeParam = strange.params[1]; 
+	expect(strangeParam.textMarks._shortjsdoc_textmarkplugin_7.binding.annotation).toBe('class'); 
+	expect(strangeParam.textMarks._shortjsdoc_textmarkplugin_7.binding.absoluteName).toBe('trees.Bananero'); 
+	expect(strangeParam.textMarks._shortjsdoc_textmarkplugin_7.binding.methods.strange.returns.type.name).toBe('Array'); 
+	expect(strangeParam.textMarks._shortjsdoc_textmarkplugin_8.binding.annotation).toBe('method');
 });
 
 });

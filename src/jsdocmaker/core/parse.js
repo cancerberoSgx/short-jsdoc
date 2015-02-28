@@ -39,13 +39,18 @@ JsDocMaker.prototype.commentPreprocessorPlugins = new PluginContainer();
 
 // @property {PluginContainer} beforeParseNodePlugins these plugins accept an object like 
 // {node:parsed:jsdocmaker:self} and perform some modification to passed node:parsed instance.
-// This is done just before the first parsing is done on the first AST node
+// This is done just before the first parsing is done on the first AST node. Only primary nodes are visited!
 JsDocMaker.prototype.beforeParseNodePlugins = new PluginContainer(); 
 
 // @property {PluginContainer} parsePreprocessors these plugins accept an object like 
 // {node:parsed:jsdocmaker:self} and perform some modification to passed node:parsed instance.
-// This is done just after the first parsing is done on the first AST node
+// This is done just after the first parsing is done on the first AST node. Only primary nodes are visited!
 JsDocMaker.prototype.afterParseNodePlugins = new PluginContainer();
+
+// @property {PluginContainer} afterParseUnitSimplePlugins these plugins accept an object like 
+// {node:parsed:jsdocmaker:self} and perform some modification to passed node:parsed instance.
+// This is done after an unit is parsed - this will iterated all nodes as units .The first node object is formed at this stage. 
+JsDocMaker.prototype.afterParseUnitSimplePlugins = new PluginContainer();
 
 //@method jsdoc the public method to parse all the added files with addFile. @return {Object} the parsed object @param {String} source . Optional
 JsDocMaker.prototype.jsdoc = function(source)
@@ -116,6 +121,7 @@ JsDocMaker.prototype.parse = function(comments)
 		_(a).each(function(value)
 		{
 			var parsed_array = self.parseUnit(value, node);
+			
 			_(parsed_array).each(function(parsed)
 			{
 				parsed.commentRange = node.range;
@@ -123,6 +129,7 @@ JsDocMaker.prototype.parse = function(comments)
 
 				delete parsed.theRestString; 
 
+				// console.log('parse ', parsed.annotation)
 				self.beforeParseNodePlugins.execute({node:parsed, jsdocmaker:self}); 
 
 				//Note: the following lines is the (only) place were the 'primary annotations' (class,module,method,property) are implemented 
@@ -212,18 +219,18 @@ JsDocMaker.prototype.parse = function(comments)
 				}
 
 				//? @param is children of @method
-				else if(parsed.annotation === 'param' && currentClass)
-				{
-					if(!currentMethod)
-					{
-						self.error('param before method: ', parsed);
-					}
-					else
-					{						
-						currentMethod.params = currentMethod.params || {};
-						currentMethod.params[parsed.name] = parsed; 
-					}
-				}
+				// else if(parsed.annotation === 'param' && currentClass)
+				// {
+				// 	if(!currentMethod)
+				// 	{
+				// 		self.error('param before method: ', parsed);
+				// 	}
+				// 	else
+				// 	{						
+				// 		currentMethod.params = currentMethod.params || {};
+				// 		currentMethod.params[parsed.name] = parsed; 
+				// 	}
+				// }
 
 				self.afterParseNodePlugins.execute({
 					node: parsed
@@ -311,6 +318,8 @@ JsDocMaker.prototype.parseUnitSimple = function(str, comment)
 	,	text: JsDocMaker.stringTrim(text||'')
 	,	theRestString: JsDocMaker.stringTrim(splitted.join(''))
 	};
+
+	this.afterParseUnitSimplePlugins.execute({node:ret, jsdocmaker:this}); 
 
 	return ret;
 }; 

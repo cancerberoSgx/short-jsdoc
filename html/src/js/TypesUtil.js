@@ -164,8 +164,18 @@ _(AbstractView.prototype).extend({
 		{
 			return '';
 		}
-		var text = node.text
-		,	type = this.application.textFormat
+		if(node.text_html_app)
+		{
+			return node.text_html_app; 
+		}
+
+		// if(node.textMarks)
+		// {
+		// 	debugger;
+		// }
+		var self2 = this //TODO invitigate why I need self2 and self always binds to other thing than this...
+		,	text = node.text
+		,	type = this.application.textFormat || 'markdown'
 		,	html = _(node.children).find(function(c){return c.annotation==='html'; })
 		,	markdown = _(node.children).find(function(c){return c.annotation==='markdown'; });
 		
@@ -178,14 +188,20 @@ _(AbstractView.prototype).extend({
 			type = 'markdown'; 
 		}
 
+		// perform text marks replacement.
+		_(node.textMarks).each(function(mark, markId)
+		{
+			text = text.replace(markId, self2.makeLink(mark.binding, true)); 
+		}); 
+
 		if(type === 'markdown')
 		{
-			return marked(text); 
+			text = marked(text); 
 		}
-		else
-		{
-			return text; 
-		}
+
+		node.text_html_app = text;
+		return text; 
+		
 	}
 
 	//@method printMethod
@@ -202,27 +218,6 @@ _(AbstractView.prototype).extend({
 		s += '<a href="' + this.makeLink(m) + '">' + methodName + '</a>'; 
 
 		return s + '</span>';
-	}
-
-,	renderSource_: function(jsdoc, $container)
-	{
-		var view = new SourcesView(this.application, jsdoc); 
-		view.renderIn($container); 
-	}
-
-
-,	renderSource: function()
-	{
-		if(!this.jsdoc)
-		{
-			return;
-		}
-		this.renderSource_(this.jsdoc, this.$('[data-type="sources"]')); 
-		this.$('pre code').addClass('prettyprint'); 
-		if(typeof prettyPrint !== 'undefined') 
-		{
-			prettyPrint('pre code');
-		}
 	}
 	
 ,	getInherited: function(c, what)

@@ -1918,13 +1918,18 @@ JsDocMaker.prototype.commentPreprocessorPlugins = new PluginContainer();
 
 // @property {PluginContainer} beforeParseNodePlugins these plugins accept an object like 
 // {node:parsed:jsdocmaker:self} and perform some modification to passed node:parsed instance.
-// This is done just before the first parsing is done on the first AST node
+// This is done just before the first parsing is done on the first AST node. Only primary nodes are visited!
 JsDocMaker.prototype.beforeParseNodePlugins = new PluginContainer(); 
 
 // @property {PluginContainer} parsePreprocessors these plugins accept an object like 
 // {node:parsed:jsdocmaker:self} and perform some modification to passed node:parsed instance.
-// This is done just after the first parsing is done on the first AST node
+// This is done just after the first parsing is done on the first AST node. Only primary nodes are visited!
 JsDocMaker.prototype.afterParseNodePlugins = new PluginContainer();
+
+// @property {PluginContainer} afterParseUnitSimplePlugins these plugins accept an object like 
+// {node:parsed:jsdocmaker:self} and perform some modification to passed node:parsed instance.
+// This is done after an unit is parsed - this will iterated all nodes as units .The first node object is formed at this stage. 
+JsDocMaker.prototype.afterParseUnitSimplePlugins = new PluginContainer();
 
 //@method jsdoc the public method to parse all the added files with addFile. @return {Object} the parsed object @param {String} source . Optional
 JsDocMaker.prototype.jsdoc = function(source)
@@ -1995,6 +2000,7 @@ JsDocMaker.prototype.parse = function(comments)
 		_(a).each(function(value)
 		{
 			var parsed_array = self.parseUnit(value, node);
+			
 			_(parsed_array).each(function(parsed)
 			{
 				parsed.commentRange = node.range;
@@ -2002,6 +2008,7 @@ JsDocMaker.prototype.parse = function(comments)
 
 				delete parsed.theRestString; 
 
+				// console.log('parse ', parsed.annotation)
 				self.beforeParseNodePlugins.execute({node:parsed, jsdocmaker:self}); 
 
 				//Note: the following lines is the (only) place were the 'primary annotations' (class,module,method,property) are implemented 
@@ -2091,18 +2098,18 @@ JsDocMaker.prototype.parse = function(comments)
 				}
 
 				//? @param is children of @method
-				else if(parsed.annotation === 'param' && currentClass)
-				{
-					if(!currentMethod)
-					{
-						self.error('param before method: ', parsed);
-					}
-					else
-					{						
-						currentMethod.params = currentMethod.params || {};
-						currentMethod.params[parsed.name] = parsed; 
-					}
-				}
+				// else if(parsed.annotation === 'param' && currentClass)
+				// {
+				// 	if(!currentMethod)
+				// 	{
+				// 		self.error('param before method: ', parsed);
+				// 	}
+				// 	else
+				// 	{						
+				// 		currentMethod.params = currentMethod.params || {};
+				// 		currentMethod.params[parsed.name] = parsed; 
+				// 	}
+				// }
 
 				self.afterParseNodePlugins.execute({
 					node: parsed
@@ -2190,6 +2197,8 @@ JsDocMaker.prototype.parseUnitSimple = function(str, comment)
 	,	text: JsDocMaker.stringTrim(text||'')
 	,	theRestString: JsDocMaker.stringTrim(splitted.join(''))
 	};
+
+	this.afterParseUnitSimplePlugins.execute({node:ret, jsdocmaker:this}); 
 
 	return ret;
 }; 
@@ -3671,6 +3680,8 @@ JsDocMaker.prototype.getNativeTypeUrl = function(name)
 /*
 @module shortjsdoc.plugin.text-marks
 
+TODO: markings should be done 100% on post processing. 
+
 this is a meta plugin that allow to define marks inside a text. markings like @?foo something will be replaced with 
 a unique string key and evaluate functions and store the result in the AST under the node 'textMarks' property.
 
@@ -3722,10 +3733,11 @@ var textMarksAfterParseNodePlugin = {
 	}
 }; 
 
-JsDocMaker.prototype.beforeParseNodePlugins.add(textMarksAfterParseNodePlugin); 
+JsDocMaker.prototype.afterParseUnitSimplePlugins.add(textMarksAfterParseNodePlugin); 
 
 
 
+//now the concrete text marks plugins to support @?class, @?module, @?method and ?@ref
 
 var classPlugin = {
 
@@ -3733,7 +3745,14 @@ var classPlugin = {
 
 ,	execute: function(options)
 	{
-		var currentClass, self=this;
+		var currentClass
+		,	self = this
+		,	classMemberNameDic = {
+				method: 'methods'
+			,	property: 'properties'
+			,	event: 'events'
+			}; 
+
 		options.jsdocmaker.recurseAST(function(node)
 		{
 			if(node.annotation==='class')
@@ -3748,34 +3767,60 @@ var classPlugin = {
 				}
 				if(mark.name==='class')
 				{
-					mark.binding = self.bindClass(mark, currentClass, options.jsdocmaker) || {error:'NAME_NOT_FOUND'};
+					mark.binding = self.bindClass(mark, currentClass, options.jsdocmaker) || {annotation: 'class', name: mark.name, error:'NAME_NOT_FOUND'};
 				}
-				if(mark.name==='module')
+				else if(mark.name==='module')
 				{
-					mark.binding = self.bindModule(mark, currentClass, options.jsdocmaker);
+					mark.binding = self.bindModule(mark, currentClass, options.jsdocmaker) || {annotation: 'module', name: mark.name, error:'NAME_NOT_FOUND'};
 				}
-				if(mark.name==='method')
+				else if(mark.name==='method' || mark.name==='property' || mark.name==='event')
 				{
-					mark.binding = self.bindMethod(mark, currentClass, options.jsdocmaker);
+					mark.binding = self.bindClassMember(mark, currentClass, options.jsdocmaker, [classMemberNameDic[mark.name]]) || {annotation: mark.name, name: mark.name, error:'NAME_NOT_FOUND'};
+				}
+				else if(mark.name==='ref')
+				{
+					mark.binding = self.bindModule(mark, currentClass, options.jsdocmaker); 
+					if(!mark.binding)
+					{
+						mark.binding = self.bindClass(mark, currentClass, options.jsdocmaker); 
+					}
+					if(!mark.binding)
+					{
+						mark.binding = self.bindClassMember(mark, currentClass, options.jsdocmaker, [classMemberNameDic['method'], classMemberNameDic['property'], classMemberNameDic['event']]) || {annotation: mark.name, name: mark.name, error:'NAME_NOT_FOUND'}; 
+					}
 				}
 			}); 
 		});
 	}
 
-,	bindMethod:function(mark, currentClass, maker)
+	//@method bindClassMember binds a method, property or event using the marking  @param {String} what can be method, property, event
+,	bindClassMember:function(mark, currentClass, maker, what)
 	{
 		var binded;
 		if(currentClass && currentClass.methods[mark.arg])
 		{
-			binded = currentClass.methods[mark.arg]; 
+			binded = currentClass[what][mark.arg]; 
 		}
 		else
 		{
 			//the assume absolute method name
-			var className = mark.arg.substring(0,mark.arg.lastIndexOf('.')); 
-			var c = maker.data.classes[className] || {methods: {}};
-			var methodName = mark.arg.substring(mark.arg.lastIndexOf('.')+1, mark.arg.length);
-			binded = c.methods[methodName]
+			var className = mark.arg.substring(0, mark.arg.lastIndexOf('.')); 
+			var c = maker.data.classes[className]; 
+			_(what).each(function(member)
+			{
+				if(!binded)
+				{
+					if(c[member])
+					{
+						var simpleName = mark.arg.substring(mark.arg.lastIndexOf('.') + 1, mark.arg.length);
+						binded = c[member][simpleName];
+					}					
+				}
+			}); 
+			if(c)
+			{
+				
+			}			
 		}
 		return binded;
 	} 

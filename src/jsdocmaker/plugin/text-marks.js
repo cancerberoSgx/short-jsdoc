@@ -1,6 +1,8 @@
 /*
 @module shortjsdoc.plugin.text-marks
 
+TODO: markings should be done 100% on post processing. 
+
 this is a meta plugin that allow to define marks inside a text. markings like @?foo something will be replaced with 
 a unique string key and evaluate functions and store the result in the AST under the node 'textMarks' property.
 
@@ -52,10 +54,11 @@ var textMarksAfterParseNodePlugin = {
 	}
 }; 
 
-JsDocMaker.prototype.beforeParseNodePlugins.add(textMarksAfterParseNodePlugin); 
+JsDocMaker.prototype.afterParseUnitSimplePlugins.add(textMarksAfterParseNodePlugin); 
 
 
 
+//now the concrete text marks plugins to support @?class, @?module, @?method and ?@ref
 
 var classPlugin = {
 
@@ -63,7 +66,14 @@ var classPlugin = {
 
 ,	execute: function(options)
 	{
-		var currentClass, self=this;
+		var currentClass
+		,	self = this
+		,	classMemberNameDic = {
+				method: 'methods'
+			,	property: 'properties'
+			,	event: 'events'
+			}; 
+
 		options.jsdocmaker.recurseAST(function(node)
 		{
 			if(node.annotation==='class')
@@ -78,34 +88,60 @@ var classPlugin = {
 				}
 				if(mark.name==='class')
 				{
-					mark.binding = self.bindClass(mark, currentClass, options.jsdocmaker) || {error:'NAME_NOT_FOUND'};
+					mark.binding = self.bindClass(mark, currentClass, options.jsdocmaker) || {annotation: 'class', name: mark.name, error:'NAME_NOT_FOUND'};
 				}
-				if(mark.name==='module')
+				else if(mark.name==='module')
 				{
-					mark.binding = self.bindModule(mark, currentClass, options.jsdocmaker);
+					mark.binding = self.bindModule(mark, currentClass, options.jsdocmaker) || {annotation: 'module', name: mark.name, error:'NAME_NOT_FOUND'};
 				}
-				if(mark.name==='method')
+				else if(mark.name==='method' || mark.name==='property' || mark.name==='event')
 				{
-					mark.binding = self.bindMethod(mark, currentClass, options.jsdocmaker);
+					mark.binding = self.bindClassMember(mark, currentClass, options.jsdocmaker, [classMemberNameDic[mark.name]]) || {annotation: mark.name, name: mark.name, error:'NAME_NOT_FOUND'};
+				}
+				else if(mark.name==='ref')
+				{
+					mark.binding = self.bindModule(mark, currentClass, options.jsdocmaker); 
+					if(!mark.binding)
+					{
+						mark.binding = self.bindClass(mark, currentClass, options.jsdocmaker); 
+					}
+					if(!mark.binding)
+					{
+						mark.binding = self.bindClassMember(mark, currentClass, options.jsdocmaker, [classMemberNameDic['method'], classMemberNameDic['property'], classMemberNameDic['event']]) || {annotation: mark.name, name: mark.name, error:'NAME_NOT_FOUND'}; 
+					}
 				}
 			}); 
 		});
 	}
 
-,	bindMethod:function(mark, currentClass, maker)
+	//@method bindClassMember binds a method, property or event using the marking  @param {String} what can be method, property, event
+,	bindClassMember:function(mark, currentClass, maker, what)
 	{
 		var binded;
 		if(currentClass && currentClass.methods[mark.arg])
 		{
-			binded = currentClass.methods[mark.arg]; 
+			binded = currentClass[what][mark.arg]; 
 		}
 		else
 		{
 			//the assume absolute method name
-			var className = mark.arg.substring(0,mark.arg.lastIndexOf('.')); 
-			var c = maker.data.classes[className] || {methods: {}};
-			var methodName = mark.arg.substring(mark.arg.lastIndexOf('.')+1, mark.arg.length);
-			binded = c.methods[methodName]
+			var className = mark.arg.substring(0, mark.arg.lastIndexOf('.')); 
+			var c = maker.data.classes[className]; 
+			_(what).each(function(member)
+			{
+				if(!binded)
+				{
+					if(c[member])
+					{
+						var simpleName = mark.arg.substring(mark.arg.lastIndexOf('.') + 1, mark.arg.length);
+						binded = c[member][simpleName];
+					}					
+				}
+			}); 
+			if(c)
+			{
+				
+			}			
 		}
 		return binded;
 	} 

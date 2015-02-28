@@ -3,7 +3,7 @@
 // @property {Object} a
 
 // @class OtherView @extend MyView
-// @method getModel @returns{Backbone.Model}
+// @method getModel @returns {Backbone.Model} yes we do because of the association with @?class empty2.MyModel it implies that.
 // @class R @extends Backbone.Router
 // @property {Backbone.View} p 
 

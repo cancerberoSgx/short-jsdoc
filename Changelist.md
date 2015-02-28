@@ -29,4 +29,5 @@
  * comment-indentation plugin to preserve original comment indentation. 
  * UI TreeView index initial contrib. 
  * text marks plugin
- * text marks concrete plugins @?class @?module @?method
+ * text marks concrete plugins @?class @?module, @?method, @?event, @?property @?ref . Show these correctly in the html app.
+ * 

@@ -23,6 +23,27 @@ var AbstractView = Backbone.View.extend({
 		this.afterRender();
 		return this;
 	}
+	
+,	renderSource_: function(jsdoc, $container)
+	{
+		var view = new SourcesView(this.application, jsdoc); 
+		view.renderIn($container); 
+	}
+
+
+,	renderSource: function()
+	{
+		if(!this.jsdoc)
+		{
+			return;
+		}
+		this.renderSource_(this.jsdoc, this.$('[data-type="sources"]')); 
+		this.$('pre code').addClass('prettyprint'); 
+		if(typeof prettyPrint !== 'undefined') 
+		{
+			prettyPrint('pre code');
+		}
+	}
 
 	//@method render implemented to comply with Backbone View contract
 ,	render: function()
