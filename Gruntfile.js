@@ -13,6 +13,7 @@ var uglifyFiles = [
 ,	'html/src/js/ApplicationView.js'
 ,	'html/src/js/HeaderView.js'
 ,	'html/src/js/TreeView.js'
+,	'html/src/js/FileView.js'
 ];
 
 var uglifyLibFiles = [

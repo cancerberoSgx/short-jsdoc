@@ -190,6 +190,20 @@ __p += '\n</ul>';
 return __p
 };
 
+this["shortjsdoc"]["file"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '<h2>File ' +
+((__t = ( this.jsdoc.fileName)) == null ? '' : __t) +
+'</h2>\n\n<pre>\n' +
+((__t = ( this.fileContent )) == null ? '' : __t) +
+'\n</pre>';
+
+}
+return __p
+};
+
 this["shortjsdoc"]["header"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
@@ -431,7 +445,11 @@ this["shortjsdoc"]["sources"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<h3>Sources <button data-type="goto-source" class="btn btn-link ">goto def</button></h3>\n\n<pre class="prettyprint linenums">' +
+__p += '<h3>Sources <button data-type="goto-source" class="btn btn-link ">goto def</button></h3>\n<p>File <a href="#file/' +
+((__t = ( this.fileNameUrl )) == null ? '' : __t) +
+'">' +
+((__t = ( this.jsdoc.fileName )) == null ? '' : __t) +
+'</a></p>\n<pre class="prettyprint linenums">' +
 __e( this.sourceSubset ) +
 '</pre>';
 

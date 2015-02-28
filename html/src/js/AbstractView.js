@@ -24,33 +24,12 @@ var AbstractView = Backbone.View.extend({
 		return this;
 	}
 	
-,	renderSource_: function(jsdoc, $container)
-	{
-		var view = new SourcesView(this.application, jsdoc); 
-		view.renderIn($container); 
-	}
-
-
-,	renderSource: function()
-	{
-		if(!this.jsdoc)
-		{
-			return;
-		}
-		this.renderSource_(this.jsdoc, this.$('[data-type="sources"]')); 
-		this.$('pre code').addClass('prettyprint'); 
-		if(typeof prettyPrint !== 'undefined') 
-		{
-			prettyPrint('pre code');
-		}
-	}
 
 	//@method render implemented to comply with Backbone View contract
 ,	render: function()
 	{
 		return this.renderIn(jQuery(this.el)); 
 	}
-
 
 ,	afterRender: function()
 	{
@@ -65,6 +44,30 @@ var AbstractView = Backbone.View.extend({
 		{
 			document.title = t; 
 		}, 200);
+	}
+
+	//sources stuff
+
+,	renderSource_: function(jsdoc, $container)
+	{
+		var view = new SourcesView(this.application, jsdoc); 
+		view.fileNameUrl = encodeURIComponent(this.jsdoc.fileName); this.jsdoc.fileName.replace(/[\\\/]/g, '_'); 
+		view.renderIn($container); 
+	}
+
+,	renderSource: function()
+	{
+		if(!this.jsdoc)
+		{
+			return;
+		}
+
+		this.renderSource_(this.jsdoc, this.$('[data-type="sources"]')); 
+		this.$('pre code').addClass('prettyprint'); 
+		if(typeof prettyPrint !== 'undefined') 
+		{
+			prettyPrint('pre code');
+		}
 	}
 });
 

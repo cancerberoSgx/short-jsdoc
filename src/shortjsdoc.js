@@ -175,12 +175,17 @@ _(ShortJsDoc.prototype).extend({
 	//@method parseSources
 ,	parseSources: function()
 	{
-		var buffer = [];
+		//Note the three commmented lines works much faster but don't generate any info about files !
+		var buffer = [], self = this; 
+
 		_(this.sources).each(function(val, file)
 		{
-			buffer.push(val);
+			// maker.addFile(value, name);
+			// buffer.push(val);
+			self.maker.addFile(val, file); 
 		}); 
-		this.maker.parseFile(buffer.join('\n\n'), 'ALL.js');
+		// this.maker.parseFile(buffer.join('\n\n'), 'ALL.js');
+		this.maker.jsdoc();
 	}
 
 	//@method buildSources parse all files in passed folders and returns the parsed results in t

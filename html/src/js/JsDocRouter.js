@@ -21,6 +21,9 @@ var JsDocRouter = Backbone.Router.extend({
 	,	'parse': 'showParse'
 
 	,	'tree': 'showTree'
+
+	,	'file/:file': 'showFile'
+	,	'file/:file?:options': 'showFile'
 	}
 
 ,	initialize: function(application) 
@@ -129,6 +132,15 @@ var JsDocRouter = Backbone.Router.extend({
 	{
 		var view = new ParseView(this.application);
 		this.application.showView(view); 
+	}
+
+	//@method showFile  @param {String} file
+,	showFile: function(file, options) 
+	{
+		options = options || '';
+		var params = this.parseOptions(options);		
+		var view = new FileView(this.application, file, params);
+		this.showView(view); 
 	}
 
 });
