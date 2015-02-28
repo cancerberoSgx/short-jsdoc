@@ -25,8 +25,8 @@
  * fixed shortjsdoc to allow passing the metadata right - i.e. dontMinifyOutout now works when calling from outside main()
  * fix error in alias when using app - alias metainfo now persisted on the ast
 
-
 ##0.1.6
  * comment-indentation plugin to preserve original comment indentation. 
  * UI TreeView index initial contrib. 
  * text marks plugin
+ * text marks concrete plugins @?class @?module @?method

@@ -14,6 +14,7 @@ JsDocMaker.prototype.recurseAST = function(fn, fn_type)
 		{
 			return;
 		}
+		fn.apply(c, [c]);
 		_(c.methods).each(function(m)
 		{
 			fn.apply(m, [m]); 
@@ -27,7 +28,11 @@ JsDocMaker.prototype.recurseAST = function(fn, fn_type)
 				fn.apply(m.returns, [m.returns]);
 				JsDocMaker.recurseType(m.returns.type, fn_type); 
 			}
-			// TODO: throws
+			_(m.throws).each(function(t)
+			{
+				fn.apply(t, [t]); 
+				JsDocMaker.recurseType(t.type, fn_type); 
+			}); 
 		}); 
 
 		_(c.properties).each(function(p)
@@ -35,12 +40,16 @@ JsDocMaker.prototype.recurseAST = function(fn, fn_type)
 			fn.apply(p, [p]);
 			JsDocMaker.recurseType(p.type, fn_type);
 		}); 
+		_(c.events).each(function(p)
+		{
+			fn.apply(p, [p]);
+			JsDocMaker.recurseType(p.type, fn_type);
+		});
 		if(c.extends)
 		{
 			fn.apply(c.extends, [c.extends]);
 			JsDocMaker.recurseType(c.extends.type, fn_type);
 		}
-		//TODO: events
 	});
 	_(self.data.modules).each(function(m)
 	{
