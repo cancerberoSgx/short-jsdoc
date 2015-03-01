@@ -254,6 +254,7 @@ ShortJsDoc.getThisFolder = function()
 // @method folderWalk General function for walking a folder recusively and sync @static 
 ShortJsDoc.folderWalk = function (dir, action) 
 {
+	// console.log('folderwalk', dir)
 	if (typeof action !== "function")
 	{
 		action = function (error, file) { };
@@ -263,7 +264,8 @@ ShortJsDoc.folderWalk = function (dir, action)
 
 	list.forEach(function (file) 
 	{
-		var path = dir + "/" + file;
+		var sep = JsDocMaker.stringEndsWith(dir, '/') ? '' : '/'; 
+		var path =  dir + sep + file;
 		var stat = fs.statSync(path); 
 		if (stat && stat.isDirectory())
 		{

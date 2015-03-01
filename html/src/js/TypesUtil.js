@@ -169,10 +169,6 @@ _(AbstractView.prototype).extend({
 			return node.text_html_app; 
 		}
 
-		// if(node.textMarks)
-		// {
-		// 	debugger;
-		// }
 		var self2 = this //TODO invitigate why I need self2 and self always binds to other thing than this...
 		,	text = node.text
 		,	type = this.application.textFormat || 'markdown'
@@ -191,7 +187,21 @@ _(AbstractView.prototype).extend({
 		// perform text marks replacement.
 		_(node.textMarks).each(function(mark, markId)
 		{
-			text = text.replace(markId, self2.makeLink(mark.binding, true)); 
+			if(mark.name === 'link')
+			{
+				if(type === 'markdown')
+				{
+					text = text.replace(markId, '['+mark.linkLabel+']('+mark.linkUrl+')'); 
+				}
+				else
+				{					
+					text = text.replace(markId, '< href="mark.linkUrl" class="text-mark-link">'+mark.linkLabel+'</a>'); 
+				}
+			}
+			else if(mark.binding)
+			{
+				text = text.replace(markId, self2.makeLink(mark.binding, true)); 
+			}
 		}); 
 
 		if(type === 'markdown')

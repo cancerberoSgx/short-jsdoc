@@ -115,6 +115,10 @@
   width: 100%;
   height: 200px;
 }
+.main-view-container .tree li {
+  list-style: none;
+  /*padding: 0;*/
+}
 /*'.tree {\n'+
 '    min-height:20px;\n'+
 '    padding:19px;\n'+
@@ -207,7 +211,7 @@
 }
 .main-view-container li {
   /*list-style: none; */
-  padding-bottom: 8px;
+  /*padding-bottom: 8px;*/
 }
 .main-view-container ul {
   padding-left: 17px;

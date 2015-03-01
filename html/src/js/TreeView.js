@@ -60,7 +60,7 @@ var TreeView = AbstractView.extend({
 	{
 		var node = {
 			children: []
-		,	label: 'Module ' + m.name
+		,	label: 'Module ' + this.makeLink(m, true)
 		,	type: 'module'
 		}
 		,	self = this; 
@@ -75,7 +75,7 @@ var TreeView = AbstractView.extend({
 	{
 		var node = {
 			children: []
-		,	label: 'Class ' + c.name
+		,	label: 'Class ' + this.makeLink(c, true)
 		,	type: 'class'
 		}
 		,	self = this; 
@@ -83,6 +83,24 @@ var TreeView = AbstractView.extend({
 		{
 			node.children.push(self.buildTreeModelForMethod(m, data)); 
 		}); 
+		_(c.properties).each(function(p)
+		{
+			node.children.push(self.buildTreeModelForProperty(p, data, 'Property')); 
+		});  
+		_(c.events).each(function(e)
+		{
+			node.children.push(self.buildTreeModelForProperty(e, data, 'Event')); 
+		}); 
+		return node;
+	}
+
+,	buildTreeModelForProperty: function(p, data, label)
+	{
+		var node = {
+			children: []
+		,	label: label + ' ' + this.makeLink(p, true)
+		,	type: 'method'
+		}; 
 		return node;
 	}
 
@@ -90,22 +108,18 @@ var TreeView = AbstractView.extend({
 	{
 		var node = {
 			children: []
-		,	label: 'Method ' + m.name
+		,	label: 'Method ' + this.makeLink(m, true)
 		,	type: 'method'
 		}
 		,	self = this; 
-		if(m.returns)
-		{			
-			node.children.push({
-				children: []
-			,	label: 'Returns'
-			,	type: 'returns'
-			}); 	
-		}
-		_(m.params).each(function(p)
-		{
-
-		})
+		// if(m.returns)
+		// {			
+		// 	node.children.push({
+		// 		children: []
+		// 	,	label: 'Returns'
+		// 	,	type: 'returns'
+		// 	}); 	
+		// }
 		return node;
 	}
 });
@@ -200,13 +214,16 @@ TreeWidget.prototype.collapseNode = function($node)
 {
 	var children = $node.parent('li.parent_li').find(' > ul > li');
 	children.hide('fast');
-	$node.attr('title', 'Expand this branch').find(' > i').addClass('icon-plus-sign').removeClass('icon-minus-sign');
+	// glyphicon glyphicon-minus
+	$node.attr('title', 'Expand this branch').find(' > i').addClass('glyphicon-plus-sign').removeClass('glyphicon-minus-sign');
+	// $node.attr('title', 'Expand this branch').find(' > i').addClass('icon-plus-sign').removeClass('icon-minus-sign');
 }; 
 TreeWidget.prototype.expandNode = function($node)
 {
 	var children = $node.parent('li.parent_li').find(' > ul > li');
 	children.show('fast');
-	$node.attr('title', 'Collapse this branch').find(' > i').addClass('icon-minus-sign').removeClass('icon-plus-sign');
+	// $node.attr('title', 'Collapse this branch').find(' > i').addClass('icon-minus-sign').removeClass('icon-plus-sign');
+	$node.attr('title', 'Collapse this branch').find(' > i').addClass('glyphicon-minus-sign').removeClass('glyphicon-plus-sign');
 }; 
 
 /*@method onNodeEvent. Usage example: 
@@ -234,7 +251,7 @@ TreeWidget.treeNodeTemplate =
 '<% } else { %>'+
 '<li class="tree-node tree-node-type-<%= node.type %>">'+
 	'<span data-tree-node data-tree-node-id="<%= node.tree_node_id %>">'+
-		'<i class="icon-minus-sign"></i>'+
+		'<i class="glyphicon glyphicon-minus-sign"></i>'+
 		'<%= node.label%>'+
 	'</span>'+
 '<% } %>'+

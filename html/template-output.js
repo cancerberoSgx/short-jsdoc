@@ -196,7 +196,7 @@ var __t, __p = '', __e = _.escape;
 with (obj) {
 __p += '<h2>File ' +
 ((__t = ( this.jsdoc.fileName)) == null ? '' : __t) +
-'</h2>\n\n<pre>\n' +
+'</h2>\n<button data-action="donwload">Download</button>\n<pre class="prettyprint linenums">\n' +
 ((__t = ( this.fileContent )) == null ? '' : __t) +
 '\n</pre>';
 
@@ -213,7 +213,7 @@ with (obj) {
  var metadata = this.application.data.projectMetadata; ;
 __p += '\n<header class="main-header">\n\t<div class="row">\n\n\t\t<!-- <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> -->\n\t\t<span class="col-sm-5 col-xs-12">\n\t\t\t<span class="dropdown">\n\t\t\t\t<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">\n\t\t\t\t' +
 ((__t = ( (metadata && metadata.name) ||  'short-jsdoc demo' )) == null ? '' : __t) +
-'\n\t\t\t\t<span class="caret"></span>\n\t\t\t\t</button>\n\t\t\t\t<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">\n\t\t\t\t\t\n\t\t\t\t\t<li role="presentation"><a role="menuitem" tabindex="-1" href="#index">Index</a></li>\t\t\n\t\t\t\t\t<li role="presentation"><a role="menuitem" tabindex="-1" href="#parse">Parse your code !</a></li>\n\t\t\t\t\t<li role="presentation" class="divider"></li>\n\t\t\t\t\t<li role="presentation"><a role="menuitem" tabindex="-1" href="https://github.com/cancerberoSgx/short-jsdoc">short-jsdoc home page</a></li>\n\t\t\t\t\t<li role="presentation"><a role="menuitem" tabindex="-1" href="../test/SpecRunner.html">Run short-jsdoc Specs</a></li>\n\n\t\t\t\t</ul>.\n\t\t\t\t\n\t\t\t</span>\t\t\n\t\t</span>\n\n\t\t<!-- <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> -->\n\t\t<span class="col-sm-7 col-xs-12">\n\t\t\t<span class="main-search pull-right">\n\t\t\t<a role="menuitem" tabindex="-1" href="#index">Index</a>\n\t\t\t\tSearch <input class="typeahead1">\n\t\t\t</span>\t\t\n\t\t</span>\n\n\n\t</div>\n\n</header>';
+'\n\t\t\t\t<span class="caret"></span>\n\t\t\t\t</button>\n\t\t\t\t<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">\n\t\t\t\t\t\n\t\t\t\t\t<li role="presentation"><a role="menuitem" tabindex="-1" href="#index">Index</a></li>\t\t\t\t\t\n\t\t\t\t\t<li role="presentation"><a role="menuitem" tabindex="-1" href="#tree">Full Abstract Syntax Tree</a></li>\n\t\t\t\t\t<li role="presentation"><a role="menuitem" tabindex="-1" href="#parse">Parse your code !</a></li>\n\t\t\t\t\t<li role="presentation" class="divider"></li>\n\t\t\t\t\t<li role="presentation"><a role="menuitem" tabindex="-1" href="https://github.com/cancerberoSgx/short-jsdoc">short-jsdoc home page</a></li>\n\t\t\t\t\t<li role="presentation"><a role="menuitem" tabindex="-1" href="../test/SpecRunner.html">Run short-jsdoc Specs</a></li>\n\n\t\t\t\t</ul>.\n\t\t\t\t\n\t\t\t</span>\t\t\n\t\t</span>\n\n\t\t<!-- <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> -->\n\t\t<span class="col-sm-7 col-xs-12">\n\t\t\t<span class="main-search pull-right">\n\t\t\t<a role="menuitem" tabindex="-1" href="#index">Index</a>\n\t\t\t\tSearch <input class="typeahead1">\n\t\t\t</span>\t\t\n\t\t</span>\n\n\n\t</div>\n\n</header>';
 
 }
 return __p

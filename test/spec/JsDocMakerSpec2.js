@@ -19,7 +19,7 @@ it("using @?something arguments inside text to create named marks inside.", func
 		'//also @?module fruits is related to this problem and of cource @?method fruits.Pineapple.paint method references are allowed' + '\n' +
 		'//@param {String} param2 any tags can also contain @?event fruits.Banana.afterSomething text marks. Events and properties like @?property fruits.Banana.flavor can be contained' + '\n' +
 		'//@param {String} p3 this one contain a @?ref trees.Bananero to a class and a @?ref trees.Bananero.strange to a method.\n'+
-		'//@return {Array}\n'+
+		'//@return {Array} we want to try @?link "[This link](http://google.com/)" to see what\'s done \n'+
 		'';
 
 	maker = new JsDocMaker();
@@ -63,6 +63,10 @@ it("using @?something arguments inside text to create named marks inside.", func
 	expect(strangeParam.textMarks._shortjsdoc_textmarkplugin_7.binding.absoluteName).toBe('trees.Bananero'); 
 	expect(strangeParam.textMarks._shortjsdoc_textmarkplugin_7.binding.methods.strange.returns.type.name).toBe('Array'); 
 	expect(strangeParam.textMarks._shortjsdoc_textmarkplugin_8.binding.annotation).toBe('method');
+
+	expect(strange.returns.textMarks._shortjsdoc_textmarkplugin_9.linkLabel).toBe('This link'); 
+	expect(strange.returns.textMarks._shortjsdoc_textmarkplugin_9.linkUrl).toBe('http://google.com/'); 
+	
 });
 
 });
