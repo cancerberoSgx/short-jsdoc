@@ -471,3 +471,21 @@ __p += '\n\n' +
 }
 return __p
 };
+
+this["shortjsdoc"]["typeaheadSuggestion"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '<div class="suggestion suggestion-' +
+((__t = ( node.annotation)) == null ? '' : __t) +
+'">\n\t<span class="suggestion-value">' +
+((__t = ( value)) == null ? '' : __t) +
+'</span>&nbsp;<span class="suggestion-type suggestion-type-' +
+((__t = ( node.annotation)) == null ? '' : __t) +
+'">(' +
+((__t = ( node.annotation)) == null ? '' : __t) +
+')</span>\n</div>';
+
+}
+return __p
+};

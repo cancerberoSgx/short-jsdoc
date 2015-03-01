@@ -34,3 +34,6 @@
  * tree view better decorated
  * treeview with color syntax and download button
  * text mark @?link to write output-independent links
+ * improved typeahead results
+ 
+##0.1.7

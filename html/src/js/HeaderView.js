@@ -29,7 +29,11 @@ var HeaderView = AbstractView.extend({
 		},	{
 			name: 'jsdoc',
 			displayKey: 'value',
-			source: this.substringMatcher()
+			source: this.substringMatcher(),
+			templates: {
+				empty: '<div class="empty-message">Sorry, nothing found.</div>'
+			,	suggestion: this.application.templates.typeaheadSuggestion
+			}
 		});
 
 		var self = this;
@@ -37,6 +41,12 @@ var HeaderView = AbstractView.extend({
 		{
 			self.handleSearchSelection.apply(self, arguments);
 		});
+
+		if(jQuery(window).width()<400)
+		{
+			jQuery('.tt-dropdown-menu').css({width: jQuery(window).width()+'px'}); 
+		}
+		
 	}
 
 ,	handleSearchSelection: function(event, object, dataset)
