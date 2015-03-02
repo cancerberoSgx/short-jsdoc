@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title>Title</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<style type="text/css">
+	  @import url(https://fonts.googleapis.com/css?family=Yanone+Kaffeesatz);
+	  @import url(https://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic);
+	  @import url(https://fonts.googleapis.com/css?family=Ubuntu+Mono:400,700,400italic);
+
+	  body { font-family: 'Droid Serif'; }
+	  h1, h2, h3 {
+		font-family: 'Yanone Kaffeesatz';
+		font-weight: normal;
+	  }
+	  .remark-code, .remark-inline-code { font-family: 'Ubuntu Mono'; }
+	  body .remark-slide-content{font-size: 18px}
+	  body h2 {margin: 10px 0px 10px 0px;}
+	</style>
+  </head>
+  <body>
+	<textarea id="source">
+
+class: center, middle
+
+# Getting started with short-jsdoc
+
+---
+
+# Introduction
+
+So you want to document your sources with short-jsodc...
+
+Then you will be declaring modules that contain classes that contain methods and properties using annotations. 
+
+This is called an *abstract syntax tree* or *AST*.
+
+---
+
+#Example
+
+Let's start with an example of JavaScript code that contains a jsdoc comment. 
+
+It declares a class *FileView* of module *myapp* that extends class *AbstractView* and contains a property *file* of type *FileData* and a method *deleteFileHandler* that accept a Function parameter and returns a *Promise* object:
+	
+	// @module myapp
+	// @class FileView This view shows a single file @extends AbstractView
+	// @property {FileData} file
+	// @method deleteFileHandler Handles the delete file action 
+	// @param {Function} fn @returns {Promise}
+
+
+---
+
+#Annotation syntax
+
+The tool will be consuming expressions like the following to build the AST. We call these expressions *annotations*:
+
+	// @param {Color} color a description for the color parameter
+
+##Annotation parts
+
+ * ```@param``` is the annotation and defines the type of node we are declaring. In this case we are declaring a method parameter
+ * ```{Color}``` is optional. Is a refence of the type of the node we are declaring.
+ * ```color``` is optional too and it is the name of the node we are declaring.
+ * The text ```a description for the color parameter``` is associated to the node and documents it
+
+---
+
+#Annotation syntax
+
+---
+
+#Tree structure
+
+In jsdoc only certain nodes can contain children. We call these *parent nodes* and are:
+
+	@module @method @property @event @class
+
+All other annotations are *leaf nodes* meaning they can't contain children and always belong to a parent node. Example of leaf nodes:
+
+	@param @throws @returns @extends @static
+
+---
+
+#Parser tool
+
+The parser will read your files from top to bottom parsing any annotation found in your source code comments.
+
+When a leaf node annotation is found, it is assigned as children of the last parsed parent node.
+
+When a parent node annotation is found it is assigned as children of the last parent node that matches the structure 'modules that contain classes that contains methods, etc'.
+
+Any kind of comment style can be used.
+
+Any @annotation name can be used so you can define your own semantics - they will be parsed as children of the last parent node read.
+
+Source code files must be auto-contenible - in other words you cannot make any assumptions about the order of the files being parsed.
+
+---
+
+#Types
+
+Some nodes like parameters or returns can declare a type, which is a reference to class nodes. short-jsdoc heavily support types and can be of the following kinds
+
+##Simple types
+
+Are just a reference to a class by name, for example:
+
+	// @method getModel @returns {Banana}
+
+---
+
+#Types
+
+## Native types
+
+If you reference a JavaScript native type like String, Array, Object, etc., they will be binded to the [Mozilla JavaScript Types Reference](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects). Some native types are
+
+	Object, Number, Boolean, String, Array, Function, Error
+
+---
+
+#Types
+
+##Generic types
+
+These are inspirated in Java or C# generics. For example we can say that a parameter is an *Array* but we can also say it is an *Array of Bananas* : 
+
+	// @method addFruit @param {Array&lt;Banana>} fruits
+
+Generic types support arbitrary anidation:
+
+	@method groupWires @returns {Object&lt;String,Array&lt;Wire>>} a map of wires by name.
+
+---
+
+#Ignored comments
+
+Comments starting with the character '?' will be ignored, even if they contain annotations:
+
+	//? @class Something will be ignored b the parser
+	/*? @method foo also will be ignored */
+
+---
+
+#Types
+
+##Literal Object
+
+Because in JavaScript is very common to define Objects on the fly shortjsdoc supports an object literal type definition:
+
+	@method foo @returns {id:String,colors:Array&lt;Color>,execute:Function}
+
+That means that the mehod *foo* returns an object with the properties *id* of type String, *color* of type Array of Color and *execute* of type Function.
+
+Literal objects can contain other types like generics, but not viceversa, this is generic types cannot contain literal objects:
+
+	@return {}
+
+
+---
+
+#Talking about the same thing in several places
+
+In JavaScript is very common that a class or module definition is made across several files. shortjsdoc support this by just telling the framework of what are we goint to talk about following the top to bottom file parsing:
+
+	// file1.js
+	// @module foo Some comment about module foo 
+	// @class Bar some comment about class Bar @property p1
+
+	// file2.js
+	// @module foo More text for module foo 
+	// @class Bar More contant about class Bar @property @p2
+
+That will result in a module *foo* containing both texts and containing a class Bar that will also contain both texts. 
+
+---
+
+#Defining classes on the fly
+
+In javascript it is common to be defining a class Foo, then in the middle of the file, define another class Bar and start talking about it, and then come back talking about the first class Foo.
+
+This can easily be done in shortjsdoc, but we must be careful to declare the target node the next lines are gonna talk about. Notice how we start talking about the class FileUtility, then, in the middle, we talk about class File, and then we proceed talking about class FileUtility:
+
+	// @module utils
+	// @class FileUtility
+	// @method parseFile @param {String} fileName @returns {File}
+	// @class File @property {String} name @property {String} basePath 
+	// @method recurseFolders @param {Function} visitor
+	// @class FileUtility
+	// @method readFile @param {File} f @returns {String}
+
+---
+
+#Text Markings
+
+Marks inside a node text can be defined using the syntax @?something. This is mostly used for defining references to other nodes or to external links from within the text. It is similar to java's @see annotation. 
+
+We can use @?class AClass or @?method module.Class.method1 or @?property, @?event, etc. These markings will create a link to the referenced node in the output. Example:
+
+	// @module client
+	// @class CustomerModel This model represent a single customer. 
+	// The attributes of this model are defined by the @?class server.CustomerService service 
+	// @extends Backbone.Model
+
+Also, there is a @?ref that will accept any kind of node - but less efficient by the viewer tools. 
+
+Also one can specify links using the @?link text mark, for example:
+
+	//@method foo Please @?link "[google it](http://google.com)" for more information 
+
+---
+
+#Type alias
+
+There is a very powerfull annotation @alias that let declare alias for types and even for annotations.
+
+Suppose you want to integrate an external jsdoc file in which the type 'float' is used instead of Number. You want the tool to replace each 'float' type with 'Number', so you would add the following (before):
+
+	@alias class float Number
+
+Even more interesting, you want to create shortcuts to common js types, so instead writing Object *&lt; String, &lt; Array &lt; Number>>>* you can just write *O &lt; S, &lt; A &lt; N>>>*, well that can be done by just defining class alias:
+
+	@alias class O Object
+	@alias class A Array
+	@alias class S String
+	@alias class N NUmber
+
+Then when the type 'A' is found it will be replaced by 'Array'
+
+---
+
+#Parsing stages. 
+
+There are two main stages in short-jsdoc: parsing and type binding.
+
+##Parsing
+
+This is the most important part, it will read your sources and make a basic AST. Nodes will be organized accordingly to a specific language, for example, in jsdoc modules will contain classes that will contain methods, etc. But in general the parsing tool is language agnostic and can be reused to process any language, not only jsdoc.
+
+	var maker = new JsDocMaker();
+	var source = '//@module fruits @class Apple the science fruit @method inpirate @param {Person} p'; 
+	maker.addFile(source, 'apple.js');
+	var ast = maker.jsdoc();
+
+The resulting *ast* variable contains a module fruits that contains a Apple class that contains a method *inspirate* that accept a parameter of type Person. We can access this type with the following code, but because it is not binded yet we can only access the referenced type name:
+
+	ast.classes ['fruits.Apple'].methods.inspirate.param [0]. type === 'Person'
+
+---
+
+#Parsing stages. 
+
+##Type Binding
+
+After we have a parsed AST we can then run a second utility over it called binding. It will bind all types found with the actual class node in the AST. This means, for each node that contains a type, it will look for the referenced class node and associate it 
+
+For example, after parsing only we have the referenced class names only, but after binding it we will have easy access to the real referenced node. 
+
+Parsing only is good for serializing the AST to JSON - you cannot serialize a binded AST.
+
+Based on our previous example, if we bind the AST we will can navigate through types:
+
+	maker.postProccess();
+	maker.postProccessBinding();
+	ast.classes ['fruits.Apple'].methods.inspirate.param [0].type 
+		=== ast.classes ['people.Person']
+
+
+	</textarea>
+	<script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
+	</script>
+	<script>
+	  var slideshow = remark.create();
+	</script>
+  </body>
+</html>

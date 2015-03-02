@@ -3760,11 +3760,17 @@ var textMarksReferencesPlugin = {
 ,	bindClassMember:function(mark, currentClass, maker, what)
 	{
 		var binded;
-		if(currentClass && currentClass.methods[mark.arg])
+		if(currentClass)
 		{
-			binded = currentClass[what][mark.arg]; 
+			_(what).each(function(member)
+			{
+				if(currentClass[member] && currentClass[member][mark.arg])
+				{
+					binded = currentClass[member][mark.arg];
+				}
+			});
 		}
-		else
+		if(!binded)
 		{
 			//the assume absolute method name
 			var className = mark.arg.substring(0, mark.arg.lastIndexOf('.')); 
@@ -3783,11 +3789,7 @@ var textMarksReferencesPlugin = {
 						binded = c[member][simpleName];
 					}					
 				}
-			}); 
-			if(c)
-			{
-				
-			}			
+			}); 		
 		}
 		return binded;
 	} 
