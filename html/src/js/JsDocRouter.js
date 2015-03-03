@@ -13,6 +13,7 @@ var JsDocRouter = Backbone.Router.extend({
 
 	,	'property/:property': 'showProperty'
 	,	'event/:event': 'showEvent'
+	,	'attribute/:attribute': 'showAttribute'
 
 	,	'index': 'showIndex'
 	,	'modules': 'showModules'
@@ -83,19 +84,26 @@ var JsDocRouter = Backbone.Router.extend({
 		this.showView(view); 
 	}
 
+
 	//@method showProperty  @param {String} property
 ,	showProperty: function(property)
 	{
-		var view = new PropertyView(this.application, property);
+		var view = new PropertyView(this.application, property, 'property');
 		this.showView(view); 
 	}
-
 	//@method showEvent  @param {String} event
 ,	showEvent: function(event)
 	{
-		var view = new PropertyView(this.application, event, true);
+		var view = new PropertyView(this.application, event, 'event');
 		this.showView(view); 
 	}
+	//@method showAttribute  @param {String} attribute
+,	showAttribute: function(attribute)
+	{
+		var view = new PropertyView(this.application, attribute, 'attribute');
+		this.showView(view); 
+	}
+
 
 	//@method showModules
 ,	showModules: function()

@@ -57,11 +57,11 @@ JsDocMaker.startsWith = function(s, prefix)
 	return s.indexOf(prefix)===0;
 }; 
 
-//@mmethod error @param {String}msg
+//@method error @param {String}msg
 JsDocMaker.prototype.error = function(msg)
 {
 	console.error('Error detected: ' + msg); 
-	throw msg;
+	// throw msg;
 }; 
 
 

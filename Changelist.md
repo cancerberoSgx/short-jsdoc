@@ -37,3 +37,7 @@
  * improved typeahead results
  
 ##0.1.7
+ * @attribute support - just like @property and @event - 'attributes' AST prop 
+ * html5 app supports attribute, and inherited attributes and events
+
+##0.1.8

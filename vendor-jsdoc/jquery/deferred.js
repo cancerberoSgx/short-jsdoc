@@ -1,7 +1,7 @@
 /*
 @module jquery
 
-@class jQueryDeferred
+@class jQuery.Deferred
 
 The Deferred object, introduced in jQuery 1.5, is a chainable utility object created by calling the jQuery.Deferred() method. It can register multiple callbacks into callback queues, invoke callback queues, and relay the success or failure state of any synchronous or asynchronous function.
 

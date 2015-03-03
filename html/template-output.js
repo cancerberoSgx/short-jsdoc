@@ -45,7 +45,7 @@ __p += '\n\t\t<h3 class=\'methods\'>Constructors</h3>\n\t\t<ul>\n\t\t';
 
 		_(this.jsdoc.constructors).each(function(method) { ;
 __p += '\n\t\t' +
-((__t = ( self.printMethod(method))) == null ? '' : __t) +
+((__t = ( self.printMethod(method) )) == null ? '' : __t) +
 '\n\t\t\t<li class="constructor">\n\t\t\t\t';
  if(method.params && method.params.length) { ;
 __p += '\n\t\t\t\tParameters:\n\t\t\t\t<ol class="params">\n\t\t\t\t\t';
@@ -82,6 +82,60 @@ __p += '\n\t\t\t<li class="property ' +
 '">' +
 ((__t = ( p.name )) == null ? '' : __t) +
 '</a>\n\t\t\t\t<span class="property-type">' +
+((__t = ( self.printTypeAsString(p.type) )) == null ? '' : __t) +
+'</span> \n\t\t\t\t' +
+((__t = ( !inherited ? '' : ('(inherited by ' + self.printTypeAsString(inheritedBy) + ')') )) == null ? '' : __t) +
+'\n\t\t\t</li>\n\t\t';
+ }); ;
+__p += '\n\t\t</ul>\n\t\t';
+ } ;
+__p += '\n\n\n\t\t';
+ if(this.attributes && _(this.attributes).keys().length) { ;
+__p += '\n\t\t<h3 class=\'attributes\'>attributes</h3>\n\t\t<ul>\n\t\t';
+ 
+		var self = this; 
+		_(this.attributes).each(function(p) { 
+			var inherited = !JsDocMaker.classOwnsProperty(self.jsdoc, p); 
+			//TODO: perform this in the view or plugin
+			
+			var inheritedByName = p.absoluteName.substring(0, p.absoluteName.lastIndexOf('.'));
+			var inheritedBy = self.application.data.classes[inheritedByName] || {};
+			
+			;
+__p += '\n\t\t\t<li class="attribute ' +
+((__t = ( inherited ? 'inherited' : '' )) == null ? '' : __t) +
+'">\n\t\t\t\t<a class=\'attribute-name\' href="#attribute/' +
+((__t = ( p.absoluteName )) == null ? '' : __t) +
+'">' +
+((__t = ( p.name )) == null ? '' : __t) +
+'</a>\n\t\t\t\t<span class="attribute-type">' +
+((__t = ( self.printTypeAsString(p.type) )) == null ? '' : __t) +
+'</span> \n\t\t\t\t' +
+((__t = ( !inherited ? '' : ('(inherited by ' + self.printTypeAsString(inheritedBy) + ')') )) == null ? '' : __t) +
+'\n\t\t\t</li>\n\t\t';
+ }); ;
+__p += '\n\t\t</ul>\n\t\t';
+ } ;
+__p += '\n\n\t\t';
+ if(this.events && _(this.events).keys().length) {;
+__p += '\n\t\t<h3 class=\'events\'>Events</h3>\n\t\t<ul>\n\t\t';
+ 
+		var self = this; 
+		_(this.events).each(function(p) { 
+			var inherited = !JsDocMaker.classOwnsProperty(self.jsdoc, p); 
+			//TODO: perform this in the view or plugin
+			
+			var inheritedByName = p.absoluteName.substring(0, p.absoluteName.lastIndexOf('.'));
+			var inheritedBy = self.application.data.classes[inheritedByName] || {};
+			
+			;
+__p += '\n\t\t\t<li class="event ' +
+((__t = ( inherited ? 'inherited' : '' )) == null ? '' : __t) +
+'">\n\t\t\t\t<a class=\'event-name\' href="#event/' +
+((__t = ( p.absoluteName )) == null ? '' : __t) +
+'">' +
+((__t = ( p.name )) == null ? '' : __t) +
+'</a>\n\t\t\t\t<span class="event-type">' +
 ((__t = ( self.printTypeAsString(p.type) )) == null ? '' : __t) +
 '</span> \n\t\t\t\t' +
 ((__t = ( !inherited ? '' : ('(inherited by ' + self.printTypeAsString(inheritedBy) + ')') )) == null ? '' : __t) +
@@ -128,21 +182,7 @@ __p += '\n\t\t\t</li>\n\t\t';
  }); ;
 __p += '\n\t\t</ul>\n\t\t';
  } ;
-__p += '\n\n\n\n\n\t\t';
- if(this.jsdoc.events && _(this.jsdoc.events).keys().length) { ;
-__p += '\n\t\t<h3 class=\'events\'>Events</h3>\n\t\t<ul>\n\t\t';
- 
-		var self = this; 
-		_(this.jsdoc.events).each(function(p) { ;
-__p += '\n\t\t\t<li class="event">\n\t\t\t\t<a class=\'event-name\' href="#event/' +
-((__t = ( p.absoluteName )) == null ? '' : __t) +
-'">' +
-((__t = ( p.name )) == null ? '' : __t) +
-'</a>\n\t\t\t</li>\n\t\t';
- }); ;
-__p += '\n\t\t</ul>\n\t\t';
- } ;
-__p += '\n\n\n\t</div>\n\n\t<div class="col-md-7">\n\n\t\t<h3>Summary</h3>\n\t\t\n\t\t<div class="class-text">\n\t\t' +
+__p += '\n\n\n\n\n\n\t</div>\n\n\t<div class="col-md-7">\n\n\t\t<h3>Summary</h3>\n\t\t\n\t\t<div class="class-text">\n\t\t' +
 ((__t = ( this.jsdoc.textHtml || self.getTextHtml(this.jsdoc.text) || this.jsdoc.text || '' )) == null ? '' : __t) +
 '\n\t\t</div>\n\n\t\t<div data-type="sources"></div>\n\n\t</div>\n</div>\n';
 
@@ -418,7 +458,7 @@ var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
 __p += '<h2>' +
-((__t = ( this.isEvent ? 'Event' : 'Property' )) == null ? '' : __t) +
+((__t = ( this.propertyLabel )) == null ? '' : __t) +
 '&nbsp;<a href="' +
 ((__t = ( this.makeLink(this.jsdoc) )) == null ? '' : __t) +
 '">' +

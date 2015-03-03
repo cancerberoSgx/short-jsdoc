@@ -1,4 +1,4 @@
-// @module shortjsdoc @class JsDocMaker
+// @module shortjsdoc.plugin @class JsDocMaker
 var JsDocMaker = require('../core/class'); 
 var _ = require('underscore'); 
 
@@ -27,6 +27,11 @@ JsDocMaker.prototype.postProccessInherited = function()
 		c.inherited.events = c.inherited.events || {};
 		self.extractInherited(c, c.extends, 'event', inheritedData);
 		_(c.inherited.events).extend(inheritedData); 
+
+		inheritedData = {}; 
+		c.inherited.attributes = c.inherited.attributes || {};
+		self.extractInherited(c, c.extends, 'attribute', inheritedData);
+		_(c.inherited.attributes).extend(inheritedData); 
 	});
 };
 
@@ -73,6 +78,21 @@ JsDocMaker.prototype.extractInherited = function(baseClass, c, what, data)
 		{
 			baseClass.events = baseClass.events || {};
 			if(!baseClass.events[name])
+			{
+				data[name] = p;
+				// TODO: here we can act and clone the inherited nodes and add more info about the owner	
+				// data[name].inherited = true; 
+				// data[name].inheritedFrom = c; 
+			}
+		});
+	}
+
+	else if(what === 'attribute')
+	{
+		_(c.attributes).each(function(p, name)
+		{
+			baseClass.attributes = baseClass.attributes || {};
+			if(!baseClass.attributes[name])
 			{
 				data[name] = p;
 				// TODO: here we can act and clone the inherited nodes and add more info about the owner	

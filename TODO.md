@@ -3,6 +3,16 @@
 (an important file in this early project stage)
 
 Listed from more important to less important:
+
+ * inherited events and inherited attributes
+
+ * html app : show known subclases in the clasview
+ 
+ * list properties in html app alphabetically or at least have that option.
+ 
+ * detect overriden methods and add a link to the overriden in the text
+
+ * file by file change in shortjsdoc.js really make things slow, let pass a --single-file argument to do things in a single file (much more quick)
  
  * support globs in nodejs API
 
@@ -50,12 +60,12 @@ Listed from more important to less important:
     ....
     //@reference m.c.p1
 
+ * (very ambitious) - make a nodejs api
  
  * //TODO: test if we can get correct source comment location relative to the @filename. all nodes should have it- we have the file name but we need information about string fragment of the file of the particular comment
 
  * IDEA: vendor-jsdoc - define package.json for each so we can do dependency - html requre xml.... ALSO mark those jsdoc from vendor as VENDOR in a AST node property
  
- * inherited events
 
  *  in the data.json, if empty text or theRestString are empty, don't dump it so file is shorter.
 
@@ -72,7 +82,6 @@ Listed from more important to less important:
  
  * more gneeral idea: be able to register type-parser plugins, for example @param {#obj(name:String,colors:Array<Color>)} a - so this is a custom type parser - the user must also provide a function that returns the type object, like return {name: 'Object', objectProperties: {name: {name:'String'}, colors: {name:Array,params: {...}}}}
 
- * make jsdoc for javascript objects liek with methods, etc and offer the possibility to use that information jsdocs instead links to the nativemozilla document like now. This gives the possibility to really see all js attributes inherited from js api.
 
  * generics typeparser doesn't accept type names with . or _ - he typeparser has the fault
 
@@ -138,9 +147,9 @@ From most important to less:
      //@class A
      //Some text for class A
 
-* issue the following nodejs doesn't work:
+ * issue the following nodejs doesn't work:
 
-    var ShortJsDoc = require('./src/shortjsdoc.js'); //can't install short-jsdoc with npm on itself so we require like this
+    var ShortJsDoc = require('./src/shortjsdoc.js'); 
     ShortJsDoc.make({
         inputDirs: ['./src/JsDocMaker.js']
     ,   output: 'jsdoc2'
@@ -186,6 +195,8 @@ now you can use @task and it will be replaced to @module !
 Extends Object{prototype: prototype} - types are printing wrong.
 
  * IMPORTANTE : @alias not working in ns app
+
+ * make jsdoc for javascript objects liek with methods, etc and offer the possibility to use that information jsdocs instead links to the nativemozilla document like now. This gives the possibility to really see all js attributes inherited from js api.  <---- this is done  and going tasks to document some known apis like javascript, html/xml dom, jqueyr, backbone, etc
 
 
 

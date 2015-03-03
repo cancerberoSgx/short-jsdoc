@@ -44,6 +44,11 @@ JsDocMaker.prototype.recurseAST = function(fn, fn_type)
 		{
 			fn.apply(p, [p]);
 			JsDocMaker.recurseType(p.type, fn_type);
+		}); 
+		_(c.attributes).each(function(p)
+		{
+			fn.apply(p, [p]);
+			JsDocMaker.recurseType(p.type, fn_type);
 		});
 		if(c.extends)
 		{

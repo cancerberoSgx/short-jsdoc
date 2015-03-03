@@ -111,7 +111,7 @@ JsDocMaker.prototype.parse = function(comments)
 	{
 		self.commentPreprocessorPlugins.execute({node: node, jsdocMaker: self}); 
 
-		var regex = /((?:@class)|(?:@method)|(?:@property)|(?:@method)|(?:@module)|(?:@event)|(?:@constructor)|(?:@filename))/gi; 
+		var regex = /((?:@class)|(?:@method)|(?:@property)|(?:@attribute)|(?:@method)|(?:@module)|(?:@event)|(?:@constructor)|(?:@filename))/gi; 
 		var a = JsDocMaker.splitAndPreserve(node.value || '', regex); 
 		a = _(a).filter(function(v)  //delete empties and trim
 		{
@@ -206,7 +206,7 @@ JsDocMaker.prototype.parse = function(comments)
 					currentMethod = parsed; 
 				}
 
-				//? @property and @event are treated similarly
+				//? @property and @event and @attribute are treated similarly
 				else if(parsed.annotation === 'property' && currentClass)
 				{
 					currentClass.properties = currentClass.properties || {};
@@ -217,20 +217,25 @@ JsDocMaker.prototype.parse = function(comments)
 					currentClass.events = currentClass.events || {};
 					currentClass.events[parsed.name] = parsed;
 				}
+				else if(parsed.annotation === 'attribute' && currentClass)
+				{
+					currentClass.attributes = currentClass.attributes || {};
+					currentClass.attributes[parsed.name] = parsed;
+				}
 
-				//? @param is children of @method
-				// else if(parsed.annotation === 'param' && currentClass)
-				// {
-				// 	if(!currentMethod)
-				// 	{
-				// 		self.error('param before method: ', parsed);
-				// 	}
-				// 	else
-				// 	{						
-				// 		currentMethod.params = currentMethod.params || {};
-				// 		currentMethod.params[parsed.name] = parsed; 
-				// 	}
-				// }
+				// ? @param is children of @method
+				/*else if(parsed.annotation === 'param' && currentClass)
+				{
+					if(!currentMethod)
+					{
+						self.error('param before method: ', parsed);
+					}
+					else
+					{						
+						currentMethod.params = currentMethod.params || {};
+						currentMethod.params[parsed.name] = parsed; 
+					}
+				}*/
 
 				self.afterParseNodePlugins.execute({
 					node: parsed

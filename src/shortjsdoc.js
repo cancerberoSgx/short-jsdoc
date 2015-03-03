@@ -100,6 +100,11 @@ _(ShortJsDoc.prototype).extend({
 		catch (ex)
 		{
 			// will print the javascript syntax error detected in the sources. we parse only valid js!
+			console.error('There is JavaScript syntax error in your source. They cannot be parsed'); 
+			//TODO: file and line number and string
+
+			console.error('Failing code fragment: \n', this.maker.data.source.substring(ex.index - 50, ex.index + 50)); 
+
 			console.error(ex); 
 			throw ex;
 		}
@@ -159,7 +164,7 @@ _(ShortJsDoc.prototype).extend({
 		fs.writeFileSync(f, this.dumpJSON(jsdoc)); 
 	} 
 
-	// @method dumpJSON dont to json string give ast object using settings like this.projectMetadata.jsdoc.dontMinifyOutput
+	// @method dumpJSON dump to json string the full ast. configurable through this.projectMetadata.jsdoc.dontMinifyOutput
 ,	dumpJSON: function(jsdoc) 
 	{
 		if(this.projectMetadata.jsdoc && this.projectMetadata.jsdoc.dontMinifyOutput)

@@ -28,12 +28,24 @@ var ClassView = AbstractView.extend({
 			this.methods = _(_(this.methods).clone()).extend(this.jsdoc.inherited.methods); 
 		}
 
+
+		// calculate properties, events and attributes inheritance information
 		this.properties = this.jsdoc.properties;
 		if(this.options.inherited)
 		{
 			this.properties = _(_(this.properties).clone()).extend(this.jsdoc.inherited.properties); 
 		}
-		
+		this.events = this.jsdoc.events;
+		if(this.options.inherited)
+		{
+			this.events = _(_(this.events).clone()).extend(this.jsdoc.inherited.events); 
+		}
+		this.attributes = this.jsdoc.attributes;
+		if(this.options.inherited)
+		{
+			this.attributes = _(_(this.attributes).clone()).extend(this.jsdoc.inherited.attributes); 
+			console.log('seba2', this.attributes )
+		}
 	}
 
 /*

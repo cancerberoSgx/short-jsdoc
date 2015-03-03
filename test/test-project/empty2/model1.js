@@ -8,6 +8,14 @@
 // @property {Backbone.View} p 
 
 // @class MyModel for more info please refeer to @?ref empty2.MyView because it uses @extends Backbone.Model
+// @attribute {String} name bla bal bal abla
+// @property {String} prop1
+// @event {String} change
+
+// @class MyModelExtension @extends MyModel
+// @attribute {String} name2 
+// @property {String} prop2
+// @event {String} change2
 
 /**
  * @module funnycomments
@@ -15,3 +23,5 @@
  * a new line for this class
  * and another one
  */
+
+ 

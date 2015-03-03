@@ -36,7 +36,7 @@ var self = this;
 		<ul>
 		<%
 		_(this.jsdoc.constructors).each(function(method) { %>
-		<%= self.printMethod(method)%>
+		<%= self.printMethod(method) %>
 			<li class="constructor">
 				<% if(method.params && method.params.length) { %>
 				Parameters:
@@ -73,6 +73,51 @@ var self = this;
 			<li class="property <%= inherited ? 'inherited' : '' %>">
 				<a class='property-name' href="#property/<%= p.absoluteName %>"><%= p.name %></a>
 				<span class="property-type"><%= self.printTypeAsString(p.type) %></span> 
+				<%= !inherited ? '' : ('(inherited by ' + self.printTypeAsString(inheritedBy) + ')') %>
+			</li>
+		<% }); %>
+		</ul>
+		<% } %>
+
+
+		<% if(this.attributes && _(this.attributes).keys().length) { %>
+		<h3 class='attributes'>attributes</h3>
+		<ul>
+		<% 
+		var self = this; 
+		_(this.attributes).each(function(p) { 
+			var inherited = !JsDocMaker.classOwnsProperty(self.jsdoc, p); 
+			//TODO: perform this in the view or plugin
+			
+			var inheritedByName = p.absoluteName.substring(0, p.absoluteName.lastIndexOf('.'));
+			var inheritedBy = self.application.data.classes[inheritedByName] || {};
+			
+			%>
+			<li class="attribute <%= inherited ? 'inherited' : '' %>">
+				<a class='attribute-name' href="#attribute/<%= p.absoluteName %>"><%= p.name %></a>
+				<span class="attribute-type"><%= self.printTypeAsString(p.type) %></span> 
+				<%= !inherited ? '' : ('(inherited by ' + self.printTypeAsString(inheritedBy) + ')') %>
+			</li>
+		<% }); %>
+		</ul>
+		<% } %>
+
+		<% if(this.events && _(this.events).keys().length) {%>
+		<h3 class='events'>Events</h3>
+		<ul>
+		<% 
+		var self = this; 
+		_(this.events).each(function(p) { 
+			var inherited = !JsDocMaker.classOwnsProperty(self.jsdoc, p); 
+			//TODO: perform this in the view or plugin
+			
+			var inheritedByName = p.absoluteName.substring(0, p.absoluteName.lastIndexOf('.'));
+			var inheritedBy = self.application.data.classes[inheritedByName] || {};
+			
+			%>
+			<li class="event <%= inherited ? 'inherited' : '' %>">
+				<a class='event-name' href="#event/<%= p.absoluteName %>"><%= p.name %></a>
+				<span class="event-type"><%= self.printTypeAsString(p.type) %></span> 
 				<%= !inherited ? '' : ('(inherited by ' + self.printTypeAsString(inheritedBy) + ')') %>
 			</li>
 		<% }); %>
@@ -121,19 +166,6 @@ var self = this;
 
 
 
-
-		<% if(this.jsdoc.events && _(this.jsdoc.events).keys().length) { %>
-		<h3 class='events'>Events</h3>
-		<ul>
-		<% 
-		var self = this; 
-		_(this.jsdoc.events).each(function(p) { %>
-			<li class="event">
-				<a class='event-name' href="#event/<%= p.absoluteName %>"><%= p.name %></a>
-			</li>
-		<% }); %>
-		</ul>
-		<% } %>
 
 
 	</div>

@@ -1990,7 +1990,7 @@ JsDocMaker.prototype.parse = function(comments)
 	{
 		self.commentPreprocessorPlugins.execute({node: node, jsdocMaker: self}); 
 
-		var regex = /((?:@class)|(?:@method)|(?:@property)|(?:@method)|(?:@module)|(?:@event)|(?:@constructor)|(?:@filename))/gi; 
+		var regex = /((?:@class)|(?:@method)|(?:@property)|(?:@attribute)|(?:@method)|(?:@module)|(?:@event)|(?:@constructor)|(?:@filename))/gi; 
 		var a = JsDocMaker.splitAndPreserve(node.value || '', regex); 
 		a = _(a).filter(function(v)  //delete empties and trim
 		{
@@ -2085,7 +2085,7 @@ JsDocMaker.prototype.parse = function(comments)
 					currentMethod = parsed; 
 				}
 
-				//? @property and @event are treated similarly
+				//? @property and @event and @attribute are treated similarly
 				else if(parsed.annotation === 'property' && currentClass)
 				{
 					currentClass.properties = currentClass.properties || {};
@@ -2096,20 +2096,25 @@ JsDocMaker.prototype.parse = function(comments)
 					currentClass.events = currentClass.events || {};
 					currentClass.events[parsed.name] = parsed;
 				}
+				else if(parsed.annotation === 'attribute' && currentClass)
+				{
+					currentClass.attributes = currentClass.attributes || {};
+					currentClass.attributes[parsed.name] = parsed;
+				}
 
-				//? @param is children of @method
-				// else if(parsed.annotation === 'param' && currentClass)
-				// {
-				// 	if(!currentMethod)
-				// 	{
-				// 		self.error('param before method: ', parsed);
-				// 	}
-				// 	else
-				// 	{						
-				// 		currentMethod.params = currentMethod.params || {};
-				// 		currentMethod.params[parsed.name] = parsed; 
-				// 	}
-				// }
+				// ? @param is children of @method
+				/*else if(parsed.annotation === 'param' && currentClass)
+				{
+					if(!currentMethod)
+					{
+						self.error('param before method: ', parsed);
+					}
+					else
+					{						
+						currentMethod.params = currentMethod.params || {};
+						currentMethod.params[parsed.name] = parsed; 
+					}
+				}*/
 
 				self.afterParseNodePlugins.execute({
 					node: parsed
@@ -2452,6 +2457,7 @@ JsDocMaker.prototype.postProccessBinding = function()
 		}; 
 		_(c.properties).each(propertySetup);
 		_(c.events).each(propertySetup);
+		_(c.attributes).each(propertySetup);
 
 		
 		self.afterTypeBindingPlugins.execute({jsdocmaker: self});
@@ -2664,11 +2670,11 @@ JsDocMaker.startsWith = function(s, prefix)
 	return s.indexOf(prefix)===0;
 }; 
 
-//@mmethod error @param {String}msg
+//@method error @param {String}msg
 JsDocMaker.prototype.error = function(msg)
 {
 	console.error('Error detected: ' + msg); 
-	throw msg;
+	// throw msg;
 }; 
 
 
@@ -3412,7 +3418,7 @@ function replaceAll(string, find, replace) {
 }
 
 },{"../core/class":3,"underscore":1}],15:[function(require,module,exports){
-// @module shortjsdoc @class JsDocMaker
+// @module shortjsdoc.plugin @class JsDocMaker
 var JsDocMaker = require('../core/class'); 
 var _ = require('underscore'); 
 
@@ -3441,6 +3447,11 @@ JsDocMaker.prototype.postProccessInherited = function()
 		c.inherited.events = c.inherited.events || {};
 		self.extractInherited(c, c.extends, 'event', inheritedData);
 		_(c.inherited.events).extend(inheritedData); 
+
+		inheritedData = {}; 
+		c.inherited.attributes = c.inherited.attributes || {};
+		self.extractInherited(c, c.extends, 'attribute', inheritedData);
+		_(c.inherited.attributes).extend(inheritedData); 
 	});
 };
 
@@ -3487,6 +3498,21 @@ JsDocMaker.prototype.extractInherited = function(baseClass, c, what, data)
 		{
 			baseClass.events = baseClass.events || {};
 			if(!baseClass.events[name])
+			{
+				data[name] = p;
+				// TODO: here we can act and clone the inherited nodes and add more info about the owner	
+				// data[name].inherited = true; 
+				// data[name].inheritedFrom = c; 
+			}
+		});
+	}
+
+	else if(what === 'attribute')
+	{
+		_(c.attributes).each(function(p, name)
+		{
+			baseClass.attributes = baseClass.attributes || {};
+			if(!baseClass.attributes[name])
 			{
 				data[name] = p;
 				// TODO: here we can act and clone the inherited nodes and add more info about the owner	
@@ -3956,6 +3982,11 @@ JsDocMaker.prototype.recurseAST = function(fn, fn_type)
 			JsDocMaker.recurseType(p.type, fn_type);
 		}); 
 		_(c.events).each(function(p)
+		{
+			fn.apply(p, [p]);
+			JsDocMaker.recurseType(p.type, fn_type);
+		}); 
+		_(c.attributes).each(function(p)
 		{
 			fn.apply(p, [p]);
 			JsDocMaker.recurseType(p.type, fn_type);
