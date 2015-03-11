@@ -43,12 +43,14 @@ Class.prototype.visit = function(config)
 				buffer: []
 			,	propName: 'unammedprop' //doesnt matter
 			,	node: node[0]
+			,	prefix: prefix
 			}; 
 			self.visit(childVisitConfig); 
 			var childTypeName = 'Any'; 
+
 			if(childVisitConfig.buffer[0].indexOf('@class') !== -1)
 			{
-				childTypeName = config.lastClass || 'UnnamedClass'; 
+				childTypeName = childVisitConfig.lastClass || 'UnnamedClass'; 
 			}
 			if(childVisitConfig.buffer[0].indexOf('@property') !== -1)
 			{
@@ -68,10 +70,14 @@ Class.prototype.visit = function(config)
 	else if(_(node).isObject())
 	{
 		var originalClass = prefix+'';
+			// console.log('\t\tDEBUG originalClass: '+originalClass)
+		config.lastClass = originalClass; 
+
+		config.buffer.push('@property {' + prefix + '} ' + config.propName); 
 		config.buffer.push('@class ' + prefix); 
 		// @class ToolVisitConfig 
 		// @property {Array<String>} buffer
-		var childVisitConfig = {buffer: []}; 
+		var childVisitConfig = {buffer: [], parentClass: prefix}; 
 		_(node).each(function(propValue, propName)
 		{
 			_(childVisitConfig).extend({
@@ -89,7 +95,10 @@ Class.prototype.visit = function(config)
 		});	
 
 		//and then come back talking about the original class
-		config.buffer.push('@class ' + originalClass);
+		if(config.parentClass)
+		{
+			config.buffer.push('@class ' + originalClass);
+		}
 	}
 	 
 	else

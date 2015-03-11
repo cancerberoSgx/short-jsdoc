@@ -15,37 +15,37 @@ The idea is to generate jsdoc annotations automatically from json input so we ca
 
 For the json
 
-{
-	"name": "Alberta Gomez"
-,	"tools": [{"name":"hammer","weight":2.32},{"name":"pencil","weight":0.2}]
-,	"female": true
-,	"car": {"color": {"red":1,"green":44,"blue":222},"branch":"fiat"}
-}
+	{
+		"name": "Alberta Gomez"
+	,	"tools": [{"name":"hammer","weight":2.32},{"name":"pencil","weight":0.2}]
+	,	"female": true
+	,	"car": {"color": {"red":1,"green":44,"blue":222},"branch":"fiat"}
+	}
 
 will generate
 
-/*
+	/*
 
-@class Person
-@property {String} name
-@property {Array<PersonTools>} tools
-@property Boolean female
-@property PersonCar car
+	@class Person
+	@property {String} name
+	@property {Array<PersonTools>} tools
+	@property Boolean female
+	@property PersonCar car
 
-@class PersonTools
-@property {String} name
-@property {Number} weight
+	@class PersonTools
+	@property {String} name
+	@property {Number} weight
 
-@class PersonCar
-@property {PersonCarColor} color
-@property {String}branch
+	@class PersonCar
+	@property {PersonCarColor} color
+	@property {String}branch
 
-@class PersonCarColor
-@property {String} red
-@property {String} green
-@property {String} blue
+	@class PersonCarColor
+	@property {String} red
+	@property {String} green
+	@property {String} blue
 
-*/
+	*/
 
 
 

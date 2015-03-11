@@ -7,7 +7,7 @@ describe("todo", function()
 it("todo", function() 
 {
 	var config = {
-		json: '{"name":"Seba","car":{"branch":"fiat"},"roles":["admin","dev"]}'
+		json: '{"name":"Seba","car":{"branch":"fiat"},"roles":["admin","dev"],"fruits":[{"color":123222,"name":"banana"}]}'
 	,	mainType: 'Person'
 	}; 
 	var output = json2jsdoc.main(config);
