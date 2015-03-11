@@ -1,0 +1,17 @@
+{
+  "name": "json2jsdoc",
+  "version": "1.0.0",
+  "description": "utility for creating jsdoc from json objects automatically",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "jasmine": "^2.2.1"
+  },
+  "dependencies": {
+    "underscore": "^1.8.2"
+  }
+}
