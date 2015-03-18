@@ -1,4 +1,6 @@
 var _ = require('underscore'); 
+var request = require('request');
+var curl = require('curlrequest')
 
 // TODO: move to json2jsdoc.js 
 // @class Tool
@@ -7,41 +9,68 @@ var Class = function(){}
 Class.prototype.main = function(config)
 {
 	//@class ToolMainConfig
+	//@property {Function} callback a function that is called when the job is done accepting a String parameter with the result
 	//@property {String} json the json string to parse
+	//@property http {String} if no json string is passed the the input can be retrieved from a passed url.
 	//@property {String} mainType the name of the class name for the root json object represent. This will be the pefix of all other subclasses defined.
 	//@property {Function} linesToText transformation between array of annotations to a valid javascript comment, by default something like function(lines){return '/*\n' + lines.join('\n') + '\n*/';}
 	//@class Tool
 	//@property {Object}parsed
-	this.parsed = JSON.parse(config.json) || {};
+	var self = this;
+	if(config.json && _(config.json).isString())
+	{
+		self.json2jsdoc(JSON.parse(config.json) || {}, config);
+	}
+	else if(config.json && _(config.json).isObject())
+	{	
+		self.json2jsdoc(config.json, config);
+	}
+	else if(config.http)
+	{
+		curl.request(config.http, function (error, data) 
+		{
+			if (!error)  //TODO error
+			{
+				self.json2jsdoc(JSON.parse(data) || {}, config);
+				// config.callback(data);
+				// console.log(body) // Show the HTML for the Google homepage.
+			}
+			// console.log(arguments)
+		}); 
+	}
+}; 
+
+Class.prototype.json2jsdoc = function(obj, config)
+{
+	this.parsed = obj; 
 	var buffer = []; 
 
 	this.visit({
-		node:this.parsed
+		node: this.parsed
 	,	buffer: buffer
 	,	prefix: config.mainType || 'UnnamedClass'
 	}); 
 
 	config.linesToText = config.linesToText || function(lines){return '/*\n' + lines.join('\n') + '\n*/';}; 
 	
-	return config.linesToText(buffer);
+	config.callback(config.linesToText(buffer));
+}
 
-}; 
+
 //@method visit @param {ToolVisitConfig} node
 Class.prototype.visit = function(config)
 {
 	var node = config.node
-	// ,	buffer = config.buffer
 	,	prefix = config.prefix
 	,	self = this;
 
-	// console.log('visit ', config)
 	if(_(node).isArray())
 	{
 		if(node.length)
 		{			
 			var childVisitConfig = {
 				buffer: []
-			,	propName: 'unammedprop' //doesnt matter
+			,	propName: 'unammedprop' 
 			,	node: node[0]
 			,	prefix: prefix
 			}; 
@@ -70,11 +99,15 @@ Class.prototype.visit = function(config)
 	else if(_(node).isObject())
 	{
 		var originalClass = prefix+'';
-			// console.log('\t\tDEBUG originalClass: '+originalClass)
+
 		config.lastClass = originalClass; 
 
-		config.buffer.push('@property {' + prefix + '} ' + config.propName); 
+		if(config.propName)
+		{
+			config.buffer.push('@property {' + prefix + '} ' + config.propName); 
+		}
 		config.buffer.push('@class ' + prefix); 
+
 		// @class ToolVisitConfig 
 		// @property {Array<String>} buffer
 		var childVisitConfig = {buffer: [], parentClass: prefix}; 
@@ -94,7 +127,7 @@ Class.prototype.visit = function(config)
 			config.buffer.push(s);
 		});	
 
-		//and then come back talking about the original class
+		//and then return talking about the original class
 		if(config.parentClass)
 		{
 			config.buffer.push('@class ' + originalClass);

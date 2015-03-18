@@ -1984,13 +1984,22 @@ JsDocMaker.prototype.parse = function(comments)
 	this.data.modules = this.data.modules || {}; 
 	this.data.files = this.data.files || {}; 
 
+	self.primaryAnnotations = {
+		'module': {
+			name: 'module', description: 'modules contain classes'
+		}
+	}; 
+
 	self.allCommentPreprocessorPlugins.execute({node: self.comments, jsdocMaker: self}); 
 
 	_(self.comments).each(function(node)
 	{
 		self.commentPreprocessorPlugins.execute({node: node, jsdocMaker: self}); 
 
-		var regex = /((?:@class)|(?:@method)|(?:@property)|(?:@attribute)|(?:@method)|(?:@module)|(?:@event)|(?:@constructor)|(?:@filename))/gi; 
+		//
+		var s = '((?:@class)|(?:@method)|(?:@property)|(?:@attribute)|(?:@method)|(?:@module)|(?:@event)|(?:@constructor)|(?:@filename))'; 
+
+		var regex = new RegExp(s, 'gi');
 		var a = JsDocMaker.splitAndPreserve(node.value || '', regex); 
 		a = _(a).filter(function(v)  //delete empties and trim
 		{

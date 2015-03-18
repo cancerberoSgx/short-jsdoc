@@ -1,3 +1,7 @@
+<!-- 
+jsdoc getting started slides. Just open this file with your browser, you don't need to 
+serve it. 
+-->
 <!DOCTYPE html>
 <html>
   <head>
@@ -142,6 +146,8 @@ Comments starting with the character '?' will be ignored, even if they contain a
 	//? @class Something will be ignored b the parser
 	/*? @method foo also will be ignored */
 
+
+
 ---
 
 #Types
@@ -154,14 +160,30 @@ Because in JavaScript is very common to define Objects on the fly shortjsdoc sup
 
 That means that the mehod *foo* returns an object with the properties *id* of type String, *color* of type Array of Color and *execute* of type Function.
 
-Literal objects can contain other types like generics, but not viceversa, this is generic types cannot contain literal objects:
 
-	@return {}
 
 
 ---
 
-#Talking about the same thing in several places
+#Talking about different classes on the same file
+
+In javascript it is common to be defining a class Foo, then in the middle of the file, define another class Bar and start talking about it, and then come back talking about the first class Foo, all on the same file.
+
+The recommended way to solve this problem with short jsdoc is making sure we are *standing* at the correct class. We use @class annotations as we use the 'cd' console command to set the current working directory to talk about relative files in there: 
+
+	// @class Foo this is the main class
+	// @method {FooConfig} doTheWork Foo method that returns a new type that wi will describe now!
+	// @class FooConfig bla, this class is declared at the middle of the file and we want to document it here!
+	// @property width a property of FooConfig class - we close class FooConfig here and come back talking about class Foo
+	// @class Foo 
+	// @property name a Foo class property
+
+
+
+
+---
+
+#Talking about the same class in different files
 
 In JavaScript is very common that a class or module definition is made across several files. shortjsdoc support this by just telling the framework of what are we goint to talk about following the top to bottom file parsing:
 
@@ -175,21 +197,7 @@ In JavaScript is very common that a class or module definition is made across se
 
 That will result in a module *foo* containing both texts and containing a class Bar that will also contain both texts. 
 
----
 
-#Defining classes on the fly
-
-In javascript it is common to be defining a class Foo, then in the middle of the file, define another class Bar and start talking about it, and then come back talking about the first class Foo.
-
-This can easily be done in shortjsdoc, but we must be careful to declare the target node the next lines are gonna talk about. Notice how we start talking about the class FileUtility, then, in the middle, we talk about class File, and then we proceed talking about class FileUtility:
-
-	// @module utils
-	// @class FileUtility
-	// @method parseFile @param {String} fileName @returns {File}
-	// @class File @property {String} name @property {String} basePath 
-	// @method recurseFolders @param {Function} visitor
-	// @class FileUtility
-	// @method readFile @param {File} f @returns {String}
 
 ---
 

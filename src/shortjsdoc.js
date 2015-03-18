@@ -180,17 +180,28 @@ _(ShortJsDoc.prototype).extend({
 	//@method parseSources
 ,	parseSources: function()
 	{
-		//Note the three commmented lines works much faster but don't generate any info about files !
 		var buffer = [], self = this; 
 
 		_(this.sources).each(function(val, file)
 		{
-			// maker.addFile(value, name);
-			// buffer.push(val);
 			self.maker.addFile(val, file); 
 		}); 
-		// this.maker.parseFile(buffer.join('\n\n'), 'ALL.js');
 		this.maker.jsdoc();
+	}
+
+	//@method __parseSourcesFastVersion this was the previous implementation without file separation support. Nevertheless we 
+	// let this cunommented and unused because parsing separate files introduced a significant parsing duration (parformance). 
+	// TODO. let the user performa a --fast-parsing not supporting files but much faster just for fast jsdoc writting..
+,	__parseSourcesFastVersion: function()
+	{
+		var buffer = [], self = this; 
+
+		_(this.sources).each(function(val, file)
+		{
+			maker.addFile(value, name);
+			buffer.push(val);
+		}); 
+		this.maker.parseFile(buffer.join('\n\n'), 'ALL.js');
 	}
 
 	//@method buildSources parse all files in passed folders and returns the parsed results in t

@@ -30,7 +30,7 @@
  * UI TreeView index initial contrib. 
  * text marks plugin
  * text marks concrete plugins @?class @?module, @?method, @?event, @?property @?ref . Show these correctly in the html app.
- * source view has link to the file sources implemented in FileView
+ * per file parsing - source view has link to the file sources implemented in FileView
  * tree view better decorated
  * treeview with color syntax and download button
  * text mark @?link to write output-independent links
@@ -41,3 +41,5 @@
  * html5 app supports attribute, and inherited attributes and events
 
 ##0.1.8
+ * inherited events and inherited attributes
+ * json2jsdoc tool

@@ -1,19 +1,11 @@
 # TODOs and ideas 
 
-(an important file in this early project stage)
+(an important file in this early project stage - growing more and more everyday - try to keep updated.)
 
-Listed from more important to less important:
+Listed from more important to less important - kind of:
 
- * inherited events and inherited attributes
 
- * html app : show known subclases in the clasview
- 
- * list properties in html app alphabetically or at least have that option.
- 
- * detect overriden methods and add a link to the overriden in the text
 
- * file by file change in shortjsdoc.js really make things slow, let pass a --single-file argument to do things in a single file (much more quick)
- 
  * support globs in nodejs API
 
  * remove asterix from package.json dependency versions
@@ -22,24 +14,54 @@ Listed from more important to less important:
  
  * markdown in Line comments 
 
- * include the source only of files that contain annotations
+ * (performance) include the source only of files that contain annotations
+
+ * implement js syntax check per file instead of the whole file. if a file doesn't compile then don't include it and warn the user
+
+
+ * configurables primary annotations : 
+
+    _(tool.primaryAnnotations).extend({
+        'object': {doesntContain: ['property','event','method']}
+    })
+    
+(we use doesntContain because by default, we want that any 'strange' annotation to be children of the previous primary annotation.) 
+
+all primary annotation rules (class, module,method, property) should be defined using this hooking api. so the jsdoc rules for this are defined in a readable json. 
+
+
+
+ * (performance small) file by file change in shortjsdoc.js really make things slow, let pass a --single-file argument to do things in a single file (much more quick)
+ 
+
+ * (feature - big) print java code, w links. define the Perspective concept - the current impl is a textual perspective and it is default. java shouold be another perspective. and also the treeview. Example url: /
 
  * app/UI : sources should be collapsed by defuault because it contaiminates visuals. 
+
  * in some plugins like comment indentator we are ssumming files have unix end to line. we should pre process all commments first. 
 
  * annotation names dont support mayus, i.e. @memberOf Apple wont work
 
-* @module @module.foo @module.bar - then , in the app module contains all the classes of @moule.foo and @module.bar - fix this in the ModuleView class
+ * @module @module.foo @module.bar - then , in the app module contains all the classes of @moule.foo and @module.bar - fix this in the ModuleView class
 
-* when navigating do scroll to top automatically
+ * when navigating do scroll to top automatically
 
-* I as a user want to support custom name regex, for example I want to be able to write annotation names with characters like []
+ * I as a user want to support custom name regex, for example I want to be able to write annotation names with characters like []
 
-* @param {Array<String>|Array<Apple>} is printing wrong - first is array of array of string
+ * @param {Array<String>|Array<Apple>} is printing wrong - first is array of array of string
 
-* IMPORTANT by default, delete the property  theRestOfTheString that is dumping in the data.json  to minimize its size
 
-* alias not working in generic types. i.e. this works: {a}, this works: {a|n} this also seems to work: {a<o>} but this doesn't : {a<o<s,n>>}
+ * ISSUE: Literal objects can contain other types like generics, but not viceversa, for example generics cannot contain literal types because they will break the syntax: this is ok: @param {cars:Array<Car>} - but this is wrong: @param {Array<{name:String}>} - syntax is broken - this should work @param {#obj(name:String)>}
+
+ * html app : show known subclases in the clasview
+ 
+ * list properties in html app alphabetically or at least have that option.
+ 
+ * detect overriden methods and add a link to the overriden in the text
+
+ * IMPORTANT by default, delete the property  theRestOfTheString that is dumping in the data.json  to minimize its size
+
+ * alias not working in generic types. i.e. this works: {a}, this works: {a|n} this also seems to work: {a<o>} but this doesn't : {a<o<s,n>>}
  
  * remove parseyourowncode,spec runner,etc from html application since this is particular of shortjsdoc. put it on readme.md or other app
  
@@ -198,6 +220,10 @@ Extends Object{prototype: prototype} - types are printing wrong.
 
  * make jsdoc for javascript objects liek with methods, etc and offer the possibility to use that information jsdocs instead links to the nativemozilla document like now. This gives the possibility to really see all js attributes inherited from js api.  <---- this is done  and going tasks to document some known apis like javascript, html/xml dom, jqueyr, backbone, etc
 
+
+ * inherited events and inherited attributes
+
+ --- Dones will be continued in Changelist.md
 
 
 
