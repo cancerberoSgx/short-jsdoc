@@ -1,5 +1,5 @@
 var _ = require('underscore'); 
-var request = require('request');
+// var request = require('request');
 var curl = require('curlrequest')
 
 // TODO: move to json2jsdoc.js 
@@ -11,7 +11,7 @@ Class.prototype.main = function(config)
 	//@class ToolMainConfig
 	//@property {Function} callback a function that is called when the job is done accepting a String parameter with the result
 	//@property {String} json the json string to parse
-	//@property http {String} if no json string is passed the the input can be retrieved from a passed url.
+	//@property resource {String} url or local file path to the resource containing the json we want to parse. Works if no json string is passed 
 	//@property {String} mainType the name of the class name for the root json object represent. This will be the pefix of all other subclasses defined.
 	//@property {Function} linesToText transformation between array of annotations to a valid javascript comment, by default something like function(lines){return '/*\n' + lines.join('\n') + '\n*/';}
 	//@class Tool
@@ -25,15 +25,15 @@ Class.prototype.main = function(config)
 	{	
 		self.json2jsdoc(config.json, config);
 	}
-	else if(config.http)
+	else if(config.resource)
 	{
-		curl.request(config.http, function (error, data) 
+		curl.request(config.resource, function (error, data) 
 		{
+				console.log(arguments) 
 			if (!error)  //TODO error
 			{
 				self.json2jsdoc(JSON.parse(data) || {}, config);
 				// config.callback(data);
-				// console.log(body) // Show the HTML for the Google homepage.
 			}
 			// console.log(arguments)
 		}); 

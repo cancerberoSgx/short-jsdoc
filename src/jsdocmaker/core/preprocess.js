@@ -49,16 +49,17 @@ JsDocMaker.prototype.allCommentPreprocessorPlugins.add(preprocessCommentsPlugin1
 //Our regexp format expect an anotation with a name. So for enabling unamed annotations we do this dirty fix, this is add a name to precondition
 var fixUnamedAnnotationsPlugin = {
 	name: 'fixUnamedAnnotationsPlugin'
+,	priority: 3
 ,	execute: function(options)
 	{
 		var node = options.node;
 		if(node.value)
 		{
 			node.value = node.value.replace(/@constructor/gi, '@constructor n'); 
-			// node.value = node.value.replace(/@throw/gi, '@throws n'); 
-			// node.value = node.value.replace(/@throws/gi, '@throws n'); 
 			node.value = node.value.replace(/(@\w+)\s*$/gi, '$1 dummy ');
 			node.value = node.value.replace(/(@\w+)\s+(@\w+)/gi, '$1 dummy $2');
+			// node.value = node.value.replace(/@throw/gi, '@throws n'); 
+			// node.value = node.value.replace(/@throws/gi, '@throws n'); 
 		}
 	}
 }; 

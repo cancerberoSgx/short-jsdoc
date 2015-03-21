@@ -2236,6 +2236,9 @@ var JsDocMaker = require('./class')
 
 // @class PluginContainer a plugin container can be used for installing plugins and then processing 
 // some action with all of them, executing them in sequence.
+// A plugin is basically a function that acts on some data - state
+// Registered plugins are executed secuentially. plugin execution arguments can be modified so next-to-execute plugin can 
+// consume new information - same with return value.
 var PluginContainer = function()
 {
 	this.plugins = [];
@@ -2248,20 +2251,71 @@ JsDocMaker.PluginContainer = PluginContainer;
 PluginContainer.prototype.add = function(plugin)
 {
 	this.plugins.push(plugin); 
+	this.priorized = null;//clean priorized cache
 }; 
+
+//TODO: remove(plugin)
 
 // @method execute @param {Object} @param {Any} input options @return {Any}
 PluginContainer.prototype.execute = function(options, input)
 {
 	var result = null;
-	_(this.plugins).each(function(plugin)
+	this.visitPlugins(function(plugin)
 	{
 		result = plugin.execute(options, result);
 	}); 
 	return result; 
 }; 
 
+//@method visitPlugins visit children plugins respecting priority @param {Function} visitor
+PluginContainer.prototype.visitPlugins = function(visitor)
+{
+	// @property {Array<Array<Plugin>>} priorized array of priorities - each priority index contains the plugins with that priority
+	var priorized = this.priorized;// = (this.priorized || [1]); //priority calculations cache
+
+	if(!priorized)
+	{
+		priorized = this.priorized = []; 
+		for (var i = 0; i < PluginContainer.MAX_PRIORITY; i++) 
+		{
+			priorized[i] = []; 
+		};
+		_(this.plugins).each(function(plugin)
+		{
+			// visitor(plugin); 
+			var p = plugin.priority || PluginContainer.DEFAULT_PRIORITY; // priority zero is invalid and it is treated as default
+			// priorized[p] = priorized[p] || []; 
+			priorized[p].push(plugin); 
+		}); 
+	}
+
+	for (var i = 1; i < priorized.length; i++) 
+	{
+		var p = priorized[i]; 
+		for (var j = 0; j < p.length; j++) 
+		{
+			visitor(p[j]);
+		};
+	};
+}; 
+
+PluginContainer.DEFAULT_PRIORITY = 6; 
+PluginContainer.MAX_PRIORITY = 10; 
+
 // TODO: priority
+
+
+
+// @class JsDocMakerPlugin
+// @property {String} name
+// @method execute execute this plugin @param{Object}options @param {Any}result 
+// @returns{Any} result possible enriched by the plugin in the chain
+
+module.exports = PluginContainer;
+
+
+
+
 
 
 //@method globalPlugins @static
@@ -2278,13 +2332,6 @@ PluginContainer.prototype.execute = function(options, input)
 
 
 
-
-// @class JsDocMakerPlugin
-// @property {String} name
-// @method execute execute this plugin @param{Object}options @param {Any}result 
-// @returns{Any} result possible enriched by the plugin in the chain
-
-module.exports = PluginContainer;
 },{"./class":3,"underscore":1}],7:[function(require,module,exports){
 // @module shortjsdoc @class JsDocMaker
 var JsDocMaker = require('./class'); 
@@ -2466,11 +2513,10 @@ JsDocMaker.prototype.postProccessBinding = function()
 		}; 
 		_(c.properties).each(propertySetup);
 		_(c.events).each(propertySetup);
-		_(c.attributes).each(propertySetup);
-
-		
-		self.afterTypeBindingPlugins.execute({jsdocmaker: self});
+		_(c.attributes).each(propertySetup);		
 	});
+
+	self.afterTypeBindingPlugins.execute({jsdocmaker: self});
 };
 
 },{"./class":3,"./plugin":6,"underscore":1}],8:[function(require,module,exports){
@@ -2525,16 +2571,17 @@ JsDocMaker.prototype.allCommentPreprocessorPlugins.add(preprocessCommentsPlugin1
 //Our regexp format expect an anotation with a name. So for enabling unamed annotations we do this dirty fix, this is add a name to precondition
 var fixUnamedAnnotationsPlugin = {
 	name: 'fixUnamedAnnotationsPlugin'
+,	priority: 3
 ,	execute: function(options)
 	{
 		var node = options.node;
 		if(node.value)
 		{
 			node.value = node.value.replace(/@constructor/gi, '@constructor n'); 
-			// node.value = node.value.replace(/@throw/gi, '@throws n'); 
-			// node.value = node.value.replace(/@throws/gi, '@throws n'); 
 			node.value = node.value.replace(/(@\w+)\s*$/gi, '$1 dummy ');
 			node.value = node.value.replace(/(@\w+)\s+(@\w+)/gi, '$1 dummy $2');
+			// node.value = node.value.replace(/@throw/gi, '@throws n'); 
+			// node.value = node.value.replace(/@throws/gi, '@throws n'); 
 		}
 	}
 }; 
@@ -2702,7 +2749,7 @@ var JsDocMaker = require('./core/main');
 require('./plugin/main.js'); 
 
 module.exports = JsDocMaker;
-},{"./core/main":4,"./plugin/main.js":17}],12:[function(require,module,exports){
+},{"./core/main":4,"./plugin/main.js":18}],12:[function(require,module,exports){
 /*
 
 This is a syntax definition compiled to JavaScript that parses an expression like 
@@ -3427,6 +3474,61 @@ function replaceAll(string, find, replace) {
 }
 
 },{"../core/class":3,"underscore":1}],15:[function(require,module,exports){
+var _ = require('underscore'); 
+var JsDocMaker = require('../core/class'); 
+var PluginContainer = require('../core/plugin'); 
+
+require('./recurse-plugin-containers');
+
+var key, keyRegexp; 
+
+var pluginBefore = {
+	name: 'escape-at'
+,	priority: 2
+,	execute: function(options)
+	{
+		var node = options.node;
+		if(!key)
+		{
+			// debugger;
+			key = 'escape_at_'+_.uniqueId();
+			keyRegexp = new RegExp(key, 'g'); 
+		}
+
+		node.value = (node.value||'').replace(/@@/g, key); 
+	}
+}; 
+JsDocMaker.prototype.commentPreprocessorPlugins.add(pluginBefore);
+
+
+var pluginAfter = {
+	name: 'escape-at'
+,	execute: function(node) 
+	{
+		node.text = (node.text||'').replace(keyRegexp, '@'); 
+	}
+}; 
+JsDocMaker.prototype.afterTypeBindingRecurseASTPlugins.add(pluginAfter);
+
+
+
+
+
+// old impl
+// var plugin = {
+// 	name: 'escape-at'
+// ,	execute: function(node)
+// 	{
+// 		// debugger;
+// 		node.text = (node.text||'').replace(/@@/g, '@'); 
+// 	}
+// }; 
+// // debugger;
+// JsDocMaker.prototype.afterTypeBindingRecurseASTPlugins.add(plugin);
+//JsDocMaker.prototype.commentPreprocessorPlugins.add(plugin);
+
+
+},{"../core/class":3,"../core/plugin":6,"./recurse-plugin-containers":22,"underscore":1}],16:[function(require,module,exports){
 // @module shortjsdoc.plugin @class JsDocMaker
 var JsDocMaker = require('../core/class'); 
 var _ = require('underscore'); 
@@ -3545,7 +3647,7 @@ JsDocMaker.classOwnsProperty = function(aClass, prop)
 	return result;
 }; 
 
-},{"../core/class":3,"underscore":1}],16:[function(require,module,exports){
+},{"../core/class":3,"underscore":1}],17:[function(require,module,exports){
 // @module shortjsdoc @class JsDocMaker
 var JsDocMaker = require('../core/class'); 
 var _ = require('underscore'); 
@@ -3595,7 +3697,7 @@ JsDocMaker.prototype.literalObjectInstall = function()
 }; 
 
 
-},{"../core/class":3,"underscore":1}],17:[function(require,module,exports){
+},{"../core/class":3,"underscore":1}],18:[function(require,module,exports){
 'strict mode'; 
 
 var JsDocMaker = require('../core/main.js'); 
@@ -3612,8 +3714,11 @@ require('./comment-indentation.js');
 require('./text-marks.js');
 require('./text-marks-references.js');
 
+require('./recurse-plugin-containers.js');
+require('./escape-at.js');
+
 module.exports = JsDocMaker; 
-},{"../core/main.js":4,"./alias.js":13,"./comment-indentation.js":14,"./inherited.js":15,"./literal-object.js":16,"./modifiers.js":18,"./module-exports.js":19,"./native-types.js":20,"./text-marks-references.js":21,"./text-marks.js":22,"./util.js":23}],18:[function(require,module,exports){
+},{"../core/main.js":4,"./alias.js":13,"./comment-indentation.js":14,"./escape-at.js":15,"./inherited.js":16,"./literal-object.js":17,"./modifiers.js":19,"./module-exports.js":20,"./native-types.js":21,"./recurse-plugin-containers.js":22,"./text-marks-references.js":23,"./text-marks.js":24,"./util.js":25}],19:[function(require,module,exports){
 // @module shortjsdoc @class JsDocMaker
 var JsDocMaker = require('../core/class'); 
 var _ = require('underscore'); 
@@ -3635,7 +3740,7 @@ JsDocMaker.prototype.installModifiers = function(node)
 	});
 }; 
 
-},{"../core/class":3,"underscore":1}],19:[function(require,module,exports){
+},{"../core/class":3,"underscore":1}],20:[function(require,module,exports){
 /* @module shortjsdoc.plugin.module-export
 
 #@module @exports
@@ -3681,7 +3786,7 @@ var plugin_beforeTypeBinding = {
 }; 
   
 JsDocMaker.prototype.beforeTypeBindingPlugins.add(plugin_beforeTypeBinding); 
-},{"../core/class":3,"underscore":1}],20:[function(require,module,exports){
+},{"../core/class":3,"underscore":1}],21:[function(require,module,exports){
 // @module shortjsdoc @class JsDocMaker
 var JsDocMaker = require('../core/class'); 
 var _ = require('underscore'); 
@@ -3712,7 +3817,53 @@ JsDocMaker.prototype.getNativeTypeUrl = function(name)
 	return customTypeUrl;
 }; 
 
-},{"../core/class":3,"underscore":1}],21:[function(require,module,exports){
+},{"../core/class":3,"underscore":1}],22:[function(require,module,exports){
+// @module recurse-plugin-containers - a plugin to be used by concrete plugins to iterate on all 
+// nodes after some interesting stages. by calling recurseAST. 
+// The objective is that other concrete plugins register here and so the AST recursion is made 
+// ONCE instead of using recurseAST in each of them.
+
+
+var JsDocMaker = require('../core/class'); 
+var PluginContainer = require('../core/plugin'); 
+require('./util'); 
+var _ = require('underscore'); 
+
+// @class AfterTypeBindingRecurseASTPluginContainer it is both a plugin and a plugin container @extends PluginContainer
+var AfterTypeBindingRecurseASTPluginContainer = function()
+{
+	return PluginContainer.apply(this, arguments); 
+};
+AfterTypeBindingRecurseASTPluginContainer.prototype = _({}).extend(PluginContainer.prototype);
+_(AfterTypeBindingRecurseASTPluginContainer.prototype).extend(
+{
+	name: 'AfterTypeBindingRecurseASTPluginContainer'
+
+	// for each AST node all child plugins will be executed - the objective is to recurse the ast only once.
+,	execute: function(options)
+	{
+		// debugger;
+		//TODO: this logic doesn't respect priority - don't copy and paste this logic here - define a cisitor method in super
+		var result = null, self = this;
+		options.jsdocmaker.recurseAST(function(node)
+		{
+			_(self.plugins).each(function(plugin) 
+			{
+				result = plugin.execute(node, plugin);
+			}); 
+		}); 
+		return result; 
+	}
+}); 
+
+
+var plugin = new AfterTypeBindingRecurseASTPluginContainer();
+
+//@module shortjsdoc @class JsDocMaker @property {AfterTypeBindingRecurseASTPluginContainer} afterTypeBindingRecurseASTPlugins
+JsDocMaker.prototype.afterTypeBindingRecurseASTPlugins = plugin; 
+
+JsDocMaker.prototype.afterTypeBindingPlugins.add(plugin); 
+},{"../core/class":3,"../core/plugin":6,"./util":25,"underscore":1}],23:[function(require,module,exports){
 /*
 @module shortjsdoc.plugin.text-marks-references
 
@@ -3877,7 +4028,7 @@ JsDocMaker.prototype.afterTypeBindingPlugins.add(textMarksReferencesPlugin);
 
 
 
-},{"../core/class":3,"underscore":1}],22:[function(require,module,exports){
+},{"../core/class":3,"underscore":1}],24:[function(require,module,exports){
 /*
 @module shortjsdoc.plugin.text-marks
 
@@ -3923,7 +4074,7 @@ var textMarksAfterParseNodePlugin = {
 		var replaceHandler = function(all, name, arg)
 		{
 			node.textMarks = node.textMarks || {}; 
-			var mark = _.uniqueId('_shortjsdoc_textmarkplugin_');
+			var mark = options.jsdocmaker.getUnique('_shortjsdoc_textmarkplugin_');
 			node.textMarks[mark] = {name:name,arg:arg}; 
 			return mark; 
 		}; 
@@ -3947,7 +4098,7 @@ JsDocMaker.prototype.afterParseUnitSimplePlugins.add(textMarksAfterParseNodePlug
 // afterTypeBindingPlugins
 
 
-},{"../core/class":3,"underscore":1}],23:[function(require,module,exports){
+},{"../core/class":3,"underscore":1}],25:[function(require,module,exports){
 // @module shortjsdoc @class JsDocMaker
 var JsDocMaker = require('../core/class'); 
 var _ = require('underscore'); 
@@ -4037,4 +4188,13 @@ JsDocMaker.recurseType = function(type, fn)
 
 	fn(type); 
 }; 
+
+
+JsDocMaker.prototype.getUnique = function(prefix)
+{
+	this.counter = this.counter || 0;
+	prefix = prefix || ''; 
+	this.counter++;
+	return prefix + this.counter;
+}
 },{"../core/class":3,"underscore":1}]},{},[11]);

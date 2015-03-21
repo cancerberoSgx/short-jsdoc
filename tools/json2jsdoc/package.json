@@ -13,7 +13,6 @@
   },
   "dependencies": {
     "curlrequest": "^0.5.1",
-    "request": "^2.53.0",
     "underscore": "^1.8.2"
   }
 }

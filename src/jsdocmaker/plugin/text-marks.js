@@ -43,7 +43,7 @@ var textMarksAfterParseNodePlugin = {
 		var replaceHandler = function(all, name, arg)
 		{
 			node.textMarks = node.textMarks || {}; 
-			var mark = _.uniqueId('_shortjsdoc_textmarkplugin_');
+			var mark = options.jsdocmaker.getUnique('_shortjsdoc_textmarkplugin_');
 			node.textMarks[mark] = {name:name,arg:arg}; 
 			return mark; 
 		}; 

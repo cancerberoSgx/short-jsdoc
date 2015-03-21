@@ -43,3 +43,6 @@
 ##0.1.8
  * inherited events and inherited attributes
  * json2jsdoc tool
+ * PluginContainer priorization
+ * escape-at plugin : escape @ from text by using @@
+ * recurse-plugin-containers (abstract) plugin 

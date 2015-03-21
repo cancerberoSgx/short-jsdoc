@@ -112,7 +112,7 @@ it("using @?something arguments inside text to create named marks inside.", func
 
 	var strange = jsdoc.classes['trees.Bananero'].methods.strange;
 	expect(strange.text).toBe('this methods do the strange thing what is related with _shortjsdoc_textmarkplugin_1 and _shortjsdoc_textmarkplugin_2 because of the destiny also _shortjsdoc_textmarkplugin_3 is related to this problem and of cource _shortjsdoc_textmarkplugin_4 method references are allowed'); 
-	
+
 	expect(strange.textMarks._shortjsdoc_textmarkplugin_1.name).toBe('class');
 	expect(strange.textMarks._shortjsdoc_textmarkplugin_1.arg).toBe('fruits.Banana');
 
@@ -154,6 +154,44 @@ it("using @?something arguments inside text to create named marks inside.", func
 });
 
 });
+
+
+
+
+
+describe("escape-at", function() 
+{
+
+	it("escape @ using @@ in text", function() 
+	{
+		var jsdoc, maker; 
+		var code = 
+			'/*@module mymodule this module text contains some "at" characters ' + 
+			'one: @@, two: @@@@, three @@@@@@, four: @@@@@@@@' + '\n' +
+			'@class C @@ @@@@ @@@@@@ @@@@@@@@' + '\n' +
+			'@property C @@ @@@@ @@@@@@ @@@@@@@@' + '\n' +
+			'@method m @@thisisnotanannotation' + '\n' +
+			'*/';
+
+		maker = new JsDocMaker();
+		maker.addFile(code, 'name.js');
+		jsdoc = maker.jsdoc();
+		maker.postProccess();
+		maker.postProccessBinding();
+
+		expect(jsdoc.modules['mymodule'].text).toBe('this module text contains some "at" characters one: @, two: @@, three @@@, four: @@@@'); 
+		expect(jsdoc.classes['mymodule.C'].text).toBe('@ @@ @@@ @@@@'); 
+		expect(jsdoc.classes['mymodule.C'].methods.m.text).toBe('@thisisnotanannotation'); 
+		expect(jsdoc.classes['mymodule.C'].properties.C.text).toBe('@ @@ @@@ @@@@'); 
+	});
+
+});
+
+
+
+
+
+
 
 
 });

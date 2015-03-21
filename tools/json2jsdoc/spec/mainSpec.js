@@ -2,8 +2,6 @@ var json2jsdoc = require('../src');
 var _ = require('underscore'); 
 
 
-jasmine.getEnv().defaultTimeoutInterval = 35000; 
-
 describe("json2jsdoc", function() 
 {
 
@@ -27,8 +25,8 @@ it("json string", function(done)
 
 it("request", function(done) 
 {
-	var config = {
-		http: 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22nome%2C%20ak%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys'
+	json2jsdoc.main({
+		resource: 'https://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22nome%2C%20ak%22)&format=json&env=store%3A%2F%2Fdatatables.org%2Falltableswithkeys'
 		// http: 'http://www.google.com'
 	,	mainType: 'WeatherQuery'
 	,	callback: function(output)
@@ -38,10 +36,8 @@ it("request", function(done)
 			done();
 		}
 	// ,	linesToText: function(lines){return '/* ' + lines.join(' ') + ' */';}
-	}; 
-	json2jsdoc.main(config);
-	// expect(strange.returns.textMarks._shortjsdoc_textmarkplugin_9.linkUrl).toBe('http://google.com/'); 
+	});
 	
-});
+}, 20000); //big timeout for this one
 
 });

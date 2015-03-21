@@ -9,8 +9,6 @@ Listed from more important to less important - kind of:
  * support globs in nodejs API
 
  * remove asterix from package.json dependency versions
-
- * escape @ in text
  
  * markdown in Line comments 
 
@@ -30,8 +28,7 @@ Listed from more important to less important - kind of:
 all primary annotation rules (class, module,method, property) should be defined using this hooking api. so the jsdoc rules for this are defined in a readable json. 
 
 
-
- * (performance small) file by file change in shortjsdoc.js really make things slow, let pass a --single-file argument to do things in a single file (much more quick)
+ * (performance - small) file by file change in shortjsdoc.js really make things slow, let pass a --single-file argument to do things in a single file (much more quick)
  
 
  * (feature - big) print java code, w links. define the Perspective concept - the current impl is a textual perspective and it is default. java shouold be another perspective. and also the treeview. Example url: /
@@ -42,13 +39,15 @@ all primary annotation rules (class, module,method, property) should be defined 
 
  * annotation names dont support mayus, i.e. @memberOf Apple wont work
 
- * @module @module.foo @module.bar - then , in the app module contains all the classes of @moule.foo and @module.bar - fix this in the ModuleView class
+ * issue app - @module @module.foo @module.bar - then , in the app module contains all the classes of @moule.foo and @module.bar - fix this in the ModuleView class
 
  * when navigating do scroll to top automatically
 
  * I as a user want to support custom name regex, for example I want to be able to write annotation names with characters like []
 
  * @param {Array<String>|Array<Apple>} is printing wrong - first is array of array of string
+
+ * make a refactor tool - it will read source code folders and perform type refactor like renaming a type.
 
 
  * ISSUE: Literal objects can contain other types like generics, but not viceversa, for example generics cannot contain literal types because they will break the syntax: this is ok: @param {cars:Array<Car>} - but this is wrong: @param {Array<{name:String}>} - syntax is broken - this should work @param {#obj(name:String)>}
@@ -188,7 +187,7 @@ From most important to less:
 
 ##DONES - 
 
-thigs moved here after solving - instead erasing it.
+things moved here after solving - instead erasing it.
 
  * support comments like /** and in those remove ** prefix
  * project metainformaton from package.json file 
@@ -220,8 +219,8 @@ Extends Object{prototype: prototype} - types are printing wrong.
 
  * make jsdoc for javascript objects liek with methods, etc and offer the possibility to use that information jsdocs instead links to the nativemozilla document like now. This gives the possibility to really see all js attributes inherited from js api.  <---- this is done  and going tasks to document some known apis like javascript, html/xml dom, jqueyr, backbone, etc
 
-
  * inherited events and inherited attributes
+ * escape @ in text
 
  --- Dones will be continued in Changelist.md
 

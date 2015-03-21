@@ -14,4 +14,7 @@ require('./comment-indentation.js');
 require('./text-marks.js');
 require('./text-marks-references.js');
 
+require('./recurse-plugin-containers.js');
+require('./escape-at.js');
+
 module.exports = JsDocMaker; 

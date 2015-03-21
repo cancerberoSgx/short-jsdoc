@@ -178,9 +178,8 @@ JsDocMaker.prototype.postProccessBinding = function()
 		}; 
 		_(c.properties).each(propertySetup);
 		_(c.events).each(propertySetup);
-		_(c.attributes).each(propertySetup);
-
-		
-		self.afterTypeBindingPlugins.execute({jsdocmaker: self});
+		_(c.attributes).each(propertySetup);		
 	});
+
+	self.afterTypeBindingPlugins.execute({jsdocmaker: self});
 };

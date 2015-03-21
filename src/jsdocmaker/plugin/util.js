@@ -87,3 +87,12 @@ JsDocMaker.recurseType = function(type, fn)
 
 	fn(type); 
 }; 
+
+
+JsDocMaker.prototype.getUnique = function(prefix)
+{
+	this.counter = this.counter || 0;
+	prefix = prefix || ''; 
+	this.counter++;
+	return prefix + this.counter;
+}
