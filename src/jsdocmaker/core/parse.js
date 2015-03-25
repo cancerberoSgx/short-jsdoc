@@ -105,11 +105,11 @@ JsDocMaker.prototype.parse = function(comments)
 	this.data.modules = this.data.modules || {}; 
 	this.data.files = this.data.files || {}; 
 
-	self.primaryAnnotations = {
-		'module': {
-			name: 'module', description: 'modules contain classes'
-		}
-	}; 
+	// self.primaryAnnotations = {
+	// 	'module': {
+	// 		name: 'module', description: 'modules contain classes'
+	// 	}
+	// }; 
 
 	self.allCommentPreprocessorPlugins.execute({node: self.comments, jsdocMaker: self}); 
 

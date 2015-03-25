@@ -79,7 +79,7 @@ JsDocMaker.prototype.parseSingleTypeString = function(typeStr, baseClass)
 				}
 				catch(ex)
 				{
-					self.error('Invalid Custom Type: '+typeString, ', baseClass: ', JSON.stringify(baseClass)); 
+					self.error('Invalid Custom Type: '+typeString, ', baseClass: ', (baseClass && baseClass.absoluteName)); 
 				}				
 			}
 		}
@@ -98,7 +98,7 @@ JsDocMaker.prototype.parseSingleTypeString = function(typeStr, baseClass)
 			}
 			catch(ex)
 			{
-				self.error('Invalid Type: '+typeString, ', baseClass: ', JSON.stringify(baseClass)); 
+				self.error('Invalid Type: '+typeString, ', baseClass: ', (baseClass && baseClass.absoluteName)); 
 			}	
 		}
 
@@ -116,7 +116,7 @@ JsDocMaker.prototype.parseSingleTypeString = function(typeStr, baseClass)
 			}
 			catch(ex)
 			{
-				self.error('Invalid Type: '+typeString, ', baseClass: ', JSON.stringify(baseClass)); 
+				self.error('Invalid Type: '+typeString, ', baseClass: ', (baseClass && baseClass.absoluteName)); 
 			}	
 		}
 

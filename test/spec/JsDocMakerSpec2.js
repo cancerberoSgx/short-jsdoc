@@ -1,28 +1,36 @@
 
-describe("escape-at", function() 
+describe("respect original comment indentation", function() 
 {
 
-	it("escape @ using @@ in text", function() 
+	it("that", function() 
 	{
 		var jsdoc, maker; 
 		var code = 
-			'/*@module mymodule this module text contains some "at" characters ' + 
-			'one: @@, two: @@@@, three @@@@@@, four: @@@@@@@@' + '\n' +
-			'@class C @@ @@@@ @@@@@@ @@@@@@@@' + '\n' +
-			'@property C @@ @@@@ @@@@@@ @@@@@@@@' + '\n' +
-			'@method m @@thisisnotanannotation' + '\n' +
-			'*/';
+			'\t\t\t/*' + '\n' +
+			'\t\t\t@module a' + '\n' +
+			'\t\t\tSome text here' + '\n' +
+			'\t\t\t\tfunction f(){' + '\n' +
+			'\t\t\t\t\tvar a = [ ' + '\n' +
+			'\t\t\t\t\t\t1.2' + '\n' +
+			'\t\t\t\t\t,\t1.3' + '\n' +
+			'\t\t\t\t\t,\t1.4' + '\n' +
+			'\t\t\t\t\t};  ' + '\n' +
+			'\t\t\t\t}' + '\n' +
+			'\t\t\t*/ ' + '\n' +
+			'';
 
 		maker = new JsDocMaker();
+		
+		
 		maker.addFile(code, 'name.js');
+
+
 		jsdoc = maker.jsdoc();
 		maker.postProccess();
 		maker.postProccessBinding();
 
-		expect(jsdoc.modules['mymodule'].text).toBe('this module text contains some "at" characters one: @, two: @@, three @@@, four: @@@@'); 
-		expect(jsdoc.classes['mymodule.C'].text).toBe('@ @@ @@@ @@@@'); 
-		expect(jsdoc.classes['mymodule.C'].methods.m.text).toBe('@thisisnotanannotation'); 
-		expect(jsdoc.classes['mymodule.C'].properties.C.text).toBe('@ @@ @@@ @@@@'); 
+		expect(jsdoc.modules['a'].text).toBe('Some text here\n	function f(){\n		var a = [ \n			1.2\n		,	1.3\n		,	1.4\n		};  \n	}'); 
+
 	});
 
 });

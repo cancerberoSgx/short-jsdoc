@@ -77,7 +77,7 @@ var unifyLineCommentsPlugin = {
 		,	jsdocMaker = options.jsdocMaker; 
 	
 		//@property {String} lineCommentSeparator used to separate each Line comment type text @static
-		jsdocMaker.lineCommentSeparator = jsdocMaker.lineCommentSeparator || ' '; 
+		jsdocMaker.lineCommentSeparator = jsdocMaker.lineCommentSeparator || '\n';//'line_comment_sep_'+jsdocMaker.getUnique(); //;jsdocMaker.lineCommentSeparator || '\n'; 
 
 		while(i < comments.length - 1)
 		{

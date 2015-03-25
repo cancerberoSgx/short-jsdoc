@@ -9,7 +9,7 @@ var JsDocMaker = require('../core/class');
 var _ = require('underscore'); 
 
 
-//@class AliasBeforeParseNodePlugin @extends JsDocMakerPlugin a plugin executed at beforeParseNodePlugins. 
+//@class commentIndentationPlugin @extends JsDocMakerPlugin a plugin executed at beforeParseNodePlugins. 
 var commentIndentationPlugin = {
 
 	name: 'commentIndentation'
@@ -29,17 +29,30 @@ var commentIndentationPlugin = {
 		{
 			prefix = result[0];
 
+			var a = options.node.text.split('\n'), output = [];;
+			_(a).each(function(line)
+			{
+				var repl = line.replace(new RegExp('^'+prefix), ''); 
+				// console.log(line, repl); 
+				output.push(repl);
+			}); 
+
 			// TODO we are ssumming files have unix end to line. we should pre process all commments first. 
-			options.node.text = replaceAll('\n' + options.node.text, prefix, '\n'); 
+			options.node.text = output.join('\n');//replaceAll('\n' + options.node.text, prefix, ''); 
 		}	
 	}
 }
 JsDocMaker.prototype.afterParseNodePlugins.add(commentIndentationPlugin); 
 
 
-function escapeRegExp(string) {
-    return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
-}
-function replaceAll(string, find, replace) {
-  return string.replace(new RegExp(escapeRegExp(find), 'g'), replace);
-}
+// function escapeRegExp(string) 
+// {
+//     return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+// }
+// function replaceAll(string, find, replace) 
+// {
+// 	var r = new RegExp(escapeRegExp(find), 'g');
+// 	debugger;
+// 	console.log(r)
+// 	return string.replace(r, replace);
+// }

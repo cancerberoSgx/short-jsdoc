@@ -1618,7 +1618,7 @@ JsDocMaker.prototype.parseSingleTypeString = function(typeStr, baseClass)
 				}
 				catch(ex)
 				{
-					self.error('Invalid Custom Type: '+typeString, ', baseClass: ', JSON.stringify(baseClass)); 
+					self.error('Invalid Custom Type: '+typeString, ', baseClass: ', (baseClass && baseClass.absoluteName)); 
 				}				
 			}
 		}
@@ -1637,7 +1637,7 @@ JsDocMaker.prototype.parseSingleTypeString = function(typeStr, baseClass)
 			}
 			catch(ex)
 			{
-				self.error('Invalid Type: '+typeString, ', baseClass: ', JSON.stringify(baseClass)); 
+				self.error('Invalid Type: '+typeString, ', baseClass: ', (baseClass && baseClass.absoluteName)); 
 			}	
 		}
 
@@ -1655,7 +1655,7 @@ JsDocMaker.prototype.parseSingleTypeString = function(typeStr, baseClass)
 			}
 			catch(ex)
 			{
-				self.error('Invalid Type: '+typeString, ', baseClass: ', JSON.stringify(baseClass)); 
+				self.error('Invalid Type: '+typeString, ', baseClass: ', (baseClass && baseClass.absoluteName)); 
 			}	
 		}
 
@@ -1984,11 +1984,11 @@ JsDocMaker.prototype.parse = function(comments)
 	this.data.modules = this.data.modules || {}; 
 	this.data.files = this.data.files || {}; 
 
-	self.primaryAnnotations = {
-		'module': {
-			name: 'module', description: 'modules contain classes'
-		}
-	}; 
+	// self.primaryAnnotations = {
+	// 	'module': {
+	// 		name: 'module', description: 'modules contain classes'
+	// 	}
+	// }; 
 
 	self.allCommentPreprocessorPlugins.execute({node: self.comments, jsdocMaker: self}); 
 
@@ -2599,7 +2599,7 @@ var unifyLineCommentsPlugin = {
 		,	jsdocMaker = options.jsdocMaker; 
 	
 		//@property {String} lineCommentSeparator used to separate each Line comment type text @static
-		jsdocMaker.lineCommentSeparator = jsdocMaker.lineCommentSeparator || ' '; 
+		jsdocMaker.lineCommentSeparator = jsdocMaker.lineCommentSeparator || '\n';//'line_comment_sep_'+jsdocMaker.getUnique(); //;jsdocMaker.lineCommentSeparator || '\n'; 
 
 		while(i < comments.length - 1)
 		{
@@ -3438,7 +3438,7 @@ var JsDocMaker = require('../core/class');
 var _ = require('underscore'); 
 
 
-//@class AliasBeforeParseNodePlugin @extends JsDocMakerPlugin a plugin executed at beforeParseNodePlugins. 
+//@class commentIndentationPlugin @extends JsDocMakerPlugin a plugin executed at beforeParseNodePlugins. 
 var commentIndentationPlugin = {
 
 	name: 'commentIndentation'
@@ -3458,20 +3458,33 @@ var commentIndentationPlugin = {
 		{
 			prefix = result[0];
 
+			var a = options.node.text.split('\n'), output = [];;
+			_(a).each(function(line)
+			{
+				var repl = line.replace(new RegExp('^'+prefix), ''); 
+				// console.log(line, repl); 
+				output.push(repl);
+			}); 
+
 			// TODO we are ssumming files have unix end to line. we should pre process all commments first. 
-			options.node.text = replaceAll('\n' + options.node.text, prefix, '\n'); 
+			options.node.text = output.join('\n');//replaceAll('\n' + options.node.text, prefix, ''); 
 		}	
 	}
 }
 JsDocMaker.prototype.afterParseNodePlugins.add(commentIndentationPlugin); 
 
 
-function escapeRegExp(string) {
-    return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
-}
-function replaceAll(string, find, replace) {
-  return string.replace(new RegExp(escapeRegExp(find), 'g'), replace);
-}
+// function escapeRegExp(string) 
+// {
+//     return string.replace(/([.*+?^=!:${}()|\[\]\/\\])/g, "\\$1");
+// }
+// function replaceAll(string, find, replace) 
+// {
+// 	var r = new RegExp(escapeRegExp(find), 'g');
+// 	debugger;
+// 	console.log(r)
+// 	return string.replace(r, replace);
+// }
 
 },{"../core/class":3,"underscore":1}],15:[function(require,module,exports){
 var _ = require('underscore'); 

@@ -46,3 +46,4 @@
  * PluginContainer priorization
  * escape-at plugin : escape @ from text by using @@
  * recurse-plugin-containers (abstract) plugin 
+ * fixed issue with respect-comment-indentation plugin
