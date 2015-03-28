@@ -1,37 +1,43 @@
 <% var metadata = this.application.data.projectMetadata; %>
 <header class="main-header">
-	<div class="row">
-
-		<!-- <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> -->
-		<span class="col-sm-5 col-xs-12">
-			<span class="dropdown">
-				<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
-				<%= (metadata && metadata.name) ||  'short-jsdoc demo' %>
-				<span class="caret"></span>
-				</button>
-				<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
-					
-					<li role="presentation"><a role="menuitem" tabindex="-1" href="#index">Index</a></li>					
-					<li role="presentation"><a role="menuitem" tabindex="-1" href="#tree">Full Abstract Syntax Tree</a></li>
-					<li role="presentation"><a role="menuitem" tabindex="-1" href="#parse">Parse your code !</a></li>
-					<li role="presentation" class="divider"></li>
-					<li role="presentation"><a role="menuitem" tabindex="-1" href="https://github.com/cancerberoSgx/short-jsdoc">short-jsdoc home page</a></li>
-					<li role="presentation"><a role="menuitem" tabindex="-1" href="../test/SpecRunner.html">Run short-jsdoc Specs</a></li>
-
-				</ul>.
-				
-			</span>		
-		</span>
-
-		<!-- <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> -->
-		<span class="col-sm-7 col-xs-12">
-			<span class="main-search pull-right">
-			<a role="menuitem" tabindex="-1" href="#index">Index</a>
-				Search <input class="typeahead1">
-			</span>		
-		</span>
+<div class="row">
 
 
-	</div>
+<!-- <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> -->
+<span class="col-sm-5 col-xs-12">
+	<span class="dropdown">
+		<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">
+		<%= (metadata && metadata.name) ||  'short-jsdoc demo' %>
+		<span class="caret"></span>
+		</button>
+		<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">
+			
+			<li role="presentation"><a role="menuitem" href="#index">Index</a></li>
 
+			<li role="presentation"><a role="menuitem" href="#tree">Full Abstract Syntax Tree</a></li>	
+
+			<li role="presentation"><a role="menuitem" href="#search?keywords=Array&propsReferencingType=1">Search type references</a></li>
+
+			<li role="presentation"><a role="menuitem" href="#parse">Parse your code !</a></li>
+
+			<li role="presentation" class="divider"></li>
+
+			<li role="presentation"><a role="menuitem" href="https://github.com/cancerberoSgx/short-jsdoc">short-jsdoc home page</a></li>
+			<li role="presentation"><a role="menuitem" href="../test/SpecRunner.html">Run short-jsdoc Specs</a></li>
+
+		</ul>.
+		
+	</span>		
+</span>
+
+<!-- <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> -->
+<span class="col-sm-7 col-xs-12">
+	<span class="main-search pull-right">
+	<a role="menuitem" href="#index">Index</a>
+		Search <input class="typeahead1">
+	</span>		
+</span>
+
+
+</div>
 </header>

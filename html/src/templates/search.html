@@ -1,0 +1,16 @@
+<h2>Query:</h2>
+
+<form data-type="search-form">
+	<p>Keywords: <input name="keywords" value="<%=this.query.keywords%>"></input></p>
+	<p><input name="propsReferencingType" type="checkbox" <%= this.query.propsReferencingType ? 'checked' : '' %> value="<%=this.query.keywords%>"></input> properties referencing given type name</p>
+	<button data-action="search">Search</button>
+</form>
+
+<h2>Results</h2>
+
+<p><%= this.results ? '' : 'Searching... please wait.'%></p>
+<ul>
+<%_(this.results).each(function(result) { %>
+	<li> <a href="<%= result.url %>"> <%= result.label %> </a> </li>
+<% }); %>
+</ul>

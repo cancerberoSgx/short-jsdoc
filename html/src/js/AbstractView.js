@@ -50,6 +50,10 @@ var AbstractView = Backbone.View.extend({
 
 ,	renderSource_: function(jsdoc, $container)
 	{
+		if(!jsdoc.commentRange)
+		{
+			return ; //this view doesn't have a related jsdoc - don't need this feature.
+		}
 		var view = new SourcesView(this.application, jsdoc); 
 		view.fileNameUrl = encodeURIComponent(this.jsdoc.fileName); this.jsdoc.fileName.replace(/[\\\/]/g, '_'); 
 		view.renderIn($container); 

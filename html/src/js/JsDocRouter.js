@@ -25,6 +25,10 @@ var JsDocRouter = Backbone.Router.extend({
 
 	,	'file/:file': 'showFile'
 	,	'file/:file?:options': 'showFile'
+
+
+	,	'search': 'doSearch'
+	,	'search/:options': 'doSearch'
 	}
 
 ,	initialize: function(application) 
@@ -120,6 +124,17 @@ var JsDocRouter = Backbone.Router.extend({
 		view.template = 'classes';
 		this.showView(view);
 	}
+
+	//@method search  @param {String} options
+,	doSearch: function(optionsStr)
+	{
+		var options = this.parseOptions(optionsStr||''); 
+		var view = new SearchView(this.application, options);
+		this.showView(view); 
+	}
+
+	
+
 	
 	//@method showIndex
 ,	showIndex: function() 

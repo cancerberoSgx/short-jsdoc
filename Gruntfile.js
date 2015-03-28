@@ -14,6 +14,7 @@ var uglifyFiles = [
 ,	'html/src/js/HeaderView.js'
 ,	'html/src/js/TreeView.js'
 ,	'html/src/js/FileView.js'
+,	'html/src/js/SearchView.js'
 ];
 
 var uglifyLibFiles = [
