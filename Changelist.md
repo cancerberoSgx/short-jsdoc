@@ -48,3 +48,4 @@
  * recurse-plugin-containers (abstract) plugin 
  * fixed issue with respect-comment-indentation plugin
  * search by type page - /search page introduced.
+ * known subclasses

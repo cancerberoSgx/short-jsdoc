@@ -172,6 +172,28 @@ var self = this;
 
 	<div class="col-md-7">
 
+		<% if(this.hierarchy && this.hierarchy.length>1) {%>
+		<div class="class-hierarchy">
+		<h3>Class Hierarchy</h3>
+		<ul>
+		<% _(this.hierarchy).each(function(c){ %>
+			<li><a href="<%= self.makeLink(c)%>"><%= c.name %></a></li>
+		<% }); %>
+		<%}%>
+		</ul>
+		</div>
+
+		<% if(this.knownSubclasses) {%>
+		<div class="class-hierarchy">
+		<h3>Known Subclasses</h3>
+		<ul>
+		<% _(this.knownSubclasses).each(function(c){ %>
+			<li><a href="<%= self.makeLink(c)%>"><%= c.name %></a></li>
+		<% }); %>
+		<%}%>
+		</ul>
+		</div>
+		
 		<h3>Summary</h3>
 		
 		<div class="class-text">

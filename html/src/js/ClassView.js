@@ -28,7 +28,6 @@ var ClassView = AbstractView.extend({
 			this.methods = _(_(this.methods).clone()).extend(this.jsdoc.inherited.methods); 
 		}
 
-
 		// calculate properties, events and attributes inheritance information
 		this.properties = this.jsdoc.properties;
 		if(this.options.inherited)
@@ -46,17 +45,19 @@ var ClassView = AbstractView.extend({
 			this.attributes = _(_(this.attributes).clone()).extend(this.jsdoc.inherited.attributes); 
 			console.log('seba2', this.attributes )
 		}
+
+		this.hierarchy = this.computeHierarchy();
+		this.knownSubclasses = this.computeKnownSubclasses();
 	}
 
-/*
 ,	computeHierarchy: function()
 	{
 		var hierarchy = [];
 		var c = this.jsdoc;
 		do 
 		{
-			hierarchy = [c].concat(hierarchy);
-			if(c.name===this.jsdoc.name)
+			hierarchy.push(c);// = [c].concat(hierarchy);
+			if(c.extends.absoluteName===c.absoluteName)
 			{
 				break;
 			}
@@ -64,5 +65,19 @@ var ClassView = AbstractView.extend({
 		while( (c = c.extends) ); 
 		return hierarchy;
 	}
-*/
+
+,	computeKnownSubclasses: function()
+	{
+		var self = this;
+		var knownSubclasses = [];
+		_(this.application.data.classes).each(function(c)
+		{
+			if(c.extends.absoluteName === self.jsdoc.absoluteName)
+			{
+				knownSubclasses.push(c); 
+			}
+		}); 
+		return knownSubclasses; 
+	}
+
 });

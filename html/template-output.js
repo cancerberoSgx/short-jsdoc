@@ -182,7 +182,31 @@ __p += '\n\t\t\t</li>\n\t\t';
  }); ;
 __p += '\n\t\t</ul>\n\t\t';
  } ;
-__p += '\n\n\n\n\n\n\t</div>\n\n\t<div class="col-md-7">\n\n\t\t<h3>Summary</h3>\n\t\t\n\t\t<div class="class-text">\n\t\t' +
+__p += '\n\n\n\n\n\n\t</div>\n\n\t<div class="col-md-7">\n\n\t\t';
+ if(this.hierarchy && this.hierarchy.length>1) {;
+__p += '\n\t\t<div class="class-hierarchy">\n\t\t<h3>Class Hierarchy</h3>\n\t\t<ul>\n\t\t';
+ _(this.hierarchy).each(function(c){ ;
+__p += '\n\t\t\t<li><a href="' +
+((__t = ( self.makeLink(c))) == null ? '' : __t) +
+'">' +
+((__t = ( c.name )) == null ? '' : __t) +
+'</a></li>\n\t\t';
+ }); ;
+__p += '\n\t\t';
+};
+__p += '\n\t\t</ul>\n\t\t</div>\n\n\t\t';
+ if(this.knownSubclasses) {;
+__p += '\n\t\t<div class="class-hierarchy">\n\t\t<h3>Known Subclasses</h3>\n\t\t<ul>\n\t\t';
+ _(this.knownSubclasses).each(function(c){ ;
+__p += '\n\t\t\t<li><a href="' +
+((__t = ( self.makeLink(c))) == null ? '' : __t) +
+'">' +
+((__t = ( c.name )) == null ? '' : __t) +
+'</a></li>\n\t\t';
+ }); ;
+__p += '\n\t\t';
+};
+__p += '\n\t\t</ul>\n\t\t</div>\n\t\t\n\t\t<h3>Summary</h3>\n\t\t\n\t\t<div class="class-text">\n\t\t' +
 ((__t = ( this.jsdoc.textHtml || self.getTextHtml(this.jsdoc.text) || this.jsdoc.text || '' )) == null ? '' : __t) +
 '\n\t\t</div>\n\n\t\t<div data-type="sources"></div>\n\n\t</div>\n</div>\n';
 
