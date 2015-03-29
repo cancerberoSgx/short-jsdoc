@@ -2,8 +2,9 @@
 
 <p>Project <%= metaData.name%> contains #<%= _(this.application.data.modules).keys().length %> modules and #<%= _(this.application.data.classes).keys().length %> classes.</p>
 
-<table>
-	<% _(metaData).each(function(value, name) { %>
-	<tr><td class="metadata-name"><%= name%></td><td class="metadata-value"><%= _(value).isString() ? value : JSON.stringify(value)%></td></tr>
-	<% }); %>
-</table>
+<dl class="dl-horizontal">
+	<% _(metaData).each(function(value, name) { 
+		if(_(['name', 'description', 'author', 'license', 'version']).contains(name)) { %>
+	<dt class="metadata-name"><%= name%></dt><dd class="metadata-value"><%= _(value).isString() ? value : JSON.stringify(value)%></dd>
+	<% } } ); %>
+</dl>

@@ -11,6 +11,7 @@ if(typeof sentence === 'undefined')
 //@property {Object<String,User>} owners the owners, a map by owner id
 // @property {color:Color,amount:Number} something
 function BaseObject(){};
+// @method m @returns {Thing}
 
 //@class ObjectPool
 function ObjectPool(){};
@@ -49,7 +50,8 @@ if(typeof sentence === 'undefined')
 
 
 //@class Thing @extends BaseObject
-//@property {Number} importance
+//@property {Number} importance the importance of this thing in the universe
+// @property {ObjectPool} pool things always contain or are related to other things so this is the pool where this associations are mantained laskd flaks djflkasj dlkfj alsdkj flaksjd flkasjdlfkjs lkdfjalksdjflak sdjlfkasdf d s asdf  df ldkja sldkfj askd fasd. 
 
 var s = 'these are just js sample sentences'; 
 if(typeof sentence === 'undefined')

@@ -29,13 +29,19 @@ __p += '\n\t\t<h3 class="class-extends-title">Extends ' +
  } ;
 __p += '\n\t</div>\n\t<div class="col-md-4">\n\t\t<h3 class="class-module-title">Module ' +
 ((__t = ( this.makeLink(this.jsdoc.module, true) )) == null ? '' : __t) +
-'</h3>\n\t</div>\n</div>\n\n\n<div class="pull-right"><a href="' +
+'</h3>\n\t</div>\n</div>\n\n\n<div class="pull-right">&nbsp;&nbsp;<a href="' +
 ((__t = ( this.makeLink(this.jsdoc) )) == null ? '' : __t) +
 '?inherited=' +
 ((__t = ( this.options.inherited ? 0 : 1 )) == null ? '' : __t) +
 '">' +
 ((__t = ( this.options.inherited ? 'Hide' : 'Show' )) == null ? '' : __t) +
-' inherited properties</a></div>\n\n\n\n<!-- <h3>Summary</h3> -->\n';
+' inherited properties</a></div>\n\n<div class="pull-right">&nbsp;&nbsp;<a href="' +
+((__t = ( this.makeLink(this.jsdoc) )) == null ? '' : __t) +
+'?text=' +
+((__t = ( this.options.text ? 0 : 1 )) == null ? '' : __t) +
+'">' +
+((__t = ( this.options.text ? 'Hide' : 'Show' )) == null ? '' : __t) +
+' partial text</a></div>\n\n\n<!-- <h3>Summary</h3> -->\n';
  var template = this.application.templates.classSummary;;
 __p += '\n' +
 ((__t = ( template.apply(this, arguments) )) == null ? '' : __t) +
@@ -85,7 +91,13 @@ __p += '\n\t\t\t<li class="property ' +
 ((__t = ( self.printTypeAsString(p.type) )) == null ? '' : __t) +
 '</span> \n\t\t\t\t' +
 ((__t = ( !inherited ? '' : ('(inherited by ' + self.printTypeAsString(inheritedBy) + ')') )) == null ? '' : __t) +
-'\n\t\t\t</li>\n\t\t';
+'\n\t\t\t\t';
+ if (self.options.text) {;
+__p += ' <span class="partial-text">' +
+((__t = ( self.makePartialText(p))) == null ? '' : __t) +
+'</span>';
+ };
+__p += '\n\t\t\t</li>\n\t\t';
  }); ;
 __p += '\n\t\t</ul>\n\t\t';
  } ;
@@ -112,11 +124,17 @@ __p += '\n\t\t\t<li class="attribute ' +
 ((__t = ( self.printTypeAsString(p.type) )) == null ? '' : __t) +
 '</span> \n\t\t\t\t' +
 ((__t = ( !inherited ? '' : ('(inherited by ' + self.printTypeAsString(inheritedBy) + ')') )) == null ? '' : __t) +
-'\n\t\t\t</li>\n\t\t';
+'\n\t\t\t\t';
+ if (self.options.text) {;
+__p += ' <span class="partial-text">' +
+((__t = ( self.makePartialText(p))) == null ? '' : __t) +
+'</span>';
+ };
+__p += '\n\t\t\t</li>\n\t\t';
  }); ;
 __p += '\n\t\t</ul>\n\t\t';
  } ;
-__p += '\n\n\t\t';
+__p += '\n\n\n\n\t\t';
  if(this.events && _(this.events).keys().length) {;
 __p += '\n\t\t<h3 class=\'events\'>Events</h3>\n\t\t<ul>\n\t\t';
  
@@ -139,11 +157,17 @@ __p += '\n\t\t\t<li class="event ' +
 ((__t = ( self.printTypeAsString(p.type) )) == null ? '' : __t) +
 '</span> \n\t\t\t\t' +
 ((__t = ( !inherited ? '' : ('(inherited by ' + self.printTypeAsString(inheritedBy) + ')') )) == null ? '' : __t) +
-'\n\t\t\t</li>\n\t\t';
+'\n\t\t\t\t';
+ if (self.options.text) {;
+__p += ' <span class="partial-text">' +
+((__t = ( self.makePartialText(p))) == null ? '' : __t) +
+'</span>';
+ };
+__p += '\n\t\t\t</li>\n\t\t';
  }); ;
 __p += '\n\t\t</ul>\n\t\t';
  } ;
-__p += '\n\n\n\n\n\n\t\t';
+__p += '\n\n\n\n\n\t\t';
  if(this.methods && _(this.methods).keys().length) { ;
 __p += '\n\t\t<h3 class=\'methods\'>Methods</h3>\n\t\t<ul>\n\t\t';
 
@@ -178,25 +202,31 @@ __p += '\n\t\t\t\tReturns: ' +
 ((__t = ( method.returns.text || '')) == null ? '' : __t) +
 '</span> -->\n\t\t\t\t';
  } ;
+__p += '\n\n\t\t\t\t';
+ if (self.options.text) {;
+__p += ' <span class="partial-text">' +
+((__t = ( self.makePartialText(method))) == null ? '' : __t) +
+'</span>';
+ };
 __p += '\n\t\t\t</li>\n\t\t';
  }); ;
 __p += '\n\t\t</ul>\n\t\t';
  } ;
 __p += '\n\n\n\n\n\n\t</div>\n\n\t<div class="col-md-7">\n\n\t\t';
- if(this.hierarchy && this.hierarchy.length>1) {;
+ if(this.hierarchy && this.hierarchy.length>2) {;
 __p += '\n\t\t<div class="class-hierarchy">\n\t\t<h3>Class Hierarchy</h3>\n\t\t<ul>\n\t\t';
- _(this.hierarchy).each(function(c){ ;
-__p += '\n\t\t\t<li><a href="' +
+ _(_(this.hierarchy).reverse()).each(function(c){ ;
+__p += '\n\t\t\t<li>&gt;&nbsp;<a href="' +
 ((__t = ( self.makeLink(c))) == null ? '' : __t) +
 '">' +
 ((__t = ( c.name )) == null ? '' : __t) +
 '</a></li>\n\t\t';
  }); ;
-__p += '\n\t\t';
+__p += '\n\t\t</ul>\n\t\t</div>\n\t\t';
 };
-__p += '\n\t\t</ul>\n\t\t</div>\n\n\t\t';
- if(this.knownSubclasses) {;
-__p += '\n\t\t<div class="class-hierarchy">\n\t\t<h3>Known Subclasses</h3>\n\t\t<ul>\n\t\t';
+__p += '\n\n\t\t';
+ if(this.knownSubclasses && this.knownSubclasses.length) {;
+__p += '\n\t\t<!-- <button data-toggle="collapse" data-tagrget=".known-subclasses-list">collapse</button> -->\n\t\t<div class="known-subclasses">\n\t\t<h3>Known Subclasses</h3>\n\t\t<ul class="known-subclasses-list">\t\n\t\t';
  _(this.knownSubclasses).each(function(c){ ;
 __p += '\n\t\t\t<li><a href="' +
 ((__t = ( self.makeLink(c))) == null ? '' : __t) +
@@ -204,11 +234,19 @@ __p += '\n\t\t\t<li><a href="' +
 ((__t = ( c.name )) == null ? '' : __t) +
 '</a></li>\n\t\t';
  }); ;
-__p += '\n\t\t';
+__p += '\n\t\t</ul>\n\t\t</div>\n\t\t';
 };
-__p += '\n\t\t</ul>\n\t\t</div>\n\t\t\n\t\t<h3>Summary</h3>\n\t\t\n\t\t<div class="class-text">\n\t\t' +
-((__t = ( this.jsdoc.textHtml || self.getTextHtml(this.jsdoc.text) || this.jsdoc.text || '' )) == null ? '' : __t) +
-'\n\t\t</div>\n\n\t\t<div data-type="sources"></div>\n\n\t</div>\n</div>\n';
+__p += '\n\n\t\t<p><a href="#search?keywords=' +
+((__t = ( this.jsdoc.absoluteName)) == null ? '' : __t) +
+'&propsReferencingType=1">Search Class Usage</a></p>\n\t\t\n\t\t';
+ var summary_text = this.jsdoc.textHtml || self.getTextHtml(this.jsdoc.text) || this.jsdoc.text || ''; ;
+__p += '\n\n\t\t';
+ if(summary_text) {;
+__p += '\n\t\t<h3>Summary</h3>\n\t\t\n\t\t<div class="class-text">\n\t\t' +
+((__t = ( summary_text )) == null ? '' : __t) +
+'\n\t\t</div>\n\t\t';
+ } ;
+__p += '\n\n\t\t<div data-type="sources"></div>\n\n\t</div>\n</div>\n';
 
 }
 return __p
@@ -462,15 +500,16 @@ __p += '\n\n<p>Project ' +
 ((__t = ( _(this.application.data.modules).keys().length )) == null ? '' : __t) +
 ' modules and #' +
 ((__t = ( _(this.application.data.classes).keys().length )) == null ? '' : __t) +
-' classes.</p>\n\n<table>\n\t';
- _(metaData).each(function(value, name) { ;
-__p += '\n\t<tr><td class="metadata-name">' +
+' classes.</p>\n\n<dl class="dl-horizontal">\n\t';
+ _(metaData).each(function(value, name) { 
+		if(_(['name', 'description', 'author', 'license', 'version']).contains(name)) { ;
+__p += '\n\t<dt class="metadata-name">' +
 ((__t = ( name)) == null ? '' : __t) +
-'</td><td class="metadata-value">' +
+'</dt><dd class="metadata-value">' +
 ((__t = ( _(value).isString() ? value : JSON.stringify(value))) == null ? '' : __t) +
-'</td></tr>\n\t';
- }); ;
-__p += '\n</table>\n';
+'</dd>\n\t';
+ } } ); ;
+__p += '\n</dl>\n';
 
 }
 return __p

@@ -16,8 +16,6 @@ var SearchView = AbstractView.extend({
 		this.application = application;
 		this.jsdoc = this.application.data;
 
-		console.log('init', options); 
-
 		var self = this;
 		// @property {SearchView.Query} query;
 		this.query = options; 

@@ -127,6 +127,11 @@
 '    border:1px solid #94a0b4;\n'+
 '    color:#000\n'+
 '}\n'+*/
+.class-hierarchy ul li,
+.known-subclasses ul li {
+  display: inline;
+  padding-left: 8px;
+}
 /*types */
 .external .glyphicon {
   /*padding-left: 5px;*/
