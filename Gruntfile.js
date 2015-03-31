@@ -12,9 +12,12 @@ var uglifyFiles = [
 ,	'html/src/js/ParseView.js'
 ,	'html/src/js/ApplicationView.js'
 ,	'html/src/js/HeaderView.js'
-,	'html/src/js/TreeView.js'
 ,	'html/src/js/FileView.js'
 ,	'html/src/js/SearchView.js'
+,	'html/src/js/AbstractTreeView.js'
+,	'html/src/js/TreeView.js'
+,	'html/src/js/HierarchyTreeView.js'
+
 ];
 
 var uglifyLibFiles = [
@@ -35,8 +38,7 @@ var uglifyLibFiles = [
 
 module.exports = function (grunt) {
 
-	require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);
-	
+	require('matchdep').filterDev('grunt-*').forEach(grunt.loadNpmTasks);	
 
 	grunt.initConfig({
 

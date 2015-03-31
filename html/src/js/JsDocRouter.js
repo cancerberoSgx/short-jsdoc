@@ -22,6 +22,7 @@ var JsDocRouter = Backbone.Router.extend({
 	,	'parse': 'showParse'
 
 	,	'tree': 'showTree'
+	,	'hierarchyTree': 'showHierarchyTree'
 
 	,	'file/:file': 'showFile'
 	,	'file/:file?:options': 'showFile'
@@ -143,12 +144,19 @@ var JsDocRouter = Backbone.Router.extend({
 		this.application.showView(view); 
 	}
 
-	//@method showIndex
+	//@method showTree
 ,	showTree: function()
 	{		
 		var view = new TreeView(this.application);
 		this.application.showView(view); 
 	}
+
+	//@method showHierarchyTree
+,	showHierarchyTree: function()
+	{		
+		var view = new HierarchyTreeView(this.application);
+		this.application.showView(view); 
+	}	
 
 	//@method showParse
 ,	showParse: function() 

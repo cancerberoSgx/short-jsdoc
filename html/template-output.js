@@ -278,7 +278,7 @@ function print() { __p += __j.call(arguments, '') }
 with (obj) {
 
  var data = this.application.data; ;
-__p += '\n\n<h3><a href="#classes">Classes</a></h3>\n<ul>\n';
+__p += '\n\n<h3><a href="#classes">Classes</a></h3>\n\n\n<ul>\n';
  _(data.classes).each(function(c) { ;
 __p += '\n\t<li><a href="#class/' +
 ((__t = ( c.absoluteName )) == null ? '' : __t) +
@@ -286,7 +286,7 @@ __p += '\n\t<li><a href="#class/' +
 ((__t = ( c.name )) == null ? '' : __t) +
 '</a></li>\n';
  }); ;
-__p += '\n</ul>';
+__p += '\n</ul>\n';
 
 }
 return __p
@@ -315,7 +315,22 @@ with (obj) {
  var metadata = this.application.data.projectMetadata; ;
 __p += '\n<header class="main-header">\n<div class="row">\n\n\n<!-- <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> -->\n<span class="col-sm-5 col-xs-12">\n\t<span class="dropdown">\n\t\t<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">\n\t\t' +
 ((__t = ( (metadata && metadata.name) ||  'short-jsdoc demo' )) == null ? '' : __t) +
-'\n\t\t<span class="caret"></span>\n\t\t</button>\n\t\t<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">\n\t\t\t\n\t\t\t<li role="presentation"><a role="menuitem" href="#index">Index</a></li>\n\n\t\t\t<li role="presentation"><a role="menuitem" href="#tree">Full Abstract Syntax Tree</a></li>\t\n\n\t\t\t<li role="presentation"><a role="menuitem" href="#search?keywords=Array&propsReferencingType=1">Search type references</a></li>\n\n\t\t\t<li role="presentation"><a role="menuitem" href="#parse">Parse your code !</a></li>\n\n\t\t\t<li role="presentation" class="divider"></li>\n\n\t\t\t<li role="presentation"><a role="menuitem" href="https://github.com/cancerberoSgx/short-jsdoc">short-jsdoc home page</a></li>\n\t\t\t<li role="presentation"><a role="menuitem" href="../test/SpecRunner.html">Run short-jsdoc Specs</a></li>\n\n\t\t</ul>.\n\t\t\n\t</span>\t\t\n</span>\n\n<!-- <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> -->\n<span class="col-sm-7 col-xs-12">\n\t<span class="main-search pull-right">\n\t<a role="menuitem" href="#index">Index</a>\n\t\tSearch <input class="typeahead1">\n\t</span>\t\t\n</span>\n\n\n</div>\n</header>';
+'\n\t\t<span class="caret"></span>\n\t\t</button>\n\t\t<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">\n\t\t\t\n\t\t\t<li role="presentation"><a role="menuitem" href="#index">Index</a></li>\n\n\t\t\t<li role="presentation"><a role="menuitem" href="#tree">Full Abstract Syntax Tree</a></li>\t\n\n\t\t\t<li role="presentation"><a role="menuitem" href="#hierarchyTree">Class Hierarchy Tree</a></li>\t\n\n\t\t\t<li role="presentation"><a role="menuitem" href="#search?keywords=Array&propsReferencingType=1">Search type references</a></li>\n\n\t\t\t<li role="presentation"><a role="menuitem" href="#parse">Parse your code !</a></li>\n\n\t\t\t<li role="presentation" class="divider"></li>\n\n\t\t\t<li role="presentation"><a role="menuitem" href="https://github.com/cancerberoSgx/short-jsdoc">short-jsdoc home page</a></li>\n\t\t\t<li role="presentation"><a role="menuitem" href="../test/SpecRunner.html">Run short-jsdoc Specs</a></li>\n\n\t\t</ul>.\n\t\t\n\t</span>\t\t\n</span>\n\n<!-- <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> -->\n<span class="col-sm-7 col-xs-12">\n\t<span class="main-search pull-right">\n\t<a role="menuitem" href="#index">Index</a>\n\t\tSearch <input class="typeahead1">\n\t</span>\t\t\n</span>\n\n\n</div>\n</header>';
+
+}
+return __p
+};
+
+this["shortjsdoc"]["hierarchytree"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+
+ var data = this.application.data; ;
+__p += '\n\n' +
+((__t = ( data.projectMetadata && this.application.templates['project-metadata'].apply(this, arguments) )) == null ? '' : __t) +
+'\n\n<h2>Class Hierarchy Tree</h2>\n\n<button data-action="expand-all">Expand all</button>\n\n<button data-action="collapse-all">Collapse all</button>\n\n<div class="the-tree"></div>\n';
 
 }
 return __p
@@ -330,7 +345,7 @@ with (obj) {
  var data = this.application.data; ;
 __p += '\n\n' +
 ((__t = ( data.projectMetadata && this.application.templates['project-metadata'].apply(this, arguments) )) == null ? '' : __t) +
-'\n\n<p>Take a look at the <a href="#tree">Full Abstract Syntax Tree (AST) View</a></p>\n\n' +
+'\n\n<p>Take a look at the <a href="#tree">Full Abstract Syntax Tree (AST) View</a></p>\n<p>Or to the <a href="#hierarchyTree">Full Class Hierarchy tree</a></p>\n\n' +
 ((__t = ( this.application.templates['modules'].apply(this, arguments) )) == null ? '' : __t) +
 '\n\n' +
 ((__t = ( this.application.templates['classes'].apply(this, arguments) )) == null ? '' : __t) +
@@ -452,22 +467,22 @@ with (obj) {
 __p += '<div class="modules">\n\n<h3><a href="#modules">Modules</a></h3>\n\n';
  var data = this.application.data; 
 var self = this; ;
-__p += '\n<ul>\n';
+__p += '\n<ul class="modules-list">\n';
  _(data.modules).each(function(moduleBody, moduleName) { ;
 __p += '\n\t<li class="modules-module"><a class=\'module-name\' href="#module/' +
 ((__t = ( moduleName )) == null ? '' : __t) +
 '">' +
 ((__t = ( moduleName )) == null ? '' : __t) +
-'</a>\n\t\t<ul>\n\t\t';
+'</a>\n\t\t<ul class="modules-classes-list">\n\t\t';
  
 		/* TODO: make a view */
 		var moduleClasses = self.getModuleClasses(moduleName, self.application.data); 
 		_(moduleClasses).each(function(c) { ;
-__p += '\n\t\t\t<li ><a class=\'class-name\' href="#class/' +
+__p += '\n\t\t\t<li class="modules-class"><a class=\'class-name\' href="#class/' +
 ((__t = ( c.absoluteName )) == null ? '' : __t) +
 '">' +
 ((__t = ( c.name )) == null ? '' : __t) +
-'</a></li>\n\t\t';
+'</a>, </li>\n\t\t';
  }); ;
 __p += '\n\t\t</ul>\n\t</li>\n';
  }); ;
@@ -596,7 +611,7 @@ with (obj) {
  var data = this.application.data; ;
 __p += '\n\n' +
 ((__t = ( data.projectMetadata && this.application.templates['project-metadata'].apply(this, arguments) )) == null ? '' : __t) +
-'\n\n<button data-action="expand-all">Expand all</button>\n\n<button data-action="collapse-all">Collapse all</button>\n\n<div class="the-tree"></div>\n';
+'\n\n<h2>Abstract Syntax Tree</h2>\n\n<p>From modules to classes and properties...</p>\n\n<button data-action="expand-all">Expand all</button>\n\n<button data-action="collapse-all">Collapse all</button>\n\n<div class="the-tree"></div>\n';
 
 }
 return __p
