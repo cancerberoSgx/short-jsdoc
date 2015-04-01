@@ -27,6 +27,9 @@ Listed from more important to less important - kind of:
 
 all primary annotation rules (class, module,method, property) should be defined using this hooking api. so the jsdoc rules for this are defined in a readable json. 
 
+ * @return {{a:1,b:2}}  - yes with 2 {{ like closure-compiler.
+
+ * @property @type plugin - to support closure compiler syntax.
 
  * (performance - small) file by file change in shortjsdoc.js really make things slow, let pass a --single-file argument to do things in a single file (much more quick)
  
@@ -80,8 +83,6 @@ all primary annotation rules (class, module,method, property) should be defined 
     //@module m @class c @property p1
     ....
     //@reference m.c.p1
-
- * (very ambitious) - make a nodejs api
  
  * //TODO: test if we can get correct source comment location relative to the @filename. all nodes should have it- we have the file name but we need information about string fragment of the file of the particular comment
 
@@ -94,9 +95,6 @@ all primary annotation rules (class, module,method, property) should be defined 
  
  * expand the module view to show the full module documentation - for example: http://lunrjs.com/docs/#lunr
 
- * @link preprocessed comment that is replaced by html or mardown link at preprocessing.
-
- 
  * There is no class / module composite support. Classes inside classes and submodules. There is no way of expressing 'module myapp contains module view that contains module home. Only artificially by naming convention, this is @module myapp @module myapp.view @module myapp.view.home
 
  * use zepto instead jquery in html app
@@ -131,7 +129,6 @@ all primary annotation rules (class, module,method, property) should be defined 
  
  * in the part of currentView, module etc of parsing put another plugin/hook container so we can take some action to modify the nodes in that current{View,Module,etc} context
 
- * support types like {String|HTMLElement|jQuery}
 
  * support two types of format for returns types, @return and @method {ReturnType} methodName
 
@@ -212,6 +209,9 @@ Backbone.View references will be renamed to BackboneView. Take in account that i
     @alias annotation task class
 now you can use @task and it will be replaced to @module !
 
+ * @link preprocessed comment that is replaced by html or mardown link at preprocessing - this was solved using text marks - like @?ref foo.Bar.method
+
+ * (very ambitious) - make a nodejs api
  * issue - injection, the html class view has this bug Class TerranObject
 Extends Object{prototype: prototype} - types are printing wrong.
 
@@ -219,6 +219,7 @@ Extends Object{prototype: prototype} - types are printing wrong.
 
  * make jsdoc for javascript objects liek with methods, etc and offer the possibility to use that information jsdocs instead links to the nativemozilla document like now. This gives the possibility to really see all js attributes inherited from js api.  <---- this is done  and going tasks to document some known apis like javascript, html/xml dom, jqueyr, backbone, etc
 
+ * support types like {String|HTMLElement|jQuery}
  * inherited events and inherited attributes
  * escape @ in text
 

@@ -437,7 +437,11 @@ obj || (obj = {});
 var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
-__p += '<h2 class="module-title">Module ' +
+
+ 
+var self = this;
+;
+__p += '\n\n<h2 class="module-title">Module ' +
 ((__t = ( this.jsdoc.name)) == null ? '' : __t) +
 '</h2>\n\n';
  if (this.jsdoc.text) { ;
@@ -447,11 +451,35 @@ __p += '\n<div class="method-text">\n\t' +
  };
 __p += '\n\n<h3>Classes</h3>\n\n<ul class="classes">\n';
  _(this.classes).each(function(c) { ;
-__p += '\n\t<li>\n\t\t<a href="#class/' +
+__p += '\n\t<li>\n\t\t<a class="module-class-name"href="#class/' +
 ((__t = ( c.absoluteName )) == null ? '' : __t) +
 '">' +
 ((__t = ( c.name )) == null ? '' : __t) +
-'</a>\t\t\n\t</li>\n';
+'</a>\t\t\n\n\t\t<ul class="module-class-properties-list">\n\t\t';
+ _(c.methods).each(function(m){ ;
+__p += '\n\t\t\t<li><a href="' +
+((__t = ( self.makeLink(m))) == null ? '' : __t) +
+'">' +
+((__t = ( m.name)) == null ? '' : __t) +
+'(), </a>\n\t\t';
+}) ;
+__p += '\n\t\t';
+ _(c.properties).each(function(m){ ;
+__p += '\n\t\t\t<li><a href="' +
+((__t = ( self.makeLink(m))) == null ? '' : __t) +
+'">' +
+((__t = ( m.name)) == null ? '' : __t) +
+', </a>\n\t\t';
+}) ;
+__p += '\n\t\t</ul>\n\t\t';
+ _(c.attributes).each(function(m){ ;
+__p += '\n\t\t\t<li><a href="' +
+((__t = ( self.makeLink(m))) == null ? '' : __t) +
+'">' +
+((__t = ( m.name)) == null ? '' : __t) +
+', </a>\n\t\t';
+}) ;
+__p += '\n\t\t</ul>\n\t</li>\n';
  }); ;
 __p += '\n</ul>';
 

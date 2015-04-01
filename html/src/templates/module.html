@@ -1,3 +1,7 @@
+<% 
+var self = this;
+%>
+
 <h2 class="module-title">Module <%= this.jsdoc.name%></h2>
 
 <% if (this.jsdoc.text) { %>
@@ -11,7 +15,20 @@
 <ul class="classes">
 <% _(this.classes).each(function(c) { %>
 	<li>
-		<a href="#class/<%= c.absoluteName %>"><%= c.name %></a>		
+		<a class="module-class-name"href="#class/<%= c.absoluteName %>"><%= c.name %></a>		
+
+		<ul class="module-class-properties-list">
+		<% _(c.methods).each(function(m){ %>
+			<li><a href="<%= self.makeLink(m)%>"><%= m.name%>(), </a>
+		<%}) %>
+		<% _(c.properties).each(function(m){ %>
+			<li><a href="<%= self.makeLink(m)%>"><%= m.name%>, </a>
+		<%}) %>
+		</ul>
+		<% _(c.attributes).each(function(m){ %>
+			<li><a href="<%= self.makeLink(m)%>"><%= m.name%>, </a>
+		<%}) %>
+		</ul>
 	</li>
 <% }); %>
 </ul>
