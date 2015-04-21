@@ -1,3 +1,7 @@
 <div class="suggestion suggestion-<%= node.annotation%>">
-	<span class="suggestion-value"><%= value%></span>&nbsp;<span class="suggestion-type suggestion-type-<%= node.annotation%>">(<%= node.annotation%>)</span>
+	<span class="suggestion-value"><%= value%></span>&nbsp;<span class="suggestion-type suggestion-type-<%= node.annotation%>">(<%= node.annotation%>
+	<% if(_(['property', 'method', 'attribute', 'event']).contains(node.annotation)) {%>
+	of class <%= node.ownerClass%>
+	<% }%>)
+	</span>
 </div>

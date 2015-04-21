@@ -647,7 +647,8 @@ return __p
 
 this["shortjsdoc"]["typeaheadSuggestion"] = function(obj) {
 obj || (obj = {});
-var __t, __p = '', __e = _.escape;
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
 with (obj) {
 __p += '<div class="suggestion suggestion-' +
 ((__t = ( node.annotation)) == null ? '' : __t) +
@@ -657,7 +658,13 @@ __p += '<div class="suggestion suggestion-' +
 ((__t = ( node.annotation)) == null ? '' : __t) +
 '">(' +
 ((__t = ( node.annotation)) == null ? '' : __t) +
-')</span>\n</div>';
+'\n\t';
+ if(_(['property', 'method', 'attribute', 'event']).contains(node.annotation)) {;
+__p += '\n\tof class ' +
+((__t = ( node.ownerClass)) == null ? '' : __t) +
+'\n\t';
+ };
+__p += ')\n\t</span>\n</div>';
 
 }
 return __p

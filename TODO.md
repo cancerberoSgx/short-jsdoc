@@ -5,6 +5,7 @@
 Listed from more important to less important - kind of:
 
 
+ * remove @?link and see if is faster. 
 
  * support globs in nodejs API
 
@@ -15,7 +16,8 @@ Listed from more important to less important - kind of:
  * (performance) include the source only of files that contain annotations
 
  * implement js syntax check per file instead of the whole file. if a file doesn't compile then don't include it and warn the user
-
+ 
+ * support object literal without types, like this @param {el,name}
 
  * configurables primary annotations : 
 

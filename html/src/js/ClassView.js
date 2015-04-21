@@ -68,15 +68,18 @@ var ClassView = AbstractView.extend({
 	{
 		var hierarchy = [];
 		var c = this.jsdoc;
-		do 
+		if(c && c.extends)
 		{
-			hierarchy.push(c);// = [c].concat(hierarchy);
-			if(c.extends.absoluteName===c.absoluteName)
+			do 
 			{
-				break;
+				hierarchy.push(c);// = [c].concat(hierarchy);
+				if(c.extends.absoluteName===c.absoluteName)
+				{
+					break;
+				}
 			}
-		}
-		while( (c = c.extends) ); 
+			while( (c = c.extends) ); 
+		}			
 		return hierarchy;
 	}
 
