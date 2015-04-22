@@ -129,7 +129,7 @@ _(AbstractView.prototype).extend({
 		} 
 	}
 
-	//@method printTypeAsString this is the public method for printing a type - supports any type @param {String} type @return {String}  @return {String} the type html
+	//@method printSingleTypeAsString this is the public method for printing a type - supports any type @param {String} type @return {String}  @return {String} the type html
 ,	printSingleTypeAsString: function(type, dontRecurse)
 	{
 		var buffer = [];
@@ -139,6 +139,7 @@ _(AbstractView.prototype).extend({
 		var typeOutput = buffer.join(''); 
 		return typeOutput; 
 	}
+	
 	//@method printTypeAsString @param {Array<Type>|Type} type @return {String} the type html
 ,	printTypeAsString: function(type)
 	{

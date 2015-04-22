@@ -21,7 +21,7 @@ var ClassView = AbstractView.extend({
 
 		this.options = options || {};
 		this.options.inherited = this.options.inherited ? parseInt(this.options.inherited, 10) : 0;
-		this.options.text = this.options.text ? parseInt(this.options.text, 10) : 0;
+		this.options.text = this.options.text ? parseInt(this.options.text, 10) : 1;
 
 		this.methods = this.jsdoc.methods;
 		if(this.options.inherited)
@@ -59,27 +59,27 @@ var ClassView = AbstractView.extend({
 		{
 			var min = Math.min(node.text.length, 100); 
 			return node.text.substring(0, min) + '...'; 
-		} 
-		
+		}		
 	}
 
 	//@method computeHierarchy @return {Array<ASTNode>}
 ,	computeHierarchy: function()
 	{
 		var hierarchy = [];
-		var c = this.jsdoc;
-		if(c && c.extends)
-		{
+		var c = this.jsdoc;		
 			do 
+		{
+			if(c && c.extends)
 			{
 				hierarchy.push(c);// = [c].concat(hierarchy);
 				if(c.extends.absoluteName===c.absoluteName)
 				{
 					break;
 				}
-			}
-			while( (c = c.extends) ); 
-		}			
+
+			}		
+		}
+		while( (c = c.extends) );	
 		return hierarchy;
 	}
 

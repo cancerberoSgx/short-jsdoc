@@ -53,7 +53,7 @@ User can subscribe to interesting processing 'moments' to add its own semantics.
 
 Jsdoc generator is usable both in nodejs or in the browser.
 
-## Rich output
+## Rich, generic and reusable output
 
 The parser generates a json file with all jsdoc meta data that can be consumed and shared easily. By default a a nice html5 single page application is delivered that shows generated jsdocs in a very rich way and easy to customize. Also you can distribute the folder with the jsdocs and others can just open the local html file in the browser without running a server for easy reading.
 
