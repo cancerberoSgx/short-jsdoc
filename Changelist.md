@@ -53,3 +53,4 @@
  * show properties partial text in class view
 
  ##0.1.9
+  * html application runs without server - just open the local html. for pure json output pass --json-output argument

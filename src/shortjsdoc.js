@@ -60,7 +60,15 @@ _(ShortJsDoc.prototype).extend({
 
 		this.projectMetadata.jsdoc.dontMinifyOutput = argv.dontMinifyOutput || this.projectMetadata.jsdoc.dontMinifyOutput;
 
-		console.log(this.dumpJSON(jsdoc)); 
+		var jsonData = this.dumpJSON(jsdoc); 
+		if(argv.jsonOuput)
+		{			
+			console.log(jsonData);
+		}
+		else
+		{
+			console.log('window.__shortjsdoc_data = ' + jsonData);
+		} 
 	}
 
 	// @method tryToParseJsonFile @param {String} path

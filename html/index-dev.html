@@ -63,14 +63,16 @@
 
 <body>
 
+<script src="data.json" type="text/javascript"></script>
 <script>
-jQuery.getJSON('data.json').done(function(data)
-{
-	Application.startApplication(data); 
-}).fail(function()
-{
-	debugger;
-}); 
+// jQuery.getJSON('data.json').done(function(data)
+// {
+// 	Application.startApplication(data); 
+// }).fail(function()
+// {
+// 	debugger;
+// }); 
+Application.startApplication(window.__shortjsdoc_data); 
 </script>
 
 
