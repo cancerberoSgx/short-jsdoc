@@ -1,0 +1,21 @@
+{
+	"predef": [
+	]
+	,"globals": {
+	}
+,	"forin":true
+,	"noarg":true
+,	"noempty":true
+,	"eqeqeq":true
+,	"bitwise":false
+,	"undef":true
+,	"unused":true
+,	"curly":true
+,	"browser":true
+,	"quotmark":"single"
+,	"maxerr":50
+,	"laxcomma":true
+,	"expr":true
+,	"newcap": false
+,	"node": true
+}

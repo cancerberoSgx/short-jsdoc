@@ -5,6 +5,8 @@
 Listed from more important to less important - kind of:
 
 
+ *  issue this seems to fail: @module m @class A @method p @property {B} @class B - the error is class 'undefined.B'
+ 
  * remove @?link and see if is faster. 
 
  * support globs in nodejs API
@@ -28,6 +30,10 @@ Listed from more important to less important - kind of:
 (we use doesntContain because by default, we want that any 'strange' annotation to be children of the previous primary annotation.) 
 
 all primary annotation rules (class, module,method, property) should be defined using this hooking api. so the jsdoc rules for this are defined in a readable json. 
+
+
+  plugin that allow to declare generic new primary annotations support new custom primary annotations
+ * IDEA: plugin for amd-commonjs dependency information - implementation 1) define a primary tag @dependency Class1 Class2,Class3 - meaning that Class 1 depends on Class21,Class3. 2) a esprima/
 
  * @return {{a:1,b:2}}  - yes with 2 {{ like closure-compiler.
 
@@ -61,6 +67,7 @@ all primary annotation rules (class, module,method, property) should be defined 
  
  * list properties in html app alphabetically or at least have that option.
  
+
  * detect overriden methods and add a link to the overriden in the text
 
  * IMPORTANT by default, delete the property  theRestOfTheString that is dumping in the data.json  to minimize its size
@@ -270,3 +277,6 @@ the idea is that the parser look in the javascript ast for the next function dec
 
 
 
+#weird ideas
+
+ * BIG IDEA: javascript source parsing and custom primary annotations: implementation steps 1) a plugin that let us register (PluginContainer) a visitor function that will be called traversing the ast using estraverse or similar. 2) a plugin that let us safely insert a new primary annotation in a file by appending it 3) concrete plugins that uses these two tools that will search for AMD or commonjs expressions and create @dependency class MyView Backbone.View Chart.Widget meaning that MyView depends on Backbone.View Chart.Widget. this is a primary annotation. it could also be @dependency module Backbone jQuery undrscore. The plugin could be runned only inthe frontend...

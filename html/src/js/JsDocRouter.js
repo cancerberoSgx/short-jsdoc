@@ -27,9 +27,11 @@ var JsDocRouter = Backbone.Router.extend({
 	,	'file/:file': 'showFile'
 	,	'file/:file?:options': 'showFile'
 
-
 	,	'search': 'doSearch'
 	,	'search/:options': 'doSearch'
+
+	,	'dependencies/:options': 'showDependencies'
+	,	'dependencies': 'showDependencies'
 	}
 
 ,	initialize: function(application) 
@@ -134,9 +136,14 @@ var JsDocRouter = Backbone.Router.extend({
 		this.showView(view); 
 	}
 
-	
+	//@method showDependencies  @param {String} options
+,	showDependencies: function(optionsStr)
+	{
+		var options = this.parseOptions(optionsStr||''); 
+		var view = new DependenciesView(this.application, options);
+		this.showView(view); 
+	}
 
-	
 	//@method showIndex
 ,	showIndex: function() 
 	{

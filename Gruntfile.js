@@ -17,6 +17,7 @@ var uglifyFiles = [
 ,	'html/src/js/AbstractTreeView.js'
 ,	'html/src/js/TreeView.js'
 ,	'html/src/js/HierarchyTreeView.js'
+,	'html/src/js/DependenciesView.js'
 
 ];
 
@@ -33,6 +34,7 @@ var uglifyLibFiles = [
 ,	'html/lib/twitter-typeahead/typeahead.bundle.js' 
 ,	'html/lib/marked/marked.js'
 ,	'html/lib/prettify/prettify.js'
+,	'html/lib/toast/toast.min.js'
 
 ];
 
@@ -110,6 +112,7 @@ module.exports = function (grunt) {
 				'esprima'
 			// , 'underscore'
 			]
+		,	debug: true
 		}
 	,	client: {
 			src: ['src/jsdocmaker/main.js'],

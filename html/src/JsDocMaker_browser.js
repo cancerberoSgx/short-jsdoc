@@ -1877,7 +1877,18 @@ require('./binding');
 
 module.exports = JsDocMaker;
 },{"./binding":2,"./class":3,"./parse":5,"./postprocess":7,"./preprocess":8,"./type-parsing":9,"./util":10}],5:[function(require,module,exports){
-/* @module shortjsdoc @class JsDocMaker
+/*
+@module shortjsdoc 
+
+@class JsDocMaker.Data
+@property {Object<String, JsDocASTNode>} methods
+@property {Object<JsDocASTNode>} classes
+@property {Array<JsDocASTNode>} classes
+
+@class JsDocASTNode all the jsdoc parsed information is stored as nodes one containing others. modules contains classes, @class contains methods and @method contains @param and @returns
+
+
+@class JsDocMaker
 
 #Parsing and processing 
 
@@ -2223,12 +2234,6 @@ JsDocMaker.prototype.parseUnitSimple = function(str, comment)
 
 // @property {JsDocMaker.Data} data the main data on which the parser and plugins will be working on. This is the resulting AST of jsdoc.
 
-// @class JsDocMaker.Data
-// @property {Object<String, JsDocASTNode>} methods
-// @property {Object<JsDocASTNode>} classes
-// @property {Array<JsDocASTNode>} classes
-
-//@class JsDocASTNode all the jsdoc parsed information is stored as nodes one containing others. modules contains classes, @class contains methods and @method contains @param and @returns
 },{"./class":3,"./plugin":6,"underscore":1}],6:[function(require,module,exports){
 // @module shortjsdoc.plugin
 var JsDocMaker = require('./class')
@@ -2749,7 +2754,7 @@ var JsDocMaker = require('./core/main');
 require('./plugin/main.js'); 
 
 module.exports = JsDocMaker;
-},{"./core/main":4,"./plugin/main.js":18}],12:[function(require,module,exports){
+},{"./core/main":4,"./plugin/main.js":19}],12:[function(require,module,exports){
 /*
 
 This is a syntax definition compiled to JavaScript that parses an expression like 
@@ -3487,6 +3492,110 @@ JsDocMaker.prototype.afterParseNodePlugins.add(commentIndentationPlugin);
 // }
 
 },{"../core/class":3,"underscore":1}],15:[function(require,module,exports){
+// @module shortjsdoc.plugin.dependencies 
+/*
+#dependencies plugin
+
+this is not technically a plugin because we don't want to make the cmd line tool slower and is a not 
+important feature. It should be executed by hand in the user agent.
+
+*/
+
+
+var JsDocMaker = require('../core/class'); 
+var _ = require('underscore'); 
+
+var Tool = function(maker, config)
+{
+	this.maker = maker;
+	this.config = config || {}; 
+}; 
+_(Tool.prototype).extend({
+	calculateClassDependencies: function()
+	{
+		var self = this
+		,	currentClass
+		,	currentModule
+		,	fn = function(node)
+			{
+				if(node.annotation==='module')
+				{
+					currentModule = node; 
+				}
+				else if(node.annotation==='class')
+				{
+					currentClass = node;
+					currentClass.dependencies = currentClass.dependencies || {}; 
+					currentClass.dependencies.classes = currentClass.dependencies.classes || {}; 
+				}
+				var deps = _(node.children).filter(function(c){ return c.annotation==='depends'; });
+			
+				if(deps && deps.length)
+				{	
+					_(deps).each(function(dep)
+					{
+						// debugger;
+						if(dep.name==='class')
+						{
+							var c = self.maker.findClassByName(dep.text);
+							if(!c)
+							{
+								console.log('warning dependency class not found: '+dep.text); 
+								return;
+							}
+
+							if(_(self.config.ignoreClasses).contains(c.absoluteName))
+							{
+								return;
+							}
+							node.dependencies = node.dependencies || {}; 
+							node.dependencies.classes = node.dependencies.classes || {}; 
+							node.dependencies.classes[c.absoluteName] = c; 
+							if(currentClass)
+							{
+								currentClass.dependencies.classes[c.absoluteName] = c; 
+							}
+						}
+						// else if(dep.name==='module') //TODO
+						// { }
+						// else //TOOD: make class to be the default and use name instead of text
+						// { }
+					}); 
+				}
+			}
+		,	fn_type = function(type, ownerNode)
+			{
+				if(!currentClass || _(self.config.ignoreClasses).contains(type.absoluteName))
+				{
+					return; 
+				}
+				// console.log('DEP TYPE FOUND, ', type)
+				currentClass.dependencies.classes[type.absoluteName] = type; 
+			};
+		this.maker.recurseAST(fn, fn_type); 
+	}
+});
+
+JsDocMaker.prototype.tools = JsDocMaker.tools || {}; 
+JsDocMaker.prototype.tools.DependencyTool = Tool; 
+
+JsDocMaker.prototype.findClassByName = function(className, data)
+{
+	data = data || this.data;
+	var c = _(data.classes).find(function(c)
+	{
+		return c.absoluteName===className; 
+	});
+	if(!c)
+	{
+		c = _(data.classes).find(function(c)
+		{
+			return c.name===className; 
+		});
+	}
+	return c; 
+}; 
+},{"../core/class":3,"underscore":1}],16:[function(require,module,exports){
 var _ = require('underscore'); 
 var JsDocMaker = require('../core/class'); 
 var PluginContainer = require('../core/plugin'); 
@@ -3541,7 +3650,7 @@ JsDocMaker.prototype.afterTypeBindingRecurseASTPlugins.add(pluginAfter);
 //JsDocMaker.prototype.commentPreprocessorPlugins.add(plugin);
 
 
-},{"../core/class":3,"../core/plugin":6,"./recurse-plugin-containers":22,"underscore":1}],16:[function(require,module,exports){
+},{"../core/class":3,"../core/plugin":6,"./recurse-plugin-containers":23,"underscore":1}],17:[function(require,module,exports){
 // @module shortjsdoc.plugin @class JsDocMaker
 var JsDocMaker = require('../core/class'); 
 var _ = require('underscore'); 
@@ -3660,7 +3769,7 @@ JsDocMaker.classOwnsProperty = function(aClass, prop)
 	return result;
 }; 
 
-},{"../core/class":3,"underscore":1}],17:[function(require,module,exports){
+},{"../core/class":3,"underscore":1}],18:[function(require,module,exports){
 // @module shortjsdoc @class JsDocMaker
 var JsDocMaker = require('../core/class'); 
 var _ = require('underscore'); 
@@ -3710,7 +3819,7 @@ JsDocMaker.prototype.literalObjectInstall = function()
 }; 
 
 
-},{"../core/class":3,"underscore":1}],18:[function(require,module,exports){
+},{"../core/class":3,"underscore":1}],19:[function(require,module,exports){
 'strict mode'; 
 
 var JsDocMaker = require('../core/main.js'); 
@@ -3730,8 +3839,11 @@ require('./text-marks-references.js');
 require('./recurse-plugin-containers.js');
 require('./escape-at.js');
 
+//tools
+require('./dependencies.js');
+
 module.exports = JsDocMaker; 
-},{"../core/main.js":4,"./alias.js":13,"./comment-indentation.js":14,"./escape-at.js":15,"./inherited.js":16,"./literal-object.js":17,"./modifiers.js":19,"./module-exports.js":20,"./native-types.js":21,"./recurse-plugin-containers.js":22,"./text-marks-references.js":23,"./text-marks.js":24,"./util.js":25}],19:[function(require,module,exports){
+},{"../core/main.js":4,"./alias.js":13,"./comment-indentation.js":14,"./dependencies.js":15,"./escape-at.js":16,"./inherited.js":17,"./literal-object.js":18,"./modifiers.js":20,"./module-exports.js":21,"./native-types.js":22,"./recurse-plugin-containers.js":23,"./text-marks-references.js":24,"./text-marks.js":25,"./util.js":26}],20:[function(require,module,exports){
 // @module shortjsdoc @class JsDocMaker
 var JsDocMaker = require('../core/class'); 
 var _ = require('underscore'); 
@@ -3753,7 +3865,7 @@ JsDocMaker.prototype.installModifiers = function(node)
 	});
 }; 
 
-},{"../core/class":3,"underscore":1}],20:[function(require,module,exports){
+},{"../core/class":3,"underscore":1}],21:[function(require,module,exports){
 /* @module shortjsdoc.plugin.module-export
 
 #@module @exports
@@ -3799,7 +3911,7 @@ var plugin_beforeTypeBinding = {
 }; 
   
 JsDocMaker.prototype.beforeTypeBindingPlugins.add(plugin_beforeTypeBinding); 
-},{"../core/class":3,"underscore":1}],21:[function(require,module,exports){
+},{"../core/class":3,"underscore":1}],22:[function(require,module,exports){
 // @module shortjsdoc @class JsDocMaker
 var JsDocMaker = require('../core/class'); 
 var _ = require('underscore'); 
@@ -3830,7 +3942,7 @@ JsDocMaker.prototype.getNativeTypeUrl = function(name)
 	return customTypeUrl;
 }; 
 
-},{"../core/class":3,"underscore":1}],22:[function(require,module,exports){
+},{"../core/class":3,"underscore":1}],23:[function(require,module,exports){
 // @module recurse-plugin-containers - a plugin to be used by concrete plugins to iterate on all 
 // nodes after some interesting stages. by calling recurseAST. 
 // The objective is that other concrete plugins register here and so the AST recursion is made 
@@ -3876,7 +3988,7 @@ var plugin = new AfterTypeBindingRecurseASTPluginContainer();
 JsDocMaker.prototype.afterTypeBindingRecurseASTPlugins = plugin; 
 
 JsDocMaker.prototype.afterTypeBindingPlugins.add(plugin); 
-},{"../core/class":3,"../core/plugin":6,"./util":25,"underscore":1}],23:[function(require,module,exports){
+},{"../core/class":3,"../core/plugin":6,"./util":26,"underscore":1}],24:[function(require,module,exports){
 /*
 @module shortjsdoc.plugin.text-marks-references
 
@@ -4041,7 +4153,7 @@ JsDocMaker.prototype.afterTypeBindingPlugins.add(textMarksReferencesPlugin);
 
 
 
-},{"../core/class":3,"underscore":1}],24:[function(require,module,exports){
+},{"../core/class":3,"underscore":1}],25:[function(require,module,exports){
 /*
 @module shortjsdoc.plugin.text-marks
 
@@ -4111,8 +4223,9 @@ JsDocMaker.prototype.afterParseUnitSimplePlugins.add(textMarksAfterParseNodePlug
 // afterTypeBindingPlugins
 
 
-},{"../core/class":3,"underscore":1}],25:[function(require,module,exports){
-// @module shortjsdoc @class JsDocMaker
+},{"../core/class":3,"underscore":1}],26:[function(require,module,exports){
+//TODO: move this file to core/recurseAST.js
+//@module shortjsdoc @class JsDocMaker
 var JsDocMaker = require('../core/class'); 
 var _ = require('underscore'); 
 
@@ -4124,53 +4237,7 @@ JsDocMaker.prototype.recurseAST = function(fn, fn_type, fn_end)
 	var self = this;
 	_(self.data.classes).each(function(c)
 	{
-		if(!c)
-		{
-			return;
-		}
-		fn.apply(c, [c]);
-		_(c.methods).each(function(m)
-		{
-			fn.apply(m, [m]); 
-			_(m.params).each(function(p)
-			{
-				p.parentNode=m;
-				fn.apply(p, [p]); 
-				JsDocMaker.recurseType(p.type, fn_type, p); 
-			}); 
-			if(m.returns)
-			{
-				m.returns.parentNode=m;
-				fn.apply(m.returns, [m.returns]);
-				JsDocMaker.recurseType(m.returns.type, fn_type, m); 
-			}
-			_(m.throws).each(function(t)
-			{
-				fn.apply(t, [t]); 
-				JsDocMaker.recurseType(t.type, fn_type, t); 
-			}); 
-		}); 
-
-		_(c.properties).each(function(p)
-		{
-			fn.apply(p, [p]);
-			JsDocMaker.recurseType(p.type, fn_type, p);
-		}); 
-		_(c.events).each(function(p)
-		{
-			fn.apply(p, [p]);
-			JsDocMaker.recurseType(p.type, fn_type, p);
-		}); 
-		_(c.attributes).each(function(p)
-		{
-			fn.apply(p, [p]);
-			JsDocMaker.recurseType(p.type, fn_type, p);
-		});
-		if (c.extends)
-		{
-			fn.apply(c.extends, [c.extends]);
-			JsDocMaker.recurseType(c.extends.type, fn_type, c);
-		}
+		self.recurseASTClass(c, fn, fn_type); 
 	});
 	_(self.data.modules).each(function(m)
 	{
@@ -4179,6 +4246,56 @@ JsDocMaker.prototype.recurseAST = function(fn, fn_type, fn_end)
 	fn_end && fn_end();
 }; 
 
+JsDocMaker.prototype.recurseASTClass = function(c, fn, fn_type)
+{
+	if(!c)
+	{
+		return;
+	}
+	fn.apply(c, [c]);
+	_(c.methods).each(function(m)
+	{
+		fn.apply(m, [m]); 
+		_(m.params).each(function(p)
+		{
+			p.parentNode=m;
+			fn.apply(p, [p]); 
+			JsDocMaker.recurseType(p.type, fn_type, p); 
+		}); 
+		if(m.returns)
+		{
+			m.returns.parentNode=m;
+			fn.apply(m.returns, [m.returns]);
+			JsDocMaker.recurseType(m.returns.type, fn_type, m); 
+		}
+		_(m.throws).each(function(t)
+		{
+			fn.apply(t, [t]); 
+			JsDocMaker.recurseType(t.type, fn_type, t); 
+		}); 
+	}); 
+
+	_(c.properties).each(function(p)
+	{
+		fn.apply(p, [p]);
+		JsDocMaker.recurseType(p.type, fn_type, p);
+	}); 
+	_(c.events).each(function(p)
+	{
+		fn.apply(p, [p]);
+		JsDocMaker.recurseType(p.type, fn_type, p);
+	}); 
+	_(c.attributes).each(function(p)
+	{
+		fn.apply(p, [p]);
+		JsDocMaker.recurseType(p.type, fn_type, p);
+	});
+	if (c.extends)
+	{
+		fn.apply(c.extends, [c.extends]);
+		JsDocMaker.recurseType(c.extends.type, fn_type, c);
+	}
+}
 // @method recurseType will recurse the type AST - children first. 
 // @param {ASTNode} type a class node @param {Function}fn @param {ASTNode} ownerNode @static 
 JsDocMaker.recurseType = function(type, fn, ownerNode)
@@ -4194,7 +4311,7 @@ JsDocMaker.recurseType = function(type, fn, ownerNode)
 			JsDocMaker.recurseType(t, fn, ownerNode); 
 		}); 
 	}
-	else
+	else if(!type.annotation || type.annotation !== 'class')
 	{
 		_(type.properties).each(function(prop)
 		{

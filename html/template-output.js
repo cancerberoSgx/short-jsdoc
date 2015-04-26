@@ -292,6 +292,16 @@ __p += '\n</ul>\n';
 return __p
 };
 
+this["shortjsdoc"]["dependencies"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape;
+with (obj) {
+__p += '<p>The following is a graph showing dependencies between classes. A class A depends on a class B if any A property or method references the type B or contains an explicit dependency declaration to B using \'@depends class B\' : </p>\n\n<div data-type="dependency-graph"></div>';
+
+}
+return __p
+};
+
 this["shortjsdoc"]["file"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;

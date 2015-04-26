@@ -1,4 +1,15 @@
-/* @module shortjsdoc @class JsDocMaker
+/*
+@module shortjsdoc 
+
+@class JsDocMaker.Data
+@property {Object<String, JsDocASTNode>} methods
+@property {Object<JsDocASTNode>} classes
+@property {Array<JsDocASTNode>} classes
+
+@class JsDocASTNode all the jsdoc parsed information is stored as nodes one containing others. modules contains classes, @class contains methods and @method contains @param and @returns
+
+
+@class JsDocMaker
 
 #Parsing and processing 
 
@@ -343,10 +354,3 @@ JsDocMaker.prototype.parseUnitSimple = function(str, comment)
 // at last we want to document the output ast data that the parser returns:
 
 // @property {JsDocMaker.Data} data the main data on which the parser and plugins will be working on. This is the resulting AST of jsdoc.
-
-// @class JsDocMaker.Data
-// @property {Object<String, JsDocASTNode>} methods
-// @property {Object<JsDocASTNode>} classes
-// @property {Array<JsDocASTNode>} classes
-
-//@class JsDocASTNode all the jsdoc parsed information is stored as nodes one containing others. modules contains classes, @class contains methods and @method contains @param and @returns

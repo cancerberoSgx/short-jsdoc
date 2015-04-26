@@ -3,7 +3,8 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
 
-<!-- not UI related dependencies - only required for the Online Parser view -->
+<!-- not UI related dependencies - only required for the Online Parser view 
+can be removed if online parser is disabled.-->
 <script src="../lib/esprima.js" type="text/javascript"></script>
 <script src="../lib/underscore.js" type="text/javascript"></script>
 <script src="src/JsDocMaker_browser.js" type="text/javascript"></script>
@@ -29,6 +30,7 @@
 <script src="lib/twitter-typeahead/typeahead.bundle.js" type="text/javascript"></script>
 
 <script src="lib/marked/marked.js" type="text/javascript"></script>
+<script src="lib/toast/toast.min.js" type="text/javascript"></script>
 
 <link href="lib/prettify/prettify.css" type="text/css" rel="stylesheet" />
 <script type="text/javascript" src="lib/prettify/prettify.js"></script>
@@ -54,11 +56,17 @@
 <script src="src/js/AbstractTreeView.js" type="text/javascript"></script>
 <script src="src/js/TreeView.js" type="text/javascript"></script>
 <script src="src/js/HierarchyTreeView.js" type="text/javascript"></script>
+<script src="src/js/DependenciesView.js" type="text/javascript"></script>
 
 <script src="template-output.js" type="text/javascript"></script>
 
 <link href="src/styles/styles.css" rel="stylesheet">
 
+
+<!-- 
+<script type="text/javascript" src="lib/vis/dist/vis.min.js"></script>
+<link href="lib/vis/dist/vis.min.css" type="text/css" rel="stylesheet" />
+ -->
 </head>
 
 <body>

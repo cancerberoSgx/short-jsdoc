@@ -17,4 +17,7 @@ require('./text-marks-references.js');
 require('./recurse-plugin-containers.js');
 require('./escape-at.js');
 
+//tools
+require('./dependencies.js');
+
 module.exports = JsDocMaker; 

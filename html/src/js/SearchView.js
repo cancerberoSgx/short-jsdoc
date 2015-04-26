@@ -57,17 +57,9 @@ var SearchView = AbstractView.extend({
 			return;
 		}
 
-		var self = this;
-
-		var results = {};
-
-		var keywordsCompare = self.query.keywords.toLowerCase();
-
-		//search types used in properties&methods.
-
-		var nodeVisitor = function(node)
-		{
-		}; 
+		var self = this, results = {}
+		,	keywordsCompare = self.query.keywords.toLowerCase()
+		,	nodeVisitor = function(node){}; 
 
 		var typeVisitor = function(type, ownerNode)
 		{
