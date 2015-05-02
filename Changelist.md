@@ -52,6 +52,8 @@
  * search class usage in class view
  * show properties partial text in class view
 
- ##0.1.9
+##0.1.9
   * html application runs without server - just open the local html. for pure json output pass --json-output argument
   * @depends class OtherClass - dependencies plugin/tool - must be run manually - not executed automatically since we don't want to make the tool slow. Also implemented a view in the html app to show the class dependency graph using visjs
+
+##0.2

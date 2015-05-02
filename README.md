@@ -19,7 +19,7 @@ If you want you can define a whole method signature in one line like this:
 
 Support all comment types, like /* /** // . 
 
-Also the jsdoc text can be written in in plain text, html or markdown. This means you are free to choose to be minimalistic (writing single-line comments) or very exaustive and styled (writing multiple paragraph html or mardown text), or what is best, do both things and choose where to put the big texts !
+Also the jsdoc text can be written in in plain text, html or markdown. This means you are free to choose to be minimalistic (writing single-line comments) or very exhaustive and styled (writing multiple paragraph html or mardown text), or what is best, do both things and choose where to put the big texts !
 
 ##Simple annotation syntax
 
@@ -72,14 +72,8 @@ Do what you need with this project, if you can, contribute you enhancements back
 
 # Installing 
 
-this project neds an simple initial installation:
-
     cd short-jsdoc
     npm install
-
-    #optionally - install the command line shortcut
-    sudo npm link
-
 
 # Using it in nodejs 
 
