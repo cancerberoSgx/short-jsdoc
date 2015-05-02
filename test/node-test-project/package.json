@@ -5,11 +5,11 @@
 ,	"author": "Sebastián Gurin"
 
 ,	"dependencies": {
-		"shortjsdoc": "*"
+		"short-jsdoc": "*"
 	}
 
 ,	 "scripts" : 
 	{
-		"postinstall" : "setup.js"
+		"postinstall" : "node setup.js"
 	}
 }

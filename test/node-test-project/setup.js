@@ -1,7 +1,7 @@
 var ShortJsDoc = require('short-jsdoc');
 
 ShortJsDoc.make({
-	inputDirs: ['./src/JsDocMaker.js', './html']
+	inputDirs: ['./src']
 ,	output: 'jsdoc'
 ,	vendor: ['javascript', 'html', 'backbonejs', 'xml-dom']
 }); 

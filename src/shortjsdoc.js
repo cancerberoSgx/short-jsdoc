@@ -108,7 +108,7 @@ _(ShortJsDoc.prototype).extend({
 		catch (ex)
 		{
 			// will print the javascript syntax error detected in the sources. we parse only valid js!
-			console.error('There is JavaScript syntax error in your source. They cannot be parsed'); 
+			console.error('There is JavaScript syntax error in your source. It cannot be parsed'); 
 			//TODO: file and line number and string
 
 			console.error('Failing code fragment: \n', this.maker.data.source.substring(ex.index - 50, ex.index + 50)); 
@@ -169,7 +169,14 @@ _(ShortJsDoc.prototype).extend({
 		//generate the data.json file
 		var jsdoc = this.execute(options); 
 		var f = path.join(options.output, 'data.json'); 
-		fs.writeFileSync(f, this.dumpJSON(jsdoc)); 
+		var output = this.dumpJSON(jsdoc);
+
+		if(!options.jsonOuput)
+		{			
+			output = 'window.__shortjsdoc_data = ' + output;
+		}
+
+		fs.writeFileSync(f, output); 
 	} 
 
 	// @method dumpJSON dump to json string the full ast. configurable through this.projectMetadata.jsdoc.dontMinifyOutput
@@ -198,7 +205,7 @@ _(ShortJsDoc.prototype).extend({
 	}
 
 	//@method __parseSourcesFastVersion this was the previous implementation without file separation support. Nevertheless we 
-	// let this cunommented and unused because parsing separate files introduced a significant parsing duration (parformance). 
+	// let this uncommented and unused because parsing separate files introduced a significant parsing duration (parformance). 
 	// TODO. let the user performa a --fast-parsing not supporting files but much faster just for fast jsdoc writting..
 ,	__parseSourcesFastVersion: function()
 	{
