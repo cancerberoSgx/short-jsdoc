@@ -1,3 +1,11 @@
+<p><input data-type="includeNativeClasses" type="checkbox" <%= this.options.includeNativeClasses ? 'checked' : ''%>></input>
+	<%= this.options.includeNativeClasses ? 'Include' : 'Don\'t include' %> native classes</a></p>
+
+<p><input data-type="includeExtends" type="checkbox" <%= this.options.includeExtends ? 'checked' : ''%>></input>
+	<%= this.options.includeExtends ? 'Include' : 'Don\'t include' %> inheritance</a></p>
+
 <p>The following is a graph showing dependencies between classes. A class A depends on a class B if any A property or method references the type B or contains an explicit dependency declaration to B using '@depends class B' : </p>
+
+<div class="loading-message">Calculating, please stand by...</div>
 
 <div data-type="dependency-graph"></div>

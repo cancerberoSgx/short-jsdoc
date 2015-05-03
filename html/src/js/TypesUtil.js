@@ -265,4 +265,64 @@ _(AbstractView.prototype).extend({
 		return a;
 	}
 
+
+	// TODO: move the following to misc utility class 
+
+	//@method parseOptions @return {Object<String,String>}
+,	parseOptions: function(options, propSep, valueSep)
+	{
+		propSep = propSep || '&'; 
+		valueSep = valueSep || '='; 
+		if(!options)
+		{
+			return {}; 
+		}
+		var params = {};
+		_(options.split(propSep)).each(function(p)
+		{
+			var a = p.split(valueSep); 
+			if (a.length >= 2)
+			{
+				params[a[0]] = a[1]; 
+				if(!a[1] || a[1]==='0' || a[1]==='false')
+				{
+					params[a[0]] = false;
+				}
+			}
+		}); 
+		return params;
+	}
+
+,	getOptionsFromHash: function(hash)
+	{
+		hash = hash || window.location.hash;
+		var options = hash.split('?');
+		options = options.length<2 ? '' : options[1]; 
+		return this.parseOptions(options);
+	}
+
+,	setOptionsToHash: function(hash, newOptions)
+	{		
+		hash = hash || window.location.hash;
+		var options = hash.split('?');
+		options = options.length<2 ? '' : options[1]; 
+		options = this.parseOptions(options); 
+		_(options).extend(newOptions);
+		return hash.split('?')[0] + '?' + this.optionsToString(options); 
+	}
+
+,	optionsToString: function(options, propSep, valueSep)
+	{
+		propSep = propSep || '&'; 
+		valueSep = valueSep || '='; 
+		var a = []; 
+		_(options).each(function(value, key)
+		{
+			a.push(key + valueSep + value); 
+		}); 
+		return a.join(propSep); 
+	}
+
+
+
 });

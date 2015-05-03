@@ -21,26 +21,33 @@ _(Tool.prototype).extend({
 	{
 		var self = this
 		,	currentClass
-		,	currentModule
+		// ,	currentModule
 		,	fn = function(node)
 			{
-				if(node.annotation==='module')
-				{
-					currentModule = node; 
-				}
-				else if(node.annotation==='class')
+				// if(node.annotation==='module')
+				// {
+				// 	currentModule = node; 
+				// }
+				if(node.annotation==='class')
 				{
 					currentClass = node;
 					currentClass.dependencies = currentClass.dependencies || {}; 
 					currentClass.dependencies.classes = currentClass.dependencies.classes || {}; 
+					if(self.config.includeExtends && currentClass.extends && 
+						!_(self.config.ignoreClasses).contains(currentClass.extends.absoluteName))
+					{
+						currentClass.dependencies.classes[currentClass.extends.absoluteName] = currentClass.extends; 
+					}
 				}
-				var deps = _(node.children).filter(function(c){ return c.annotation==='depends'; });
+				var deps = _(node.children).filter(function(c)
+				{ 
+					return c.annotation==='depends'; 
+				});
 			
 				if(deps && deps.length)
 				{	
 					_(deps).each(function(dep)
 					{
-						// debugger;
 						if(dep.name==='class')
 						{
 							var c = self.maker.findClassByName(dep.text);
@@ -75,8 +82,13 @@ _(Tool.prototype).extend({
 				{
 					return; 
 				}
-				// console.log('DEP TYPE FOUND, ', type)
-				currentClass.dependencies.classes[type.absoluteName] = type; 
+
+				//when iterating types, we automatically add the type as class dependency to the currentClass
+				if(type.absoluteName !== currentClass.absoluteName && 
+					!_(self.config.ignoreClasses).contains(type.absoluteName))
+				{
+					currentClass.dependencies.classes[type.absoluteName] = type; 	
+				}
 			};
 		this.maker.recurseAST(fn, fn_type); 
 	}

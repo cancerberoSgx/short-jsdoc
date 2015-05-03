@@ -296,7 +296,15 @@ this["shortjsdoc"]["dependencies"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape;
 with (obj) {
-__p += '<p>The following is a graph showing dependencies between classes. A class A depends on a class B if any A property or method references the type B or contains an explicit dependency declaration to B using \'@depends class B\' : </p>\n\n<div data-type="dependency-graph"></div>';
+__p += '<p><input data-type="includeNativeClasses" type="checkbox" ' +
+((__t = ( this.options.includeNativeClasses ? 'checked' : '')) == null ? '' : __t) +
+'></input>\n\t' +
+((__t = ( this.options.includeNativeClasses ? 'Include' : 'Don\'t include' )) == null ? '' : __t) +
+' native classes</a></p>\n\n<p><input data-type="includeExtends" type="checkbox" ' +
+((__t = ( this.options.includeExtends ? 'checked' : '')) == null ? '' : __t) +
+'></input>\n\t' +
+((__t = ( this.options.includeExtends ? 'Include' : 'Don\'t include' )) == null ? '' : __t) +
+' inheritance</a></p>\n\n<p>The following is a graph showing dependencies between classes. A class A depends on a class B if any A property or method references the type B or contains an explicit dependency declaration to B using \'@depends class B\' : </p>\n\n<div class="loading-message">Calculating, please stand by...</div>\n\n<div data-type="dependency-graph"></div>';
 
 }
 return __p
@@ -325,7 +333,7 @@ with (obj) {
  var metadata = this.application.data.projectMetadata; ;
 __p += '\n<header class="main-header">\n<div class="row">\n\n\n<!-- <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> -->\n<span class="col-sm-5 col-xs-12">\n\t<span class="dropdown">\n\t\t<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">\n\t\t' +
 ((__t = ( (metadata && metadata.name) ||  'short-jsdoc demo' )) == null ? '' : __t) +
-'\n\t\t<span class="caret"></span>\n\t\t</button>\n\t\t<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">\n\t\t\t\n\t\t\t<li role="presentation"><a role="menuitem" href="#index">Index</a></li>\n\n\t\t\t<li role="presentation"><a role="menuitem" href="#tree">Full Abstract Syntax Tree</a></li>\t\n\n\t\t\t<li role="presentation"><a role="menuitem" href="#hierarchyTree">Class Hierarchy Tree</a></li>\t\n\n\t\t\t<li role="presentation"><a role="menuitem" href="#search?keywords=Array&propsReferencingType=1">Search type references</a></li>\n\n\t\t\t<li role="presentation"><a role="menuitem" href="#parse">Parse your code !</a></li>\n\n\t\t\t<li role="presentation" class="divider"></li>\n\n\t\t\t<li role="presentation"><a role="menuitem" href="https://github.com/cancerberoSgx/short-jsdoc">short-jsdoc home page</a></li>\n\t\t\t<li role="presentation"><a role="menuitem" href="../test/SpecRunner.html">Run short-jsdoc Specs</a></li>\n\n\t\t</ul>.\n\t\t\n\t</span>\t\t\n</span>\n\n<!-- <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> -->\n<span class="col-sm-7 col-xs-12">\n\t<span class="main-search pull-right">\n\t<a role="menuitem" href="#index">Index</a>\n\t\tSearch <input class="typeahead1">\n\t</span>\t\t\n</span>\n\n\n</div>\n</header>';
+'\n\t\t<span class="caret"></span>\n\t\t</button>\n\t\t<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">\n\t\t\t\n\t\t\t<li role="presentation"><a role="menuitem" href="#index">Index</a></li>\n\n\t\t\t<li role="presentation"><a role="menuitem" href="#tree">Full Abstract Syntax Tree</a></li>\t\n\n\t\t\t<li role="presentation"><a role="menuitem" href="#hierarchyTree">Class Hierarchy Tree</a></li>\t\n\n\t\t\t<li role="presentation"><a role="menuitem" href="#search?keywords=Array&propsReferencingType=1">Search type references</a></li>\n\n\t\t\t<li role="presentation"><a role="menuitem" href="#dependencies">Class Dependencies Graph</a></li>\t\n\n\t\t\t<li role="presentation"><a role="menuitem" href="#parse">Parse your code !</a></li>\n\n\t\t\t<li role="presentation" class="divider"></li>\n\n\t\t\t<li role="presentation"><a role="menuitem" href="https://github.com/cancerberoSgx/short-jsdoc">short-jsdoc home page</a></li>\n\t\t\t<li role="presentation"><a role="menuitem" href="../test/SpecRunner.html">Run short-jsdoc Specs</a></li>\n\n\t\t</ul>.\n\t\t\n\t</span>\t\t\n</span>\n\n<!-- <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> -->\n<span class="col-sm-7 col-xs-12">\n\t<span class="main-search pull-right">\n\t<a role="menuitem" href="#index">Index</a>\n\t\tSearch <input class="typeahead1">\n\t</span>\t\t\n</span>\n\n\n</div>\n</header>';
 
 }
 return __p

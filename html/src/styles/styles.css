@@ -208,3 +208,10 @@
 .modules .modules-classes-list * {
   display: inline;
 }
+/* dependencies.less*/
+.loading-message {
+  margin: 40px auto 0 auto;
+  display: block;
+  font-weight: bold;
+  font-size: 24px;
+}

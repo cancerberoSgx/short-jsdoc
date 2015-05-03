@@ -6,10 +6,19 @@ var DependenciesView = AbstractView.extend({
 
 ,	template: 'dependencies'
 
+,	events: {
+		'click [data-type="includeExtends"]': 'includeExtends'
+	,	'click [data-type="includeNativeClasses"]': 'includeNativeClasses'
+	}
+
 ,	initialize: function(application, options)
 	{
 		this.application = application; 
-		this.ignoreClasses = [
+		this.options = options || {}; 
+		this.options.includeExtends = this.options.includeExtends && this.options.includeExtends!=='0'; 
+		this.options.includeNativeClasses = this.options.includeNativeClasses && this.options.includeNativeClasses!=='0'; 
+
+		this.ignoreClasses = this.options.includeNativeClasses ? [] : [
 			'javascript.String'
 		,	'javascript.Object'
 		,	'javascript.Function'
@@ -33,13 +42,37 @@ var DependenciesView = AbstractView.extend({
 				self.doTheGraph();
 			}
 		); 
+	} 
+
+	//TODO repeated code
+,	includeExtends: function()
+	{
+		var checked = this.$('[data-type="includeExtends"]').is(':checked');		
+		var options = this.getOptionsFromHash();
+		options.includeExtends = checked ? '1' : '0';
+		var url = 'dependencies?' + this.optionsToString(options); 
+		Backbone.history.navigate(url, {trigger: true}); 
+	}
+
+	//TODO repeated code
+,	includeNativeClasses: function()
+	{
+		var checked = this.$('[data-type="includeNativeClasses"]').is(':checked');		
+		var options = this.getOptionsFromHash();
+		options.includeNativeClasses = checked ? '1' : '0';
+		var url = 'dependencies?' + this.optionsToString(options); 
+		Backbone.history.navigate(url, {trigger: true}); 
 	}
 
 ,	doTheGraph: function()
 	{
-		var tool = new this.application.maker.tools.DependencyTool(this.application.maker, {
-			ignoreClasses: this.ignoreClasses
-		}); 
+		this.$('.loading-message').show();
+		var toolConfig = {
+				ignoreClasses: this.ignoreClasses
+			,	includeExtends: this.options.includeExtends
+			}
+		,	tool = new this.application.maker.tools.DependencyTool(this.application.maker, toolConfig); 
+
 		tool.calculateClassDependencies();
 
 		// this.application.maker.calculateClassDependencies();
@@ -60,7 +93,10 @@ var DependenciesView = AbstractView.extend({
 				// debugger;
 				if(nodeIds[c.absoluteName] && nodeIds[dep.absoluteName])
 				{				
-					edges.push({from: nodeIds[c.absoluteName].id, to: nodeIds[dep.absoluteName].id}); 	
+					edges.push({
+						from: nodeIds[c.absoluteName].id
+						, to: nodeIds[dep.absoluteName].id
+					}); 	
 				}
 			}); 
 		}); 
@@ -82,6 +118,8 @@ var DependenciesView = AbstractView.extend({
 		};
 
 		var network = new vis.Network(container, data, options);
+
+		this.$('.loading-message').hide();
 	}
 
 });
