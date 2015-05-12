@@ -60,3 +60,6 @@
   * fix issue with embedded index.html
 
 ##0.2.1
+  * fix big issue with later declared children
+
+##0.2.2

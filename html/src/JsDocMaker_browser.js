@@ -2046,14 +2046,32 @@ JsDocMaker.prototype.parse = function(comments)
 					parsed.module = currentModule; 
 					parsed.absoluteName = currentModule.name + JsDocMaker.ABSOLUTE_NAME_SEPARATOR + parsed.name;
 
-					//if the class was already defined we want to preserve all the definitions texts
+					//if the class was already defined we want to preserve all the definitions children and texts 
 					if(self.data.classes[parsed.absoluteName])
 					{
+						//preserve text
 						if(self.data.classes[parsed.absoluteName].text !== parsed.text)
 						{
 							self.data.classes[parsed.absoluteName].text += JsDocMaker.MULTIPLE_TEXT_SEPARATOR + parsed.text; 
 						}
+
+						// preserve children
+						self.data.classes[parsed.absoluteName].children = self.data.classes[parsed.absoluteName].children || [];
+						_(parsed.children).each(function(classPreservedChild)
+						{
+							var originalChild = _(self.data.classes[parsed.absoluteName].cihldren).find(function(c2)
+							{
+								return c2.annotation===classPreservedChild.annotation; 
+							}); 
+							if(!originalChild)
+							{
+								self.data.classes[parsed.absoluteName].children.push(classPreservedChild); 
+							}
+						});
+
+						
 						currentClass = self.data.classes[parsed.absoluteName]; 
+
 					}
 					else
 					{						

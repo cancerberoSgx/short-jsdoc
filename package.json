@@ -1,6 +1,6 @@
 {
   "name": "short-jsdoc",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "short and simple jsdoc Object Oriented syntax format and implementation",
   "author": "Sebastián Gurin (cancerberoSgx)",
   "dependencies": {
