@@ -164,6 +164,18 @@ Generate and run a full distro from github:
     firefox http://localhost:8080/html/index-dev.html
 
 
+#Unit test
+
+Run unit tests in the browser: 
+
+    gulp run
+    firefox http://localhost:8080/test/SpecRunner.html
+
+Run unit tests in node:
+
+    node node_modules/jasmine/bin/jasmine.js
+
+
 #Motivation notes
 [These are some notes about my initial motivation when started the project](https://github.com/cancerberoSgx/short-jsdoc/blob/master/doc/MOTIVATION.md)
 

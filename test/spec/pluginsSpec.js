@@ -1,3 +1,7 @@
+var JsDocMaker = typeof _ === 'undefined' ? require('../../src/jsdocmaker/main.js') : JsDocMaker; 
+var _ = typeof _ === 'undefined' ? require('underscore') : _; 
+
+
 describe("plugins", function() 
 {
 

@@ -19,6 +19,7 @@
     "grunt-contrib-less": "*",
     "grunt-contrib-uglify": "*",
     "grunt-contrib-watch": "*",
+    "jasmine": "^2.3.2",
     "matchdep": "*"
   },
   "main": "./src/shortjsdoc.js",

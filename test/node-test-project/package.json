@@ -1,15 +1,15 @@
 {
-	"name": "my-pets"
-,	"version": "0.1.0"
-,	"description": "example of using shortjsdoc in a build system based on nodejs (gulp, grunt, etc)"
-,	"author": "Sebastián Gurin"
-
-,	"dependencies": {
-		"short-jsdoc": "*"
-	}
-
-,	 "scripts" : 
-	{
-		"postinstall" : "node setup.js"
-	}
+  "name": "my-pets",
+  "version": "0.1.0",
+  "description": "example of using shortjsdoc in a build system based on nodejs (gulp, grunt, etc)",
+  "author": "Sebastián Gurin",
+  "dependencies": {
+    "short-jsdoc": "*"
+  },
+  "scripts": {
+    "postinstall": "node setup.js"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.0"
+  }
 }
