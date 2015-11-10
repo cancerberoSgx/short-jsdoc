@@ -10,6 +10,8 @@
     "postinstall": "node setup.js"
   },
   "devDependencies": {
-    "gulp": "^3.9.0"
+    "gulp": "^3.9.0",
+    "short-jsdoc": "file:../..",
+    "through": "^2.3.8"
   }
 }

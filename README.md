@@ -168,7 +168,7 @@ Generate and run a full distro from github:
 
 Run unit tests in the browser: 
 
-    gulp run
+    grunt run
     firefox http://localhost:8080/test/SpecRunner.html
 
 Run unit tests in node:

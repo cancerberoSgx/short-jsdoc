@@ -71,13 +71,13 @@ The tool will be consuming expressions like the following to build the AST. We c
 
 ---
 
-#Annotation syntax
-
----
-
 #Tree structure
 
-In jsdoc only certain nodes can contain children. We call these *parent nodes* and are:
+ * @module contain @class
+ * @class contain @method @property @event 
+ * @method contain @param 
+
+In short-jsdoc only certain nodes can contain children. We call these *parent nodes* and are:
 
 	@module @method @property @event @class
 
@@ -121,7 +121,9 @@ Are just a reference to a class by name, for example:
 
 If you reference a JavaScript native type like String, Array, Object, etc., they will be binded to the [Mozilla JavaScript Types Reference](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects). Some native types are
 
-	Object, Number, Boolean, String, Array, Function, Error
+	Object, Number, Boolean, String, Array, Function, Error, etc
+
+Also you can choose to compile using the provided jsdoc for native types - copied and pasted from mozilla docs. In that case instead an external link you can navigate to the type as with any other types and the inherited information will be available.
 
 ---
 
@@ -136,15 +138,6 @@ These are inspirated in Java or C# generics. For example we can say that a param
 Generic types support arbitrary anidation:
 
 	@method groupWires @returns {Object&lt;String,Array&lt;Wire>>} a map of wires by name.
-
----
-
-#Ignored comments
-
-Comments starting with the character '?' will be ignored, even if they contain annotations:
-
-	//? @class Something will be ignored b the parser
-	/*? @method foo also will be ignored */
 
 
 
@@ -161,6 +154,22 @@ Because in JavaScript is very common to define Objects on the fly shortjsdoc sup
 That means that the mehod *foo* returns an object with the properties *id* of type String, *color* of type Array of Color and *execute* of type Function.
 
 
+
+---
+#Types
+
+There is jsdoc for libraries types like jQuery, Backbone, Underscore that you can also link in your applications. For example jQuery.Deferred, Backbone.View, etc. 
+
+
+
+---
+
+#Ignored comments
+
+Comments starting with the character '?' will be ignored, even if they contain annotations:
+
+	//? @class Something will be ignored b the parser
+	/*? @method foo also will be ignored */
 
 
 ---
@@ -214,15 +223,12 @@ We can use @?class AClass or @?method module.Class.method1 or @?property, @?even
 
 Also, there is a @?ref that will accept any kind of node - but less efficient by the viewer tools. 
 
-Also one can specify links using the @?link text mark, for example:
-
-	//@method foo Please @?link "[google it](http://google.com)" for more information 
 
 ---
 
 #Type alias
 
-There is a very powerfull annotation @alias that let declare alias for types and even for annotations.
+There is a very powerful annotation @alias that let declare alias for types and even for annotations.
 
 Suppose you want to integrate an external jsdoc file in which the type 'float' is used instead of Number. You want the tool to replace each 'float' type with 'Number', so you would add the following (before):
 
@@ -276,6 +282,20 @@ Based on our previous example, if we bind the AST we will can navigate through t
 		=== ast.classes ['people.Person']
 
 
+
+---
+
+#The html application
+
+After the parser has extracted all the jsdoc AST information from given sources, there is a html single page application that renders all of this information in a navigable way with utilities like:
+
+ * node text search
+ * class hierarchy
+ * known subclases
+ * search type references
+ * full AST tree
+
+ 
 	</textarea>
 	<script src="https://gnab.github.io/remark/downloads/remark-latest.min.js">
 	</script>
