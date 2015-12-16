@@ -32,3 +32,14 @@ var self = this;
 	</li>
 <% }); %>
 </ul>
+
+
+<h3>Functions</h3>
+<ul class="Functions">
+<% _(this.jsdoc.functions).each(function(c) { %>
+	<li>
+		<a class="module-function-name"href="#function/<%= c.absoluteName %>"><%= c.name %></a>		
+
+	</li>
+<% }); %>
+</ul>

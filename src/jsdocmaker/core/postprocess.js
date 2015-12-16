@@ -56,7 +56,7 @@ JsDocMaker.prototype.postProccessBinding = function()
 	_(self.data.modules).each(function(m)
 	{
 		self.beforeTypeBindingPlugins.execute({node: m, jsdocmaker: self});
-		self._postProccessBinding_methodSetup(m.functions, m);
+		self._postProccessBinding_methodSetup(m.functions, m, true);
 	});
 	
 	//at this points we have all our modules and classes - now we normalize extend, methods and params and also do the type binding. 
@@ -117,7 +117,7 @@ JsDocMaker.prototype.postProccessBinding = function()
 	self.afterTypeBindingPlugins.execute({jsdocmaker: self});
 };
 
-JsDocMaker.prototype._postProccessBinding_methodSetup = function(methods, c)
+JsDocMaker.prototype._postProccessBinding_methodSetup = function(methods, c, isFunction)
 {
 	var self = this;
 	c = c || {}; 
@@ -133,7 +133,14 @@ JsDocMaker.prototype._postProccessBinding_methodSetup = function(methods, c)
 		method.params = params; 
 
 		var absoluteName = c.absoluteName || c.name || '';
-		method.ownerClass = absoluteName;			
+		if(!isFunction)
+		{
+			method.ownerClass = absoluteName;	
+		}
+		else
+		{
+			method.ownerModule = absoluteName;
+		}		
 		method.absoluteName = absoluteName + JsDocMaker.ABSOLUTE_NAME_SEPARATOR + method.name; 
 
 		_(method.params).each(function(param)

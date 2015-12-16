@@ -383,19 +383,29 @@ with (obj) {
 __p += '\n\n\n\n<div class="row method-header">\n\t<div class="col-md-4">\n\t\t<h2 class="method-title">\n\t\t\t';
  if(this.isConstructor){ ;
 __p += '\n\t\t\t<h2>Constructor</h2>\n\t\t\t';
- } else {;
+ } else if(!this.isFunction) { ;
 __p += '\n\t\t\t<h2>Method&nbsp;<a href="' +
 ((__t = ( this.makeLink(this.jsdoc) )) == null ? '' : __t) +
 '">' +
 ((__t = ( this.jsdoc.name)) == null ? '' : __t) +
 '</a></h2>\n\t\t\t';
- } ;
-__p += '\n\t\t</h2>\n\t</div>\n\t<div class="col-md-4">\n\t\t<h3>Of class <a href="#class/' +
+ } else { ;
+__p += '\n\t\t\t<h2>Function&nbsp;<a href="' +
+((__t = ( this.makeLink(this.jsdoc) )) == null ? '' : __t) +
+'">' +
+((__t = ( this.jsdoc.name)) == null ? '' : __t) +
+'</a></h2>\n\t\t\t';
+ };
+__p += '\n\t\t</h2>\n\t</div>\n\t<div class="col-md-4">\n\t\t';
+ if(!this.isFunction){;
+__p += '\n\t\t<h3>Of class <a href="#class/' +
 ((__t = ( this.jsdoc.ownerClass )) == null ? '' : __t) +
 '">\n\t\t\t' +
 ((__t = ( this.simpleName(this.jsdoc.ownerClass) )) == null ? '' : __t) +
-'</a>\n\t\t</h3>\n\t</div>\n\n\t<div class="col-md-4">\n\t\t<h3 class="class-module-title">Of Module ' +
-((__t = ( this.makeLink(this.ownerClass.module, true) )) == null ? '' : __t) +
+'</a>\n\t\t</h3>\n\t\t';
+ } ;
+__p += '\n\t</div>\n\n\t<div class="col-md-4">\n\t\t<h3 class="class-module-title">Of Module ' +
+((__t = ( this.makeLink(this.ownerClass ? this.ownerClass.module : this.ownerModule, true) )) == null ? '' : __t) +
 '</h3>\n\t</div>\n</div>\n\n\n\n\n\n\n\n<div class="row">\n\t<div class="col-md-4">\n\n\t\t';
  if( this.jsdoc.params.length ) { ;
 __p += '\n\t\t<h3>Parameters</h3>\n\t\t';
@@ -498,6 +508,14 @@ __p += '\n\t\t\t<li><a href="' +
 ', </a>\n\t\t';
 }) ;
 __p += '\n\t\t</ul>\n\t</li>\n';
+ }); ;
+__p += '\n</ul>\n\n\n<h3>Functions</h3>\n<ul class="Functions">\n';
+ _(this.jsdoc.functions).each(function(c) { ;
+__p += '\n\t<li>\n\t\t<a class="module-function-name"href="#function/' +
+((__t = ( c.absoluteName )) == null ? '' : __t) +
+'">' +
+((__t = ( c.name )) == null ? '' : __t) +
+'</a>\t\t\n\n\t</li>\n';
  }); ;
 __p += '\n</ul>';
 

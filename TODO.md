@@ -5,6 +5,7 @@
 Listed from more important to less important - kind of:
 
 
+
  *  issue this seems to fail: @module m @class A @method p @property {B} @class B - the error is class 'undefined.B'
  
  * remove @?link and see if is faster. 
@@ -17,6 +18,9 @@ Listed from more important to less important - kind of:
 
  * (performance) include the source only of files that contain annotations
 
+
+ * issue : this wont work /* ... @method m @return rt@throws {A}*/ - ntp a big deal but nice to have
+ 
  * implement js syntax check per file instead of the whole file. if a file doesn't compile then don't include it and warn the user
  
  * support object literal without types, like this @param {el,name}

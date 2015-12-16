@@ -10,6 +10,7 @@ var JsDocRouter = Backbone.Router.extend({
 
 	,	'method/:method': 'showMethod'
 	,	'constructor/:method': 'showMethod'
+	,	'function/:method': 'showMethod'
 
 	,	'property/:property': 'showProperty'
 	,	'event/:event': 'showEvent'
@@ -84,7 +85,7 @@ var JsDocRouter = Backbone.Router.extend({
 		this.showView(view); 
 	}
 
-	//@method showMethod  @param {String} method
+	//@method showMethod Responsible of showing Methods, Constructors and Functions @param {String} method
 ,	showMethod: function(method)
 	{
 		var view = new MethodView(this.application, method);

@@ -37,6 +37,10 @@ _(AbstractView.prototype).extend({
 		{			
 			s += '#constructor/' + node.absoluteName; 
 		}
+		else if(node.annotation==='function')
+		{			
+			s += '#function/' + node.absoluteName; 
+		}
 		else if(node.annotation==='property')
 		{
 			s += '#property/' + node.absoluteName; 

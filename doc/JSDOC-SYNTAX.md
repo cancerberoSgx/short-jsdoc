@@ -33,3 +33,33 @@ You are free to include any custom @annotation to define your custom semantics. 
 
 
 Flexible:
+
+
+
+
+
+
+
+#Modules
+
+
+#Classes
+
+
+
+#Methods
+
+(Object Oriented concept). In JavaScript, a method is a function associated with context object, the 'this' name. This context object will be an instance of the class the method's belong to. 
+
+In JavaScript, very often, methods are defined as functions of the class prototype, for example: 
+
+	MyClass.prototype.sayHi = function()....
+
+We can also have static methods, this is functions associated to a class and not to any instance, for example, 
+
+	MyClass.utilityMethod = function()...
+
+
+
+#Functions
+(JavaScript concept, not Object oriented)

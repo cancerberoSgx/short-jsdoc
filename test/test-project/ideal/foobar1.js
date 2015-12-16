@@ -2,7 +2,7 @@ define([], function()
 {
 	var Class = {
 
-		/*
+		/*@module empty1 @class Aba
 		@method foo
 		This is some text
 
@@ -20,3 +20,5 @@ define([], function()
 		}
 	};
 });
+
+// @function auxiliary65 @return {String} @param p2 @param {Aba} aba
