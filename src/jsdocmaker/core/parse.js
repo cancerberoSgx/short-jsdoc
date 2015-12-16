@@ -129,7 +129,7 @@ JsDocMaker.prototype.parse = function(comments)
 		self.commentPreprocessorPlugins.execute({node: node, jsdocMaker: self}); 
 
 		//
-		var s = '((?:@class)|(?:@method)|(?:@property)|(?:@attribute)|(?:@method)|(?:@module)|(?:@event)|(?:@constructor)|(?:@filename))'; 
+		var s = '((?:@class)|(?:@method)|(?:@property)|(?:@attribute)|(?:@module)|(?:@event)|(?:@constructor)|(?:@function)|(?:@filename))'; 
 
 		var regex = new RegExp(s, 'gi');
 		var a = JsDocMaker.splitAndPreserve(node.value || '', regex); 
@@ -244,6 +244,14 @@ JsDocMaker.prototype.parse = function(comments)
 					currentMethod = parsed; 
 				}
 
+
+				else if(parsed.annotation === 'function' && currentModule)
+				{
+					currentModule.functions = currentModule.functions || [];
+					currentModule.functions.push(parsed); 
+					currentMethod = parsed; // heads up - so future @params and @returns are assigned to this function
+				}
+
 				//? @property and @event and @attribute are treated similarly
 				else if(parsed.annotation === 'property' && currentClass)
 				{
@@ -260,20 +268,6 @@ JsDocMaker.prototype.parse = function(comments)
 					currentClass.attributes = currentClass.attributes || {};
 					currentClass.attributes[parsed.name] = parsed;
 				}
-
-				// ? @param is children of @method
-				/*else if(parsed.annotation === 'param' && currentClass)
-				{
-					if(!currentMethod)
-					{
-						self.error('param before method: ', parsed);
-					}
-					else
-					{						
-						currentMethod.params = currentMethod.params || {};
-						currentMethod.params[parsed.name] = parsed; 
-					}
-				}*/
 
 				self.afterParseNodePlugins.execute({
 					node: parsed

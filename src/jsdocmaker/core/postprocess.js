@@ -56,6 +56,7 @@ JsDocMaker.prototype.postProccessBinding = function()
 	_(self.data.modules).each(function(m)
 	{
 		self.beforeTypeBindingPlugins.execute({node: m, jsdocmaker: self});
+		self._postProccessBinding_methodSetup(m.functions, m);
 	});
 	
 	//at this points we have all our modules and classes - now we normalize extend, methods and params and also do the type binding. 
@@ -92,75 +93,7 @@ JsDocMaker.prototype.postProccessBinding = function()
             }
         }
 
-		_(methods).each(function(method)
-		{
-			self.beforeTypeBindingPlugins.execute({node: method, jsdocmaker: self});
-			//method.param property
-			var params = _(method.children||[]).filter(function(child)
-			{
-				child.text = JsDocMaker.stringTrim(child.text||''); 
-				return child.annotation === 'param'; 
-			}); 
-			method.params = params; 
-
-			method.ownerClass = c.absoluteName;				
-			method.absoluteName = c.absoluteName + JsDocMaker.ABSOLUTE_NAME_SEPARATOR + method.name; 
-
-			_(method.params).each(function(param)
-			{
-				self.beforeTypeBindingPlugins.execute({node: param, jsdocmaker: self});
-
-				if(_(param.type).isString())
-				{
-					param.typeOriginalString = param.type; 
-					param.type = self.parseTypeString(param.type, c) || param.type;						
-				}
-			}); 
-
-			//method throws property
-			var throw$ = _(method.children||[]).filter(function(child)
-			{
-				// child.text = JsDocMaker.stringTrim(child.text||''); 
-				return child.annotation === 'throw' || child.annotation === 'throws'; 
-			}); 
-			method.throws = throw$; 
-			// method.ownerClass = c.absoluteName;				
-			// method.absoluteName = c.absoluteName + JsDocMaker.ABSOLUTE_NAME_SEPARATOR + method.name; 
-			_(method.throws).each(function(t)
-			{
-				self.beforeTypeBindingPlugins.execute({node: t, jsdocmaker: self});
-
-				//because @throws doesn't have a name it breaks our simple grammar, so we merge the name with its text.
-				t.text = (t.name ? t.name+' ' : '') + (t.text||''); 
-				if(_(t.type).isString())
-				{
-					t.typeOriginalString = t.type; 
-					t.type = self.parseTypeString(t.type, c) || t.type;						
-				}
-			}); 
-
-			//method.returns property
-			var returns = _(method.children||[]).filter(function(child)
-			{				
-				self.beforeTypeBindingPlugins.execute({node: child, jsdocmaker: self});
-				child.text = JsDocMaker.stringTrim(child.text||''); 
-				return child.annotation === 'returns' || child.annotation === 'return'; 
-			}); 
-			method.returns = returns.length ? returns[0] : {name:'',type:''};
-
-			//because @returns doesn't have a name it breaks our simple grammar, so we merge the name with its text.
-			method.returns.text = (method.returns.name ? method.returns.name+' ' : '') + (method.returns.text||''); 
-
-			if(_(method.returns.type).isString())
-			{
-				method.returns.type = self.parseTypeString(method.returns.type, c) || method.returns.type;						
-			}
-
-			if(self.installModifiers)
-			{
-				self.installModifiers(method); 
-			}
-		});
+		self._postProccessBinding_methodSetup(methods, c);		
 
 		//setup properties
 		var propertySetup = function(prop)
@@ -182,4 +115,80 @@ JsDocMaker.prototype.postProccessBinding = function()
 	});
 
 	self.afterTypeBindingPlugins.execute({jsdocmaker: self});
+};
+
+JsDocMaker.prototype._postProccessBinding_methodSetup = function(methods, c)
+{
+	var self = this;
+	c = c || {}; 
+	_(methods).each(function(method)
+	{
+		self.beforeTypeBindingPlugins.execute({node: method, jsdocmaker: self});
+		//method.param property
+		var params = _(method.children||[]).filter(function(child)
+		{
+			child.text = JsDocMaker.stringTrim(child.text||''); 
+			return child.annotation === 'param'; 
+		}); 
+		method.params = params; 
+
+		var absoluteName = c.absoluteName || c.name || '';
+		method.ownerClass = absoluteName;			
+		method.absoluteName = absoluteName + JsDocMaker.ABSOLUTE_NAME_SEPARATOR + method.name; 
+
+		_(method.params).each(function(param)
+		{
+			self.beforeTypeBindingPlugins.execute({node: param, jsdocmaker: self});
+
+			if(_(param.type).isString())
+			{
+				param.typeOriginalString = param.type; 
+				param.type = self.parseTypeString(param.type, c) || param.type;						
+			}
+		}); 
+
+		//method throws property
+		var throw$ = _(method.children||[]).filter(function(child)
+		{
+			// child.text = JsDocMaker.stringTrim(child.text||''); 
+			return child.annotation === 'throw' || child.annotation === 'throws'; 
+		}); 
+		method.throws = throw$; 
+		// method.ownerClass = c.absoluteName;				
+		// method.absoluteName = c.absoluteName + JsDocMaker.ABSOLUTE_NAME_SEPARATOR + method.name; 
+		_(method.throws).each(function(t)
+		{
+			self.beforeTypeBindingPlugins.execute({node: t, jsdocmaker: self});
+
+			//because @throws doesn't have a name it breaks our simple grammar, so we merge the name with its text.
+			t.text = (t.name ? t.name+' ' : '') + (t.text||''); 
+			if(_(t.type).isString())
+			{
+				t.typeOriginalString = t.type; 
+				t.type = self.parseTypeString(t.type, c) || t.type;						
+			}
+		}); 
+
+		//method.returns property
+		var returns = _(method.children||[]).filter(function(child)
+		{				
+			self.beforeTypeBindingPlugins.execute({node: child, jsdocmaker: self});
+			child.text = JsDocMaker.stringTrim(child.text||''); 
+			return child.annotation === 'returns' || child.annotation === 'return'; 
+		}); 
+		method.returns = returns.length ? returns[0] : {name:'',type:''};
+
+		//because @returns doesn't have a name it breaks our simple grammar, so we merge the name with its text.
+		method.returns.text = (method.returns.name ? method.returns.name+' ' : '') + (method.returns.text||''); 
+
+		if(_(method.returns.type).isString())
+		{
+			method.returns.type = self.parseTypeString(method.returns.type, c) || method.returns.type;						
+		}
+
+		if(self.installModifiers)
+		{
+			self.installModifiers(method); 
+		}
+	});
 };
