@@ -254,10 +254,17 @@ JsDocMaker.prototype.bindClass = function(name, baseClass)
 }; 
 
 // @method simpleName @param {String} name @return {String}
-JsDocMaker.prototype.simpleName = function(name)
+JsDocMaker.prototype.simpleName = function(name, prefix)
 {
-	var a = name.split(JsDocMaker.ABSOLUTE_NAME_SEPARATOR);
-	return a[a.length-1]; 
+	if(prefix && name.indexOf(prefix) === 0)
+	{
+		return name.substring(prefix.length + 1, name.length);
+	}
+	else
+	{	
+		var a = name.split(JsDocMaker.ABSOLUTE_NAME_SEPARATOR);
+		return a[a.length - 1]; 	
+	}
 }; 
 
 

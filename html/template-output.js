@@ -401,7 +401,7 @@ __p += '\n\t\t</h2>\n\t</div>\n\t<div class="col-md-4">\n\t\t';
 __p += '\n\t\t<h3>Of class <a href="#class/' +
 ((__t = ( this.jsdoc.ownerClass )) == null ? '' : __t) +
 '">\n\t\t\t' +
-((__t = ( this.simpleName(this.jsdoc.ownerClass) )) == null ? '' : __t) +
+((__t = ( this.simpleName(this.jsdoc.ownerClass, this.ownerModule) )) == null ? '' : __t) +
 '</a>\n\t\t</h3>\n\t\t';
  } ;
 __p += '\n\t</div>\n\n\t<div class="col-md-4">\n\t\t<h3 class="class-module-title">Of Module ' +
@@ -608,7 +608,7 @@ __p += '<h2>' +
 '</a></h2>\n\n<h3>Of class <a href="#class/' +
 ((__t = ( this.jsdoc.ownerClass )) == null ? '' : __t) +
 '">\n\t' +
-((__t = ( this.simpleName(this.jsdoc.ownerClass) )) == null ? '' : __t) +
+((__t = ( this.simpleName(this.jsdoc.ownerClass, this.ownerModule) )) == null ? '' : __t) +
 '</a>\n</h3>\n\n';
  if (this.jsdoc.text) { ;
 __p += '\n<div class="method-text">\n\t' +

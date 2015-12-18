@@ -57,5 +57,8 @@ Excepteur sint occaecat *cupidatat* non proident, sunt in culpa qui officia dese
 
 
 
-@class MedicalException @extends Error
+@class Medical.Exception @extends Error
+@method method1 foo @param a @throws b
+@property {String} name
+@event pepe
 */

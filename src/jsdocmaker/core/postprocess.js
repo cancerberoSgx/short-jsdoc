@@ -157,12 +157,9 @@ JsDocMaker.prototype._postProccessBinding_methodSetup = function(methods, c, isF
 		//method throws property
 		var throw$ = _(method.children||[]).filter(function(child)
 		{
-			// child.text = JsDocMaker.stringTrim(child.text||''); 
 			return child.annotation === 'throw' || child.annotation === 'throws'; 
 		}); 
 		method.throws = throw$; 
-		// method.ownerClass = c.absoluteName;				
-		// method.absoluteName = c.absoluteName + JsDocMaker.ABSOLUTE_NAME_SEPARATOR + method.name; 
 		_(method.throws).each(function(t)
 		{
 			self.beforeTypeBindingPlugins.execute({node: t, jsdocmaker: self});

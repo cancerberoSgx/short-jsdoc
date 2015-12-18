@@ -17,7 +17,7 @@
 	<div class="col-md-4">
 		<% if(!this.isFunction){%>
 		<h3>Of class <a href="#class/<%= this.jsdoc.ownerClass %>">
-			<%= this.simpleName(this.jsdoc.ownerClass) %></a>
+			<%= this.simpleName(this.jsdoc.ownerClass, this.ownerModule) %></a>
 		</h3>
 		<% } %>
 	</div>

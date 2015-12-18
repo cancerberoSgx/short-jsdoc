@@ -13,11 +13,11 @@ var MethodView = AbstractView.extend({
 		if(Backbone.history.fragment.indexOf('method')===0 || Backbone.history.fragment.indexOf('constructor')===0)
 		{
 			var className = this.getClassName(methodName);
-		
 			var methodSimpleName = this.getSimpleName(methodName);
 
 			var class_ = this.application.data.classes[className];
-			
+			this.ownerModule = class_.module.name;
+
 			//is a method or constructor
 			if(!isNaN(parseInt(methodSimpleName, 10)))
 			{

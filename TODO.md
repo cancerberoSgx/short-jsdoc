@@ -124,8 +124,6 @@ all primary annotation rules (class, module,method, property) should be defined 
  * Some secondary features of jsdocmaker like installModifiers, NATIVE_TYPES, should be if(full plugins and be optional. i.e. don't do installModifiers){} in core code.
 
  * native types declaration: @declareNativeClass QuickSort http://foo.bar.org/external-api/QuickSort.html
-
- * @function primary
  
  * if an extension loop occurs a maximun call stack size exceeded exception ocurrs. Detect this more friendly.
  

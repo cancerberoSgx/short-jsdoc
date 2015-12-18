@@ -15,9 +15,9 @@ _(AbstractView.prototype).extend({
 	}
 
 	//@method simpleName @param {String}name
-,	simpleName: function(name)
+,	simpleName: function(name, prefix)
 	{
-		return this.application.maker.simpleName(name);
+		return this.application.maker.simpleName(name, prefix);
 	}
 
 	//@method makeLink @param {boolean} htmlAnchors will output anchor elements html

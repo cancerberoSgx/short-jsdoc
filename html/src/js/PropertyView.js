@@ -20,7 +20,8 @@ var PropertyView = AbstractView.extend({
 		
 		var propertySimpleName = this.getSimpleName(propertyName);
 
-		var class_ = this.application.data.classes[className];
+		var class_ = this.application.data.classes[className];		
+		this.ownerModule = class_.module.name;
 
 		var propertyPropNamesDic = {
 			event: 'events', property: 'properties', attribute: 'attributes'
