@@ -7,15 +7,15 @@ describe("@function", function()
 	it("a module can contain functions", function() 
 	{
 		var jsdoc, maker; 
-		var code = 
-			'/*' + '\n' +
-			'@module Module.With.Dots' + '\n' +  			
-			'@class Class.With.Dots @extend OtherClass.With.Dots '+'\n'+
-			'@method beEatenBy apples have this privilege' + '\n' +
-			'@return {String} bla bla' + '\n' +
-			'@thows {Error} bla bla' + '\n' +
-			'@param {Number} p1 bla bla' + '\n' +
-			'*/' + '\n' +
+		var code =
+
+			'//@module m1' + '\n' + 
+			'//#title 1' + '\n' +
+			'//This is a paragraph 1l slkdjf lskdjflkdf' + '\n' +
+			'//paragraph 1 still continue lksjdflskdjlf' + '\n' +
+			'//' + '\n' +
+			'//this is pargaraph 2 lskdjf lsk flk sjldf' + '\n' +
+			'//still paragraph 2lsdkjf lksjdlf skjldf' + '\n' +
 			'';
 
 		maker = new JsDocMaker();		
@@ -27,7 +27,7 @@ describe("@function", function()
 
 		// expect(jsdoc.classes['a.Apple'].methods['beEatenBy'].params).toBe(3)
 
-		console.log(jsdoc.classes['Module.With.Dots.Class.With.Dots'])
+		console.log(jsdoc.modules['m1'].text)
 	});
 
 });

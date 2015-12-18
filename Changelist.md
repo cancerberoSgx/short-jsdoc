@@ -64,4 +64,5 @@
 
 ##0.2.2
  * @function support as @module child and html app also
- * fix 'of class' value in method and property views
+ * fix 'of class' value in method and property views 
+ * markdown in Line comments 

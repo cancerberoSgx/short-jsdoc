@@ -347,12 +347,16 @@ JsDocMaker.prototype.parseUnitSimple = function(str, comment)
 		
 	var splitted = JsDocMaker.splitAndPreserve(text, this.annotationRegexp) || [''];  
 	text = splitted[0]; 
+	//@property {String} lineCommentSeparator used to separate each Line comment type text
+	this.lineCommentSeparator = this.lineCommentSeparator || '\n';
+	text = text.replace(new RegExp(this.lineCommentSeparatorMark, 'g'), this.lineCommentSeparator);
+	text = JsDocMaker.stringTrim(text||'')
 	splitted.splice(0,1); 
 	var ret = {
 		annotation: result[1]
 	,	type: result[2]
 	,	name: result[3]
-	,	text: JsDocMaker.stringTrim(text||'')
+	,	text: text
 	,	theRestString: JsDocMaker.stringTrim(splitted.join(''))
 	};
 

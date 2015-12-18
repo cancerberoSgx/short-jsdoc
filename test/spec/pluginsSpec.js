@@ -115,7 +115,7 @@ it("using @?something arguments inside text to create named marks inside.", func
 	jsdoc = maker.jsdoc();
 
 	var strange = jsdoc.classes['trees.Bananero'].methods.strange;
-	expect(strange.text).toBe('this methods do the strange thing what is related with _shortjsdoc_textmarkplugin_1 and _shortjsdoc_textmarkplugin_2 because of the destiny also _shortjsdoc_textmarkplugin_3 is related to this problem and of cource _shortjsdoc_textmarkplugin_4 method references are allowed'); 
+	expect(strange.text).toBe('this methods do the strange thing what is related \n with _shortjsdoc_textmarkplugin_1 and _shortjsdoc_textmarkplugin_2 because of the destiny \n also _shortjsdoc_textmarkplugin_3 is related to this problem and of cource _shortjsdoc_textmarkplugin_4 method references are allowed'); 
 
 	expect(strange.textMarks._shortjsdoc_textmarkplugin_1.name).toBe('class');
 	expect(strange.textMarks._shortjsdoc_textmarkplugin_1.arg).toBe('fruits.Banana');

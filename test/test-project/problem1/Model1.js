@@ -62,3 +62,10 @@ Excepteur sint occaecat *cupidatat* non proident, sunt in culpa qui officia dese
 @property {String} name
 @event pepe
 */
+
+// @property somethingintheway
+// This is some markdown text with a lot of paragraph, this is the first
+//
+// this is the second
+//
+// and this is the third

@@ -36,6 +36,7 @@ var Application = function(data)
 
 	//@property {JsDocMaker} maker the JsDocMaker instance we will use for loading the parsed data and doing some post processing stage (type binding and so)
 	this.maker = new JsDocMaker();
+	// this.maker.lineCommentSeparator = '888898888';
 	this.maker.data = data;	
 
 	this.maker.postProccess();

@@ -14,8 +14,6 @@ Listed from more important to less important - kind of:
 
  * remove asterix from package.json dependency versions
  
- * markdown in Line comments 
-
  * (performance) include the source only of files that contain annotations
 
 

@@ -2245,12 +2245,16 @@ JsDocMaker.prototype.parseUnitSimple = function(str, comment)
 		
 	var splitted = JsDocMaker.splitAndPreserve(text, this.annotationRegexp) || [''];  
 	text = splitted[0]; 
+	//@property {String} lineCommentSeparator used to separate each Line comment type text
+	this.lineCommentSeparator = this.lineCommentSeparator || '\n';
+	text = text.replace(new RegExp(this.lineCommentSeparatorMark, 'g'), this.lineCommentSeparator);
+	text = JsDocMaker.stringTrim(text||'')
 	splitted.splice(0,1); 
 	var ret = {
 		annotation: result[1]
 	,	type: result[2]
 	,	name: result[3]
-	,	text: JsDocMaker.stringTrim(text||'')
+	,	text: text
 	,	theRestString: JsDocMaker.stringTrim(splitted.join(''))
 	};
 
@@ -2646,9 +2650,7 @@ var unifyLineCommentsPlugin = {
 		,	comments = options.node
 		,	jsdocMaker = options.jsdocMaker; 
 	
-		//@property {String} lineCommentSeparator used to separate each Line comment type text @static
-		jsdocMaker.lineCommentSeparator = jsdocMaker.lineCommentSeparator || '\n';//'line_comment_sep_'+jsdocMaker.getUnique(); //;jsdocMaker.lineCommentSeparator || '\n'; 
-
+		jsdocMaker.lineCommentSeparatorMark = '_lineCommentSeparatorMark_';
 		while(i < comments.length - 1)
 		{
 			var c = comments[i]
@@ -2657,7 +2659,7 @@ var unifyLineCommentsPlugin = {
 			var sss = JsDocMaker.stringFullTrim(options.jsdocMaker.data.source.substring(c.range[1], next.range[0])); 
 			if (c.type==='Line' && next.type==='Line' && !sss)
 			{
-				c.value += ' ' + jsdocMaker.lineCommentSeparator + ' ' + next.value; 
+				c.value += ' ' + jsdocMaker.lineCommentSeparatorMark + ' ' + next.value; 
 				c.range[1] = next.range[1]; 
 				comments.splice(i+1, 1); 
 			}

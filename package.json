@@ -4,8 +4,8 @@
   "description": "short and simple jsdoc Object Oriented syntax format and implementation",
   "author": "Sebastián Gurin (cancerberoSgx)",
   "dependencies": {
-    "esprima": "*",
-    "underscore": "*",
+    "esprima": "2.7.1",
+    "underscore": "1.8.3",
     "yargs": "^1.3.3"
   },
   "devDependencies": {
