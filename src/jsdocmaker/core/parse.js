@@ -326,16 +326,18 @@ JsDocMaker.prototype.parseUnitSimple = function(str, comment)
 	var result;
 	var regexp = null; 
 
+	// HEADS UP - TODO: the fgollowing two regex definitions must be identical in the content but not perhasin the endings/begginigns / globals
+	// if you fix one you must also fix the other
 	if(comment.type==='Line')
 	{
 		str = JsDocMaker.stringFullTrim(str); 
-		regexp = /\s*@(\w+)\s*(\{[\w<>\|, #:\(\)\.]+\}){0,1}\s*([\w\._\$]+){0,1}(.*)\s*/i; 
+		regexp = /\s*@([\w\.\-\_]+)\s*(\{[\w<>\|, #:\(\)\.]+\}){0,1}\s*([\w\._\$]+){0,1}(.*)\s*/i; 
 		result = regexp.exec(str);
 	}
 	else
 	{
 		str = JsDocMaker.stringTrim(str); 
-		regexp = /\s*@(\w+)\s*(\{[\w<>\|, #:\(\)\.]+\}){0,1}\s*([\w\._\$]+){0,1}([.\s\w\W]*)/gmi;
+		regexp = /\s*@([\w\.\-\_]+)\s*(\{[\w<>\|, #:\(\)\.]+\}){0,1}\s*([\w\._\$]+){0,1}([.\s\w\W]*)/gmi;
 		//TODO: I have to put this regexp inline here - if not the second time I call exec on the instance it won't match. This is because the 'g' modifier.
 		result = regexp.exec(str); 
 	}

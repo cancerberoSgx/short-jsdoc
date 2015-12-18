@@ -58,8 +58,6 @@ var fixUnamedAnnotationsPlugin = {
 			node.value = node.value.replace(/@constructor/gi, '@constructor n'); 
 			node.value = node.value.replace(/(@\w+)\s*$/gi, '$1 dummy ');
 			node.value = node.value.replace(/(@\w+)\s+(@\w+)/gi, '$1 dummy $2');
-			// node.value = node.value.replace(/@throw/gi, '@throws n'); 
-			// node.value = node.value.replace(/@throws/gi, '@throws n'); 
 		}
 	}
 }; 

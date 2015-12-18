@@ -671,39 +671,72 @@ describe("support alternative comment block syntax", function()
 
 describe("support comment preprocessor", function() 
 {			
-	describe("for example one can install a pcomment preprocessor for adding/removing fragment to comments", function() 
+	it("for example one can install a pcomment preprocessor for adding/removing fragment to comments", function() 
 	{
-		it("/** style blocks", function() 
-		{
-			var code = 
-				'//@module stuff3' + '\n' +	
-				'/**@class Vanilla some text @author sgx */' + '\n'; 
+		var code = 
+			'//@module stuff3' + '\n' +	
+			'/**@class Vanilla some text @author sgx */' + '\n'; 
 
-			var maker = new JsDocMaker();
+		var maker = new JsDocMaker();
 
-			var plugin = {
-				name: 'author replace my example'
-			,	execute: function(options)
-				{					
-					options.node.value = options.node.value.replace(/@author\s+\w+/gi, '') + ' @author thief'; 
-				}
-			}; 
-			maker.commentPreprocessorPlugins.add(plugin); 
+		var plugin = {
+			name: 'author replace my example'
+		,	execute: function(options)
+			{					
+				options.node.value = options.node.value.replace(/@author\s+\w+/gi, '') + ' @author thief'; 
+			}
+		}; 
+		maker.commentPreprocessorPlugins.add(plugin); 
 
-			//then do the parsing
-			maker.parseFile(code); 
-			maker.postProccess();
-			maker.postProccessBinding();
-			var jsdoc = maker.data;
+		//then do the parsing
+		maker.parseFile(code); 
+		maker.postProccess();
+		maker.postProccessBinding();
+		var jsdoc = maker.data;
 
-			var Vanilla = jsdoc.classes['stuff3.Vanilla'];
-			var author = _(Vanilla.children).find(function(c){return c.annotation === 'author'; });
-			expect(author.name).toBe('thief');
-		});
+		var Vanilla = jsdoc.classes['stuff3.Vanilla'];
+		var author = _(Vanilla.children).find(function(c){return c.annotation === 'author'; });
+		expect(author.name).toBe('thief');
 	});
 });
 
 
+
+
+
+describe("custom child annotation", function() 
+{
+
+	it("custom annotations will be parsed in 'children' property and can contain characters '.', '-', '_'", function() 
+	{
+		var jsdoc, maker; 
+		var code =
+
+			// '//@alias annotation module gulp-task' + '\n' +
+
+			'//@module m1' + '\n' +
+			'//@customAnnotation1 {Type} name text text' + '\n' +
+			'//@custom-annotation2 {Type} name text text' + '\n' +
+			'//@custom.Annotation3 {Type} name text text' + '\n' +
+			'//@custom_Annotation4 {Type} name text text' + '\n' +
+			'//' + '\n' +
+
+			'';
+
+		maker = new JsDocMaker();		
+		maker.addFile(code, 'name.js');
+
+		jsdoc = maker.jsdoc();
+		maker.postProccess();
+		maker.postProccessBinding();
+
+		// console.log(jsdoc.modules['m1'].children)
+		expect(!!_.find(jsdoc.modules['m1'].children, function(c){return c.annotation==='customAnnotation1';})).toBe(true)
+		expect(!!_.find(jsdoc.modules['m1'].children, function(c){return c.annotation==='custom-annotation2';})).toBe(true)
+		expect(!!_.find(jsdoc.modules['m1'].children, function(c){return c.annotation==='custom-annotation2';})).toBe(true)
+		expect(!!_.find(jsdoc.modules['m1'].children, function(c){return c.annotation==='custom_Annotation4';})).toBe(true)
+	});
+});
 
 
 
@@ -1159,6 +1192,38 @@ describe("@function", function()
 		expect(f2.throws[0].type.absoluteName === 'a.A').toBe(true)
 		// console.log(f2.throws)
 	});
+});
+
+
+
+
+describe("lie comments and markdown", function() 
+{
+
+	it("line comments must support multiple markdown paragraph by default", function() 
+	{
+		var jsdoc, maker; 
+		var code =
+
+			'//@module m1' + '\n' + 
+			'//#title 1' + '\n' +
+			'//This is a paragraph 1l slkdjf lskdjflkdf' + '\n' +
+			'//paragraph 1 still continue lastwordofpara1' + '\n' +
+			'//' + '\n' +
+			'//firstwordofpara2 this is pargaraph 2 lskdjf lsk flk sjldf' + '\n' +
+			'//still paragraph 2lsdkjf lksjdlf skjldf' + '\n' +
+			'';
+
+		maker = new JsDocMaker();		
+		maker.addFile(code, 'name.js');
+
+		jsdoc = maker.jsdoc();
+		maker.postProccess();
+		maker.postProccessBinding();
+
+		expect(!!jsdoc.modules['m1'].text.match(/lastwordofpara1 \n \n firstwordofpara2/)).toBe(true)
+	});
+
 });
 
 

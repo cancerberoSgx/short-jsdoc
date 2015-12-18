@@ -5,14 +5,13 @@
 Listed from more important to less important - kind of:
 
 
-
+ * custom annotations name cannot contain '-' @module m1 @custom-annotation will fail  to parse @custom-annotation
+ 
  *  issue this seems to fail: @module m @class A @method p @property {B} @class B - the error is class 'undefined.B'
  
  * remove @?link and see if is faster. 
 
  * support globs in nodejs API
-
- * remove asterix from package.json dependency versions
  
  * (performance) include the source only of files that contain annotations
 
@@ -129,6 +128,13 @@ all primary annotation rules (class, module,method, property) should be defined 
  
  * search for class, modules, methods, methods that return or accept a type. subclasses of..., classes overriding a method... be able to find the classes that uses a certain class in a property or parameter or return type...
  
+
+ * @alias method get_apples getApples
+that means that when a method named 'get_apples' is found in the jsdoc, the name will be replaced with 'getApples'. 
+ * Support annotation alias, example
+    @alias annotation task class
+now you can use @task and it will be replaced to @module !
+
  * class hierarchy in classview
  
  * crazy idea - store native types pages : at build time capture native types html and attach into generated docs and change links that point to those.
@@ -207,16 +213,7 @@ things moved here after solving - instead erasing it.
  * literal object syntax with types: @return {name: String, colors: Array<Color>}.
  * divide JsDocMaker in several files core, preprocessing, postprocessing, biding, etc.
  * @module foo bla bla bla @exports {ParserException:Error,parse:Function} bla bla bla
- * support name alias - for example map the name Map to match Object. as an example show how to make shortkuts like Arr<Obj> or even a<o>. The classes Arr o a won't be generated in the output. Both will be replaced with Array, for this @alias class Arr Array
-    @alias method get_apples getApples
-that means that when a method named 'get_apples' is found in the jsdoc, the name will be replaced with 'getApples'. Other example:
-    @alias class Backbone.View BackboneView
-Backbone.View references will be renamed to BackboneView. Take in account that in the output Backbone.View won't exists - only BackboneView
 
- * plugin idea - post propcessing - : @module mod1 bla bla @exports {AClass} bla bla
- * Support annotation alias, example
-    @alias annotation task class
-now you can use @task and it will be replaced to @module !
 
  * @link preprocessed comment that is replaced by html or mardown link at preprocessing - this was solved using text marks - like @?ref foo.Bar.method
 

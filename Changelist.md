@@ -66,3 +66,5 @@
  * @function support as @module child and html app also
  * fix 'of class' value in method and property views 
  * markdown in Line comments 
+ * remove asterix from package.json dependency versions
+ * custom annotation names can contain characters '.', '-', '_'

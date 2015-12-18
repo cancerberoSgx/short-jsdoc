@@ -1,21 +1,23 @@
 var JsDocMaker = typeof _ === 'undefined' ? require('../../src/jsdocmaker/main.js') : JsDocMaker; 
 var _ = typeof _ === 'undefined' ? require('underscore') : _; 
 
-describe("@function", function() 
+describe("custom child annotation", function() 
 {
 
-	it("a module can contain functions", function() 
+	it("custom annotations will be parsed in 'children' property and can contain characters '.', '-', '_'", function() 
 	{
 		var jsdoc, maker; 
 		var code =
 
-			'//@module m1' + '\n' + 
-			'//#title 1' + '\n' +
-			'//This is a paragraph 1l slkdjf lskdjflkdf' + '\n' +
-			'//paragraph 1 still continue lksjdflskdjlf' + '\n' +
+			// '//@alias annotation module gulp-task' + '\n' +
+
+			'//@module m1' + '\n' +
+			'//@customAnnotation1 {Type} name text text' + '\n' +
+			'//@custom-annotation2 {Type} name text text' + '\n' +
+			'//@custom.Annotation3 {Type} name text text' + '\n' +
+			'//@custom_Annotation4 {Type} name text text' + '\n' +
 			'//' + '\n' +
-			'//this is pargaraph 2 lskdjf lsk flk sjldf' + '\n' +
-			'//still paragraph 2lsdkjf lksjdlf skjldf' + '\n' +
+
 			'';
 
 		maker = new JsDocMaker();		
@@ -25,9 +27,10 @@ describe("@function", function()
 		maker.postProccess();
 		maker.postProccessBinding();
 
-		// expect(jsdoc.classes['a.Apple'].methods['beEatenBy'].params).toBe(3)
-
-		console.log(jsdoc.modules['m1'].text)
+		// console.log(jsdoc.modules['m1'].children)
+		expect(!!_.find(jsdoc.modules['m1'].children, function(c){return c.annotation==='customAnnotation1';})).toBe(true)
+		expect(!!_.find(jsdoc.modules['m1'].children, function(c){return c.annotation==='custom-annotation2';})).toBe(true)
+		expect(!!_.find(jsdoc.modules['m1'].children, function(c){return c.annotation==='custom-annotation2';})).toBe(true)
+		expect(!!_.find(jsdoc.modules['m1'].children, function(c){return c.annotation==='custom_Annotation4';})).toBe(true)
 	});
-
 });
