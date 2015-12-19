@@ -711,9 +711,6 @@ describe("custom child annotation", function()
 	{
 		var jsdoc, maker; 
 		var code =
-
-			// '//@alias annotation module gulp-task' + '\n' +
-
 			'//@module m1' + '\n' +
 			'//@customAnnotation1 {Type} name text text' + '\n' +
 			'//@custom-annotation2 {Type} name text text' + '\n' +

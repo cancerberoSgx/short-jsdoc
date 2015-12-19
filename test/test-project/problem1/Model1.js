@@ -69,3 +69,14 @@ Excepteur sint occaecat *cupidatat* non proident, sunt in culpa qui officia dese
 // this is the second
 //
 // and this is the third
+;
+
+
+// @alias annotation gulp-task module
+
+// @gulp-task compilecss with this command you can compile all the project's css
+// @class testclass33
+
+// @alias annotation newclass class
+// @module aliasannotationtest1
+// @newclass aliasannotationtest1C1 hello world

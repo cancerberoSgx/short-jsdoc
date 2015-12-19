@@ -243,6 +243,17 @@ Even more interesting, you want to create shortcuts to common js types, so inste
 
 Then when the type 'A' is found it will be replaced by 'Array'
 
+
+---
+
+#Annotation alias
+
+the @alias plugin also supportsanother kind of aliasing that gives the user the power of creating aliases of annotations. For example, suppose that we are not documenting js-doc but another thing, like the grunt/gulp build tasks and we want to use the annotation @gulp-task to be proccessed as if they were @module, then we can just write:
+
+	@alias annotation gulp-task module
+
+After that declaration, all annotations @gulp-task will be treated as if they were @module. 
+
 ---
 
 #Parsing stages. 

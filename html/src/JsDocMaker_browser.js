@@ -2026,7 +2026,6 @@ JsDocMaker.prototype.parse = function(comments)
 	{
 		self.commentPreprocessorPlugins.execute({node: node, jsdocMaker: self}); 
 
-		//
 		var s = '((?:@class)|(?:@method)|(?:@property)|(?:@attribute)|(?:@module)|(?:@event)|(?:@constructor)|(?:@function)|(?:@filename))'; 
 
 		var regex = new RegExp(s, 'gi');
@@ -2225,7 +2224,7 @@ JsDocMaker.prototype.parseUnitSimple = function(str, comment)
 	var regexp = null; 
 
 	// HEADS UP - TODO: the fgollowing two regex definitions must be identical in the content but not perhasin the endings/begginigns / globals
-	// if you fi one you must also fix the other
+	// if you fix one you must also fix the other
 	if(comment.type==='Line')
 	{
 		str = JsDocMaker.stringFullTrim(str); 
@@ -3407,6 +3406,7 @@ var aliasBeforeParseNodePlugin = {
 
 		context.alias = context.alias || {}; 
 
+
 		var aliasList = []; //its a list because node can have many alias children inside. alias is a second-level AST node
 			
 		if (node.annotation=='alias')
@@ -3418,7 +3418,7 @@ var aliasBeforeParseNodePlugin = {
 			aliasList = _(node.children).select(function(c)
 			{
 				return c.annotation=='alias';
-			}); 
+			});
 		}
 
 		_(aliasList).each(function(alias)
@@ -3427,7 +3427,23 @@ var aliasBeforeParseNodePlugin = {
 		}); 
 
 		//TODO: remove the alias node from comments array ? 
+		
+		// this.installAnnotationAlias(context, node);
+		// var self = this; 
+		// _.each(node.children, function(c){self.installAnnotationAlias(context, c);})
 	}
+
+// ,	installAnnotationAlias: function(context, node)
+// 	{
+// 		_.each(context.alias, function(alias)
+// 		{
+// 			if(alias.type==='annotation' && alias.name === node.annotation)
+// 			{
+// 				console.log('installing it')
+// 				node.annotation = 'module'//alias.target;
+// 			}
+// 		});
+// 	}
 
 	//@method parseAlias @return {JSDocASTNode} the enhanced node with property *alias* enhanced
 	//@param {JSDocASTNode} alias @param {JsDocMaker} context @param {Boolean} install  @return {Array<JSDocASTNode>} contained in the annotation text.
@@ -3441,21 +3457,22 @@ var aliasBeforeParseNodePlugin = {
 		,	parsed = [];
 		for (var i = 0; i < a.length; i+=2) 
 		{
-			var o = {name: a[i], target: a[i+1]};
+			var o = {type: alias.name, name: a[i], target: a[i+1]};
 			parsed.push(o); 
-			// debugger;
 			if(install)
 			{
 				context.alias[o.name] = o;
+
 			}
 		}
 		return parsed;
 	}
-
 }; 
 
-JsDocMaker.prototype.beforeParseNodePlugins.add(aliasBeforeParseNodePlugin); 
 
+
+JsDocMaker.prototype.afterParseUnitSimplePlugins.add(aliasBeforeParseNodePlugin); 
+// afterParseUnitSimplePlugins
 
 //@class AliasBeforeBindClassPlugin @extends JsDocMakerPlugin a plugin executed at beforeBindClass 
 var aliasBeforeBindClassPlugin = {
@@ -3475,6 +3492,25 @@ var aliasBeforeBindClassPlugin = {
 }; 
 
 JsDocMaker.prototype.beforeBindClassPlugins.add(aliasBeforeBindClassPlugin); 
+
+var annotationAliasPlugin = {
+	execute: function(options)
+	{
+		var alias = {}
+		var regex = /@alias\s+annotation\s+([\w\-_\.]+)\s+([\w\-_\.]+)/gi;
+		options.node.value.replace(regex, function(s, newName, targetName)
+		{
+			alias[newName] = targetName;
+		});
+		_.each(alias, function(targetName, newName)
+		{
+			// var targetNameEscaped= targetName//.replace(/\-/g)
+			var newNameRegex = new RegExp('@'+newName, 'gi');
+			options.node.value = options.node.value.replace(newNameRegex, '@'+targetName);
+		});
+	}
+}
+JsDocMaker.prototype.commentPreprocessorPlugins.add(annotationAliasPlugin);
 
 },{"../core/class":3,"underscore":1}],14:[function(require,module,exports){
 /*

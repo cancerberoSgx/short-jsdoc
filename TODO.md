@@ -4,9 +4,6 @@
 
 Listed from more important to less important - kind of:
 
-
- * custom annotations name cannot contain '-' @module m1 @custom-annotation will fail  to parse @custom-annotation
- 
  *  issue this seems to fail: @module m @class A @method p @property {B} @class B - the error is class 'undefined.B'
  
  * remove @?link and see if is faster. 

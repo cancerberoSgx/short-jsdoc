@@ -56,6 +56,7 @@ var aliasBeforeParseNodePlugin = {
 
 		context.alias = context.alias || {}; 
 
+
 		var aliasList = []; //its a list because node can have many alias children inside. alias is a second-level AST node
 			
 		if (node.annotation=='alias')
@@ -67,7 +68,7 @@ var aliasBeforeParseNodePlugin = {
 			aliasList = _(node.children).select(function(c)
 			{
 				return c.annotation=='alias';
-			}); 
+			});
 		}
 
 		_(aliasList).each(function(alias)
@@ -76,7 +77,23 @@ var aliasBeforeParseNodePlugin = {
 		}); 
 
 		//TODO: remove the alias node from comments array ? 
+		
+		// this.installAnnotationAlias(context, node);
+		// var self = this; 
+		// _.each(node.children, function(c){self.installAnnotationAlias(context, c);})
 	}
+
+// ,	installAnnotationAlias: function(context, node)
+// 	{
+// 		_.each(context.alias, function(alias)
+// 		{
+// 			if(alias.type==='annotation' && alias.name === node.annotation)
+// 			{
+// 				console.log('installing it')
+// 				node.annotation = 'module'//alias.target;
+// 			}
+// 		});
+// 	}
 
 	//@method parseAlias @return {JSDocASTNode} the enhanced node with property *alias* enhanced
 	//@param {JSDocASTNode} alias @param {JsDocMaker} context @param {Boolean} install  @return {Array<JSDocASTNode>} contained in the annotation text.
@@ -90,21 +107,22 @@ var aliasBeforeParseNodePlugin = {
 		,	parsed = [];
 		for (var i = 0; i < a.length; i+=2) 
 		{
-			var o = {name: a[i], target: a[i+1]};
+			var o = {type: alias.name, name: a[i], target: a[i+1]};
 			parsed.push(o); 
-			// debugger;
 			if(install)
 			{
 				context.alias[o.name] = o;
+
 			}
 		}
 		return parsed;
 	}
-
 }; 
 
-JsDocMaker.prototype.beforeParseNodePlugins.add(aliasBeforeParseNodePlugin); 
 
+
+JsDocMaker.prototype.afterParseUnitSimplePlugins.add(aliasBeforeParseNodePlugin); 
+// afterParseUnitSimplePlugins
 
 //@class AliasBeforeBindClassPlugin @extends JsDocMakerPlugin a plugin executed at beforeBindClass 
 var aliasBeforeBindClassPlugin = {
@@ -124,3 +142,22 @@ var aliasBeforeBindClassPlugin = {
 }; 
 
 JsDocMaker.prototype.beforeBindClassPlugins.add(aliasBeforeBindClassPlugin); 
+
+var annotationAliasPlugin = {
+	execute: function(options)
+	{
+		var alias = {}
+		var regex = /@alias\s+annotation\s+([\w\-_\.]+)\s+([\w\-_\.]+)/gi;
+		options.node.value.replace(regex, function(s, newName, targetName)
+		{
+			alias[newName] = targetName;
+		});
+		_.each(alias, function(targetName, newName)
+		{
+			// var targetNameEscaped= targetName//.replace(/\-/g)
+			var newNameRegex = new RegExp('@'+newName, 'gi');
+			options.node.value = options.node.value.replace(newNameRegex, '@'+targetName);
+		});
+	}
+}
+JsDocMaker.prototype.commentPreprocessorPlugins.add(annotationAliasPlugin);

@@ -128,7 +128,6 @@ JsDocMaker.prototype.parse = function(comments)
 	{
 		self.commentPreprocessorPlugins.execute({node: node, jsdocMaker: self}); 
 
-		//
 		var s = '((?:@class)|(?:@method)|(?:@property)|(?:@attribute)|(?:@module)|(?:@event)|(?:@constructor)|(?:@function)|(?:@filename))'; 
 
 		var regex = new RegExp(s, 'gi');
