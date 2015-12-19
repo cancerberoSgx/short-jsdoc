@@ -51,6 +51,7 @@ var Application = function(data)
 		jQuery('body').append('<div id="mainContainer"></div>'); 
 	}
 	this.$containerEl = jQuery('#mainContainer'); 
+	this.$body = jQuery('.main-view-container');	
 };
 
 _(Application.prototype).extend({
@@ -84,7 +85,10 @@ _(Application.prototype).extend({
 	//@method showErrorView @param {String}s 
 ,	showErrorView: function(s) 
 	{
-		this.$containerEl.empty().append('<h1>'+s+'</h1>'); 
+		var errorView = new AbstractView();
+		errorView.application = this;
+		errorView.template = _.template('<h1>'+s+'</h1>');
+		this.showView(errorView)
 	}
 
 });

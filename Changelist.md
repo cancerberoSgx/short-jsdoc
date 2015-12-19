@@ -68,3 +68,4 @@
  * markdown in Line comments 
  * remove asterix from package.json dependency versions
  * custom annotation names can contain characters '.', '-', '_'
+ * improved resource not found page in html app

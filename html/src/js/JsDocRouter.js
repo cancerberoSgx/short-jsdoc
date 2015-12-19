@@ -43,10 +43,10 @@ var JsDocRouter = Backbone.Router.extend({
 	//@method showView @param {AbstractView}view @param {String} resourceName
 ,	showView: function(view, resourceName)
 	{
-		resourceName = resourceName||'Resource'; 
 		if(view.resourceNotFound)
 		{
-			this.application.showErrorView(resourceName+' '+resourceName+' not found!'); 
+			resourceName = resourceName||Backbone.history.fragment;
+			this.application.showErrorView('Resource ' + resourceName + ' not found!'); 
 		}
 		else
 		{
