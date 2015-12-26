@@ -9,6 +9,7 @@ require('./util.js');
 require('./literal-object.js');
 require('./module-exports.js');
 require('./alias.js');
+require('./metadata.js');
 require('./comment-indentation.js');
 
 require('./text-marks.js');

@@ -1,6 +1,6 @@
 # TODOs and ideas 
 
-(an important file in this early project stage - growing more and more everyday - try to keep updated.)
+(an important file in this early project stage - growing more and more everyday - trying to keep it updated.)
 
 Listed from more important to less important - kind of:
 
@@ -8,8 +8,16 @@ Listed from more important to less important - kind of:
  
  * remove @?link and see if is faster. 
 
+ * @metadata Feature i want to represent a book with chapters containing sections using @alias - but also i want to configure the html app to say 'Chapter' instead 'Module' and 'Section' instead 'Class'. Solution: store this info in the ast, in a 'metadata' object the app will read from here. 
+ @metadata class.label Section 
+ @metadata module.label Chapter can be multi word cause is the annotation's text
+
+ * be able to psas a literal jsdoc prefix at compilation time: jsdocmaker.make({prefix: '@metadata class.name Section @metadata module Book @alias annotation book module '})
+
  * support globs in nodejs API
- 
+
+ * inner classes (classes inside classes) motivation: allow richer languages definitions  -like composite sections of an article
+
  * (performance) include the source only of files that contain annotations
 
 

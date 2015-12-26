@@ -43,7 +43,7 @@ Then this information will be consumed at binding time in the second plugin
 var JsDocMaker = require('../core/class'); 
 var _ = require('underscore'); 
 
-//@class AliasBeforeParseNodePlugin @extends JsDocMakerPlugin a plugin executed at beforeParseNodePlugins. 
+//@class AliasBeforeParseNodePlugin @extends JsDocMakerPlugin a plugin executed at afterParseUnitSimplePlugins. Responsible of TODO 
 var aliasBeforeParseNodePlugin = {
 
 	name: 'alias'
@@ -78,22 +78,7 @@ var aliasBeforeParseNodePlugin = {
 
 		//TODO: remove the alias node from comments array ? 
 		
-		// this.installAnnotationAlias(context, node);
-		// var self = this; 
-		// _.each(node.children, function(c){self.installAnnotationAlias(context, c);})
 	}
-
-// ,	installAnnotationAlias: function(context, node)
-// 	{
-// 		_.each(context.alias, function(alias)
-// 		{
-// 			if(alias.type==='annotation' && alias.name === node.annotation)
-// 			{
-// 				console.log('installing it')
-// 				node.annotation = 'module'//alias.target;
-// 			}
-// 		});
-// 	}
 
 	//@method parseAlias @return {JSDocASTNode} the enhanced node with property *alias* enhanced
 	//@param {JSDocASTNode} alias @param {JsDocMaker} context @param {Boolean} install  @return {Array<JSDocASTNode>} contained in the annotation text.
@@ -122,9 +107,8 @@ var aliasBeforeParseNodePlugin = {
 
 
 JsDocMaker.prototype.afterParseUnitSimplePlugins.add(aliasBeforeParseNodePlugin); 
-// afterParseUnitSimplePlugins
 
-//@class AliasBeforeBindClassPlugin @extends JsDocMakerPlugin a plugin executed at beforeBindClass 
+//@class AliasBeforeBindClassPlugin @extends JsDocMakerPlugin a plugin executed at afterParseUnitSimplePlugins. Responsible of TODO 
 var aliasBeforeBindClassPlugin = {
 	name: 'aliasAfterTypeBindingPlugin'
 
@@ -143,18 +127,18 @@ var aliasBeforeBindClassPlugin = {
 
 JsDocMaker.prototype.beforeBindClassPlugins.add(aliasBeforeBindClassPlugin); 
 
+//@class annotationAliasPlugin @extends JsDocMakerPlugin a plugin executed at commentPreprocessorPlugins. Responsible of TODO 
 var annotationAliasPlugin = {
 	execute: function(options)
 	{
 		var alias = {}
-		var regex = /@alias\s+annotation\s+([\w\-_\.]+)\s+([\w\-_\.]+)/gi;
+		var regex = /@alias\s+annotation\s+([\w\-_\.]+)\s+([\w\-_\.]+)/gi; //TODO: the core should provide this regex
 		options.node.value.replace(regex, function(s, newName, targetName)
 		{
 			alias[newName] = targetName;
 		});
 		_.each(alias, function(targetName, newName)
 		{
-			// var targetNameEscaped= targetName//.replace(/\-/g)
 			var newNameRegex = new RegExp('@'+newName, 'gi');
 			options.node.value = options.node.value.replace(newNameRegex, '@'+targetName);
 		});
