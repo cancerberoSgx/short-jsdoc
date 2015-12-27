@@ -316,9 +316,10 @@ describe("@mtadata annotation", function()
 	{
 		var jsdoc, maker; 
 		var code =
-			'//@metadata class.name My Chapter' + '\n' +
+			'//@metadata-global class.name My Chapter' + '\n' +
 			'//@module m' + '\n' +
 			'//@class c' + '\n' +
+			'//@metadata foo.var some text' + '\n' +
 			'';
 
 		maker = new JsDocMaker();		
@@ -329,7 +330,8 @@ describe("@mtadata annotation", function()
 		maker.postProccessBinding();
 
 		expect(jsdoc.metadata['class.name']==='My Chapter').toBe(true)
-		// console.log(jsdoc.metadata)
+		expect(jsdoc.classes['m.c'].metadata['foo.var']==='some text').toBe(true)
+		// console.log(jsdoc.classes['m.c'].metadata)
 	});
 });
 

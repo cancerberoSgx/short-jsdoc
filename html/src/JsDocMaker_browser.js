@@ -1961,6 +1961,19 @@ JsDocMaker.prototype.afterParseNodePlugins = new PluginContainer();
 // This is done after an unit is parsed - this will iterated all nodes as units .The first node object is formed at this stage. 
 JsDocMaker.prototype.afterParseUnitSimplePlugins = new PluginContainer();
 
+// @property {String}primaryAnnotationsRegexString
+JsDocMaker.prototype.primaryAnnotationsRegexString = '((?:@class)|(?:@method)|(?:@property)|(?:@attribute)|(?:@module)|(?:@event)|(?:@constructor)|(?:@function)|(?:@filename))';
+
+JsDocMaker.prototype.isPrimaryAnnotation = function(s)
+{
+	if(s.indexOf('@')!==0)
+	{
+		s = '@' + s; 
+	}
+	return new RegExp('^'+this.primaryAnnotationsRegexString, 'g').test(s);
+}
+
+
 //@method jsdoc the public method to parse all the added files with addFile. @return {Object} the parsed object @param {String} source . Optional
 JsDocMaker.prototype.jsdoc = function(source)
 {
@@ -2014,21 +2027,15 @@ JsDocMaker.prototype.parse = function(comments)
 	this.data.modules = this.data.modules || {}; 
 	this.data.files = this.data.files || {}; 
 
-	// self.primaryAnnotations = {
-	// 	'module': {
-	// 		name: 'module', description: 'modules contain classes'
-	// 	}
-	// }; 
-
 	self.allCommentPreprocessorPlugins.execute({node: self.comments, jsdocMaker: self}); 
 
 	_(self.comments).each(function(node)
 	{
 		self.commentPreprocessorPlugins.execute({node: node, jsdocMaker: self}); 
 
-		var s = '((?:@class)|(?:@method)|(?:@property)|(?:@attribute)|(?:@module)|(?:@event)|(?:@constructor)|(?:@function)|(?:@filename))'; 
+		//because is global we must instantiate this regex each time
+		var regex = new RegExp(self.primaryAnnotationsRegexString, 'gi');
 
-		var regex = new RegExp(s, 'gi');
 		var a = JsDocMaker.splitAndPreserve(node.value || '', regex); 
 		a = _(a).filter(function(v)  //delete empties and trim
 		{
@@ -3926,19 +3933,23 @@ module.exports = JsDocMaker;
 /*
 #Metadata plugin
 
-store metadata information about the concepts - for example, use @metadata togheter with @alias to 
-define a language for represent a book with chapters containing sections using @alias - but also i want to configure the html app to say 'Chapter' instead 'Module' and 'Section' instead 'Class'. Solution: store this info in the ast, in a 'metadata' object the app will read from here. 
+store metadata information about the concepts - for example, use @ metadata-global together with @ alias to 
+define a language for represent a book with chapters containing sections using @ alias - but also i want 
+to configure the html app to say 'Chapter' instead 'Module' and 'Section' instead 'Class'. Solution: store 
+this info in the ast, in a global 'metadata' object. The html app will read from here. 
 
-	@ metadata class.label Section 
+@ metadata is used for adding some metadata property in the current primary annotation and @ metadata-global is 
+used for adding a metadata property in the global ast object. Example:
 
-	@ metadata module.label Book can be multi word cause is the annotation's text
-
+Metadata in general is used by viewers like the html application to name or describe concepts 
 
 */
 
 
 var JsDocMaker = require('../core/class'); 
 var _ = require('underscore'); 
+
+var lastPrimaryAnnotation;
 
 //@class MetadataPlugin @extends JsDocMakerPlugin a plugin executed at beforeParseNodePlugins. 
 var metadataPlugin = {
@@ -3953,9 +3964,18 @@ var metadataPlugin = {
 
 		context.metadata = context.metadata || {};
 
-		if(node.annotation === 'metadata')
+		if(node.annotation === 'metadata-global')
 		{
 			context.metadata[node.name] = node.text; 
+		}
+		else if(node.annotation === 'metadata' && lastPrimaryAnnotation)
+		{
+			lastPrimaryAnnotation.metadata = lastPrimaryAnnotation.metadata || {};
+			lastPrimaryAnnotation.metadata[node.name] = node.text;  
+		}
+		else if(options.jsdocmaker.isPrimaryAnnotation(node.annotation))
+		{
+			lastPrimaryAnnotation = node;
 		}
 	}
 }; 

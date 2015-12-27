@@ -254,6 +254,26 @@ the @alias plugin also supportsanother kind of aliasing that gives the user the 
 
 After that declaration, all annotations @gulp-task will be treated as if they were @module. 
 
+
+---
+Metadata
+
+Out ouf the hook metadata is supported via the annotations @metadata and @metadata-global. 
+
+@metadata is used for adding some metadata property in the current primary annotation and @metadata-global is 
+used for adding a metadata property in the global ast object. Example:
+
+Metadata in general is used by viewers like the html application to name or describe concepts 
+
+We want the viewers to name classes as 'sections' and modules as 'books' so:
+
+	@metadata-global class.name Section
+	@metadata-global module.name Book
+
+we want the paricular class Apple to be named as a 'Chapter'
+
+	@class Apple foo bar @extend Fruit @metadata class.name Chapter
+
 ---
 
 #Parsing stages. 

@@ -63,6 +63,19 @@ JsDocMaker.prototype.afterParseNodePlugins = new PluginContainer();
 // This is done after an unit is parsed - this will iterated all nodes as units .The first node object is formed at this stage. 
 JsDocMaker.prototype.afterParseUnitSimplePlugins = new PluginContainer();
 
+// @property {String}primaryAnnotationsRegexString
+JsDocMaker.prototype.primaryAnnotationsRegexString = '((?:@class)|(?:@method)|(?:@property)|(?:@attribute)|(?:@module)|(?:@event)|(?:@constructor)|(?:@function)|(?:@filename))';
+
+JsDocMaker.prototype.isPrimaryAnnotation = function(s)
+{
+	if(s.indexOf('@')!==0)
+	{
+		s = '@' + s; 
+	}
+	return new RegExp('^'+this.primaryAnnotationsRegexString, 'g').test(s);
+}
+
+
 //@method jsdoc the public method to parse all the added files with addFile. @return {Object} the parsed object @param {String} source . Optional
 JsDocMaker.prototype.jsdoc = function(source)
 {
@@ -116,21 +129,15 @@ JsDocMaker.prototype.parse = function(comments)
 	this.data.modules = this.data.modules || {}; 
 	this.data.files = this.data.files || {}; 
 
-	// self.primaryAnnotations = {
-	// 	'module': {
-	// 		name: 'module', description: 'modules contain classes'
-	// 	}
-	// }; 
-
 	self.allCommentPreprocessorPlugins.execute({node: self.comments, jsdocMaker: self}); 
 
 	_(self.comments).each(function(node)
 	{
 		self.commentPreprocessorPlugins.execute({node: node, jsdocMaker: self}); 
 
-		var s = '((?:@class)|(?:@method)|(?:@property)|(?:@attribute)|(?:@module)|(?:@event)|(?:@constructor)|(?:@function)|(?:@filename))'; 
+		//because is global we must instantiate this regex each time
+		var regex = new RegExp(self.primaryAnnotationsRegexString, 'gi');
 
-		var regex = new RegExp(s, 'gi');
 		var a = JsDocMaker.splitAndPreserve(node.value || '', regex); 
 		a = _(a).filter(function(v)  //delete empties and trim
 		{
