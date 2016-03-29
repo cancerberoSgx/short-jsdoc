@@ -25,11 +25,12 @@ var preprocessCommentsPlugin1 = {
 			node.value = node.value || ''; 
 
 			// fix styled comment blocks with '*' as new line prefix
-			if(node.type === 'Block')
-			{
-				// Note: syntax /** - not necesary to implement
-				node.value = node.value.replace(/\n \*/gi, '\n');
-			}
+			// if(node.type === 'Block')
+			// {
+			// 	// Note: syntax /** - not necesary to implement
+			// 	debugger
+			// 	node.value = node.value.replace(/\n \*/gi, '\n');
+			// }
 
 			// remove comments that starts with ignoreCommentPrefix
 			if(JsDocMaker.startsWith(JsDocMaker.stringTrim(node.value), options.jsdocMaker.ignoreCommentPrefix))

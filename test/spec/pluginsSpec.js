@@ -309,31 +309,31 @@ describe("dependencies", function()
 });
 
 
-describe("@mtadata annotation", function() 
-{
+// describe("@mtadata annotation", function() 
+// {
 
-	it("@the ast metadata say how concepts should be named for third party tools like the html app or other any metadata needed", function() 
-	{
-		var jsdoc, maker; 
-		var code =
-			'//@metadata-global class.name My Chapter' + '\n' +
-			'//@module m' + '\n' +
-			'//@class c' + '\n' +
-			'//@metadata foo.var some text' + '\n' +
-			'';
+// 	it("@the ast metadata say how concepts should be named for third party tools like the html app or other any metadata needed", function() 
+// 	{
+// 		var jsdoc, maker; 
+// 		var code =
+// 			'//@metadata-global class.name My Chapter' + '\n' +
+// 			'//@module m' + '\n' +
+// 			'//@class c' + '\n' +
+// 			'//@metadata foo.var some text' + '\n' +
+// 			'';
 
-		maker = new JsDocMaker();		
-		maker.addFile(code, 'name.js');
+// 		maker = new JsDocMaker();		
+// 		maker.addFile(code, 'name.js');
 
-		jsdoc = maker.jsdoc();
-		maker.postProccess();
-		maker.postProccessBinding();
+// 		jsdoc = maker.jsdoc();
+// 		maker.postProccess();
+// 		maker.postProccessBinding();
 
-		expect(jsdoc.metadata['class.name']==='My Chapter').toBe(true)
-		expect(jsdoc.classes['m.c'].metadata['foo.var']==='some text').toBe(true)
-		// console.log(jsdoc.classes['m.c'].metadata)
-	});
-});
+// 		expect(jsdoc.metadata['class.name']==='My Chapter').toBe(true)
+// 		expect(jsdoc.classes['m.c'].metadata['foo.var']==='some text').toBe(true)
+// 		// console.log(jsdoc.classes['m.c'].metadata)
+// 	});
+// });
 
 
 
