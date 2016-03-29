@@ -23,46 +23,49 @@ _(AbstractView.prototype).extend({
 	//@method makeLink @param {boolean} htmlAnchors will output anchor elements html
 ,	makeLink: function(node, htmlAnchors)
 	{
-		// if (!node || !node.type) // no type for this node. This isn't undefined ! This means we just simply doesn't have the information.
-		// {
-		//	return '';
-		// }
 		var className = node.annotation + '-name'; 
 		var s = htmlAnchors ? ('<a class="' + className + '" href="') : '';
+
+		var href = '';
 		if(node.annotation==='method')
 		{
-			s += '#method/' + node.absoluteName; 
+			href += '#method/' + node.absoluteName; 
 		}
 		else if(node.annotation==='constructor')
 		{			
-			s += '#constructor/' + node.absoluteName; 
+			href += '#constructor/' + node.absoluteName; 
 		}
 		else if(node.annotation==='function')
 		{			
-			s += '#function/' + node.absoluteName; 
+			href += '#function/' + node.absoluteName; 
 		}
 		else if(node.annotation==='property')
 		{
-			s += '#property/' + node.absoluteName; 
+			href += '#property/' + node.absoluteName; 
 		}
 		else if(node.annotation==='event')
 		{
-			s += '#event/' + node.absoluteName; 
+			href += '#event/' + node.absoluteName; 
 		}
 		else if(node.annotation==='class')
 		{
-			s += '#class/' + node.absoluteName; 
+			href += '#class/' + node.absoluteName; 
 		}
 		else if(node.annotation==='module')
 		{
-			s += '#module/' + node.name; 
+			href += '#module/' + node.name; 
 		}
 		else
 		{
 			return '';
 		}
 
-		s += htmlAnchors?('">'+node.name+'</a>'):'';
+		//preserve current params
+		var search = location.hash.indexOf('?')===-1 ? '' : location.hash.split('?')[1];
+		href += search ? ('?' + search) : '';
+
+		s += href + (htmlAnchors?('">'+node.name+'</a>'):'');
+
 		return s;
 	}
 
