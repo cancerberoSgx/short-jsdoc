@@ -9,7 +9,7 @@
 //@method walk @return {Action}
 /*@method crossStreet
 
-This try to be a markdown [text](http://google.com)
+This try to be a *markdown* [text](http://google.com)
 
 Another paragraph 
 
@@ -32,3 +32,8 @@ and some final text with a list
   2. hello
 4. And another item.
 */
+
+//@method talk @public
+
+// @property pprivate
+// @property ppublic @public

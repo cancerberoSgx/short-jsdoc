@@ -29,7 +29,13 @@ __p += '\n\t\t<h3 class="class-extends-title">Extends ' +
  } ;
 __p += '\n\t</div>\n\t<div class="col-md-4">\n\t\t<h3 class="class-module-title">Module ' +
 ((__t = ( this.makeLink(this.jsdoc.module, true) )) == null ? '' : __t) +
-'</h3>\n\t</div>\n</div>\n\n\n<div class="pull-right">&nbsp;&nbsp;<a href="' +
+'</h3>\n\t</div>\n</div>\n\n<div class="pull-right">&nbsp;&nbsp;<a href="' +
+((__t = ( this.makeLink(this.jsdoc) )) == null ? '' : __t) +
+'?noprivate=' +
+((__t = ( this.options.noprivate ? 0 : 1 )) == null ? '' : __t) +
+'">' +
+((__t = ( this.options.noprivate ? 'Hide' : 'Show' )) == null ? '' : __t) +
+' private properties</a></div>\n\n<div class="pull-right">&nbsp;&nbsp;<a href="' +
 ((__t = ( this.makeLink(this.jsdoc) )) == null ? '' : __t) +
 '?inherited=' +
 ((__t = ( this.options.inherited ? 0 : 1 )) == null ? '' : __t) +

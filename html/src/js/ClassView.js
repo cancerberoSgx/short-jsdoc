@@ -21,34 +21,41 @@ var ClassView = AbstractView.extend({
 
 		this.options = options || {};
 		this.options.inherited = this.options.inherited ? parseInt(this.options.inherited, 10) : 0;
+		this.options.noprivate = this.options.noprivate ? parseInt(this.options.noprivate, 10) : 0;
 		this.options.text = this.options.text ? parseInt(this.options.text, 10) : 1;
 
-		this.methods = this.jsdoc.methods;
-		if(this.options.inherited)
-		{
-			this.methods = _(_(this.methods).clone()).extend(this.jsdoc.inherited.methods); 
-		}
-
 		// calculate properties, events and attributes inheritance information
+		this.methods = this.jsdoc.methods;
 		this.properties = this.jsdoc.properties;
-		if(this.options.inherited)
-		{
-			this.properties = _(_(this.properties).clone()).extend(this.jsdoc.inherited.properties); 
-		}
 		this.events = this.jsdoc.events;
-		if(this.options.inherited)
-		{
-			this.events = _(_(this.events).clone()).extend(this.jsdoc.inherited.events); 
-		}
 		this.attributes = this.jsdoc.attributes;
 		if(this.options.inherited)
 		{
+			this.properties = _(_(this.properties).clone()).extend(this.jsdoc.inherited.properties); 
+			this.events = _(_(this.events).clone()).extend(this.jsdoc.inherited.events); 
 			this.attributes = _(_(this.attributes).clone()).extend(this.jsdoc.inherited.attributes); 
-			console.log('seba2', this.attributes )
+			this.methods = _(_(this.methods).clone()).extend(this.jsdoc.inherited.methods); 
 		}
 
+		//calculate properties, events and attributes respecting visibility (i.e. the user choose to see only public props)
+		if(!this.options.noprivate)
+		{
+			this.properties = _.filter(this.properties, this.propertyIsPublicPredicate);
+			this.methods = _.filter(this.methods, this.propertyIsPublicPredicate);
+			this.events = _.filter(this.events, this.propertyIsPublicPredicate);
+			this.attributes = _.filter(this.attributes, this.propertyIsPublicPredicate);
+		}
 		this.hierarchy = this.computeHierarchy();
 		this.knownSubclasses = this.computeKnownSubclasses();
+	}
+
+,	propertyIsPublicPredicate: function(p)
+	{
+			console.log(p.annotation)
+		return _.find(p.children, function(c)
+		{
+			return c.annotation === 'public';
+		});
 	}
 
 	//@method makePartialText @param {AST} node @return {String}

@@ -2607,11 +2607,12 @@ var preprocessCommentsPlugin1 = {
 			node.value = node.value || ''; 
 
 			// fix styled comment blocks with '*' as new line prefix
-			if(node.type === 'Block')
-			{
-				// Note: syntax /** - not necesary to implement
-				node.value = node.value.replace(/\n \*/gi, '\n');
-			}
+			// if(node.type === 'Block')
+			// {
+			// 	// Note: syntax /** - not necesary to implement
+			// 	debugger
+			// 	node.value = node.value.replace(/\n \*/gi, '\n');
+			// }
 
 			// remove comments that starts with ignoreCommentPrefix
 			if(JsDocMaker.startsWith(JsDocMaker.stringTrim(node.value), options.jsdocMaker.ignoreCommentPrefix))
@@ -3734,7 +3735,7 @@ JsDocMaker.prototype.afterTypeBindingRecurseASTPlugins.add(pluginAfter);
 //JsDocMaker.prototype.commentPreprocessorPlugins.add(plugin);
 
 
-},{"../core/class":3,"../core/plugin":6,"./recurse-plugin-containers":24,"underscore":1}],17:[function(require,module,exports){
+},{"../core/class":3,"../core/plugin":6,"./recurse-plugin-containers":23,"underscore":1}],17:[function(require,module,exports){
 // @module shortjsdoc.plugin @class JsDocMaker
 var JsDocMaker = require('../core/class'); 
 var _ = require('underscore'); 
@@ -3915,7 +3916,7 @@ require('./util.js');
 require('./literal-object.js');
 require('./module-exports.js');
 require('./alias.js');
-require('./metadata.js');
+// require('./metadata.js');
 require('./comment-indentation.js');
 
 require('./text-marks.js');
@@ -3928,61 +3929,7 @@ require('./escape-at.js');
 require('./dependencies.js');
 
 module.exports = JsDocMaker; 
-},{"../core/main.js":4,"./alias.js":13,"./comment-indentation.js":14,"./dependencies.js":15,"./escape-at.js":16,"./inherited.js":17,"./literal-object.js":18,"./metadata.js":20,"./modifiers.js":21,"./module-exports.js":22,"./native-types.js":23,"./recurse-plugin-containers.js":24,"./text-marks-references.js":25,"./text-marks.js":26,"./util.js":27}],20:[function(require,module,exports){
-// @module shortjsdoc.plugin.alias 
-/*
-#Metadata plugin
-
-store metadata information about the concepts - for example, use @ metadata-global together with @ alias to 
-define a language for represent a book with chapters containing sections using @ alias - but also i want 
-to configure the html app to say 'Chapter' instead 'Module' and 'Section' instead 'Class'. Solution: store 
-this info in the ast, in a global 'metadata' object. The html app will read from here. 
-
-@ metadata is used for adding some metadata property in the current primary annotation and @ metadata-global is 
-used for adding a metadata property in the global ast object. Example:
-
-Metadata in general is used by viewers like the html application to name or describe concepts 
-
-*/
-
-
-var JsDocMaker = require('../core/class'); 
-var _ = require('underscore'); 
-
-var lastPrimaryAnnotation;
-
-//@class MetadataPlugin @extends JsDocMakerPlugin a plugin executed at beforeParseNodePlugins. 
-var metadataPlugin = {
-
-	name: 'alias'
-
-,	execute: function(options)
-	{
-		var node = options.node
-		,	context = options.jsdocmaker.data
-		,	self = this;
-
-		context.metadata = context.metadata || {};
-
-		if(node.annotation === 'metadata-global')
-		{
-			context.metadata[node.name] = node.text; 
-		}
-		else if(node.annotation === 'metadata' && lastPrimaryAnnotation)
-		{
-			lastPrimaryAnnotation.metadata = lastPrimaryAnnotation.metadata || {};
-			lastPrimaryAnnotation.metadata[node.name] = node.text;  
-		}
-		else if(options.jsdocmaker.isPrimaryAnnotation(node.annotation))
-		{
-			lastPrimaryAnnotation = node;
-		}
-	}
-}; 
-
-JsDocMaker.prototype.afterParseUnitSimplePlugins.add(metadataPlugin); 
-
-},{"../core/class":3,"underscore":1}],21:[function(require,module,exports){
+},{"../core/main.js":4,"./alias.js":13,"./comment-indentation.js":14,"./dependencies.js":15,"./escape-at.js":16,"./inherited.js":17,"./literal-object.js":18,"./modifiers.js":20,"./module-exports.js":21,"./native-types.js":22,"./recurse-plugin-containers.js":23,"./text-marks-references.js":24,"./text-marks.js":25,"./util.js":26}],20:[function(require,module,exports){
 // @module shortjsdoc @class JsDocMaker
 var JsDocMaker = require('../core/class'); 
 var _ = require('underscore'); 
@@ -4004,7 +3951,7 @@ JsDocMaker.prototype.installModifiers = function(node)
 	});
 }; 
  
-},{"../core/class":3,"underscore":1}],22:[function(require,module,exports){
+},{"../core/class":3,"underscore":1}],21:[function(require,module,exports){
 /* @module shortjsdoc.plugin.module-export
 
 #@module @exports
@@ -4050,7 +3997,7 @@ var plugin_beforeTypeBinding = {
 }; 
   
 JsDocMaker.prototype.beforeTypeBindingPlugins.add(plugin_beforeTypeBinding); 
-},{"../core/class":3,"underscore":1}],23:[function(require,module,exports){
+},{"../core/class":3,"underscore":1}],22:[function(require,module,exports){
 // @module shortjsdoc @class JsDocMaker
 var JsDocMaker = require('../core/class'); 
 var _ = require('underscore'); 
@@ -4081,7 +4028,7 @@ JsDocMaker.prototype.getNativeTypeUrl = function(name)
 	return customTypeUrl;
 }; 
 
-},{"../core/class":3,"underscore":1}],24:[function(require,module,exports){
+},{"../core/class":3,"underscore":1}],23:[function(require,module,exports){
 // @module recurse-plugin-containers - a plugin to be used by concrete plugins to iterate on all 
 // nodes after some interesting stages. by calling recurseAST. 
 // The objective is that other concrete plugins register here and so the AST recursion is made 
@@ -4127,7 +4074,7 @@ var plugin = new AfterTypeBindingRecurseASTPluginContainer();
 JsDocMaker.prototype.afterTypeBindingRecurseASTPlugins = plugin; 
 
 JsDocMaker.prototype.afterTypeBindingPlugins.add(plugin); 
-},{"../core/class":3,"../core/plugin":6,"./util":27,"underscore":1}],25:[function(require,module,exports){
+},{"../core/class":3,"../core/plugin":6,"./util":26,"underscore":1}],24:[function(require,module,exports){
 /*
 @module shortjsdoc.plugin.text-marks-references
 
@@ -4292,7 +4239,7 @@ JsDocMaker.prototype.afterTypeBindingPlugins.add(textMarksReferencesPlugin);
 
 
 
-},{"../core/class":3,"underscore":1}],26:[function(require,module,exports){
+},{"../core/class":3,"underscore":1}],25:[function(require,module,exports){
 /*
 @module shortjsdoc.plugin.text-marks
 
@@ -4362,7 +4309,7 @@ JsDocMaker.prototype.afterParseUnitSimplePlugins.add(textMarksAfterParseNodePlug
 // afterTypeBindingPlugins
 
 
-},{"../core/class":3,"underscore":1}],27:[function(require,module,exports){
+},{"../core/class":3,"underscore":1}],26:[function(require,module,exports){
 //TODO: move this file to core/recurseAST.js
 //@module shortjsdoc @class JsDocMaker
 var JsDocMaker = require('../core/class'); 

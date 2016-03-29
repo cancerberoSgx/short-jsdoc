@@ -66,7 +66,8 @@
  * @function support as @module child and html app also
  * fix 'of class' value in method and property views 
  * markdown in Line comments 
- * remove asterix from package.json dependency versions
+ * remove '*' from package.json dependency versions
  * custom annotation names can contain characters '.', '-', '_'
  * improved resource not found page in html app
  * @alias annotation
+ * removed the functionality that removed the starting ' * ' prefix from each line of block comments since that breaks markdown lists. 
