@@ -70,4 +70,7 @@
  * custom annotation names can contain characters '.', '-', '_'
  * improved resource not found page in html app
  * @alias annotation
+ 
+##0.2.3
  * removed the functionality that removed the starting ' * ' prefix from each line of block comments since that breaks markdown lists. 
+ * added an option in the UI to only show the class public properties - public properties are marked with a @public child annotation.
