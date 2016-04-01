@@ -81,3 +81,6 @@
 ##0.2.5
 
  * fixed html ui makeLink to preserve current hash options fixed to mix with current options. 
+ * new properties and method full text are inside the class view also, after the summary
+
+##0.2.6
