@@ -24,6 +24,11 @@ _(AbstractView.prototype).extend({
 	//@method makeLink @param {boolean} htmlAnchors will output anchor elements html @param {Object|String} options
 ,	makeLink: function(node, htmlAnchors, options)
 	{
+		if(!node)
+		{
+			debugger;
+		}
+		
 		var className = node.annotation + '-name'; 
 		var s = htmlAnchors ? ('<a class="' + className + '" href="') : '';
 

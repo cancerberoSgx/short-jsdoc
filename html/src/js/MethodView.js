@@ -7,10 +7,12 @@ var MethodView = AbstractView.extend({
 
 ,	template: 'method'
 
-,	initialize: function(application, methodName) 
+,	initialize: function(application, methodName, asChildView) 
 	{
 		this.application = application;
-		if(Backbone.history.fragment.indexOf('method')===0 || Backbone.history.fragment.indexOf('constructor')===0)
+		this.asChildView = asChildView;
+		// if(Backbone.history.fragment.indexOf('method')===0 || Backbone.history.fragment.indexOf('constructor')===0)
+		if(Backbone.history.fragment.indexOf('function')!==0)
 		{
 			var className = this.getClassName(methodName);
 			var methodSimpleName = this.getSimpleName(methodName);

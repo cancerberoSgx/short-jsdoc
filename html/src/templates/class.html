@@ -16,11 +16,14 @@ var self = this;
 	</div>
 </div>
 
-<div class="pull-right">&nbsp;&nbsp;<a href="<%= this.makeLink(this.jsdoc, false, {private: this.options.private ? 0 : 1}) %>"><%= this.options.private ? 'Hide' : 'Show' %> private properties</a></div>
+<div class="pull-right">&nbsp;&nbsp;<a href="<%= this.makeLink(this.jsdoc, false, {private: this.options.private ? 0 : 1}) %>">
+<%= this.options.private ? 'Hide' : 'Show' %> private properties</a></div>
 
-<div class="pull-right">&nbsp;&nbsp;<a href="<%= this.makeLink(this.jsdoc, false, {inherited: this.options.inherited ? 0 : 1}) %>"><%= this.options.inherited ? 'Hide' : 'Show' %> inherited properties</a></div>
+<div class="pull-right">&nbsp;&nbsp;<a href="<%= this.makeLink(this.jsdoc, false, {inherited: this.options.inherited ? 0 : 1}) %>">
+<%= this.options.inherited ? 'Hide' : 'Show' %> inherited properties</a></div>
 
-<div class="pull-right">&nbsp;&nbsp;<a href="<%= this.makeLink(this.jsdoc, false, {text: this.options.text ? 0 : 1}) %>"><%= this.options.text ? 'Hide' : 'Show' %> partial text</a></div>
+<div class="pull-right">&nbsp;&nbsp;<a href="<%= this.makeLink(this.jsdoc, false, {text: this.options.text ? 0 : 1}) %>">
+<%= this.options.text ? 'Hide' : 'Show' %> partial text</a></div>
 
 
 <!-- <h3>Summary</h3> -->
@@ -192,7 +195,6 @@ var self = this;
 		<%}%>
 
 		<% if(this.knownSubclasses && this.knownSubclasses.length) {%>
-		<!-- <button data-toggle="collapse" data-tagrget=".known-subclasses-list">collapse</button> -->
 		<div class="known-subclasses">
 		<h3>Known Subclasses</h3>
 		<ul class="known-subclasses-list">	
@@ -211,7 +213,7 @@ var self = this;
 
 
 		<% if(summary_text) {%>
-		<h3>Summary</h3>
+		<h2>Summary</h2>
 		
 		<div class="class-text">
 		<%= summary_text %>
@@ -220,43 +222,30 @@ var self = this;
 
 
 
-		<% 
-		this.inlineProperties = false; 
-		if(this.inlineProperties) { 
-		%>
+		<% if(this.inlineProperties) {%>
+		<div class="inline-class-properties">
+
+		<% if(_(this.properties).keys().length) { %>
+		<h3>Properties</h3>
+		<div data-type="inline-properties" class="inline-properties"></div>
+		<% } %>
+
+		<% if(_(this.attributes).keys().length) { %>
+		<h3>Attributes</h3>
+		<div data-type="inline-attributes" class="inline-attributes"></div>
+		<% } %>
+
+		<% if(_(this.events).keys().length) { %>
+		<h3>Events</h3>
+		<div data-type="inline-events" class="inline-events"></div>
+		<% } %>
+
+		<% if(_(this.methods).keys().length) { %>
 		<h3>Methods</h3>
-		<%
-		_(this.methods).each(function(method) { 
-			var inherited = !JsDocMaker.classOwnsProperty(self.jsdoc, method); 			
-			var inheritedByName = method.absoluteName.substring(0, method.absoluteName.lastIndexOf('.'));
-			var inheritedBy = self.application.data.classes[inheritedByName] || {};
-		%>
+		<div data-type="inline-methods" class="inline-methods"></div>
+		<% } %>
 
-			<li class="method <%= inherited ? 'inherited' : '' %>">
-				<%= self.makeLink(method, true)%>
-				<% if(method.params && method.params.length) { %>
-				Parameters: 
-				<ol class="params">
-					<% _(method.params).each(function(param){ %>
-					<li class="param">
-						<span class="param-name"><%= param.name %></span>: 
-						<span class="param-type"><%= self.printTypeAsString(param.type) %></span> 
-						<%= !inherited ? '' : ('(inherited by ' + self.printTypeAsString(inheritedBy) + ')') %>
-					</li>
-					<% }); %>
-				</ol>
-				<% } %>
-
-				<!-- TODO: do throw here ?  -->
-
-				<% if(method.returns && (method.returns.type || method.returns.text)) {%>
-				Returns: <%= self.printTypeAsString(method.returns.type) %>	
-				<!-- <span class="returns-text"><%= method.returns.text || ''%></span> -->
-				<% } %>
-
-				<% if (self.options.text) {%> <span class="partial-text"><%= self.makePartialText(method)%></span><% }%>
-			</li>
-		<% }); %>
+		</div>
 		<% } %>
 
 

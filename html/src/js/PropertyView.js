@@ -6,12 +6,16 @@ var PropertyView = AbstractView.extend({
 
 ,	template: 'property'
 
-,	initialize: function(application, propertyName, propertyType) 
+,	initialize: function(application, propertyName, propertyType, asChildView) 
 	{
 		this.application = application;
 
+		this.asChildView = asChildView;
+
 		var propertyLabelsDic = {
-			event: 'Event', property: 'Property', attribute: 'Attribute'
+			event: 'Event'
+		,	property: 'Property'
+		,	attribute: 'Attribute'
 		};
 
 		this.propertyLabel = propertyLabelsDic[propertyType]; 
@@ -24,7 +28,9 @@ var PropertyView = AbstractView.extend({
 		this.ownerModule = class_.module.name;
 
 		var propertyPropNamesDic = {
-			event: 'events', property: 'properties', attribute: 'attributes'
+			event: 'events'
+		,	property: 'properties'
+		,	attribute: 'attributes'
 		};
 
 		this.jsdoc = class_[propertyPropNamesDic[propertyType]][propertySimpleName];

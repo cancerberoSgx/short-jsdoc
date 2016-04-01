@@ -9,6 +9,7 @@ var ClassView = AbstractView.extend({
 
 ,	initialize: function(application, className, options) 
 	{
+		var self = this;
 		this.application = application;
 		this.jsdoc = this.application.data.classes[className]; 
 		if(!this.jsdoc)
@@ -49,23 +50,67 @@ var ClassView = AbstractView.extend({
 		this.knownSubclasses = this.computeKnownSubclasses();
 
 
-		// this.inlineProperties = true;  //TODO: configure / parametrize
-		// if(this.inlineProperties) 
-		// {
-		// 	this.fullMethodViews = [];
-		// 	_(this.methods).each(function(method)
-		// 	{ 
-		// 		method.inherited = !JsDocMaker.classOwnsProperty(self.jsdoc, method); 			
-		// 		method.inheritedByName = method.absoluteName.substring(0, method.absoluteName.lastIndexOf('.'));
-		// 		method.inheritedBy = self.application.data.classes[inheritedByName] || {};
-		// 		var methodView = new MethodView()
-		// 	});
-		// }
+		this.inlineProperties = true;  //TODO: configure / parametrize
+		if(this.inlineProperties) 
+		{
+			this.inlineMethodViews = [];
+			_(this.methods).each(function(node)
+			{
+				var view = new MethodView(self.application, node.absoluteName, true);
+				view.render();
+				self.inlineMethodViews.push(view);
+			});
+
+			this.inlinePropertyViews = [];
+			_(this.properties).each(function(node)
+			{
+				var view = new PropertyView(self.application, node.absoluteName, 'property', true);
+				view.render();
+				self.inlinePropertyViews.push(view);
+			});
+
+			this.inlineEventViews = [];
+			_(this.events).each(function(node)
+			{
+				var view = new PropertyView(self.application, node.absoluteName, 'event', true);
+				view.render();
+				self.inlineEventViews.push(view);
+			});
+
+			this.inlineAttributeViews = [];
+			_(this.attributes).each(function(node)
+			{
+				var view = new PropertyView(self.application, node.absoluteName, 'attribute', true);
+				view.render();
+				self.inlineAttributeViews.push(view);
+			});
+		}
+	}
+
+,	afterRender: function()
+	{
+		var self = this;
+		AbstractView.prototype.afterRender.apply(this, arguments);
+		_.each(this.inlineMethodViews, function(v)
+		{
+			self.$('[data-type="inline-methods"]').append(v.$el);
+		});
+		_.each(this.inlinePropertyViews, function(v)
+		{
+			self.$('[data-type="inline-properties"]').append(v.$el);
+		});
+		_.each(this.inlineEventViews, function(v)
+		{
+			self.$('[data-type="inline-events"]').append(v.$el);
+		});
+		_.each(this.inlineAttributeViews, function(v)
+		{
+			self.$('[data-type="inline-attributes"]').append(v.$el);
+		});
 	}
 
 ,	propertyIsPublicPredicate: function(p)
 	{
-			console.log(p.annotation)
 		return _.find(p.children, function(c)
 		{
 			return c.annotation === 'public';

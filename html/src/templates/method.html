@@ -3,17 +3,18 @@
 
 
 <div class="row method-header">
-	<div class="col-md-4">
-		<h2 class="method-title">
+	<div class="<%= this.asChildView ? 'col-md-12' : 'col-md-4'%>">
+		<div class="method-title">
 			<% if(this.isConstructor){ %>
-			<h2>Constructor</h2>
+			<h3>Constructor</h3>
 			<% } else if(!this.isFunction) { %>
-			<h2>Method&nbsp;<a href="<%= this.makeLink(this.jsdoc) %>"><%= this.jsdoc.name%></a></h2>
+			<h3>Method&nbsp;<a href="<%= this.makeLink(this.jsdoc) %>"><%= this.jsdoc.name%></a></h3>
 			<% } else { %>
-			<h2>Function&nbsp;<a href="<%= this.makeLink(this.jsdoc) %>"><%= this.jsdoc.name%></a></h2>
+			<h3>Function&nbsp;<a href="<%= this.makeLink(this.jsdoc) %>"><%= this.jsdoc.name%></a></h3>
 			<% }%>
-		</h2>
+		</div>
 	</div>
+	<% if(!this.asChildView) {%>
 	<div class="col-md-4">
 		<% if(!this.isFunction){%>
 		<h3>Of class <a href="#class/<%= this.jsdoc.ownerClass %>">
@@ -25,6 +26,7 @@
 	<div class="col-md-4">
 		<h3 class="class-module-title">Of Module <%= this.makeLink(this.ownerClass ? this.ownerClass.module : this.ownerModule, true) %></h3>
 	</div>
+	<% }%>
 </div>
 
 
@@ -34,7 +36,7 @@
 
 
 <div class="row">
-	<div class="col-md-4">
+	<div class="<%= this.asChildView ? 'col-md-12' : 'col-md-4' %>">
 
 		<% if( this.jsdoc.params.length ) { %>
 		<h3>Parameters</h3>
@@ -85,15 +87,17 @@
 
 
 
-	<div class="col-md-8">
+	
+	<div class="<%= this.asChildView ? 'col-md-12' : 'col-md-8' %>">
 		<% if (this.jsdoc.text) { %>
 		<div class="method-text">
 			<%= this.jsdoc.textHtml %>
 		</div>
 		<% } %>
 		
-		<div data-type="sources"></div>
+	<% if(!this.asChildView) {%><div data-type="sources"></div><% }%>
 	</div>
+	
 </div>
 
 

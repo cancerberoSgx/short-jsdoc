@@ -113,6 +113,9 @@ _(ShortJsDoc.prototype).extend({
 
 			console.error('Failing code fragment: \n', this.maker.data.source.substring(ex.index - 50, ex.index + 50)); 
 
+			fs.writeFileSync('jsdoc_failed_source.js', this.maker.data.source);
+			console.log('\n * Dumped file that fails at jsdoc_failed_source.js * \n');
+			
 			console.error(ex); 
 			throw ex;
 		}
