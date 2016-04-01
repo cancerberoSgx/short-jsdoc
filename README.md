@@ -137,7 +137,7 @@ Or execute the Unit tests - located in folder /test/spec/ : http://localhost:808
 
 Generates the test-project json data:
 
-    node src/shortjsdoc.js --input test/test-project/ --project-metadata ./test/test-project/package.json > html/data.json
+    node src/shortjsdoc.js --input test/test-project/,vendor-jsdoc/ --project-metadata ./test/test-project/package.json > html/data.json
 
 Generates the front end js application jsdocs itself:
 

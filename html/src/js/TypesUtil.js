@@ -4,7 +4,8 @@
 _(AbstractView.prototype).extend({
 
 	//@method printTag
-	printTag: function(text, classAttribute, tag) {
+	printTag: function(text, classAttribute, tag) 
+	{
 		tag = tag || 'span'; 
 		classAttribute = classAttribute ||'';
 		if(text)
@@ -20,8 +21,8 @@ _(AbstractView.prototype).extend({
 		return this.application.maker.simpleName(name, prefix);
 	}
 
-	//@method makeLink @param {boolean} htmlAnchors will output anchor elements html
-,	makeLink: function(node, htmlAnchors)
+	//@method makeLink @param {boolean} htmlAnchors will output anchor elements html @param {Object|String} options
+,	makeLink: function(node, htmlAnchors, options)
 	{
 		var className = node.annotation + '-name'; 
 		var s = htmlAnchors ? ('<a class="' + className + '" href="') : '';
@@ -62,6 +63,13 @@ _(AbstractView.prototype).extend({
 
 		//preserve current params
 		var search = location.hash.indexOf('?')===-1 ? '' : location.hash.split('?')[1];
+		search = this.paramStringToObject(search);
+		if(_.isString(options))
+		{
+			options = this.paramStringToObject(options);
+		}
+		_.extend(search, options||{});
+		search = this.paramObjectToString(search);
 		href += search ? ('?' + search) : '';
 
 		s += href + (htmlAnchors?('">'+node.name+'</a>'):'');
@@ -69,9 +77,33 @@ _(AbstractView.prototype).extend({
 		return s;
 	}
 
+,	paramStringToObject: function(s)
+	{
+		var a = s.split('&');
+		var o = {};
+		_.each(a, function(pf)
+		{
+			var a2 = pf.split('=');
+			o[a2[0]] = a2[1];
+		});
+		return o;
+	}
+
+,	paramObjectToString: function(o)
+	{
+		var s = [];
+		_.each(o, function(val,name)
+		{
+			if(name)
+			{
+				s.push(name+'='+val);
+			}
+		});
+		return s.join('&');
+	}
+
 ,	printLiteralObjectType: function(context)
 	{
-
 		var self = this;
 		var buf = []; 
 		context.buffer.push(this.printType(context.type, true));
@@ -105,7 +137,7 @@ _(AbstractView.prototype).extend({
 		}
 
 		var self = this;
-		var href = context.type.nativeTypeUrl || '#class/'+context.type.absoluteName; 
+		var href = context.type.nativeTypeUrl || this.makeLink(context.type);//'#class/'+context.type.absoluteName; 
 		var htmlText = context.type.name; 
 		var aclass = (context.type.nativeTypeUrl ? ' type external ' : ' type ');
 		var iconHtml = context.type.nativeTypeUrl ? '<span class="glyphicon glyphicon-share"></span>' : ''; 

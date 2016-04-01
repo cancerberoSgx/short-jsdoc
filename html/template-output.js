@@ -30,21 +30,15 @@ __p += '\n\t\t<h3 class="class-extends-title">Extends ' +
 __p += '\n\t</div>\n\t<div class="col-md-4">\n\t\t<h3 class="class-module-title">Module ' +
 ((__t = ( this.makeLink(this.jsdoc.module, true) )) == null ? '' : __t) +
 '</h3>\n\t</div>\n</div>\n\n<div class="pull-right">&nbsp;&nbsp;<a href="' +
-((__t = ( this.makeLink(this.jsdoc) )) == null ? '' : __t) +
-'?noprivate=' +
-((__t = ( this.options.noprivate ? 0 : 1 )) == null ? '' : __t) +
+((__t = ( this.makeLink(this.jsdoc, false, {private: this.options.private ? 0 : 1}) )) == null ? '' : __t) +
 '">' +
-((__t = ( this.options.noprivate ? 'Hide' : 'Show' )) == null ? '' : __t) +
+((__t = ( this.options.private ? 'Hide' : 'Show' )) == null ? '' : __t) +
 ' private properties</a></div>\n\n<div class="pull-right">&nbsp;&nbsp;<a href="' +
-((__t = ( this.makeLink(this.jsdoc) )) == null ? '' : __t) +
-'?inherited=' +
-((__t = ( this.options.inherited ? 0 : 1 )) == null ? '' : __t) +
+((__t = ( this.makeLink(this.jsdoc, false, {inherited: this.options.inherited ? 0 : 1}) )) == null ? '' : __t) +
 '">' +
 ((__t = ( this.options.inherited ? 'Hide' : 'Show' )) == null ? '' : __t) +
 ' inherited properties</a></div>\n\n<div class="pull-right">&nbsp;&nbsp;<a href="' +
-((__t = ( this.makeLink(this.jsdoc) )) == null ? '' : __t) +
-'?text=' +
-((__t = ( this.options.text ? 0 : 1 )) == null ? '' : __t) +
+((__t = ( this.makeLink(this.jsdoc, false, {text: this.options.text ? 0 : 1}) )) == null ? '' : __t) +
 '">' +
 ((__t = ( this.options.text ? 'Hide' : 'Show' )) == null ? '' : __t) +
 ' partial text</a></div>\n\n\n<!-- <h3>Summary</h3> -->\n';
@@ -246,13 +240,61 @@ __p += '\n\n\t\t<p><a href="#search?keywords=' +
 ((__t = ( this.jsdoc.absoluteName)) == null ? '' : __t) +
 '&propsReferencingType=1">Search Class Usage</a></p>\n\t\t\n\t\t';
  var summary_text = this.jsdoc.textHtml || self.getTextHtml(this.jsdoc.text) || this.jsdoc.text || ''; ;
-__p += '\n\n\t\t';
+__p += '\n\n\n\n\n\t\t';
  if(summary_text) {;
 __p += '\n\t\t<h3>Summary</h3>\n\t\t\n\t\t<div class="class-text">\n\t\t' +
 ((__t = ( summary_text )) == null ? '' : __t) +
 '\n\t\t</div>\n\t\t';
  } ;
-__p += '\n\n\t\t<div data-type="sources"></div>\n\n\t</div>\n</div>\n';
+__p += '\n\n\n\n\t\t';
+ 
+		this.inlineProperties = false; 
+		if(this.inlineProperties) { 
+		;
+__p += '\n\t\t<h3>Methods</h3>\n\t\t';
+
+		_(this.methods).each(function(method) { 
+			var inherited = !JsDocMaker.classOwnsProperty(self.jsdoc, method); 			
+			var inheritedByName = method.absoluteName.substring(0, method.absoluteName.lastIndexOf('.'));
+			var inheritedBy = self.application.data.classes[inheritedByName] || {};
+		;
+__p += '\n\n\t\t\t<li class="method ' +
+((__t = ( inherited ? 'inherited' : '' )) == null ? '' : __t) +
+'">\n\t\t\t\t' +
+((__t = ( self.makeLink(method, true))) == null ? '' : __t) +
+'\n\t\t\t\t';
+ if(method.params && method.params.length) { ;
+__p += '\n\t\t\t\tParameters: \n\t\t\t\t<ol class="params">\n\t\t\t\t\t';
+ _(method.params).each(function(param){ ;
+__p += '\n\t\t\t\t\t<li class="param">\n\t\t\t\t\t\t<span class="param-name">' +
+((__t = ( param.name )) == null ? '' : __t) +
+'</span>: \n\t\t\t\t\t\t<span class="param-type">' +
+((__t = ( self.printTypeAsString(param.type) )) == null ? '' : __t) +
+'</span> \n\t\t\t\t\t\t' +
+((__t = ( !inherited ? '' : ('(inherited by ' + self.printTypeAsString(inheritedBy) + ')') )) == null ? '' : __t) +
+'\n\t\t\t\t\t</li>\n\t\t\t\t\t';
+ }); ;
+__p += '\n\t\t\t\t</ol>\n\t\t\t\t';
+ } ;
+__p += '\n\n\t\t\t\t<!-- TODO: do throw here ?  -->\n\n\t\t\t\t';
+ if(method.returns && (method.returns.type || method.returns.text)) {;
+__p += '\n\t\t\t\tReturns: ' +
+((__t = ( self.printTypeAsString(method.returns.type) )) == null ? '' : __t) +
+'\t\n\t\t\t\t<!-- <span class="returns-text">' +
+((__t = ( method.returns.text || '')) == null ? '' : __t) +
+'</span> -->\n\t\t\t\t';
+ } ;
+__p += '\n\n\t\t\t\t';
+ if (self.options.text) {;
+__p += ' <span class="partial-text">' +
+((__t = ( self.makePartialText(method))) == null ? '' : __t) +
+'</span>';
+ };
+__p += '\n\t\t\t</li>\n\t\t';
+ }); ;
+__p += '\n\t\t';
+ } ;
+__p += '\n\n\n\n\t\t<div data-type="sources"></div>\n\n\t</div>\n</div>\n';
 
 }
 return __p

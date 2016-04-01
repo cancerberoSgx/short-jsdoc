@@ -21,7 +21,7 @@ var ClassView = AbstractView.extend({
 
 		this.options = options || {};
 		this.options.inherited = this.options.inherited ? parseInt(this.options.inherited, 10) : 0;
-		this.options.noprivate = this.options.noprivate ? parseInt(this.options.noprivate, 10) : 0;
+		this.options.private = this.options.private ? parseInt(this.options.private, 10) : 0;
 		this.options.text = this.options.text ? parseInt(this.options.text, 10) : 1;
 
 		// calculate properties, events and attributes inheritance information
@@ -38,7 +38,7 @@ var ClassView = AbstractView.extend({
 		}
 
 		//calculate properties, events and attributes respecting visibility (i.e. the user choose to see only public props)
-		if(!this.options.noprivate)
+		if(!this.options.private)
 		{
 			this.properties = _.filter(this.properties, this.propertyIsPublicPredicate);
 			this.methods = _.filter(this.methods, this.propertyIsPublicPredicate);
@@ -47,6 +47,20 @@ var ClassView = AbstractView.extend({
 		}
 		this.hierarchy = this.computeHierarchy();
 		this.knownSubclasses = this.computeKnownSubclasses();
+
+
+		// this.inlineProperties = true;  //TODO: configure / parametrize
+		// if(this.inlineProperties) 
+		// {
+		// 	this.fullMethodViews = [];
+		// 	_(this.methods).each(function(method)
+		// 	{ 
+		// 		method.inherited = !JsDocMaker.classOwnsProperty(self.jsdoc, method); 			
+		// 		method.inheritedByName = method.absoluteName.substring(0, method.absoluteName.lastIndexOf('.'));
+		// 		method.inheritedBy = self.application.data.classes[inheritedByName] || {};
+		// 		var methodView = new MethodView()
+		// 	});
+		// }
 	}
 
 ,	propertyIsPublicPredicate: function(p)

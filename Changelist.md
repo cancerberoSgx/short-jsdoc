@@ -77,3 +77,7 @@
 
 ##0.2.4
  * fixed html ui makeLink to preserve current hash options
+
+##0.2.5
+
+ * fixed html ui makeLink to preserve current hash options fixed to mix with current options. 
