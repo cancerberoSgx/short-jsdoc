@@ -83,3 +83,6 @@
  * fixed html ui makeLink to preserve current hash options fixed to mix with current options. 
  * new properties and method full text are inside the class view also, after the summary
  *  issue this seems to fail: @module m @class A @method p @property {B} @class B - the error is class 'undefined.B'
+
+##0.2.6
+ * 
