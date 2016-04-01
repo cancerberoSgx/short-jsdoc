@@ -165,7 +165,7 @@
 .inline-properties h3,
 .inline-events h3,
 .inline-attributes h3 {
-  font-size: 16px;
+  font-size: 18px;
   margin-top: 10px;
 }
 .inline-methods .returns-title,
@@ -173,13 +173,14 @@
 .inline-events .returns-title,
 .inline-attributes .returns-title {
   display: inline;
+  font-size: 16px;
   margin: 0;
 }
 .inline-methods .method-title,
 .inline-properties .method-title,
 .inline-events .method-title,
 .inline-attributes .method-title {
-  margin-top: 20px;
+  margin-top: 18px;
 }
 .inline-methods .parameter-list,
 .inline-properties .parameter-list,

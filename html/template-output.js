@@ -655,7 +655,7 @@ __p += '\n<div class="method-text">\n\t' +
  } ;
 __p += '\n\n';
  if(this.jsdoc.type) { ;
-__p += ' \n<h3 class="returns-type">Type</h3>\n' +
+__p += ' \n<span class="property-type"><strong>Type</strong>:&nbsp;</span>\n' +
 ((__t = ( this.printTypeAsString(this.jsdoc.type) )) == null ? '' : __t) +
 '\n';
  } ;

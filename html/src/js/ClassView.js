@@ -26,10 +26,11 @@ var ClassView = AbstractView.extend({
 		this.options.text = this.options.text ? parseInt(this.options.text, 10) : 1;
 
 		// calculate properties, events and attributes inheritance information
-		this.methods = this.jsdoc.methods;
-		this.properties = this.jsdoc.properties;
-		this.events = this.jsdoc.events;
-		this.attributes = this.jsdoc.attributes;
+		this.methods = this.jsdoc.methods || {};
+		this.properties = this.jsdoc.properties || {};
+		this.events = this.jsdoc.events || {};
+		this.attributes = this.jsdoc.attributes || {};
+		
 		if(this.options.inherited)
 		{
 			this.properties = _(_(this.properties).clone()).extend(this.jsdoc.inherited.properties); 
