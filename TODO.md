@@ -3,8 +3,6 @@
 (an important file in this early project stage - growing more and more everyday - trying to keep it updated.)
 
 Listed from more important to less important - kind of:
-
- *  issue this seems to fail: @module m @class A @method p @property {B} @class B - the error is class 'undefined.B'
  
  * remove @?link and see if is faster. 
 

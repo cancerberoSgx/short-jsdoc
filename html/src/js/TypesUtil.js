@@ -209,12 +209,12 @@ _(AbstractView.prototype).extend({
 		{
 			return '';
 		}
-		if(node.text_html_app)
+		if(node.text_html_app) //caching
 		{
 			return node.text_html_app; 
 		}
 
-		var self2 = this //TODO invitigate why I need self2 and self always binds to other thing than this...
+		var self2 = this //TODO investigate why I need self2 and self always binds to other thing than this...
 		,	text = node.text
 		,	type = this.application.textFormat || 'markdown'
 		,	html = _(node.children).find(function(c){return c.annotation==='html'; })
@@ -232,6 +232,7 @@ _(AbstractView.prototype).extend({
 		// perform text marks replacement.
 		_(node.textMarks).each(function(mark, markId)
 		{
+			console.log('mark', mark)
 			if(mark.name === 'link')
 			{
 				if(type === 'markdown')

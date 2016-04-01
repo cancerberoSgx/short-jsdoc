@@ -4286,21 +4286,23 @@ var textMarksAfterParseNodePlugin = {
 		{
 			node.textMarks = node.textMarks || {}; 
 			var mark = options.jsdocmaker.getUnique('_shortjsdoc_textmarkplugin_');
-			node.textMarks[mark] = {name:name,arg:arg}; 
+			node.textMarks[mark] = {name:name, arg:arg}; 
 			return mark; 
 		}; 
 
 		// first expressions like this: @?link "[This is a link](http://google.com)"
-		var regex = /@\?([a-zA-Z0-9_\.]+)\s+"([^"]+)"/g; 
-		node.text = node.text.replace(regex, replaceHandler); 
+		// TODO: remove the link functionality since the user can use markdowns or html's
+		// var regex = /@\?([a-zA-Z0-9_\.]+)\s+"([^"]+)"/g; 
+		// node.text = node.text.replace(regex, replaceHandler); 
 
 		// and then expressions like this: @?ref foo.bar.Class.method2
 		regex = /@\?([a-zA-Z0-9_\.]+)\s+([^\s]+)/g; 
+		// console.log(regex.exec(node.text))
 		node.text = node.text.replace(regex, replaceHandler); 
 	}
 }; 
-
-JsDocMaker.prototype.afterParseUnitSimplePlugins.add(textMarksAfterParseNodePlugin); 
+	
+JsDocMaker.prototype.beforeTypeBindingPlugins.add(textMarksAfterParseNodePlugin); 
 
 
 

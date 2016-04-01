@@ -1,26 +1,35 @@
 var JsDocMaker = typeof _ === 'undefined' ? require('../../src/jsdocmaker/main.js') : JsDocMaker; 
 var _ = typeof _ === 'undefined' ? require('underscore') : _; 
 
-describe("@mtadata annotation", function() 
+describe("marks in text from different places issue", function() 
 {
 
-	it("@the ast metadata say how concepts should be named for third party tools like the html app or other any metadata needed", function() 
+	it("issue: text marks from different files are broken", function() 
 	{
 		var jsdoc, maker; 
-		var code =
-			'//@metadata class.name My Chapter' + '\n' +
-			'//@module m' + '\n' +
-			'//@class c' + '\n' +
-			'';
 
 		maker = new JsDocMaker();		
-		maker.addFile(code, 'name.js');
+		maker.addFile(
+			'//@module shared' + '\n' +
+
+			'//@classTarget' + '\n' +
+
+			'//@class shared1' + '\n' +
+			'//Text from file1 - @?class Target -' + '\n' +
+			'', 'file1.js'
+		);
+		maker.addFile(
+			'//@module shared' + '\n' +
+			'//@class shared1' + '\n' +
+			'//Text from file2 - @?class Target -' + '\n' +
+			'', 'file2.js'
+		);
 
 		jsdoc = maker.jsdoc();
 		maker.postProccess();
 		maker.postProccessBinding();
 
-		expect(jsdoc.metadata['class.name']==='My Chapter').toBe(true)
-		// console.log(jsdoc.metadata)
+		
+		console.log(jsdoc.classes['shared.shared1'])
 	});
 });
