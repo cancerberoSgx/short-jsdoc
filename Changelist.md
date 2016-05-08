@@ -85,4 +85,4 @@
  *  issue this seems to fail: @module m @class A @method p @property {B} @class B - the error is class 'undefined.B'
 
 ##0.2.6
- * 
+ * issue: private properties shown by default
