@@ -40,7 +40,7 @@ var ClassView = AbstractView.extend({
 		}
 
 		//calculate properties, events and attributes respecting visibility (i.e. the user choose to see only public props)
-		if(!this.options.private)
+		if(this.options.private)
 		{
 			this.properties = _.filter(this.properties, this.propertyIsPublicPredicate);
 			this.methods = _.filter(this.methods, this.propertyIsPublicPredicate);

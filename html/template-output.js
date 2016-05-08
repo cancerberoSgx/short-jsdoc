@@ -32,8 +32,8 @@ __p += '\n\t</div>\n\t<div class="col-md-4">\n\t\t<h3 class="class-module-title"
 '</h3>\n\t</div>\n</div>\n\n<div class="pull-right">&nbsp;&nbsp;<a href="' +
 ((__t = ( this.makeLink(this.jsdoc, false, {private: this.options.private ? 0 : 1}) )) == null ? '' : __t) +
 '">\n' +
-((__t = ( this.options.private ? 'Hide' : 'Show' )) == null ? '' : __t) +
-' private properties</a></div>\n\n<div class="pull-right">&nbsp;&nbsp;<a href="' +
+((__t = ( this.options.private ? 'Show' : 'Hide' )) == null ? '' : __t) +
+' private properties</a></div> \n\n<div class="pull-right">&nbsp;&nbsp;<a href="' +
 ((__t = ( this.makeLink(this.jsdoc, false, {inherited: this.options.inherited ? 0 : 1}) )) == null ? '' : __t) +
 '">\n' +
 ((__t = ( this.options.inherited ? 'Hide' : 'Show' )) == null ? '' : __t) +
@@ -272,25 +272,6 @@ __p += '\n\n\n\n\t\t<div data-type="sources"></div>\n\n\t</div>\n</div>\n';
 return __p
 };
 
-this["shortjsdoc"]["classSummary"] = function(obj) {
-obj || (obj = {});
-var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
-function print() { __p += __j.call(arguments, '') }
-with (obj) {
-__p += '<!-- <span class="class-summary-extends">class ' +
-((__t = ( this.makeLink(this.jsdoc, true) )) == null ? '' : __t) +
-'\n';
- if (this.jsdoc.extends) { ;
-__p += '\n\t<span class="class-summary-extends"><span class=" ">extends ' +
-((__t = ( this.printTypeAsString(this.jsdoc.extends))) == null ? '' : __t) +
-'</span>\n\t';
- } ;
-__p += ':\n<ul>\n\t -->\n</ul>\n</span>\n\n';
-
-}
-return __p
-};
-
 this["shortjsdoc"]["classes"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
@@ -307,6 +288,25 @@ __p += '\n\t<li><a href="#class/' +
 '</a></li>\n';
  }); ;
 __p += '\n</ul>\n';
+
+}
+return __p
+};
+
+this["shortjsdoc"]["classSummary"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+__p += '<!-- <span class="class-summary-extends">class ' +
+((__t = ( this.makeLink(this.jsdoc, true) )) == null ? '' : __t) +
+'\n';
+ if (this.jsdoc.extends) { ;
+__p += '\n\t<span class="class-summary-extends"><span class=" ">extends ' +
+((__t = ( this.printTypeAsString(this.jsdoc.extends))) == null ? '' : __t) +
+'</span>\n\t';
+ } ;
+__p += ':\n<ul>\n\t -->\n</ul>\n</span>\n\n';
 
 }
 return __p
