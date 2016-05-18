@@ -4,6 +4,9 @@ var self = this;
 
 <h2 class="module-title">Module <%= this.jsdoc.name%></h2>
 
+<div class="pull-right">&nbsp;&nbsp;<a href="<%= this.makeLink(this.jsdoc, false, {private: this.options.private ? 0 : 1}) %>">
+<%= this.options.private ? 'Show' : 'Hide' %> private classes</a></div> 
+
 <% if (this.jsdoc.text) { %>
 <div class="method-text">
 	<%= this.jsdoc.textHtml %>

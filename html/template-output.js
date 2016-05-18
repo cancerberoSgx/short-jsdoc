@@ -505,7 +505,11 @@ var self = this;
 ;
 __p += '\n\n<h2 class="module-title">Module ' +
 ((__t = ( this.jsdoc.name)) == null ? '' : __t) +
-'</h2>\n\n';
+'</h2>\n\n<div class="pull-right">&nbsp;&nbsp;<a href="' +
+((__t = ( this.makeLink(this.jsdoc, false, {private: this.options.private ? 0 : 1}) )) == null ? '' : __t) +
+'">\n' +
+((__t = ( this.options.private ? 'Show' : 'Hide' )) == null ? '' : __t) +
+' private classes</a></div> \n\n';
  if (this.jsdoc.text) { ;
 __p += '\n<div class="method-text">\n\t' +
 ((__t = ( this.jsdoc.textHtml )) == null ? '' : __t) +

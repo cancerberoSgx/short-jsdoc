@@ -110,13 +110,6 @@ var ClassView = AbstractView.extend({
 		});
 	}
 
-,	propertyIsPublicPredicate: function(p)
-	{
-		return _.find(p.children, function(c)
-		{
-			return c.annotation === 'public';
-		});
-	}
 
 	//@method makePartialText @param {AST} node @return {String}
 ,	makePartialText: function(node)
@@ -134,7 +127,7 @@ var ClassView = AbstractView.extend({
 	{
 		var hierarchy = [];
 		var c = this.jsdoc;		
-			do 
+		do 
 		{
 			if(c && c.extends)
 			{

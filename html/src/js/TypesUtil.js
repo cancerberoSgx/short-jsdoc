@@ -370,4 +370,24 @@ _(AbstractView.prototype).extend({
 
 
 
+	//public / private 
+
+,	propertyIsPublicPredicate: function(p)
+	{
+		return _.find(p.children, function(c)
+		{
+			return c.annotation === 'public';
+		});
+	}
+
+,	isClassPublic:function(c)
+	{
+		var isPublic = this.propertyIsPublicPredicate(c)
+		isPublic = isPublic || _.find(c.methods, this.propertyIsPublicPredicate)
+		isPublic = isPublic || _.find(c.properties, this.propertyIsPublicPredicate)
+		isPublic = isPublic || _.find(c.events, this.propertyIsPublicPredicate)
+		isPublic = isPublic || _.find(c.attributes, this.propertyIsPublicPredicate)
+		return isPublic;
+	}
+
 });
