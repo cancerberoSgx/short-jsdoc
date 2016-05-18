@@ -86,3 +86,4 @@
 
 ##0.2.6
  * issue: private properties shown by default
+ * whoe/hide private classes in the module view
