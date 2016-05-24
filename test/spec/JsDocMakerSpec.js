@@ -1194,7 +1194,7 @@ describe("@function", function()
 
 
 
-describe("lie comments and markdown", function() 
+describe("line comments and markdown", function() 
 {
 
 	it("line comments must support multiple markdown paragraph by default", function() 
@@ -1223,6 +1223,35 @@ describe("lie comments and markdown", function()
 
 });
 
+
+describe("annotations names", function() 
+{
+
+	it("can contain : and - characters", function() 
+	{
+		var jsdoc, maker; 
+
+		maker = new JsDocMaker();		
+		maker.addFile(
+			'//@module mod:first-one some text 1' + '\n' +
+
+			'//@class some:thi-ng some text 2' + '\n' +
+
+			'//@event after:append-viewshared1 some text 3' + '\n' +
+
+			'//@childtag child:custom-tag some text 4' + '\n' +
+			''
+		)
+
+		jsdoc = maker.jsdoc();
+		maker.postProccess();
+		maker.postProccessBinding();
+		
+		expect(jsdoc.classes['mod:first-one.some:thi-ng'].text.indexOf('some text 2')!==-1).toBe(true);
+		expect(jsdoc.classes['mod:first-one.some:thi-ng'].events['after:append-viewshared1'].text.indexOf('some text 3')!==-1).toBe(true);
+		expect(jsdoc.classes['mod:first-one.some:thi-ng'].events['after:append-viewshared1'].children[0].name==='child:custom-tag').toBe(true);
+	});
+});
 
 });
 
