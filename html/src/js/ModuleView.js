@@ -19,7 +19,6 @@ var ModuleView = AbstractView.extend({
 		this.options = options || {}
 		this.options.private = this.options.private ? parseInt(this.options.private, 10) : 0;
 
-		console.log(this.options.private)
 		if(this.options.private)
 		{
 			this.classes = _.filter(this.classes, function(c)

@@ -277,10 +277,8 @@ obj || (obj = {});
 var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
-
- var data = this.application.data; ;
-__p += '\n\n<h3><a href="#classes">Classes</a></h3>\n\n\n<ul>\n';
- _(data.classes).each(function(c) { ;
+__p += '<h3><a href="#classes">Classes</a></h3>\n\n<ul>\n';
+ _(this.classes).each(function(c) { ;
 __p += '\n\t<li><a href="#class/' +
 ((__t = ( c.absoluteName )) == null ? '' : __t) +
 '">' +
@@ -383,7 +381,11 @@ with (obj) {
  var data = this.application.data; ;
 __p += '\n\n' +
 ((__t = ( data.projectMetadata && this.application.templates['project-metadata'].apply(this, arguments) )) == null ? '' : __t) +
-'\n\n<p>Take a look at the <a href="#tree">Full Abstract Syntax Tree (AST) View</a></p>\n<p>Or to the <a href="#hierarchyTree">Full Class Hierarchy tree</a></p>\n\n' +
+'\n\n<div class="pull-right">&nbsp;&nbsp;<a href="' +
+((__t = ( this.makeLink('index', false, {private: this.options.private ? 0 : 1}) )) == null ? '' : __t) +
+'">\n' +
+((__t = ( this.options.private ? 'Show' : 'Hide' )) == null ? '' : __t) +
+' private classes</a></div> \n\n<p>Take a look at the <a href="#tree">Full Abstract Syntax Tree (AST) View</a></p>\n<p>Or to the <a href="#hierarchyTree">Full Class Hierarchy tree</a></p>\n\n' +
 ((__t = ( this.application.templates['modules'].apply(this, arguments) )) == null ? '' : __t) +
 '\n\n' +
 ((__t = ( this.application.templates['classes'].apply(this, arguments) )) == null ? '' : __t) +
@@ -567,18 +569,18 @@ var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
 __p += '<div class="modules">\n\n<h3><a href="#modules">Modules</a></h3>\n\n';
- var data = this.application.data; 
+ 
 var self = this; ;
 __p += '\n<ul class="modules-list">\n';
- _(data.modules).each(function(moduleBody, moduleName) { ;
+ _(this.modules).each(function(m) { ;
 __p += '\n\t<li class="modules-module"><a class=\'module-name\' href="#module/' +
-((__t = ( moduleName )) == null ? '' : __t) +
+((__t = ( m.name )) == null ? '' : __t) +
 '">' +
-((__t = ( moduleName )) == null ? '' : __t) +
+((__t = ( m.name )) == null ? '' : __t) +
 '</a>\n\t\t<ul class="modules-classes-list">\n\t\t';
  
 		/* TODO: make a view */
-		var moduleClasses = self.getModuleClasses(moduleName, self.application.data); 
+		var moduleClasses = self.getModuleClasses(m.name, self.application.data); 
 		_(moduleClasses).each(function(c) { ;
 __p += '\n\t\t\t<li class="modules-class"><a class=\'class-name\' href="#class/' +
 ((__t = ( c.absoluteName )) == null ? '' : __t) +

@@ -33,7 +33,11 @@ _(AbstractView.prototype).extend({
 		var s = htmlAnchors ? ('<a class="' + className + '" href="') : '';
 
 		var href = '';
-		if(node.annotation==='method')
+		if(_.isString(node))
+		{
+			href += '#' + node;
+		}
+		else if(node.annotation==='method')
 		{
 			href += '#method/' + node.absoluteName; 
 		}
@@ -299,6 +303,10 @@ _(AbstractView.prototype).extend({
 
 ,	getModuleClasses: function(moduleName, data)
 	{
+		if(!data)
+		{
+			data = this.application.data;
+		}
 		var a = [];
 		_(data.classes).each(function(c)
 		{
@@ -388,6 +396,13 @@ _(AbstractView.prototype).extend({
 		isPublic = isPublic || _.find(c.events, this.propertyIsPublicPredicate)
 		isPublic = isPublic || _.find(c.attributes, this.propertyIsPublicPredicate)
 		return isPublic;
+	}
+
+,	isModulePublic: function(m)
+	{
+		var classes = this.getModuleClasses(m.name); 
+		// debugger;
+		return _.find(classes, _.bind(this.isClassPublic, this))
 	}
 
 });

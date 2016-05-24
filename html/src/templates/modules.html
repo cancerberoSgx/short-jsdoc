@@ -2,15 +2,15 @@
 
 <h3><a href="#modules">Modules</a></h3>
 
-<% var data = this.application.data; 
+<% 
 var self = this; %>
 <ul class="modules-list">
-<% _(data.modules).each(function(moduleBody, moduleName) { %>
-	<li class="modules-module"><a class='module-name' href="#module/<%= moduleName %>"><%= moduleName %></a>
+<% _(this.modules).each(function(m) { %>
+	<li class="modules-module"><a class='module-name' href="#module/<%= m.name %>"><%= m.name %></a>
 		<ul class="modules-classes-list">
 		<% 
 		/* TODO: make a view */
-		var moduleClasses = self.getModuleClasses(moduleName, self.application.data); 
+		var moduleClasses = self.getModuleClasses(m.name, self.application.data); 
 		_(moduleClasses).each(function(c) { %>
 			<li class="modules-class"><a class='class-name' href="#class/<%= c.absoluteName %>"><%= c.name %></a>, </li>
 		<% }); %>

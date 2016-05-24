@@ -18,6 +18,8 @@ var JsDocRouter = Backbone.Router.extend({
 	,	'attribute/:attribute': 'showAttribute'
 
 	,	'index': 'showIndex'
+	,	'index/?:options': 'showIndex'
+
 	,	'modules': 'showModules'
 	,	'classes': 'showClasses'
 
@@ -149,9 +151,10 @@ var JsDocRouter = Backbone.Router.extend({
 	}
 
 	//@method showIndex
-,	showIndex: function() 
+,	showIndex: function(optionsStr) 
 	{
-		var view = new IndexView(this.application);
+		var options = this.parseOptions(optionsStr||''); 
+		var view = new IndexView(this.application, options);
 		this.application.showView(view); 
 	}
 
