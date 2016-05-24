@@ -291,14 +291,26 @@ _(AbstractView.prototype).extend({
 		return data;
 	}
 	
-,	getClassName: function(absoluteName)
+,	getClassName: function(absoluteName, data)
 	{
-		return absoluteName.substring(0, absoluteName.lastIndexOf('.'));
+		data = data || this.application.data;
+		var a = absoluteName.split('.')
+		while(a)
+		{	
+			a = _.initial(a)
+			var name = a.join('.')
+			if(data.classes[name])
+			{
+				return name;
+			}
+		}
+		return absoluteName.substring(0, absoluteName.lastIndexOf('.')); //probably an error
 	}
 
 ,	getSimpleName: function(absoluteName)
 	{
-		return absoluteName.substring(absoluteName.lastIndexOf('.')+1, absoluteName.length); 
+		var className = this.getClassName(absoluteName);
+		return absoluteName.substring(className.length + 1, absoluteName.length);
 	}
 
 ,	getModuleClasses: function(moduleName, data)

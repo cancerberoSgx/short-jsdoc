@@ -31,4 +31,11 @@ and some final text with a list
   1. Ordered sub-list
   2. hello
 4. And another item.
+
+@property sgurin
 */
+
+
+// @event after:release-patch hello world
+
+// @event afterReleasePatch

@@ -5,3 +5,8 @@
 // @class Apple a nice fruit of *cold* climates @extends Fruit
 
 // @class Banana nice powerful fruit from *warm* climates @extends Fruit
+
+
+// @event after:release-patch hello world
+
+// @event afterReleasePatch

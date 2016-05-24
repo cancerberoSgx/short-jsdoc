@@ -152,8 +152,8 @@ generate shortjsdoc documentation:
     node generate-apidocs.js
 
 full rebuild and recreate
-
-    grunt compile; rm  html/data.json; node src/shortjsdoc.js --input "test/test-project/,html/src/,vendor-jsdoc/javascript" --project-metadata ./test/test-project/package.json > html/data.json
+    
+    rm html/data.json; node src/shortjsdoc.js --input "test/test-project/,html/src/,vendor-jsdoc/javascript" --project-metadata ./test/test-project/package.json > html/data.json
 
 Generate and run a full distro from github:
 

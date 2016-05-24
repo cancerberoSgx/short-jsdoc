@@ -86,4 +86,6 @@
 
 ##0.2.6
  * issue: private properties shown by default
- * whoe/hide private classes in the module view
+ * show/hide private classes in the module view
+ * show/hide private classes & modules in index view
+ * now annotation names can contain the ':' character, example: @event before:push-data

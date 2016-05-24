@@ -223,7 +223,7 @@ describe("text marks", function()
 		expect(jsdoc.classes['shared.shared1'].textMarks['_shortjsdoc_textmarkplugin_1'].arg).toBe('Target')
 		expect(jsdoc.classes['shared.shared1'].textMarks['_shortjsdoc_textmarkplugin_1'].name).toBe('class')
 		
-		console.log(jsdoc.classes['shared.shared1'])
+		// console.log(jsdoc.classes['shared.shared1'])
 	});
 
 });
