@@ -161,6 +161,7 @@ now you can use @task and it will be replaced to @module !
 
 From most important to less:
 
+ * 'hide partial text' doesn't work for events in the class view
 
  * issue: html app inherited props: only the super class inherited props are shown but not super-super class... also inherited classes should be grouped.
 

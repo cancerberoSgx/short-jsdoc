@@ -148,27 +148,44 @@ var self = this;
 		%>
 
 			<li class="method <%= inherited ? 'inherited' : '' %>">
-				<%= self.makeLink(method, true)%>
+
+				<!-- method name -->
+				<span class="method-name"><%= self.makeLink(method, true)%></span>
+
+
+				<!-- method params  -->
+				<span class="method-param-decorator">(</span>
 				<% if(method.params && method.params.length) { %>
-				Parameters: 
 				<ol class="params">
 					<% _(method.params).each(function(param){ %>
 					<li class="param">
-						<span class="param-name"><%= param.name %></span>: 
 						<span class="param-type"><%= self.printTypeAsString(param.type) %></span> 
-						<%= !inherited ? '' : ('(inherited by ' + self.printTypeAsString(inheritedBy) + ')') %>
+						<span class="param-name"><%= param.name %></span>
+						<span class="method-param-decorator">,</span>
 					</li>
 					<% }); %>
 				</ol>
 				<% } %>
+				<span class="method-param-decorator">)&nbsp;:&nbsp;</span>
 
-				<!-- TODO: do throw here ?  -->
 
+				<!-- method return type -->
 				<% if(method.returns && (method.returns.type || method.returns.text)) {%>
-				Returns: <%= self.printTypeAsString(method.returns.type) %>	
+				<span class="method-return"><%= self.printTypeAsString(method.returns.type) %></span>
 				<!-- <span class="returns-text"><%= method.returns.text || ''%></span> -->
+				<% } else {%>
+				void
 				<% } %>
 
+
+				<!-- method inherited by  -->
+				<%= !inherited ? '' : ('(inherited by ' + self.printTypeAsString(inheritedBy) + ')') %>
+
+				
+
+				<!-- TODO: do throw here ?  -->
+				
+				<!-- method description -->
 				<% if (self.options.text) {%> <span class="partial-text"><%= self.makePartialText(method)%></span><% }%>
 			</li>
 		<% }); %>

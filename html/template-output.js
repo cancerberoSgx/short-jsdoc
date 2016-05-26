@@ -178,31 +178,33 @@ __p += '\n\t\t<h3 class=\'methods\'>Methods</h3>\n\t\t<ul>\n\t\t';
 		;
 __p += '\n\n\t\t\t<li class="method ' +
 ((__t = ( inherited ? 'inherited' : '' )) == null ? '' : __t) +
-'">\n\t\t\t\t' +
+'">\n\n\t\t\t\t<!-- method name -->\n\t\t\t\t<span class="method-name">' +
 ((__t = ( self.makeLink(method, true))) == null ? '' : __t) +
-'\n\t\t\t\t';
+'</span>\n\n\n\t\t\t\t<!-- method params  -->\n\t\t\t\t<span class="method-param-decorator">(</span>\n\t\t\t\t';
  if(method.params && method.params.length) { ;
-__p += '\n\t\t\t\tParameters: \n\t\t\t\t<ol class="params">\n\t\t\t\t\t';
+__p += '\n\t\t\t\t<ol class="params">\n\t\t\t\t\t';
  _(method.params).each(function(param){ ;
-__p += '\n\t\t\t\t\t<li class="param">\n\t\t\t\t\t\t<span class="param-name">' +
-((__t = ( param.name )) == null ? '' : __t) +
-'</span>: \n\t\t\t\t\t\t<span class="param-type">' +
+__p += '\n\t\t\t\t\t<li class="param">\n\t\t\t\t\t\t<span class="param-type">' +
 ((__t = ( self.printTypeAsString(param.type) )) == null ? '' : __t) +
-'</span> \n\t\t\t\t\t\t' +
-((__t = ( !inherited ? '' : ('(inherited by ' + self.printTypeAsString(inheritedBy) + ')') )) == null ? '' : __t) +
-'\n\t\t\t\t\t</li>\n\t\t\t\t\t';
+'</span> \n\t\t\t\t\t\t<span class="param-name">' +
+((__t = ( param.name )) == null ? '' : __t) +
+'</span>\n\t\t\t\t\t\t<span class="method-param-decorator">,</span>\n\t\t\t\t\t</li>\n\t\t\t\t\t';
  }); ;
 __p += '\n\t\t\t\t</ol>\n\t\t\t\t';
  } ;
-__p += '\n\n\t\t\t\t<!-- TODO: do throw here ?  -->\n\n\t\t\t\t';
+__p += '\n\t\t\t\t<span class="method-param-decorator">)&nbsp;:&nbsp;</span>\n\n\n\t\t\t\t<!-- method return type -->\n\t\t\t\t';
  if(method.returns && (method.returns.type || method.returns.text)) {;
-__p += '\n\t\t\t\tReturns: ' +
+__p += '\n\t\t\t\t<span class="method-return">' +
 ((__t = ( self.printTypeAsString(method.returns.type) )) == null ? '' : __t) +
-'\t\n\t\t\t\t<!-- <span class="returns-text">' +
+'</span>\n\t\t\t\t<!-- <span class="returns-text">' +
 ((__t = ( method.returns.text || '')) == null ? '' : __t) +
 '</span> -->\n\t\t\t\t';
+ } else {;
+__p += '\n\t\t\t\tvoid\n\t\t\t\t';
  } ;
-__p += '\n\n\t\t\t\t';
+__p += '\n\n\n\t\t\t\t<!-- method inherited by  -->\n\t\t\t\t' +
+((__t = ( !inherited ? '' : ('(inherited by ' + self.printTypeAsString(inheritedBy) + ')') )) == null ? '' : __t) +
+'\n\n\t\t\t\t\n\n\t\t\t\t<!-- TODO: do throw here ?  -->\n\t\t\t\t\n\t\t\t\t<!-- method description -->\n\t\t\t\t';
  if (self.options.text) {;
 __p += ' <span class="partial-text">' +
 ((__t = ( self.makePartialText(method))) == null ? '' : __t) +
