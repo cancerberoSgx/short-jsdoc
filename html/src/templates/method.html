@@ -13,6 +13,12 @@
 			<h3>Function&nbsp;<a href="<%= this.makeLink(this.jsdoc) %>"><%= this.jsdoc.name%></a></h3>
 			<% }%>
 		</div>
+
+		<% if (this.jsdoc.text) { %>
+		<div class="method-text">
+			<%= this.jsdoc.textHtml %>
+		</div>
+		<% } %>
 	</div>
 	<% if(!this.asChildView) {%>
 	<div class="col-md-4">
@@ -89,11 +95,7 @@
 
 	
 	<div class="<%= this.asChildView ? 'col-md-12' : 'col-md-8' %>">
-		<% if (this.jsdoc.text) { %>
-		<div class="method-text">
-			<%= this.jsdoc.textHtml %>
-		</div>
-		<% } %>
+		
 		
 	<% if(!this.asChildView) {%><div data-type="sources"></div><% }%>
 	</div>

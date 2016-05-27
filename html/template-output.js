@@ -422,7 +422,13 @@ __p += '\n\t\t\t<h3>Function&nbsp;<a href="' +
 ((__t = ( this.jsdoc.name)) == null ? '' : __t) +
 '</a></h3>\n\t\t\t';
  };
-__p += '\n\t\t</div>\n\t</div>\n\t';
+__p += '\n\t\t</div>\n\n\t\t';
+ if (this.jsdoc.text) { ;
+__p += '\n\t\t<div class="method-text">\n\t\t\t' +
+((__t = ( this.jsdoc.textHtml )) == null ? '' : __t) +
+'\n\t\t</div>\n\t\t';
+ } ;
+__p += '\n\t</div>\n\t';
  if(!this.asChildView) {;
 __p += '\n\t<div class="col-md-4">\n\t\t';
  if(!this.isFunction){;
@@ -482,13 +488,7 @@ __p += '\n\t\t</ul>\n\n\t\t';
  } ;
 __p += '\n\t</div>\n\n\n\n\t\n\t<div class="' +
 ((__t = ( this.asChildView ? 'col-md-12' : 'col-md-8' )) == null ? '' : __t) +
-'">\n\t\t';
- if (this.jsdoc.text) { ;
-__p += '\n\t\t<div class="method-text">\n\t\t\t' +
-((__t = ( this.jsdoc.textHtml )) == null ? '' : __t) +
-'\n\t\t</div>\n\t\t';
- } ;
-__p += '\n\t\t\n\t';
+'">\n\t\t\n\t\t\n\t';
  if(!this.asChildView) {;
 __p += '<div data-type="sources"></div>';
  };
