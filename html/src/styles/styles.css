@@ -148,13 +148,16 @@
   display: inline;
   padding: 0;
 }
-.method {
+.method,
+.event,
+.property {
   margin-top: 20px;
 }
 .method-param-decorator,
 .method-name,
-.event-name {
-  font-size: 20px;
+.event-name,
+.property-name {
+  font-size: 19px;
   font-weight: bold;
 }
 .method-header h3,
