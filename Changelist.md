@@ -89,3 +89,4 @@
  * show/hide private classes in the module view
  * show/hide private classes & modules in index view
  * now annotation names can contain the ':' character, example: @event before:push-data
+ * fix issue with beforeTypeBindingPlugins - text markings weren't working in properties and event descriptions. 

@@ -2483,6 +2483,7 @@ JsDocMaker.prototype.postProccessBinding = function()
 		{
 			prop.ownerClass = c.absoluteName;
 			prop.absoluteName = c.absoluteName + JsDocMaker.ABSOLUTE_NAME_SEPARATOR + prop.name; 
+
 			if(self.installModifiers)
 			{
 				self.installModifiers(prop); 
@@ -2490,7 +2491,9 @@ JsDocMaker.prototype.postProccessBinding = function()
 			if(_(prop.type).isString())
 			{
 				prop.type = self.parseTypeString(prop.type, c) || prop.type;
-			}	
+			}
+
+			self.beforeTypeBindingPlugins.execute({node: prop, jsdocmaker: self});
 		}; 
 		_(c.properties).each(propertySetup);
 		_(c.events).each(propertySetup);
