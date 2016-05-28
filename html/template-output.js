@@ -24,7 +24,7 @@ data.projectMetadata = data.projectMetadata || {};
 __p += '\n\n' +
 ((__t = ( data.projectMetadata.name && this.application.templates['project-metadata'].apply(this, arguments) )) == null ? '' : __t) +
 '\n\n<div class="pull-right">&nbsp;&nbsp;<a href="' +
-((__t = ( this.makeLink('index', false, {private: this.options.private ? 0 : 1}) )) == null ? '' : __t) +
+((__t = ( this.makeLink('book', false, {private: this.options.private ? 0 : 1}) )) == null ? '' : __t) +
 '">\n' +
 ((__t = ( this.options.private ? 'Show' : 'Hide' )) == null ? '' : __t) +
 ' private classes</a></div> \n\n\n<h1>' +

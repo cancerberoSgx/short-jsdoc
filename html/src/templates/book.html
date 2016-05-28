@@ -6,7 +6,7 @@ data.projectMetadata = data.projectMetadata || {};
 
 <%= data.projectMetadata.name && this.application.templates['project-metadata'].apply(this, arguments) %>
 
-<div class="pull-right">&nbsp;&nbsp;<a href="<%= this.makeLink('index', false, {private: this.options.private ? 0 : 1}) %>">
+<div class="pull-right">&nbsp;&nbsp;<a href="<%= this.makeLink('book', false, {private: this.options.private ? 0 : 1}) %>">
 <%= this.options.private ? 'Show' : 'Hide' %> private classes</a></div> 
 
 
