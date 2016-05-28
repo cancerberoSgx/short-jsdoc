@@ -4,6 +4,7 @@ var uglifyFiles = [
 ,	'html/src/js/AbstractView.js'
 ,	'html/src/js/TypesUtil.js'
 ,	'html/src/js/IndexView.js'
+,	'html/src/js/BookView.js'
 ,	'html/src/js/ClassView.js'
 ,	'html/src/js/ModuleView.js'
 ,	'html/src/js/MethodView.js' 

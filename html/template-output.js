@@ -10,6 +10,69 @@ __p += '<div class="container">\n\t<div data-type="header-container"></div>\n\t<
 return __p
 };
 
+this["shortjsdoc"]["book"] = function(obj) {
+obj || (obj = {});
+var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
+function print() { __p += __j.call(arguments, '') }
+with (obj) {
+
+ 
+var self = this;
+var data = this.application.data; 
+data.projectMetadata = data.projectMetadata || {}; 
+;
+__p += '\n\n' +
+((__t = ( data.projectMetadata.name && this.application.templates['project-metadata'].apply(this, arguments) )) == null ? '' : __t) +
+'\n\n<div class="pull-right">&nbsp;&nbsp;<a href="' +
+((__t = ( this.makeLink('index', false, {private: this.options.private ? 0 : 1}) )) == null ? '' : __t) +
+'">\n' +
+((__t = ( this.options.private ? 'Show' : 'Hide' )) == null ? '' : __t) +
+' private classes</a></div> \n\n\n<h1>' +
+((__t = ( data.projectMetadata.name + ' API Reference')) == null ? '' : __t) +
+'</h2>\n<p><strong>' +
+((__t = ( 'Version ' + data.projectMetadata.version )) == null ? '' : __t) +
+'</strong></p>\n<p>' +
+((__t = ( data.projectMetadata.description )) == null ? '' : __t) +
+'</p>\n\n\n<h1>Index</h1>\n\n<ul class="index-modules">\n';
+ _.each(self.modules, function(module) { ;
+__p += '\n\n\t<li><a href="#module-' +
+((__t = ( module.name)) == null ? '' : __t) +
+'">Module ' +
+((__t = ( module.name)) == null ? '' : __t) +
+'</a>\n\t\t<ul class="index-modules-classes">\n\t\t\t';
+ var moduleClasses = self.getModuleClasses(module.name, self.application.data); 
+			_(moduleClasses).each(function(c) { ;
+__p += '\n\t\t\t\t<li><a class=\'class-name\' href="#class-' +
+((__t = ( c.absoluteName)) == null ? '' : __t) +
+'">Class ' +
+((__t = ( c.name )) == null ? '' : __t) +
+'</a></li>\n\t\t\t';
+ }); ;
+__p += '\n\t\t</ul>\n\t</li>\n';
+ });
+__p += '\n\n</ul>\n\n\n\n';
+ _.each(self.modules, function(module) { ;
+__p += '\n<br/><br/><br/>\n\t<h1 id="module-' +
+((__t = ( module.name )) == null ? '' : __t) +
+'">Module' +
+((__t = ( module.name)) == null ? '' : __t) +
+'</h1>\n\t<p>' +
+((__t = ( self.getTextHtml(module) )) == null ? '' : __t) +
+' </p>\n\n\t';
+ var moduleClasses = self.getModuleClasses(module.name, self.application.data); 
+	_(moduleClasses).each(function(c) { ;
+__p += '\n\t\t<br/><br/>\n\t\t<div data-class="' +
+((__t = ( c.absoluteName)) == null ? '' : __t) +
+'"></div>\n\t';
+ }); ;
+__p += '\n\n';
+ });
+__p += '\n\n';
+
+}
+return __p
+};
+
 this["shortjsdoc"]["class"] = function(obj) {
 obj || (obj = {});
 var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
@@ -29,7 +92,9 @@ __p += '\n\t\t<h3 class="class-extends-title">Extends ' +
  } ;
 __p += '\n\t</div>\n\t<div class="col-md-4">\n\t\t<h3 class="class-module-title">Module ' +
 ((__t = ( this.makeLink(this.jsdoc.module, true) )) == null ? '' : __t) +
-'</h3>\n\t</div>\n</div>\n\n<div class="pull-right">&nbsp;&nbsp;<a href="' +
+'</h3>\n\t</div>\n</div>\n\n\n';
+ if(!self.options.dontShowOptions) { ;
+__p += '\n<div class="pull-right">&nbsp;&nbsp;<a href="' +
 ((__t = ( this.makeLink(this.jsdoc, false, {private: this.options.private ? 0 : 1}) )) == null ? '' : __t) +
 '">\n' +
 ((__t = ( this.options.private ? 'Show' : 'Hide' )) == null ? '' : __t) +
@@ -41,11 +106,15 @@ __p += '\n\t</div>\n\t<div class="col-md-4">\n\t\t<h3 class="class-module-title"
 ((__t = ( this.makeLink(this.jsdoc, false, {text: this.options.text ? 0 : 1}) )) == null ? '' : __t) +
 '">\n' +
 ((__t = ( this.options.text ? 'Hide' : 'Show' )) == null ? '' : __t) +
-' partial text</a></div>\n\n\n<!-- <h3>Summary</h3> -->\n';
+' partial text</a></div>\n';
+ } ;
+__p += '\n\n<!-- <h3>Summary</h3> -->\n';
  var template = this.application.templates.classSummary;;
 __p += '\n' +
 ((__t = ( template.apply(this, arguments) )) == null ? '' : __t) +
-'\n\n<div class="row">\n\n\t<div class="col-md-5">\n\n\n\n\t\t';
+'\n\n<div class="row">\n\n\n';
+ if(!self.options.dontShowSidebar) {;
+__p += '\n\t<div class="col-md-5">\n\n\n\n\t\t';
  if(this.jsdoc.constructors && this.jsdoc.constructors.length) { ;
 __p += '\n\t\t<h3 class=\'methods\'>Constructors</h3>\n\t\t<ul>\n\t\t';
 
@@ -214,7 +283,11 @@ __p += '\n\t\t\t</li>\n\t\t';
  }); ;
 __p += '\n\t\t</ul>\n\t\t';
  } ;
-__p += '\n\n\n\n\n\n\t</div>\n\n\t<div class="col-md-7">\n\n\t\t';
+__p += '\n\n\n\n\n\n\t</div>\n\n\n';
+ } /*if(!self.options.dontShowSidebar)*/ ;
+__p += '\n\n\n\t<div class="' +
+((__t = ( self.options.dontShowSidebar ? 'col-md-12' : 'col-md-7' )) == null ? '' : __t) +
+'">\n\n\t\t';
  if(this.hierarchy && this.hierarchy.length>2) {;
 __p += '\n\t\t<div class="class-hierarchy">\n\t\t<h3>Class Hierarchy</h3>\n\t\t<ul>\n\t\t';
  _(_(this.hierarchy).reverse()).each(function(c){ ;
@@ -238,13 +311,17 @@ __p += '\n\t\t\t<li><a href="' +
  }); ;
 __p += '\n\t\t</ul>\n\t\t</div>\n\t\t';
 };
-__p += '\n\n\t\t<p><a href="#search?keywords=' +
+__p += '\n\n\n\t\t';
+ if(!self.options.dontShowOptions) { ;
+__p += '\n\t\t<p><a href="#search?keywords=' +
 ((__t = ( this.jsdoc.absoluteName)) == null ? '' : __t) +
-'&propsReferencingType=1">Search Class Usage</a></p>\n\t\t\n\t\t';
+'&propsReferencingType=1">Search Class Usage</a></p>\n\t\t';
+ } ;
+__p += ' \n\t\t\n\t\t';
  var summary_text = this.jsdoc.textHtml || self.getTextHtml(this.jsdoc.text) || this.jsdoc.text || ''; ;
 __p += '\n\n\n\n\n\t\t';
  if(summary_text) {;
-__p += '\n\t\t<h2>Summary</h2>\n\t\t\n\t\t<div class="class-text">\n\t\t' +
+__p += '\n\t\t<h3>Summary</h3>\n\t\t\n\t\t<div class="class-text">\n\t\t' +
 ((__t = ( summary_text )) == null ? '' : __t) +
 '\n\t\t</div>\n\t\t';
  } ;
@@ -268,7 +345,11 @@ __p += '\n\t\t<h3>Methods</h3>\n\t\t<div data-type="inline-methods" class="inlin
  } ;
 __p += '\n\n\t\t</div>\n\t\t';
  } ;
-__p += '\n\n\n\n\t\t<div data-type="sources"></div>\n\n\t</div>\n</div>\n';
+__p += '\n\n\n\n\t\t';
+ if(!self.options.dontShowSources) {;
+__p += '<div data-type="sources"></div>';
+};
+__p += '\n\n\t</div>\n</div>\n';
 
 }
 return __p
@@ -353,7 +434,7 @@ with (obj) {
  var metadata = this.application.data.projectMetadata; ;
 __p += '\n<header class="main-header">\n<div class="row">\n\n\n<!-- <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> -->\n<span class="col-sm-5 col-xs-12">\n\t<span class="dropdown">\n\t\t<button class="btn btn-default dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown">\n\t\t' +
 ((__t = ( (metadata && metadata.name) ||  'short-jsdoc demo' )) == null ? '' : __t) +
-'\n\t\t<span class="caret"></span>\n\t\t</button>\n\t\t<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">\n\t\t\t\n\t\t\t<li role="presentation"><a role="menuitem" href="#index">Index</a></li>\n\n\t\t\t<li role="presentation"><a role="menuitem" href="#tree">Full Abstract Syntax Tree</a></li>\t\n\n\t\t\t<li role="presentation"><a role="menuitem" href="#hierarchyTree">Class Hierarchy Tree</a></li>\t\n\n\t\t\t<li role="presentation"><a role="menuitem" href="#search?keywords=Array&propsReferencingType=1">Search type references</a></li>\n\n\t\t\t<li role="presentation"><a role="menuitem" href="#dependencies">Class Dependencies Graph</a></li>\t\n\n\t\t\t<li role="presentation"><a role="menuitem" href="#parse">Parse your code !</a></li>\n\n\t\t\t<li role="presentation" class="divider"></li>\n\n\t\t\t<li role="presentation"><a role="menuitem" href="https://github.com/cancerberoSgx/short-jsdoc">short-jsdoc home page</a></li>\n\t\t\t<li role="presentation"><a role="menuitem" href="../test/SpecRunner.html">Run short-jsdoc Specs</a></li>\n\n\t\t</ul>.\n\t\t\n\t</span>\t\t\n</span>\n\n<!-- <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> -->\n<span class="col-sm-7 col-xs-12">\n\t<span class="main-search pull-right">\n\t<a role="menuitem" href="#index">Index</a>\n\t\tSearch <input class="typeahead1">\n\t</span>\t\t\n</span>\n\n\n</div>\n</header>';
+'\n\t\t<span class="caret"></span>\n\t\t</button>\n\t\t<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu1">\n\t\t\t\n\t\t\t<li role="presentation"><a role="menuitem" href="#index">Index</a></li>\n\n\t\t\t<li role="presentation"><a role="menuitem" href="#book">Book view (for printing it all)</a></li>\n\n\t\t\t<li role="presentation"><a role="menuitem" href="#tree">Full Abstract Syntax Tree</a></li>\t\n\n\t\t\t<li role="presentation"><a role="menuitem" href="#hierarchyTree">Class Hierarchy Tree</a></li>\t\n\n\t\t\t<li role="presentation"><a role="menuitem" href="#search?keywords=Array&propsReferencingType=1">Search type references</a></li>\n\n\t\t\t<li role="presentation"><a role="menuitem" href="#dependencies">Class Dependencies Graph</a></li>\t\n\n\t\t\t<li role="presentation"><a role="menuitem" href="#parse">Parse your code !</a></li>\n\n\t\t\t<li role="presentation" class="divider"></li>\n\n\t\t\t<li role="presentation"><a role="menuitem" href="https://github.com/cancerberoSgx/short-jsdoc">short-jsdoc home page</a></li>\n\t\t\t<li role="presentation"><a role="menuitem" href="../test/SpecRunner.html">Run short-jsdoc Specs</a></li>\n\n\t\t</ul>.\n\t\t\n\t</span>\t\t\n</span>\n\n<!-- <span class="col-lg-12 col-md-12 col-sm-12 col-xs-12"> -->\n<span class="col-sm-7 col-xs-12">\n\t<span class="main-search pull-right">\n\t<a role="menuitem" href="#index">Index</a>\n\t\tSearch <input class="typeahead1">\n\t</span>\t\t\n</span>\n\n\n</div>\n</header>';
 
 }
 return __p

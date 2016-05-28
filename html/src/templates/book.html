@@ -1,0 +1,49 @@
+<% 
+var self = this;
+var data = this.application.data; 
+data.projectMetadata = data.projectMetadata || {}; 
+%>
+
+<%= data.projectMetadata.name && this.application.templates['project-metadata'].apply(this, arguments) %>
+
+<div class="pull-right">&nbsp;&nbsp;<a href="<%= this.makeLink('index', false, {private: this.options.private ? 0 : 1}) %>">
+<%= this.options.private ? 'Show' : 'Hide' %> private classes</a></div> 
+
+
+<h1><%= data.projectMetadata.name + ' API Reference'%></h2>
+<p><strong><%= 'Version ' + data.projectMetadata.version %></strong></p>
+<p><%= data.projectMetadata.description %></p>
+
+
+<h1>Index</h1>
+
+<ul class="index-modules">
+<% _.each(self.modules, function(module) { %>
+
+	<li><a href="#module-<%= module.name%>">Module <%= module.name%></a>
+		<ul class="index-modules-classes">
+			<% var moduleClasses = self.getModuleClasses(module.name, self.application.data); 
+			_(moduleClasses).each(function(c) { %>
+				<li><a class='class-name' href="#class-<%= c.absoluteName%>">Class <%= c.name %></a></li>
+			<% }); %>
+		</ul>
+	</li>
+<% })%>
+
+</ul>
+
+
+
+<% _.each(self.modules, function(module) { %>
+<br/><br/><br/>
+	<h1 id="module-<%= module.name %>">Module<%= module.name%></h1>
+	<p><%= self.getTextHtml(module) %> </p>
+
+	<% var moduleClasses = self.getModuleClasses(module.name, self.application.data); 
+	_(moduleClasses).each(function(c) { %>
+		<br/><br/>
+		<div data-class="<%= c.absoluteName%>"></div>
+	<% }); %>
+
+<% })%>
+

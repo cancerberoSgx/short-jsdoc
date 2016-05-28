@@ -6,6 +6,34 @@ Listed from more important to less important - kind of:
  
  * remove @?link and see if is faster. 
 
+ * Validate JavaScript interface implementations:
+    declare interfaces and implementations with jsdoc 
+    validate implementation signatures to implement the interfaces. 
+
+        file framework/datastore.js: 
+
+            @class DataStore
+            @interface 
+            @method get @param {String} id @returns {Model}
+
+        file framework/datastore.js: 
+
+            @class DataStore
+            @interface 
+            @method get @param {String} id @returns {Model}
+
+        File client1.js: 
+
+            @class MySQLDataStore
+            @implements DataStore
+            @implements EventEmitter
+            @method get @param {String} id @returns {SubModel}
+
+
+
+
+
+
  * @metadata Feature i want to represent a book with chapters containing sections using @alias - but also i want to configure the html app to say 'Chapter' instead 'Module' and 'Section' instead 'Class'. Solution: store this info in the ast, in a 'metadata' object the app will read from here. 
  @metadata class.label Section 
  @metadata module.label Chapter can be multi word cause is the annotation's text

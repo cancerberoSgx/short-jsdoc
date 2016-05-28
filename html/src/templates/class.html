@@ -16,6 +16,8 @@ var self = this;
 	</div>
 </div>
 
+
+<% if(!self.options.dontShowOptions) { %>
 <div class="pull-right">&nbsp;&nbsp;<a href="<%= this.makeLink(this.jsdoc, false, {private: this.options.private ? 0 : 1}) %>">
 <%= this.options.private ? 'Show' : 'Hide' %> private properties</a></div> 
 
@@ -24,7 +26,7 @@ var self = this;
 
 <div class="pull-right">&nbsp;&nbsp;<a href="<%= this.makeLink(this.jsdoc, false, {text: this.options.text ? 0 : 1}) %>">
 <%= this.options.text ? 'Hide' : 'Show' %> partial text</a></div>
-
+<% } %>
 
 <!-- <h3>Summary</h3> -->
 <% var template = this.application.templates.classSummary;%>
@@ -32,6 +34,8 @@ var self = this;
 
 <div class="row">
 
+
+<% if(!self.options.dontShowSidebar) {%>
 	<div class="col-md-5">
 
 
@@ -198,7 +202,11 @@ var self = this;
 
 	</div>
 
-	<div class="col-md-7">
+
+<% } /*if(!self.options.dontShowSidebar)*/ %>
+
+
+	<div class="<%= self.options.dontShowSidebar ? 'col-md-12' : 'col-md-7' %>">
 
 		<% if(this.hierarchy && this.hierarchy.length>2) {%>
 		<div class="class-hierarchy">
@@ -222,7 +230,10 @@ var self = this;
 		</div>
 		<%}%>
 
+
+		<% if(!self.options.dontShowOptions) { %>
 		<p><a href="#search?keywords=<%= this.jsdoc.absoluteName%>&propsReferencingType=1">Search Class Usage</a></p>
+		<% } %> 
 		
 		<% var summary_text = this.jsdoc.textHtml || self.getTextHtml(this.jsdoc.text) || this.jsdoc.text || ''; %>
 
@@ -230,7 +241,7 @@ var self = this;
 
 
 		<% if(summary_text) {%>
-		<h2>Summary</h2>
+		<h3>Summary</h3>
 		
 		<div class="class-text">
 		<%= summary_text %>
@@ -267,7 +278,7 @@ var self = this;
 
 
 
-		<div data-type="sources"></div>
+		<% if(!self.options.dontShowSources) {%><div data-type="sources"></div><%}%>
 
 	</div>
 </div>

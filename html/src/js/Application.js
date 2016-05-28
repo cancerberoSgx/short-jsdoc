@@ -72,6 +72,7 @@ _(Application.prototype).extend({
 		this.currentView = view;
 		this.$containerEl.empty();
 		this.applicationView.renderIn(this.$containerEl);
+		document.title = view.title || document.title;
 	}
 
 	//@method refreshWithNewModel @param {Object}data

@@ -20,6 +20,9 @@ var JsDocRouter = Backbone.Router.extend({
 	,	'index': 'showIndex'
 	,	'index/?:options': 'showIndex'
 
+	,	'book': 'showBook'
+	,	'book/?:options': 'showBook'
+
 	,	'modules': 'showModules'
 	,	'classes': 'showClasses'
 
@@ -157,6 +160,22 @@ var JsDocRouter = Backbone.Router.extend({
 		var view = new IndexView(this.application, options);
 		this.application.showView(view); 
 	}
+	//@method showBook
+,	showBook: function(optionsStr) 
+	{
+		var userWants = confirm('This can take some time for the browser, are you sure you want to continue ? ')
+		if(userWants)
+		{
+			var options = this.parseOptions(optionsStr||''); 
+			var view = new BookView(this.application, options);
+			this.application.showView(view); 
+		}
+		else
+		{
+			Backbone.history.navigate('index', {trigger: true})
+		}
+	}
+
 
 	//@method showTree
 ,	showTree: function()
