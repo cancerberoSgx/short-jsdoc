@@ -79,7 +79,6 @@
  * fixed html ui makeLink to preserve current hash options
 
 ##0.2.5
-
  * fixed html ui makeLink to preserve current hash options fixed to mix with current options. 
  * new properties and method full text are inside the class view also, after the summary
  *  issue this seems to fail: @module m @class A @method p @property {B} @class B - the error is class 'undefined.B'
@@ -90,3 +89,4 @@
  * show/hide private classes & modules in index view
  * now annotation names can contain the ':' character, example: @event before:push-data
  * fix issue with beforeTypeBindingPlugins - text markings weren't working in properties and event descriptions. 
+ * book view - for printing it all to a PDF
