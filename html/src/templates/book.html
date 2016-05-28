@@ -36,14 +36,15 @@ data.projectMetadata = data.projectMetadata || {};
 
 <% _.each(self.modules, function(module) { %>
 <br/><br/><br/>
+<div class="book-module">
 	<h1 id="module-<%= module.name %>">Module <%= module.name%></h1>
 	<p><%= self.getTextHtml(module) %> </p>
 
 	<% var moduleClasses = self.getModuleClasses(module.name, self.application.data); 
 	_(moduleClasses).each(function(c) { %>
 		<br/><br/>
-		<div id="class-<%= c.absoluteName %>" data-class="<%= c.absoluteName%>"></div>
+		<div class="book-class" id="class-<%= c.absoluteName %>" data-class="<%= c.absoluteName%>"></div>
 	<% }); %>
-
+</div>
 <% })%>
 

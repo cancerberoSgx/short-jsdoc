@@ -258,6 +258,12 @@
     content: "" !important;
   }
 }
+@media print {
+  .book-class {
+    display: block;
+    page-break-before: always;
+  }
+}
 /* dependencies.less*/
 .loading-message {
   margin: 40px auto 0 auto;

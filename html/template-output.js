@@ -52,7 +52,7 @@ __p += '\n\t\t</ul>\n\t</li>\n';
  });
 __p += '\n\n</ul>\n\n\n\n';
  _.each(self.modules, function(module) { ;
-__p += '\n<br/><br/><br/>\n\t<h1 id="module-' +
+__p += '\n<br/><br/><br/>\n<div class="book-module">\n\t<h1 id="module-' +
 ((__t = ( module.name )) == null ? '' : __t) +
 '">Module ' +
 ((__t = ( module.name)) == null ? '' : __t) +
@@ -61,13 +61,13 @@ __p += '\n<br/><br/><br/>\n\t<h1 id="module-' +
 ' </p>\n\n\t';
  var moduleClasses = self.getModuleClasses(module.name, self.application.data); 
 	_(moduleClasses).each(function(c) { ;
-__p += '\n\t\t<br/><br/>\n\t\t<div id="class-' +
+__p += '\n\t\t<br/><br/>\n\t\t<div class="book-class" id="class-' +
 ((__t = ( c.absoluteName )) == null ? '' : __t) +
 '" data-class="' +
 ((__t = ( c.absoluteName)) == null ? '' : __t) +
 '"></div>\n\t';
  }); ;
-__p += '\n\n';
+__p += '\n</div>\n';
  });
 __p += '\n\n';
 
