@@ -54,14 +54,16 @@ __p += '\n\n</ul>\n\n\n\n';
  _.each(self.modules, function(module) { ;
 __p += '\n<br/><br/><br/>\n\t<h1 id="module-' +
 ((__t = ( module.name )) == null ? '' : __t) +
-'">Module' +
+'">Module ' +
 ((__t = ( module.name)) == null ? '' : __t) +
 '</h1>\n\t<p>' +
 ((__t = ( self.getTextHtml(module) )) == null ? '' : __t) +
 ' </p>\n\n\t';
  var moduleClasses = self.getModuleClasses(module.name, self.application.data); 
 	_(moduleClasses).each(function(c) { ;
-__p += '\n\t\t<br/><br/>\n\t\t<div data-class="' +
+__p += '\n\t\t<br/><br/>\n\t\t<div id="class-' +
+((__t = ( c.absoluteName )) == null ? '' : __t) +
+'" data-class="' +
 ((__t = ( c.absoluteName)) == null ? '' : __t) +
 '"></div>\n\t';
  }); ;
