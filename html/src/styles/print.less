@@ -1,16 +1,18 @@
 
-//hide the hrefs in the pdf output
 @media print {
+
+	//hide the hrefs in the pdf output
 	a[href]:after {
 	   content:"" !important;
 	}
-}
 
-
-//page breaks support:
-@media print {
+	//page breaks support:
 	.book-class {
 		display: block; 
 		page-break-before: always; 
+	}
+
+	.header-view {
+		display: none
 	}
 }

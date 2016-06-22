@@ -4,7 +4,6 @@ var data = this.application.data;
 data.projectMetadata = data.projectMetadata || {}; 
 %>
 
-<%= data.projectMetadata.name && this.application.templates['project-metadata'].apply(this, arguments) %>
 
 <div class="pull-right">&nbsp;&nbsp;<a href="<%= this.makeLink('book', false, {private: this.options.private ? 0 : 1}) %>">
 <%= this.options.private ? 'Show' : 'Hide' %> private classes</a></div> 
@@ -13,6 +12,9 @@ data.projectMetadata = data.projectMetadata || {};
 <h1><%= data.projectMetadata.name + ' API Reference'%></h2>
 <p><strong><%= 'Version ' + data.projectMetadata.version %></strong></p>
 <p><%= data.projectMetadata.description %></p>
+
+
+<%= data.projectMetadata.name && this.application.templates['project-metadata'].apply(this, arguments) %>
 
 
 <h1>Index</h1>

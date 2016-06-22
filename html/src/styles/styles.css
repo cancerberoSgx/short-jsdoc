@@ -257,11 +257,12 @@
   a[href]:after {
     content: "" !important;
   }
-}
-@media print {
   .book-class {
     display: block;
     page-break-before: always;
+  }
+  .header-view {
+    display: none;
   }
 }
 /* dependencies.less*/

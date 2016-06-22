@@ -21,9 +21,7 @@ var self = this;
 var data = this.application.data; 
 data.projectMetadata = data.projectMetadata || {}; 
 ;
-__p += '\n\n' +
-((__t = ( data.projectMetadata.name && this.application.templates['project-metadata'].apply(this, arguments) )) == null ? '' : __t) +
-'\n\n<div class="pull-right">&nbsp;&nbsp;<a href="' +
+__p += '\n\n\n<div class="pull-right">&nbsp;&nbsp;<a href="' +
 ((__t = ( this.makeLink('book', false, {private: this.options.private ? 0 : 1}) )) == null ? '' : __t) +
 '">\n' +
 ((__t = ( this.options.private ? 'Show' : 'Hide' )) == null ? '' : __t) +
@@ -33,7 +31,9 @@ __p += '\n\n' +
 ((__t = ( 'Version ' + data.projectMetadata.version )) == null ? '' : __t) +
 '</strong></p>\n<p>' +
 ((__t = ( data.projectMetadata.description )) == null ? '' : __t) +
-'</p>\n\n\n<h1>Index</h1>\n\n<ul class="index-modules">\n';
+'</p>\n\n\n' +
+((__t = ( data.projectMetadata.name && this.application.templates['project-metadata'].apply(this, arguments) )) == null ? '' : __t) +
+'\n\n\n<h1>Index</h1>\n\n<ul class="index-modules">\n';
  _.each(self.modules, function(module) { ;
 __p += '\n\n\t<li><a href="#module-' +
 ((__t = ( module.name)) == null ? '' : __t) +
