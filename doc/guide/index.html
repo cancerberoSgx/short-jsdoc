@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, shrink-to-fit=no, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Simple Sidebar - Start Bootstrap Template</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="css/simple-sidebar.css" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body>
+
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        <div id="sidebar-wrapper">
+            <ul class="sidebar-nav">
+                <li class="sidebar-brand">
+                    <a href="#">
+                        short-jsdoc guide
+                    </a>
+                </li>
+                <li>
+                    <a href="#introduction">Introduction</a>
+                </li>
+                <li>
+                    <a href="#oop">Object Oriented Programming</a>
+                </li>
+                <li>
+                    <a href="#jsdoc">jsdoc</a>
+                </li>
+                <li>
+                    <a href="#">Events</a>
+                </li>
+                <li>
+                    <a href="#">About</a>
+                </li>
+                <li>
+                    <a href="#">Services</a>
+                </li>
+                <li>
+                    <a href="#">Contact</a>
+                </li>
+            </ul>
+        </div>
+        <!-- /#sidebar-wrapper -->
+
+        <!-- Page Content -->
+        <div id="page-content-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+
+                        <a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Toggle Menu</a>
+
+                        <h1 id="introduction">Introduction</h1>
+
+                        <p>This document is an introductory guide on documenting your source code using short-jsdoc. </p>
+
+                        <p><a href="">short-jsdoc</a> is a tool and language very similar to <a href="">jsdoc</a> with a strong emphasis in types and other advanced features designed to better express particularities of the semantics of the JavaScript language. </p>
+
+                        <p>So if you are already familiar with Object Oriented Programming and tools like jsdoc or javadocs then using short-jsdoc will be straight forward.</p>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 id="oop">Object Oriented Programming</h1>
+                        <p>For documenting our source code with short-jsdoc we will be using the Object Oriented Programming paradigm (OOP). So short-jsdoc will be better suited to document those projects that uses POO than other paradigms, like functional. You should be familiar with POO, but just in case here is a summary:</p>
+                        <p>Software is organized in several <strong>Modules</strong> which are the first building block for modularization of responsibilities in a project. Modules contains classes that can be instantiated and which instances collaborate to solve a problem. <strong>classes</strong> which are the main behavior building block in POO:</p>
+                        <ul>
+                            <li>A class might <strong>extend</strong> another class. For example, the class Car extends from the class Vehicle and this means that a Car is and can do what any other Vehicle is/does and also have some particularities, like it has an engine and four wheels. </li>
+                            <li>A class contains <strong>properties</strong> which defines the state of its instances. For example the class Car has the 'color' property which defines the car's color.</li>
+                            <li>A class might contain <strong>methods</strong> which defines the behavior of classes. For example, the class Car have a method startEngine()</li>
+                            <li>Instances of a class could trigger <strong>events</strong> to notify other objects that something interesting happens. For example, cars could trigger the event 'engine-started' to notify other interested objects that that particular car instance engine's just started.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                 <div class="row">
+                    <div class="col-lg-12">
+                        <h1 id="jsdoc">jsdoc</h1>
+                        <p>jsdoc is a technology in which the programmer writes source code <emphasis>comments</emphasis> that contains some special markings to declare and describe its project's Object oriented elements like modules, classes, properties, etc.</p>
+                        <p>There are other very similar technologies for other languages, for example <a href="https://en.wikipedia.org/wiki/Javadoc">javadoc</a> is a similar tool but for the Java programming language. </p>
+                    </div>
+                </div>
+
+
+
+                 <div class="row">
+                    <div class="col-lg-12">
+                        <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+                        <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+                        <p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p><p>&nbsp;</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- /#page-content-wrapper -->
+
+    </div>
+    <!-- /#wrapper -->
+
+    <!-- jQuery -->
+    <script src="js/jquery.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="js/bootstrap.min.js"></script>
+
+    <!-- Menu Toggle Script -->
+    <script>
+    $("#menu-toggle").click(function(e) {
+        e.preventDefault();
+        $("#wrapper").toggleClass("toggled");
+    });
+    </script>
+
+</body>
+
+</html>
