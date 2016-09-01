@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/cancerberoSgx/short-jsdoc.png?branch=master)](https://travis-ci.org/cancerberoSgx/short-jsdoc)
 
+[Guide](http://cancerberosgx.github.io/short-jsdoc/doc/guide/index.html#)
+
 #Online HTML5 project demo.  
 
 [Online Example Demo](http://cancerberosgx.github.io/short-jsdoc/html)
