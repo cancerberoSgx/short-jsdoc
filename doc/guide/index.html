@@ -48,16 +48,16 @@
                     <a href="#jsdoc">jsdoc</a>
                 </li>
                 <li>
-                    <a href="#">Events</a>
+                    <a href="#annotation-syntax">Annotation syntax</a>
                 </li>
                 <li>
-                    <a href="#">About</a>
+                    <a href="#types">Types</a>
                 </li>
                 <li>
-                    <a href="#">Services</a>
+                    <a href="#text-markings">Text Markings</a>
                 </li>
                 <li>
-                    <a href="#">Contact</a>
+                    <a href="#aliases">Aliases</a>
                 </li>
             </ul>
         </div>
@@ -75,9 +75,10 @@
 
                         <p>This document is an introductory guide on documenting your source code using short-jsdoc. </p>
 
-                        <p><a href="">short-jsdoc</a> is a tool and language very similar to <a href="">jsdoc</a> with a strong emphasis in types and other advanced features designed to better express particularities of the semantics of the JavaScript language. </p>
+                        <p><a href="">short-jsdoc</a> is a tool and language very similar to <a href="https://en.wikipedia.org/wiki/JSDoc">jsdoc</a> with a strong emphasis in types and other advanced features designed to better express particularities of the semantics of the JavaScript language. </p>
 
-                        <p>So if you are already familiar with Object Oriented Programming and tools like jsdoc or javadocs then using short-jsdoc will be straight forward.</p>
+                        <p>So if you are already familiar with Object Oriented Programming and tools like jsdoc or <a href="https://en.wikipedia.org/wiki/Javadoc">javadoc</a> then using short-jsdoc will be straight forward.</p>
+
                     </div>
                 </div>
 
@@ -99,8 +100,199 @@
                  <div class="row">
                     <div class="col-lg-12">
                         <h1 id="jsdoc">jsdoc</h1>
-                        <p>jsdoc is a technology in which the programmer writes source code <emphasis>comments</emphasis> that contains some special markings to declare and describe its project's Object oriented elements like modules, classes, properties, etc.</p>
-                        <p>There are other very similar technologies for other languages, for example <a href="https://en.wikipedia.org/wiki/Javadoc">javadoc</a> is a similar tool but for the Java programming language. </p>
+                        <p>jsdoc is a technology in which the programmer writes source code <strong>comments</strong> that contains some special markings to declare and describe its project's Object oriented elements like modules, classes, properties, etc.</p>
+                        <p>These markings have the format <code>@foo</code> and are called <strong>annotations</strong></p>
+                        <p>Then a jsdoc tool will parse the source code files and collect all these annotations to form an <strong>Abstract Syntax Tree</strong> (AST)</p>
+                        <p>Alternatively, another tools will be responsible of showing this AST visually so the user can navigate through classes, modules, methods, etc. </p>
+                        <p>Let's see a little example of JavaScript code that contains a jsdoc comment. It declares a class <code>FileView</code> of module myapp that extends class <code>AbstractView</code> and contains a property file of type <code>FileData</code> and a method <code>deleteFileHandler</code> that accept a <code>Function</code> parameter and returns a <code>Promise</code> object:</p>
+
+                        <pre class="prettyprint lang-js">
+// @module myapp
+// @class FileView This view shows a single file @extends AbstractView
+// @property {FileData} file
+// @method deleteFileHandler Handles the delete file action 
+// @param {Function} fn 
+// @returns {Promise}
+                        </pre>
+                    </div>
+                </div>
+
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 id="annotation-syntax">Annotation syntax</h1>
+                        <p>The tool will be consuming expressions like the following to build the AST. We call these expressions <strong>annotations</strong>:</p>
+
+                        <pre class="prettyprint lang-js">// @param {Color} color a description for the color parameter</pre>
+
+                        <h3>Annotation parts</h3>
+                        <ul>
+                            <li><strong>@param</strong> is the annotation and defines the type of node we are declaring. In this case we are declaring a method parameter</li>
+                            <li><strong>{Color}</strong> is optional. Is a refence of the type of the node we are declaring.</li>
+                            <li><strong>color</strong> is optional too and it is the name of the node we are declaring.</li>
+                            <li>The text <code>a description for the color parameter</code> is associated to the node and documents it</li>
+                        </ul>
+
+                        <h3>Tree structure</h3>
+                        <p>The structure of the generated tree is as follows. </p>
+                        <ul>
+                            <li>A <code>@module</code> contains <code>@class</code></li>
+                            <li>A <code>@class</code> contains <code>@method</code>, <code>@property</code>, and <code>@event</code></li>
+                            <li>A <code>@method</code> contains <code>@param</code>, <code>@return</code> and <code>@throw</code></li>
+                        </ul>
+
+                        <p>In short-jsdoc only certain nodes can contain children and are the following:</p>
+
+                        <p><code>@module @method @property @event @class</code></p>
+
+                        <p>All other annotations are leaf nodes meaning they can't contain children and always belong to a parent node. Example of leaf nodes:</p>
+
+                        <p><code>@param @throws @returns @extends @static</code></p>
+
+                        <h3>Parsing</h3>
+                        <p>The parser will read your files from top to bottom parsing any annotation found in your source code comments.</p>
+                        <p>When a leaf node annotation is found, it is assigned as children of the last parsed parent node.</p>
+                        <p>When a parent node annotation is found it is assigned as children of the last parent node that matches the structure 'modules that contain classes that contains methods, etc'.</p>
+                        <p>Any kind of comment style can be used.</p>
+                        <p>Any @annotation name can be used so you can define your own semantics - they will be parsed as children of the last parent node read.</p>
+                        <p>Source code files must be auto-containable - in other words you cannot make any assumptions about the order of the files being parsed.</p>
+
+                        <h3>Ignored comments</h3>
+
+                        <p>Comments starting with the character '?' will be ignored, even if they contain annotations:</p>
+<pre class="prettyprint lang-js">
+//? @class Something will be ignored b the parser
+/*? @method foo also will be ignored */
+</pre>
+                    </div>
+                </div>
+
+
+                    
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 id="types">Types</h1>
+                        <p>Types are optional, always</p>
+                        <p>Some nodes like parameters or returns can declare a type, which is a reference to class nodes. short-jsdoc heavily support types and can be of the following kinds:</p>
+
+                        <h3>Simple types</h3>
+
+                        <p>Are just a reference to a class by name, for example:</p>
+
+                        <pre class="prettyprint lang-js">// @method getModel @returns {Banana}</pre>
+
+
+                        <h3>Native types</h3>
+                        <p>If you reference a JavaScript native type like String, Array, Object, etc., they will be binded to the Mozilla JavaScript Types Reference. Some native types are: </p>
+
+                        <p><code>Object, Number, Boolean, String, Array, Function, Error, etc</code></p>
+                        <p>Alternative you can instruct short-jsdoc parser to also include build in natives types documentation. In that case instead an external link you can navigate to the type as with any other types and the inherited information will be available.</p>
+
+                        <h3>Generic types</h3>
+                        <p>These are inspired in Java or C# generics. For example we can say that a parameter is an Array but we can also say it is an Array of Bananas :</p>
+
+                        <pre class="prettyprint lang-js">// @method addFruit @param {Array&lt;Banana>} fruits</pre>
+
+                        <p>Generic types support arbitrary nesting:</p>
+
+                        <pre class="prettyprint lang-js">// @method groupWires @returns {Object&lt;String,Array&lt;Wire>>} a map of wires by name.</pre>
+
+
+                        <h3>Multiple types - (OR)</h3>
+
+                        <p>Imagine a method in which its first param can be both a String or an Array. Then we can say so in jsdocs like this:</p>
+
+                        <pre class="prettyprint lang-js">@method foo @param {String|Array} p</pre>
+
+
+
+                        <h3>Literal Object</h3>
+                        <p>Because in JavaScript is very common to define Objects on the fly shortjsdoc supports an object literal type definition:</p>
+
+                        <pre class="prettyprint lang-js">@method foo @returns {id:String,colors:Array&lt;Color>,execute:Function}</pre>
+                        <p>That means that the method foo returns an object with the properties id of type String, color of type Array of Color and execute of type Function.</p>
+                    </div>
+                </div>
+
+
+
+
+
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 id="text-markings">Text Markings</h1>
+
+                        <p>Marks inside a node text can be defined using the syntax @?something. This is mostly used for defining references to other nodes or to external links from within the text. It is similar to java's @see annotation.</p>
+
+                        <p>We can use @?class AClass or @?method module.Class.method1 or @?property, @?event, etc. These markings will create a link to the referenced node in the output. Example:</p>
+<pre class="prettyprint lang-js">
+// @module client
+// @class CustomerModel This model represent a single customer. 
+// The attributes of this model are defined by the @?class server.CustomerService service 
+// @extends Backbone.Model
+</pre>
+
+                        <p>Also, there is a @?ref that will accept any kind of node - but less efficient by the viewer tools.</p>
+
+                    </div>
+                </div>
+
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 id="aliases">Aliases</h1>
+
+                        <h3>Type alias</h3>
+
+                        <P>There is a very powerful annotation @alias that let declare alias for types and even for annotations.</P>
+
+                        <p>Suppose you want to integrate an external jsdoc file in which the type 'float' is used instead of Number. You want the tool to replace each 'float' type with 'Number', so you would add the following (before):</p>
+
+                        <pre class="prettyprint lang-js">// @alias class float Number</pre>
+                        <p>Even more interesting, you want to create shortcuts to common js types, so instead writing Object < String, < Array < Number>>> you can just write O < S, < A < N>>>, well that can be done by just defining class alias:</p>
+                        <pre class="prettyprint lang-js">
+// @alias class O Object
+// @alias class A Array
+// @alias class S String
+// @alias class N NUmber
+                        </pre>
+
+                        <p>Then when the type 'A' is found it will be replaced by 'Array'</p>
+
+
+                        <h3>Annotation alias</h3>
+
+                        <p>the @alias plugin also supports another kind of aliasing that gives the user the power of creating aliases of annotations. For example, suppose that we are not documenting js-doc but another thing, like the grunt/gulp build tasks and we want to use the annotation @gulp-task to be processed as if they were @module, then we can just write:</p>
+
+                        <pre class="prettyprint lang-js">// @alias annotation gulp-task module</pre>
+                        <p>After that declaration, all annotations @gulp-task will be treated as if they were @module.</p>
+                    </div>
+                </div>
+
+
+
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1>Annotations</h1>
+
+                        <h3>Primary annotations</h3>
+
+                        <table>
+                        <tr><td>name</td><td>example</td><td>description</td></tr>
+                        </table>
+
+
+                        <h3>Secondary annotations</h3>
+                         <table>
+                        <tr><td>name</td><td>example</td><td>description</td></tr>
+                        </table>
+                        <p></p>
                     </div>
                 </div>
 
@@ -125,6 +317,8 @@
 
     <!-- Bootstrap Core JavaScript -->
     <script src="js/bootstrap.min.js"></script>
+
+    <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
 
     <!-- Menu Toggle Script -->
     <script>
