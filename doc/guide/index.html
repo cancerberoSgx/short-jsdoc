@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>Simple Sidebar - Start Bootstrap Template</title>
+    <title>Short-jsdoc User Guide</title>
 
     <!-- Bootstrap Core CSS -->
     <link href="css/bootstrap.min.css" rel="stylesheet">
@@ -75,9 +75,9 @@
 
                         <p>This document is an introductory guide on documenting your source code using short-jsdoc. </p>
 
-                        <p><a href="">short-jsdoc</a> is a tool and language very similar to <a href="https://en.wikipedia.org/wiki/JSDoc">jsdoc</a> with a strong emphasis in types and other advanced features designed to better express particularities of the semantics of the JavaScript language. </p>
+                        <p><a href="">short-jsdoc</a> defines a language very similar to <a href="https://en.wikipedia.org/wiki/JSDoc">jsdoc</a> with a strong emphasis in types and other advanced features designed to better express particularities of the semantics of the JavaScript language. </p>
 
-                        <p>So if you are already familiar with Object Oriented Programming and tools like jsdoc or <a href="https://en.wikipedia.org/wiki/Javadoc">javadoc</a> then using short-jsdoc will be straight forward.</p>
+                        <p>So if you are already familiar with Object Oriented Programming and tools like jsdoc or <a href="https://en.wikipedia.org/wiki/Javadoc">javadoc</a>, doxygen, etc then using short-jsdoc will be straight forward.</p>
 
                     </div>
                 </div>
@@ -279,18 +279,184 @@
 
                 <div class="row">
                     <div class="col-lg-12">
-                        <h1>Annotations</h1>
+                        <h1>Annotation Index</h1>
+
+                        <p>Please keep in mind that the following lists of primary and secondary annotations just decribe main annotations that implement jsdoc, but you can use any annotation that you like , both custom annotations or defining annotation aliases. </p>
 
                         <h3>Primary annotations</h3>
 
-                        <table>
-                        <tr><td>name</td><td>example</td><td>description</td></tr>
+                        <table class="table">
+
+                        <tr><th>name</th><th>example</th><th>description</th></tr>
+
+                        <tr>
+                            <td id="annotation-module"><code>@module</code></td>
+                            <td>
+<pre class="prettyprint lang-js">
+// @module TodoList 
+// This module contains the front-end classes that implement 
+// the product list user experience from Models, routers and views
+</pre></td>
+                            <td>
+                            <p>Indicates that the block describes a group of related classes. It declares that the following class declarations will be contained by this module. </p>
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <td  id="annotation-class"><code>@class</code></td>
+                            <td>
+<pre class="prettyprint lang-js">
+// @class TodoEntry
+// Instance of this class represent an entry in the TODO list. 
+// @extends AbstractView
+</pre></td>
+                            <td>
+                            <p>Indicates that the block describes a class. In JavaScript, this is generally an object with a constructor function. Nevertheless <code>@class</code> can be also used to describe plain old JavaScript objects (without constructor functions). </p>
+                            <p>Must be preceded by a <code>@module</code> annotation that contains it.</p>
+                            <p>Parents: <a href="#annotation-module"><code>@module</code></a></p>
+                            <p>Children: <a href="#annotation-method"><code>@method</code></a>, <a href="#annotation-event"><code>@event</code></a>, <a href="#annotation-property"><code>@property</code></a>, <a href="#annotation-attribute"><code>@attribute</code></a>, <a href="#annotation-contructor"><code>@contructor</code></a></p>
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                            <td id="annotation-method"><code>@method</code></td>
+                            <td>
+<pre class="prettyprint lang-js">
+// @method parse it will parse given JavaScript code and return an AST object
+// @param {String} jscode the JavaScript code to parse
+// @throws {ParserError} thrown if given code is not valid JavaScript
+// @returns {ASTNode}
+</pre></td>
+                            <td>
+                            <p>Indicates that the block describes a method for the current class, this is the last parsed class. </p>
+                            <p>Parents: <a href="#annotation-class"><code>@class</code></a></p>
+                            <p>Children: <a href="#annotation-param"><code>@param</code></a>, <a href="#annotation-return"><code>@return</code></a>, <a href="#annotation-throw"><code>@throw</code></a>, <a href="#annotation-public"><code>@public</code></a>, <a href="#annotation-private"><code>@private</code></a></p>
+                            </td>
+                        </tr>
+
+                        <tr>
+                        <td id="annotation-property"><code>@property</code></td>
+                            <td>
+<pre class="prettyprint lang-js">
+// @property {Color} color the color of this car.
+</pre></td>
+                            <td>
+                            <p>Indicates that the block describes a method for the current class, this is the last parsed class.  A @property tag has the structure @property {type} description. The {type} is optional.</p>
+                            <p>Parents: <a href="#annotation-class"><code>@class</code></a></p>
+                            <p>Children:  <a href="#annotation-public"><code>@public</code></a>, <a href="#annotation-private"><code>@private</code></a></p>
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                        <td id="annotation-event"><code>@event</code></td>
+                            <td>
+<pre class="prettyprint lang-js">
+// @event change
+// triggered when the state of this model changed. 
+// Handlers accept the property name and new value as parameters
+</pre></td>
+                            <td>
+                            <p>Indicates that the block describes a custom event that the class can fire at some interesting moment of code execution.</p>
+                            <P>Ideally, an @event block should reside above the code that defines the event, even if that code is just a simple string declaration. </P>
+                            <p> A @event tag has the structure <code>@event {type} name description</code>. The {type} is optional but it can be used informally to describe the handler signature.</p>
+                            <p>Parents: <a href="#annotation-class"><code>@class</code></a></p>
+                            <p>Children:<a href="#annotation-public"><code>@public</code></a>, <a href="#annotation-private"><code>@private</code></a></p>
+                            </td>
+                        </tr>
+
                         </table>
 
 
+
+
                         <h3>Secondary annotations</h3>
-                         <table>
-                        <tr><td>name</td><td>example</td><td>description</td></tr>
+                        <table class="table">
+                            <tr><th>name</th><th>example</th><th>description</th></tr>
+
+                        <tr>
+                        <td id="annotation-return"><code>@return</code> or <code>@returns</code></td>
+                            <td>
+<pre class="prettyprint lang-js">
+// @return {Number} the number of goals this player has submitted. 
+</pre></td>
+                            <td>
+                            <p>Specifies a method's return value. A @return tag has the structure @return {type} description. The {type} is optional.</p>
+                            <p>Parents: <a href="#annotation-method"><code>@method</code></a></p>
+                            <p>Children: <a href="#annotation-public"><code>@public</code></a>, <a href="#annotation-private"><code>@private</code></a></p>
+                            </td>
+                        </tr>
+
+                          <tr>
+                        <td id="annotation-param"><code>@param</code></td>
+                            <td>
+<pre class="prettyprint lang-js">
+// @param {Array&lt;String>} queue the queue objectyou want to process. 
+</pre></td>
+                            <td>
+                            <p>Specifies a method's return value. A @return tag has the structure @return {type} description. The {type} is optional.</p>
+                            <p>Parents: <a href="#annotation-method"><code>@method</code></a></p>
+                            <p>Children: <a href="#annotation-public"><code>@public</code></a>, <a href="#annotation-private"><code>@private</code></a></p>
+                            </td>
+                        </tr>
+
+                            <tr>
+                        <td id="annotation-constructor"><code>@constructor</code></td>
+                            <td>
+<pre class="prettyprint lang-js">
+// @constructor 
+// @param {Config} config the configuration for the new instances. 
+</pre></td>
+                            <td>
+                            <p>constructors are similar to methods but they don't have a name. A class can declare several constructors and they describe the constructor function of the class. @return can be omitted.</p>
+                            <p>Parents: <a href="#annotation-class"><code>@class</code></a></p>
+                            <p>Children: <a href="#annotation-param"><code>@param</code></a>, <a href="#annotation-return"><code>@return</code></a>, <a href="#annotation-throw"><code>@throw</code></a>, <a href="#annotation-public"><code>@public</code></a>, <a href="#annotation-private"><code>@private</code></a></p>
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                        <td id="annotation-attribute"><code>@attribute</code></td>
+                            <td>
+<pre class="prettyprint lang-js">
+// @attribute {String} name the color of this car.
+</pre></td>
+                            <td>
+                            <p>Several JavaScript frameworks like Backbone.js react, YUI, etc support the concept of class attributes. Attributes are similar to properties but they can be setted/getted using getters and setters methods and also the class could trigger 'change' events when attributes change. </p>
+                            <p>Parents: <a href="#annotation-class"><code>@class</code></a></p>
+                            <p>Children: <a href="#annotation-public"><code>@public</code></a>, <a href="#annotation-private"><code>@private</code></a></p>
+                            </td>
+                        </tr>
+
+                        <tr>
+                        <td id="annotation-throw"><code>@throw</code> or <code>@throws</code></td>
+                            <td>
+<pre class="prettyprint lang-js">
+// @throws {UnexpectedError} when an unknown error raises. 
+</pre></td>
+                            <td>
+                            <p>Specifies an error which method throws. A @throws tag has the structure @throws {type} description. The {type} is optional. A method can contain multiple throw declarations, often one for each type of error thrown. </p>
+                            <p>Parents: <a href="#annotation-method"><code>@method</code></a></p>
+                            <p>Children: <a href="#annotation-public"><code>@public</code></a>, <a href="#annotation-private"><code>@private</code></a></p>
+                            </td>
+                        </tr>
+
+
+                        <tr>
+                        <td id="annotation-public"><code>@public</code> or <code>@private</code></td>
+                            <td>
+<pre class="prettyprint lang-js">
+// @property {Color} color the color of this fruit. 
+// @public
+</pre></td>
+                            <td>
+                            <p>You can add @public or @private annotation to any method, property, etc  to declare that it is public or private.</p>
+                            <p>Parents: <a href="#annotation-method"><code>@method</code></a>, <a href="#annotation-property"><code>@property</code></a>, <a href="#annotation-event"><code>@event</code></a></p>
+                            </td>
+                        </tr>
+
                         </table>
                         <p></p>
                     </div>
