@@ -68,7 +68,6 @@ JsDocMaker.prototype.postProccessBinding = function()
 		{
 			return child.annotation === 'extend' || child.annotation === 'extends'; 
 		}); 
-
 		if(!extend) // All classes must extend something
 		{
 			extend = c.extends = (self.bindClass(JsDocMaker.DEFAULT_CLASS, c) || {error: 'NAME_NOT_FOUND', name: JsDocMaker.DEFAULT_CLASS});
@@ -77,6 +76,24 @@ JsDocMaker.prototype.postProccessBinding = function()
 		{
 			c.extends = self.bindClass(extend.name, c);
 			c.children = _(c.children).without(extend);	//TODO: why we would want to do this? - remove this line
+		}
+
+		var implement = _(c.children||[]).filter(function(child)
+		{
+			return child.annotation === 'implement' || child.annotation === 'implements'; 
+		}) || []; 
+		if(!implement.length) // All classes must implement something
+		{
+			implement = c.implements = [(self.bindClass(JsDocMaker.DEFAULT_CLASS, c) || {error: 'NAME_NOT_FOUND', name: JsDocMaker.DEFAULT_CLASS})];
+		}
+		else 
+		{
+			c.implements = c.implements || [];
+			_.each(implement, function(i)
+			{
+				c.implements.push(self.bindClass(i.name, c));
+				c.children = _(c.children).without(i);	//TODO: why we would want to do this? - remove this line
+			})
 		}
 
 

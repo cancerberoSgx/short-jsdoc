@@ -19,6 +19,6 @@ require('./recurse-plugin-containers.js');
 require('./escape-at.js');
 
 //tools
-require('./dependencies.js');
+require('./dependencies.js'); //TODO: review, this probably makes compilation slower. 
 
 module.exports = JsDocMaker; 

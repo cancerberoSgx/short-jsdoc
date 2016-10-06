@@ -2451,7 +2451,6 @@ JsDocMaker.prototype.postProccessBinding = function()
 		{
 			return child.annotation === 'extend' || child.annotation === 'extends'; 
 		}); 
-
 		if(!extend) // All classes must extend something
 		{
 			extend = c.extends = (self.bindClass(JsDocMaker.DEFAULT_CLASS, c) || {error: 'NAME_NOT_FOUND', name: JsDocMaker.DEFAULT_CLASS});
@@ -2460,6 +2459,24 @@ JsDocMaker.prototype.postProccessBinding = function()
 		{
 			c.extends = self.bindClass(extend.name, c);
 			c.children = _(c.children).without(extend);	//TODO: why we would want to do this? - remove this line
+		}
+
+		var implement = _(c.children||[]).filter(function(child)
+		{
+			return child.annotation === 'implement' || child.annotation === 'implements'; 
+		}) || []; 
+		if(!implement.length) // All classes must implement something
+		{
+			implement = c.implements = [(self.bindClass(JsDocMaker.DEFAULT_CLASS, c) || {error: 'NAME_NOT_FOUND', name: JsDocMaker.DEFAULT_CLASS})];
+		}
+		else 
+		{
+			c.implements = c.implements || [];
+			_.each(implement, function(i)
+			{
+				c.implements.push(self.bindClass(i.name, c));
+				c.children = _(c.children).without(i);	//TODO: why we would want to do this? - remove this line
+			})
 		}
 
 
@@ -3929,7 +3946,7 @@ require('./recurse-plugin-containers.js');
 require('./escape-at.js');
 
 //tools
-require('./dependencies.js');
+require('./dependencies.js'); //TODO: review, this probably makes compilation slower. 
 
 module.exports = JsDocMaker; 
 },{"../core/main.js":4,"./alias.js":13,"./comment-indentation.js":14,"./dependencies.js":15,"./escape-at.js":16,"./inherited.js":17,"./literal-object.js":18,"./modifiers.js":20,"./module-exports.js":21,"./native-types.js":22,"./recurse-plugin-containers.js":23,"./text-marks-references.js":24,"./text-marks.js":25,"./util.js":26}],20:[function(require,module,exports){
