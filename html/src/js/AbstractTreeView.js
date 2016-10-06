@@ -36,23 +36,25 @@ var AbstractTreeView = AbstractView.extend({
 
 
 
-/** 
-TreeWidget - bootstrap based TreeView. Usage: 
-<pre>var model = {children: [
-	{label: '1',  children: [
-		{label: '1.1', type: 'apple', children: []}
-	]}
-,   {label: '2', children: [
-		{label: '2.1', type: 'orange', children: []}
-	]}
-]};
-var widget = new TreeWidget(model);
-widget.render('#mytree');
-widget.onNodeEvent('click', function(nodeModel){
-	alert(nodeModel.label+' was clicked')
-})
-</pre> 
+/*
+
 @class TreeWidget
+TreeWidget - bootstrap based TreeView. Usage: 
+
+	var model = {children: [
+		{label: '1',  children: [
+			{label: '1.1', type: 'apple', children: []}
+		]}
+	,   {label: '2', children: [
+			{label: '2.1', type: 'orange', children: []}
+		]}
+	]};
+	var widget = new TreeWidget(model);
+	widget.render('#mytree');
+	widget.onNodeEvent('click', function(nodeModel){
+		alert(nodeModel.label+' was clicked')
+	})
+
 @author Sebastián Gurin
 */
 

@@ -1,5 +1,5 @@
 //@module shortjsdoc.html
-//@class IndexView @extends AbstractView
+//@class BookView @extends AbstractView
 var BookView = AbstractView.extend({
 
 	className: 'book'
@@ -62,7 +62,18 @@ var BookView = AbstractView.extend({
 
 });
 
+/*
+@module justjstest
 
+@function resolveAndHit 
 
+This is just a sample global function. 
 
+Functions belong to a module - they have the same importance as classes. 
 
+A function signature is just the same as a method. 
+
+@param{Array<Promise>} promises 
+@param {Boolean} required
+@return {Array<Number>} lorem ipsum
+*/

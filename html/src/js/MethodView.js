@@ -48,6 +48,7 @@ var MethodView = AbstractView.extend({
 			this.ownerModule = this.application.data.modules[moduleName]
 			var f = _.find(this.ownerModule.functions, function(f){return f.absoluteName===methodName})
 			this.jsdoc = f;
+			this.jsdoc.textHtml = this.getTextHtml(this.jsdoc); 
 			if(!this.jsdoc)
 			{
 				this.resourceNotFound = true;
