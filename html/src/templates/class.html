@@ -4,7 +4,7 @@ var self = this;
 
 <div class="row class-header">
 	<div class="col-md-4">
-		<h2 class="class-title">Class <%= this.makeLink(this.jsdoc, true) %></h2>
+		<h2 class="class-title"><%= this.isInterface?'Interface':'Class'%> <%= this.makeLink(this.jsdoc, true) %></h2>
 	</div>
 	<div class="col-md-4">		
 		<% if (this.jsdoc.extends && this.jsdoc.absoluteName != this.jsdoc.extends.absoluteName) { %>
@@ -27,6 +27,19 @@ var self = this;
 <div class="pull-right">&nbsp;&nbsp;<a href="<%= this.makeLink(this.jsdoc, false, {text: this.options.text ? 0 : 1}) %>">
 <%= this.options.text ? 'Hide' : 'Show' %> partial text</a></div>
 <% } %>
+
+
+<% if(this.jsdoc.implements&&this.jsdoc.implements.length) { %>
+<div class="row"><br/>
+<div class="col-md-12">Implements: <ul>
+<% _.each(this.jsdoc.implements, function(interface){%>
+	<li><%= self.makeLink(interface, true, {text: self.options.text ? 0 : 1}) %></li>
+<% });%>
+</ul>
+</div>
+</div>
+<% }%>
+
 
 <!-- <h3>Summary</h3> -->
 <% var template = this.application.templates.classSummary;%>

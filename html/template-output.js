@@ -84,7 +84,9 @@ with (obj) {
  
 var self = this; 
 ;
-__p += '\n\n<div class="row class-header">\n\t<div class="col-md-4">\n\t\t<h2 class="class-title">Class ' +
+__p += '\n\n<div class="row class-header">\n\t<div class="col-md-4">\n\t\t<h2 class="class-title">' +
+((__t = ( this.isInterface?'Interface':'Class')) == null ? '' : __t) +
+' ' +
 ((__t = ( this.makeLink(this.jsdoc, true) )) == null ? '' : __t) +
 '</h2>\n\t</div>\n\t<div class="col-md-4">\t\t\n\t\t';
  if (this.jsdoc.extends && this.jsdoc.absoluteName != this.jsdoc.extends.absoluteName) { ;
@@ -110,7 +112,17 @@ __p += '\n<div class="pull-right">&nbsp;&nbsp;<a href="' +
 ((__t = ( this.options.text ? 'Hide' : 'Show' )) == null ? '' : __t) +
 ' partial text</a></div>\n';
  } ;
-__p += '\n\n<!-- <h3>Summary</h3> -->\n';
+__p += '\n\n\n';
+ if(this.jsdoc.implements&&this.jsdoc.implements.length) { ;
+__p += '\n<div class="row"><br/>\n<div class="col-md-12">Implements: <ul>\n';
+ _.each(this.jsdoc.implements, function(interface){;
+__p += '\n\t<li>' +
+((__t = ( self.makeLink(interface, true, {text: self.options.text ? 0 : 1}) )) == null ? '' : __t) +
+'</li>\n';
+ });;
+__p += '\n</ul>\n</div>\n</div>\n';
+ };
+__p += '\n\n\n<!-- <h3>Summary</h3> -->\n';
  var template = this.application.templates.classSummary;;
 __p += '\n' +
 ((__t = ( template.apply(this, arguments) )) == null ? '' : __t) +

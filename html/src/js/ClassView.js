@@ -18,6 +18,8 @@ var ClassView = AbstractView.extend({
 			return;
 		}
 
+		this.isInterface = this.jsdoc.annotation==='interface';
+
 		this.jsdoc.textHtml = this.getTextHtml(this.jsdoc);	
 
 		this.options = options || {};

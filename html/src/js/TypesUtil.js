@@ -57,7 +57,7 @@ _(AbstractView.prototype).extend({
 		{
 			href += '#event/' + node.absoluteName; 
 		}
-		else if(node.annotation==='class')
+		else if(node.annotation==='class'||node.annotation==='interface')
 		{
 			href += '#class/' + node.absoluteName; 
 		}
