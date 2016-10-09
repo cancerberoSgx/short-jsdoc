@@ -9,7 +9,7 @@ describe("JsDocMaker", function()
 
 describe("Basic jsdoc parser", function() 
 {
-	var jsdoc, maker, Apple, Lion, Lemon, MyModel, SomeConcrete2; 
+	var jsdoc, maker, Apple, Lion, Lemon, MyModel; 
 
 	beforeEach(function() 
 	{
@@ -32,13 +32,9 @@ describe("Basic jsdoc parser", function()
 			'//@module model @class MyModel @extends Framework.Model'+'\n'+			
 			'//@attribute {String} name this is the name of the model'+'\n'+
 			'//@attribute {Apple} apple this is the apple fruit'+'\n'+
-
-			'//@module interfacetest @class Interface1 this is interface 1 @method superInter @return {Number} '+'\n'+
-			'//@class Interface2 @extends Interface1 '+'\n'+
-			'//@class Interface3 '+'\n'+
-			'/*@method inter2Method foo bar and apples have this privilege @param {Mouth} mouth the mouth to be used @param {Int} amount @return {String} the bla*/' + '\n' +
-			'//@class SomeConcrete2 hello this is a concrete class implementing multiple interfaces @implements Interface1 @implements Interface3 '+'\n'+
+			
 			'';
+
 		maker = new JsDocMaker();
 		maker.parseFile(code, 'textarea');
 		maker.postProccess();
@@ -59,9 +55,6 @@ describe("Basic jsdoc parser", function()
 
 		MyModel = jsdoc.classes['model.MyModel']; 
 		expect(MyModel).toBeDefined();
-
-		SomeConcrete2 = jsdoc.classes['interfacetest.SomeConcrete2']
-		expect(SomeConcrete2).toBeDefined();
 	});
 
 	it("classes and modules", function() 
@@ -77,13 +70,6 @@ describe("Basic jsdoc parser", function()
 		expect(Apple.extends.error).toBe('NAME_NOT_FOUND');
 
 		expect(Lion.module.name).toBe('livingThings'); 
-	});
-
-
-	it("implements", function() 
-	{
-		expect(SomeConcrete2.implements.length).toBe(2);
-		expect(_.find(SomeConcrete2.implements, function(i){return i.absoluteName==='interfacetest.Interface1'}).methods.superInter.returns.type.name).toBe('Number');
 	});
 
 	it("methods", function() 
@@ -159,6 +145,59 @@ describe("Basic jsdoc parser", function()
 
 
 
+
+
+describe("@interface and @implements", function() 
+{
+	it('@implement and @class', function() 
+	{
+		var code = 
+			'//@module interfacetest @class Interface1 this is interface 1 @method superInter @return {Number} '+'\n'+
+			'//@class Interface2 @extends Interface1 '+'\n'+
+			'//@class Interface3 '+'\n'+
+			'/*@method inter2Method foo bar and apples have this privilege @param {Mouth} mouth the mouth to be used @param {Int} amount @return {String} the bla*/' + '\n' +
+			'//@class SomeConcrete2 hello this is a concrete class implementing multiple interfaces  \n'+
+			'//@implements Interface1 @implements Interface3\n'+
+			'';
+		maker = new JsDocMaker();
+		maker.parseFile(code, 'textarea');
+		maker.postProccess();
+		maker.postProccessBinding();
+		jsdoc = maker.data;
+		
+		var SomeConcrete2 = jsdoc.classes['interfacetest.SomeConcrete2'];
+		expect(SomeConcrete2.implements.length).toBe(2);
+		expect(_.find(SomeConcrete2.implements, function(i){return i.absoluteName==='interfacetest.Interface1'}).methods.superInter.returns.type.name).toBe('Number');
+	});
+
+
+	it('@implement and @interface', function() 
+	{
+		var code = 
+			// '// @alias annotation interface class\n' + 
+			'/* @alias annotation interface class \n */' + 
+			'//@module interfacetest2\n'+
+			'//@interface Interface1 this is interface 1 @method superInter @return {Number} '+'\n'+
+			'//@interface Interface2 @extends Interface1 '+'\n'+
+			'//@interface Interface3 '+'\n'+
+			'/*@method inter2Method foo bar and apples have this privilege @param {Mouth} mouth the mouth to be used \n'+
+			'@param {Int} amount @return {String} the bla*/' + '\n' +
+			'//@class SomeConcrete2 hello this is a concrete class implementing multiple interfaces  \n'+
+			'//@implements Interface1 @implements Interface3\n'+
+			'';
+		maker = new JsDocMaker();
+		maker.parseFile(code, 'textarea');
+		maker.postProccess();
+		maker.postProccessBinding();
+		jsdoc = maker.data;
+		
+		var SomeConcrete2 = jsdoc.classes['interfacetest2.SomeConcrete2']
+		// console.log(jsdoc, SomeConcrete2)
+		expect(SomeConcrete2.implements.length).toBe(2);
+		expect(_.find(SomeConcrete2.implements, function(i){return i.absoluteName==='interfacetest2.Interface1'}).methods.superInter.returns.type.name).toBe('Number');
+	});
+
+})
 
 describe("type binding & generics", function() 
 {

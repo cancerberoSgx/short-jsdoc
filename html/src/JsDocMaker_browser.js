@@ -1962,7 +1962,7 @@ JsDocMaker.prototype.afterParseNodePlugins = new PluginContainer();
 JsDocMaker.prototype.afterParseUnitSimplePlugins = new PluginContainer();
 
 // @property {String}primaryAnnotationsRegexString
-JsDocMaker.prototype.primaryAnnotationsRegexString = '((?:@class)|(?:@method)|(?:@property)|(?:@attribute)|(?:@module)|(?:@event)|(?:@constructor)|(?:@function)|(?:@filename))';
+JsDocMaker.prototype.primaryAnnotationsRegexString = '((?:@class)|(?:@method)|(?:@property)|(?:@attribute)|(?:@module)|(?:@event)|(?:@constructor)|(?:@function)|(?:@interface)|(?:@filename))';
 
 JsDocMaker.prototype.isPrimaryAnnotation = function(s)
 {
@@ -2052,15 +2052,14 @@ JsDocMaker.prototype.parse = function(comments)
 				parsed.fileName = (currentFile && currentFile.fileName) ? currentFile.fileName : undefined;
 
 				delete parsed.theRestString; 
-
-				// console.log('parse ', parsed.annotation)
+				
 				self.beforeParseNodePlugins.execute({node:parsed, jsdocmaker:self}); 
 
 				//Note: the following lines is the (only) place were the 'primary annotations' (class,module,method,property) are implemented 
 				//We get primary tags like class,module,method,property and form the first primary AST (a module contains classes which contain methods and properties)
 				//All the other annotations are treated as secondary, this means they will be assigned as childresn to the last primary annotation.
 
-				if(parsed.annotation === 'class') 
+				if(parsed.annotation === 'class'||parsed.annotation === 'interface') 
 				{
 					//allow classes without modules - asignated to a defulat module
 					if (!currentModule)

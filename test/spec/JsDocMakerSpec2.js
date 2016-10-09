@@ -1,38 +1,32 @@
 var JsDocMaker = typeof _ === 'undefined' ? require('../../src/jsdocmaker/main.js') : JsDocMaker; 
 var _ = typeof _ === 'undefined' ? require('underscore') : _; 
 
-describe("marks in text from different places issue", function() 
+describe("@interface and @implements", function() 
 {
-
-	it("issue: text marks from different files are broken", function() 
+	it('@implement and @interface', function() 
 	{
-		var jsdoc, maker; 
-
-		maker = new JsDocMaker();		
-		maker.addFile(
-			'//@module multiinher' + '\n' +
-
-			'//@class Foo1' + '\n' +
-			'//@class Foo2' + '\n' +
-			'//@class Foo3' + '\n' +
-			'//@extends Foo1' + '\n' +
-			'//@extends Foo2' + '\n' +
-
-			'', 'file1.js'
-		);
-		// maker.addFile(
-		// 	'//@module shared' + '\n' +
-		// 	'//@class shared1' + '\n' +
-		// 	'//Text from file2 - @?class Target -' + '\n' +
-		// 	'', 'file2.js'
-		// );
-
-		jsdoc = maker.jsdoc();
+		var code = 
+			// '// @alias annotation interface class\n' + 
+			// '/* @alias annotation interface class \n */' + 
+			'//@module interfacetest2\n'+
+			'//@interface Interface1 this is interface 1 @method superInter @return {Number} '+'\n'+
+			'//@interface Interface2 @extends Interface1 '+'\n'+
+			'//@interface Interface3 '+'\n'+
+			'/*@method inter2Method foo bar and apples have this privilege @param {Mouth} mouth the mouth to be used \n'+
+			'@param {Int} amount @return {String} the bla*/' + '\n' +
+			'//@class SomeConcrete2 hello this is a concrete class implementing multiple interfaces  \n'+
+			'//@implements Interface1 @implements Interface3\n'+
+			'';
+		maker = new JsDocMaker();
+		maker.parseFile(code, 'textarea');
 		maker.postProccess();
 		maker.postProccessBinding();
-
-		debugger;
+		jsdoc = maker.data;
 		
-		console.log(jsdoc.classes['shared.shared1'])
+		var SomeConcrete2 = jsdoc.classes['interfacetest2.SomeConcrete2']
+		// console.log(jsdoc, SomeConcrete2)
+		expect(SomeConcrete2.implements.length).toBe(2);
+		expect(_.find(SomeConcrete2.implements, function(i){return i.absoluteName==='interfacetest2.Interface1'}).methods.superInter.returns.type.name).toBe('Number');
 	});
-});
+
+})
