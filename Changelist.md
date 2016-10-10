@@ -90,3 +90,7 @@
  * now annotation names can contain the ':' character, example: @event before:push-data
  * fix issue with beforeTypeBindingPlugins - text markings weren't working in properties and event descriptions. 
  * book view - for printing it all to a PDF
+ * @interface and @implements
+
+##0.2.7
+ * 
