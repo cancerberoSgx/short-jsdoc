@@ -13,9 +13,12 @@ var ModuleView = AbstractView.extend({
 		this.jsdoc = this.application.data.modules[moduleName]; 
 		this.classes = _( _(this.application.data.classes).values() ).filter(function(c)
 		{
-			return c.module.name === moduleName; 
+			return c.module.name === moduleName && c.annotation==='class'; 
 		}); 
-
+		this.interfaces = _( _(this.application.data.classes).values() ).filter(function(c)
+		{
+			return c.module.name === moduleName && c.annotation==='interface'; 
+		}); 
 		this.options = options || {}
 		this.options.private = this.options.private ? parseInt(this.options.private, 10) : 0;
 

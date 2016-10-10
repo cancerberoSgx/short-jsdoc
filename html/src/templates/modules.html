@@ -12,7 +12,7 @@ var self = this; %>
 		/* TODO: make a view */
 		var moduleClasses = self.getModuleClasses(m.name, self.application.data); 
 		_(moduleClasses).each(function(c) { %>
-			<li class="modules-class"><a class='class-name' href="#class/<%= c.absoluteName %>"><%= c.name %></a>, </li>
+			<li class="modules-class"><a class='class-name <%= c.annotation%>' href="#class/<%= c.absoluteName %>"><%= c.name %></a>, </li>
 		<% }); %>
 		</ul>
 	</li>

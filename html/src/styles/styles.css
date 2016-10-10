@@ -252,10 +252,12 @@
   margin: 1.2em 0 1.4em 0;
   font-size: 1.3em;
   font-weight: bold;
-  /*display: block;*/
 }
 .modules .modules-classes-list * {
   display: inline;
+}
+.interface {
+  text-decoration: underline;
 }
 @media print {
   a[href]:after {

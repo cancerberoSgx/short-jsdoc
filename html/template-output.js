@@ -44,7 +44,9 @@ __p += '\n\n\t<li><a href="#module-' +
 			_(moduleClasses).each(function(c) { ;
 __p += '\n\t\t\t\t<li><a class=\'class-name\' href="#class-' +
 ((__t = ( c.absoluteName)) == null ? '' : __t) +
-'">Class ' +
+'">' +
+((__t = ( c.annotation)) == null ? '' : __t) +
+' ' +
 ((__t = ( c.name )) == null ? '' : __t) +
 '</a></li>\n\t\t\t';
  }); ;
@@ -374,10 +376,13 @@ obj || (obj = {});
 var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
 function print() { __p += __j.call(arguments, '') }
 with (obj) {
-__p += '<h3><a href="#classes">Classes</a></h3>\n\n<ul>\n';
- _(this.classes).each(function(c) { ;
+__p += '<h3><a href="#classes">Classes and interfaces</a></h3>\n\n<ul class="classes-list">\n';
+ 
+	_(this.classes).each(function(c) { ;
 __p += '\n\t<li><a href="#class/' +
 ((__t = ( c.absoluteName )) == null ? '' : __t) +
+'" class="' +
+((__t = ( c.annotation )) == null ? '' : __t) +
 '">' +
 ((__t = ( c.name )) == null ? '' : __t) +
 '</a></li>\n';
@@ -646,7 +651,39 @@ __p += '\n\t\t\t<li><a href="' +
 }) ;
 __p += '\n\t\t</ul>\n\t</li>\n';
  }); ;
-__p += '\n</ul>\n\n\n<h3>Functions</h3>\n<ul class="Functions">\n';
+__p += '\n</ul>\n\n<h3>Interfaces</h3>\n\n<ul class="interfaces">\n';
+ _(this.interfaces).each(function(c) { ;
+__p += '\n\t<li>\n\t\t<a class="module-class-name"href="#class/' +
+((__t = ( c.absoluteName )) == null ? '' : __t) +
+'">' +
+((__t = ( c.name )) == null ? '' : __t) +
+'</a>\t\t\n\n\t\t<ul class="module-class-properties-list">\n\t\t';
+ _(c.methods).each(function(m){ ;
+__p += '\n\t\t\t<li><a href="' +
+((__t = ( self.makeLink(m))) == null ? '' : __t) +
+'">' +
+((__t = ( m.name)) == null ? '' : __t) +
+'(), </a>\n\t\t';
+}) ;
+__p += '\n\t\t';
+ _(c.properties).each(function(m){ ;
+__p += '\n\t\t\t<li><a href="' +
+((__t = ( self.makeLink(m))) == null ? '' : __t) +
+'">' +
+((__t = ( m.name)) == null ? '' : __t) +
+', </a>\n\t\t';
+}) ;
+__p += '\n\t\t</ul>\n\t\t';
+ _(c.attributes).each(function(m){ ;
+__p += '\n\t\t\t<li><a href="' +
+((__t = ( self.makeLink(m))) == null ? '' : __t) +
+'">' +
+((__t = ( m.name)) == null ? '' : __t) +
+', </a>\n\t\t';
+}) ;
+__p += '\n\t\t</ul>\n\t</li>\n';
+ }); ;
+__p += '\n</ul>\n\n<h3>Functions</h3>\n<ul class="Functions">\n';
  _(this.jsdoc.functions).each(function(c) { ;
 __p += '\n\t<li>\n\t\t<a class="module-function-name"href="#function/' +
 ((__t = ( c.absoluteName )) == null ? '' : __t) +
@@ -679,7 +716,9 @@ __p += '\n\t<li class="modules-module"><a class=\'module-name\' href="#module/' 
 		/* TODO: make a view */
 		var moduleClasses = self.getModuleClasses(m.name, self.application.data); 
 		_(moduleClasses).each(function(c) { ;
-__p += '\n\t\t\t<li class="modules-class"><a class=\'class-name\' href="#class/' +
+__p += '\n\t\t\t<li class="modules-class"><a class=\'class-name ' +
+((__t = ( c.annotation)) == null ? '' : __t) +
+'\' href="#class/' +
 ((__t = ( c.absoluteName )) == null ? '' : __t) +
 '">' +
 ((__t = ( c.name )) == null ? '' : __t) +

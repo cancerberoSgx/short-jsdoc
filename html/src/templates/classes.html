@@ -1,7 +1,8 @@
-<h3><a href="#classes">Classes</a></h3>
+<h3><a href="#classes">Classes and interfaces</a></h3>
 
-<ul>
-<% _(this.classes).each(function(c) { %>
-	<li><a href="#class/<%= c.absoluteName %>"><%= c.name %></a></li>
+<ul class="classes-list">
+<% 
+	_(this.classes).each(function(c) { %>
+	<li><a href="#class/<%= c.absoluteName %>" class="<%= c.annotation %>"><%= c.name %></a></li>
 <% }); %>
 </ul>

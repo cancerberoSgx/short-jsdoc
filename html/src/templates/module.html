@@ -36,6 +36,28 @@ var self = this;
 <% }); %>
 </ul>
 
+<h3>Interfaces</h3>
+
+<ul class="interfaces">
+<% _(this.interfaces).each(function(c) { %>
+	<li>
+		<a class="module-class-name"href="#class/<%= c.absoluteName %>"><%= c.name %></a>		
+
+		<ul class="module-class-properties-list">
+		<% _(c.methods).each(function(m){ %>
+			<li><a href="<%= self.makeLink(m)%>"><%= m.name%>(), </a>
+		<%}) %>
+		<% _(c.properties).each(function(m){ %>
+			<li><a href="<%= self.makeLink(m)%>"><%= m.name%>, </a>
+		<%}) %>
+		</ul>
+		<% _(c.attributes).each(function(m){ %>
+			<li><a href="<%= self.makeLink(m)%>"><%= m.name%>, </a>
+		<%}) %>
+		</ul>
+	</li>
+<% }); %>
+</ul>
 
 <h3>Functions</h3>
 <ul class="Functions">

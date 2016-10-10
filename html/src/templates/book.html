@@ -26,7 +26,7 @@ data.projectMetadata = data.projectMetadata || {};
 		<ul class="index-modules-classes">
 			<% var moduleClasses = self.getModuleClasses(module.name, self.application.data); 
 			_(moduleClasses).each(function(c) { %>
-				<li><a class='class-name' href="#class-<%= c.absoluteName%>">Class <%= c.name %></a></li>
+				<li><a class='class-name' href="#class-<%= c.absoluteName%>"><%= c.annotation%> <%= c.name %></a></li>
 			<% }); %>
 		</ul>
 	</li>
