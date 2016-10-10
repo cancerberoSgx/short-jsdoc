@@ -152,10 +152,24 @@ var ClassView = AbstractView.extend({
 		var knownSubclasses = [];
 		_(this.application.data.classes).each(function(c)
 		{
-			if(c.extends.absoluteName === self.jsdoc.absoluteName)
+			if(self.isInterface)
 			{
-				knownSubclasses.push(c); 
+				_.each(c.implements, function(interface)
+				{
+					if(interface.extends.absoluteName === self.jsdoc.absoluteName)
+					{
+						knownSubclasses.push(interface); 
+					}
+				})
 			}
+			else
+			{
+				if(c.extends.absoluteName === self.jsdoc.absoluteName)
+				{
+					knownSubclasses.push(c); 
+				}
+			}
+			
 		}); 
 		return knownSubclasses; 
 	}

@@ -7,7 +7,7 @@ var self = this;
 		<h2 class="class-title"><%= this.isInterface?'Interface':'Class'%> <%= this.makeLink(this.jsdoc, true) %></h2>
 	</div>
 	<div class="col-md-4">		
-		<% if (this.jsdoc.extends && this.jsdoc.absoluteName != this.jsdoc.extends.absoluteName) { %>
+		<% if (this.jsdoc.extends && this.jsdoc.absoluteName != this.jsdoc.extends.absoluteName && !(this.isInterface && this.jsdoc.extends.name==='Object')) { %>
 		<h3 class="class-extends-title">Extends <%= this.printTypeAsString(this.jsdoc.extends)%></h3>
 		<% } %>
 	</div>
@@ -234,10 +234,10 @@ var self = this;
 
 		<% if(this.knownSubclasses && this.knownSubclasses.length) {%>
 		<div class="known-subclasses">
-		<h3>Known Subclasses</h3>
+		<h3>Known <%= self.isInterface ? 'sub-interfaces' : 'sub-classes'%></h3>
 		<ul class="known-subclasses-list">	
 		<% _(this.knownSubclasses).each(function(c){ %>
-			<li><a href="<%= self.makeLink(c)%>"><%= c.name %></a></li>
+			<li><%= self.makeLink(c, true)%></li>
 		<% }); %>
 		</ul>
 		</div>

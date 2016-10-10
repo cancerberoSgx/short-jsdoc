@@ -139,6 +139,10 @@
   display: inline;
   padding-left: 8px;
 }
+.class-name,
+.interface-name {
+  font-size: 1.1em;
+}
 .inherited {
   opacity: 0.5;
 }

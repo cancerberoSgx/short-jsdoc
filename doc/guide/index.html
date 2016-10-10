@@ -51,6 +51,12 @@
                     <a href="#annotation-syntax">Annotation syntax</a>
                 </li>
                 <li>
+                    <a href="#class-inheritance">Class inheritance</a>
+                </li>
+                <li>
+                    <a href="#annotation-syntax">Interfaces</a>
+                </li>
+                <li>
                     <a href="#types">Types</a>
                 </li>
                 <li>
@@ -169,6 +175,45 @@
                 </div>
 
 
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 id="class-inheritance">Class inheritance</h1>
+                        <p>short-jsdoc supports class inheritance. Only single class inheritance is supported, this is, a class can only extend only other one class. Also, <code>javascript.Object</code> is the root class, meaning that, if a class doesn't declare any inheritance then the tool will assume it extends from <code>javascript.Object</code>. </p>
+
+                        <p>For declaring inheritance we use the class-level annotations <code>@extend</code> or <code>@extends</code>. In the following example we declare that class <code>Dog</code> extends from class <code>Animal</code>:</p>
+
+<pre class="prettyprint lang-js">
+// @class Animal lorem ipsum @property {Number} age
+// @class Dog @extends Animal @method bark @return {Sound}
+</pre>
+
+                        <p><strong>Important: </strong> you can only extend simple types, for example the following won't work: 
+                        <code>@class Apples @extends Array&lt;Fruit></code></code></p>
+                    </div>
+                </div>
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 id="interface">Interfaces</h1>
+                        <p>short-jsdoc supports the concept of class's interfaces. An interface is a well known concept in Object oriented programming for describing contracts that classes/objects must respect. A class can 'implement' several interfaces and, for declaring that, we use the annotation <code>@implement</code> or <code>@implements</code> at the class level. </p>
+
+                        <p>For declaring an interface we use the annotation <code>@interface</code> that is very very similar to <code>@class</code> annotation. interfaces can contain just the same things as classes like methods, properties, events, etc. </p>
+
+                        <p>Also interfaces can inherit from other interfaces by using <code>@extend</code> or <code>@extends</code>, just as classes. </p>
+
+                        <p>In the following code we declare a class LittleRadio that implements two interfaces Throwable and SoundMaker. Also interface Throwable extends interface IBase: </p>
+                        
+<pre class="prettyprint lang-js">
+// @interface Throwable @extends IBase @method throw
+// @interface SoundMaker @method play @method stop
+// @class LittleRadio @extends Radio @implements Throwable @implements SoundMaker
+</pre>
+
+                    </div>
+                </div>
                     
                 <div class="row">
                     <div class="col-lg-12">

@@ -84,7 +84,7 @@ JsDocMaker.prototype.postProccessBinding = function()
 		}) || []; 
 		if(!implement.length) // All classes must implement something
 		{
-			implement = c.implements = [(self.bindClass(JsDocMaker.DEFAULT_CLASS, c) || {error: 'NAME_NOT_FOUND', name: JsDocMaker.DEFAULT_CLASS})];
+			implement = c.implements = []//[(self.bindClass(JsDocMaker.DEFAULT_CLASS, c) || {error: 'NAME_NOT_FOUND', name: JsDocMaker.DEFAULT_CLASS})];
 		}
 		else 
 		{

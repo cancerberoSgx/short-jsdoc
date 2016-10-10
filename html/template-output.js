@@ -89,7 +89,7 @@ __p += '\n\n<div class="row class-header">\n\t<div class="col-md-4">\n\t\t<h2 cl
 ' ' +
 ((__t = ( this.makeLink(this.jsdoc, true) )) == null ? '' : __t) +
 '</h2>\n\t</div>\n\t<div class="col-md-4">\t\t\n\t\t';
- if (this.jsdoc.extends && this.jsdoc.absoluteName != this.jsdoc.extends.absoluteName) { ;
+ if (this.jsdoc.extends && this.jsdoc.absoluteName != this.jsdoc.extends.absoluteName && !(this.isInterface && this.jsdoc.extends.name==='Object')) { ;
 __p += '\n\t\t<h3 class="class-extends-title">Extends ' +
 ((__t = ( this.printTypeAsString(this.jsdoc.extends))) == null ? '' : __t) +
 '</h3>\n\t\t';
@@ -315,13 +315,13 @@ __p += '\n\t\t</ul>\n\t\t</div>\n\t\t';
 };
 __p += '\n\n\t\t';
  if(this.knownSubclasses && this.knownSubclasses.length) {;
-__p += '\n\t\t<div class="known-subclasses">\n\t\t<h3>Known Subclasses</h3>\n\t\t<ul class="known-subclasses-list">\t\n\t\t';
+__p += '\n\t\t<div class="known-subclasses">\n\t\t<h3>Known ' +
+((__t = ( self.isInterface ? 'sub-interfaces' : 'sub-classes')) == null ? '' : __t) +
+'</h3>\n\t\t<ul class="known-subclasses-list">\t\n\t\t';
  _(this.knownSubclasses).each(function(c){ ;
-__p += '\n\t\t\t<li><a href="' +
-((__t = ( self.makeLink(c))) == null ? '' : __t) +
-'">' +
-((__t = ( c.name )) == null ? '' : __t) +
-'</a></li>\n\t\t';
+__p += '\n\t\t\t<li>' +
+((__t = ( self.makeLink(c, true))) == null ? '' : __t) +
+'</li>\n\t\t';
  }); ;
 __p += '\n\t\t</ul>\n\t\t</div>\n\t\t';
 };
