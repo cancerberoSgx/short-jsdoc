@@ -158,8 +158,8 @@ _(AbstractView.prototype).extend({
 			this.printLiteralObjectType(context); 
 		}
 
-		else if(context.type.params) 
-		{ 
+		else if(context.type.params && context.type.annotation!=='function') 
+		{
 			context.buffer.push('&lt;');
 			for (var i = 0; i < (context.type.params||[]).length; i++) 
 			{
@@ -236,7 +236,6 @@ _(AbstractView.prototype).extend({
 		// perform text marks replacement.
 		_(node.textMarks).each(function(mark, markId)
 		{
-			console.log('mark', mark)
 			if(mark.name === 'link')
 			{
 				if(type === 'markdown')
