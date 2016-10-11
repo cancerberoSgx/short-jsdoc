@@ -233,6 +233,26 @@ JsDocMaker.prototype.bindClass = function(name, baseClass)
 
 	if(!c)
 	{
+		//then it could be a function
+		var fns = []
+		_.each(this.data.modules, function(module)
+		{
+			_.each(module.functions, function(fn)
+			{
+				if(fn.name===name)
+				{
+					fns.push(fn)
+				}
+			})
+		});
+		if(fns.length)
+		{
+			c = fns[0]
+		}
+	}
+
+	if(!c)
+	{
 		//TODO: look at native types
 		var nativeType = this.getNativeTypeUrl ? this.getNativeTypeUrl(name) : null;
 		var o = {name:name}; 

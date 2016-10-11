@@ -1244,6 +1244,27 @@ describe("@function", function()
 		expect(f2.throws[0].type.absoluteName === 'a.A').toBe(true)
 		// console.log(f2.throws)
 	});
+
+	it('can bind @function as types', function() 
+	{
+		var code = 
+			'//@module functionAsTypesModule\n'+
+			'//@function F1 @param {Array<Number>} sortNumbers @return {Array<Number>}\n'+
+
+			'//@class C1\n'+
+			'//@method m1 @param {F1} fn @param {Boolean} opacity\n'+
+			'';
+		maker = new JsDocMaker();
+		maker.parseFile(code, 'textarea');
+		maker.postProccess();
+		maker.postProccessBinding();
+		jsdoc = maker.data;
+		
+		var paramType = jsdoc.classes['functionAsTypesModule.C1'].methods.m1.params[0].type
+		expect(paramType.absoluteName).toBe('functionAsTypesModule.F1')
+		expect(paramType.annotation).toBe('function')
+	});
+
 });
 
 
