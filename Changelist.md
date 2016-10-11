@@ -93,4 +93,5 @@
  * @interface and @implements
 
 ##0.2.7
+ * Can bind functions as types
  * 
