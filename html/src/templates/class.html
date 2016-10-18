@@ -26,7 +26,7 @@ var self = this;
 
 <div class="pull-right">&nbsp;&nbsp;<a href="<%= this.makeLink(this.jsdoc, false, {text: this.options.text ? 0 : 1}) %>">
 <%= this.options.text ? 'Hide' : 'Show' %> partial text</a></div>
-<% } %>
+<% } /* if(!self.options.dontShowOptions) */%>
 
 
 <% if(this.jsdoc.implements&&this.jsdoc.implements.length) { %>
@@ -40,10 +40,6 @@ var self = this;
 </div>
 <% }%>
 
-
-<!-- <h3>Summary</h3> -->
-<% var template = this.application.templates.classSummary;%>
-<%= template.apply(this, arguments) %>
 
 <div class="row">
 
@@ -174,13 +170,18 @@ var self = this;
 				<span class="method-param-decorator">(</span>
 				<% if(method.params && method.params.length) { %>
 				<ol class="params">
-					<% _(method.params).each(function(param){ %>
+					<% 
+					for(var paramIndex = 0; paramIndex < method.params.length; paramIndex++) {
+						var param = method.params[paramIndex];
+					%>
 					<li class="param">
 						<span class="param-type"><%= self.printTypeAsString(param.type) %></span> 
 						<span class="param-name"><%= param.name %></span>
+						<% if(paramIndex < method.params.length-1) { %>
 						<span class="method-param-decorator">,</span>
+						<% } %>
 					</li>
-					<% }); %>
+					<% } %>
 				</ol>
 				<% } %>
 				<span class="method-param-decorator">)&nbsp;:&nbsp;</span>

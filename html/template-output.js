@@ -113,7 +113,7 @@ __p += '\n<div class="pull-right">&nbsp;&nbsp;<a href="' +
 '">\n' +
 ((__t = ( this.options.text ? 'Hide' : 'Show' )) == null ? '' : __t) +
 ' partial text</a></div>\n';
- } ;
+ } /* if(!self.options.dontShowOptions) */;
 __p += '\n\n\n';
  if(this.jsdoc.implements&&this.jsdoc.implements.length) { ;
 __p += '\n<div class="row"><br/>\n<div class="col-md-12">Implements: <ul>\n';
@@ -124,11 +124,7 @@ __p += '\n\t<li>' +
  });;
 __p += '\n</ul>\n</div>\n</div>\n';
  };
-__p += '\n\n\n<!-- <h3>Summary</h3> -->\n';
- var template = this.application.templates.classSummary;;
-__p += '\n' +
-((__t = ( template.apply(this, arguments) )) == null ? '' : __t) +
-'\n\n<div class="row">\n\n\n';
+__p += '\n\n\n<div class="row">\n\n\n';
  if(!self.options.dontShowSidebar) {;
 __p += '\n\t<div class="col-md-5">\n\n\n\n\t\t';
  if(this.jsdoc.constructors && this.jsdoc.constructors.length) { ;
@@ -268,13 +264,20 @@ __p += '\n\n\t\t\t<li class="method ' +
 '</span>\n\n\n\t\t\t\t<!-- method params  -->\n\t\t\t\t<span class="method-param-decorator">(</span>\n\t\t\t\t';
  if(method.params && method.params.length) { ;
 __p += '\n\t\t\t\t<ol class="params">\n\t\t\t\t\t';
- _(method.params).each(function(param){ ;
+ 
+					for(var paramIndex = 0; paramIndex < method.params.length; paramIndex++) {
+						var param = method.params[paramIndex];
+					;
 __p += '\n\t\t\t\t\t<li class="param">\n\t\t\t\t\t\t<span class="param-type">' +
 ((__t = ( self.printTypeAsString(param.type) )) == null ? '' : __t) +
 '</span> \n\t\t\t\t\t\t<span class="param-name">' +
 ((__t = ( param.name )) == null ? '' : __t) +
-'</span>\n\t\t\t\t\t\t<span class="method-param-decorator">,</span>\n\t\t\t\t\t</li>\n\t\t\t\t\t';
- }); ;
+'</span>\n\t\t\t\t\t\t';
+ if(paramIndex < method.params.length-1) { ;
+__p += '\n\t\t\t\t\t\t<span class="method-param-decorator">,</span>\n\t\t\t\t\t\t';
+ } ;
+__p += '\n\t\t\t\t\t</li>\n\t\t\t\t\t';
+ } ;
 __p += '\n\t\t\t\t</ol>\n\t\t\t\t';
  } ;
 __p += '\n\t\t\t\t<span class="method-param-decorator">)&nbsp;:&nbsp;</span>\n\n\n\t\t\t\t<!-- method return type -->\n\t\t\t\t';
@@ -388,25 +391,6 @@ __p += '\n\t<li><a href="#class/' +
 '</a></li>\n';
  }); ;
 __p += '\n</ul>\n';
-
-}
-return __p
-};
-
-this["shortjsdoc"]["classSummary"] = function(obj) {
-obj || (obj = {});
-var __t, __p = '', __e = _.escape, __j = Array.prototype.join;
-function print() { __p += __j.call(arguments, '') }
-with (obj) {
-__p += '<!-- <span class="class-summary-extends">class ' +
-((__t = ( this.makeLink(this.jsdoc, true) )) == null ? '' : __t) +
-'\n';
- if (this.jsdoc.extends) { ;
-__p += '\n\t<span class="class-summary-extends"><span class=" ">extends ' +
-((__t = ( this.printTypeAsString(this.jsdoc.extends))) == null ? '' : __t) +
-'</span>\n\t';
- } ;
-__p += ':\n<ul>\n\t -->\n</ul>\n</span>\n\n';
 
 }
 return __p
