@@ -67,7 +67,7 @@ all primary annotation rules (class, module,method, property) should be defined 
   plugin that allow to declare generic new primary annotations support new custom primary annotations
  * IDEA: plugin for amd-commonjs dependency information - implementation 1) define a primary tag @dependency Class1 Class2,Class3 - meaning that Class 1 depends on Class21,Class3. 2) a esprima/
 
- * @return {{a:1,b:2}}  - yes with 2 {{ like closure-compiler.
+ * @return {{a:1,b:2}}  - yes with 2 '{' like closure-compiler.
 
  * @property @type plugin - to support closure compiler syntax.
 
