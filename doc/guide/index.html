@@ -87,7 +87,7 @@
 
                         <p><a href="">short-jsdoc</a> defines a language very similar to <a href="https://en.wikipedia.org/wiki/JSDoc">jsdoc</a> with a strong emphasis in types and other advanced features designed to better express particularities of the semantics of the JavaScript language. </p>
 
-                        <p>So if you are already familiar with Object Oriented Programming and tools like jsdoc or <a href="https://en.wikipedia.org/wiki/Javadoc">javadoc</a>, doxygen, etc then using short-jsdoc will be straight forward.</p>
+                        <p>So if you are already familiar with Object Oriented Programming and tools like jsdoc, <a href="https://en.wikipedia.org/wiki/Javadoc">javadoc</a>, doxygen, etc then using short-jsdoc will be straight forward.</p>
 
                     </div>
                 </div>
@@ -97,9 +97,15 @@
                     <div class="col-lg-12">
                         <h1 id="annotation-index">Annotation Index</h1>
 
-                        <p>For the impatiens, here there is a list of main jsdoc annotations. </p>
+                        <p>For the impatiens, here there is a list of main jsdoc annotations. Because short-jsdoc is designed with flezibility/customizability in mind, some relevant things to understand are: </p>
 
-                        <p>Please keep in mind that the following lists of primary and secondary annotations just describe main annotations that implement jsdoc, but you can use any annotation that you like , both custom annotations or defining annotation aliases. </p>
+                        <ul>
+                            <li>Secondary annotations are children of primary annotations</li>
+                            <li>You can use any custom annotation you can think of, at any point. They will be treated as secondary annotations</li>
+                            <li>You can declare <a href="#aliases">annotation aliases</a> for having custom annotations/semantics</li>
+                        </ul>
+
+
 
                         <h3>Primary annotations</h3>
 
@@ -195,10 +201,26 @@
 // @class LittleRadio @extends Radio @implements Throwable @implements SoundMaker
 </pre></td>
                             <td>
-                            <p>Interfaces are very similar to classes. See <a href="#interface">Interfaces section</a>. A class can <code>@implement</code> several interfaces and also an interface can <code>@extend</code> another interface.</p>
+                            <p>Interfaces are very similar to classes. See <a href="#interface">Interfaces section</a>. A class can <code>@implement</code> several interfaces and also an interface can <code>@extend</code> another interface.</p> 
+                            <p>Parents: <a href="#annotation-module"><code>@module</code></a></p>
+                            <p>Children:<a href="#annotation-method"><code>@method</code></a>, <a href="#annotation-property"><code>@property</code></a>, <a href="#annotation-event"><code>@event</code></a>, etc (same as class)</p>
                             </td>
                         </tr>
-
+  <tr>
+                            <td  id="annotation-function"><code>@function</code></td>
+                            <td>
+<pre class="prettyprint lang-js">
+// @function formatUrl @param {String} base @returns {String} 
+// @function visitor @param {Thing} visitable
+// @function visit @param collection @param {visitor} visitor
+</pre> 
+                            </td>
+                            <td>
+                            <p>Functions belong to a module. Also, notice that functions can be referenced as types - as if they were classes/interfaces. </p>
+                            <p>Parents: <a href="#annotation-module"><code>@module</code></a></p>
+                            <p>Children:<a href="#annotation-param"><code>@param</code></a>, <a href="#annotation-returns"><code>@returns</code></a>, <a href="#annotation-throws"><code>@throws</code></a>, etc (same as method)</p>
+                            </td>
+                        </tr>
                         </table>
 
 
@@ -395,7 +417,7 @@
                         <p><code>@param @throws @returns @extends @static</code></p>
 
                         <h3>Parsing</h3>
-                        <p>The parser will read your files from top to bottom parsing any annotation found in your source code comments.</p>
+                        <p>The parser will read your files <b>from top to bottom</b> parsing any annotation found in your source code comments.</p>
                         <p>When a leaf node annotation is found, it is assigned as children of the last parsed parent node.</p>
                         <p>When a parent node annotation is found it is assigned as children of the last parent node that matches the structure 'modules that contain classes that contains methods, etc'.</p>
                         <p>Any kind of comment style can be used.</p>
