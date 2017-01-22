@@ -94,4 +94,6 @@
 
 ##0.2.7
  * Can bind functions as types
- * 
+ * better command line tool. cd line tool test
+
+##0.2.8
