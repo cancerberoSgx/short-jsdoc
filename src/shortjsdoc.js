@@ -1,3 +1,4 @@
+
 /* @module shortjsdoc.node
 nodejs command line utility for generating the .json definition scanning a given source folder or file. 
 
@@ -9,8 +10,8 @@ var fs = require('fs')
 ,	path = require('path')
 ,	esprima = require('esprima')
 ,	_ = require('underscore')
-,	argv = require('yargs').argv
-,	JsDocMaker = require('./jsdocmaker/main.js'); 
+,	JsDocMaker = require('./jsdocmaker/main.js')
+,	shell = require('shelljs'); 
 
  
 //@class ShortJsDoc main class for running jsdocmaker using node through the command line.
@@ -33,42 +34,6 @@ _(ShortJsDoc.prototype).extend({
 	{
 		console.log(m + '\nUSAGE:\n\tnode src/shortjsdoc.js home/my-js-project/ home/another-js-project/ ... > html/data.json'); 
 		process.exit(1);
-	}
-
-	//@method main do the job when invoked from command line like this: node src/shortjsdoc.js test/test-project/ > html/data.json
-,	main: function main()
-	{
-		if(!ShortJsDoc.isValidMainCall())
-		{
-			this.error('more parameters required'); 
-		} 
-
-		var inputDirs = argv.input.split(','); 
-
-		// var projectMetadata = {};
-		if(argv.projectMetadata)
-		{
-			this.projectMetadata = this.tryToParseJsonFile(argv.projectMetadata) || {};
-		}
-
-		var jsdoc = this.execute({
-			inputDirs: inputDirs
-		,	projectMetadata: this.projectMetadata
-		});
-
-		this.projectMetadata.jsdoc = this.projectMetadata.jsdoc || {}; 
-
-		this.projectMetadata.jsdoc.dontMinifyOutput = argv.dontMinifyOutput || this.projectMetadata.jsdoc.dontMinifyOutput;
-
-		var jsonData = this.dumpJSON(jsdoc); 
-		if(argv.jsonOuput)
-		{			
-			console.log(jsonData);
-		}
-		else
-		{
-			console.log('window.__shortjsdoc_data = ' + jsonData);
-		} 
 	}
 
 	// @method tryToParseJsonFile @param {String} path
@@ -94,7 +59,7 @@ _(ShortJsDoc.prototype).extend({
 
 		this.computeVendorDirs(options);
 
-		_(options.inputDirs).each(function(inputDir)
+		_(options.input).each(function(inputDir)
 		{
 			_(self.sources).extend(self.buildSources(inputDir)); 
 		}); 
@@ -134,6 +99,10 @@ _(ShortJsDoc.prototype).extend({
 	{
 		_(options.vendor).each(function(vendorName)
 		{
+			if(!vendorName)
+			{
+				return
+			}
 			var f = path.join(ShortJsDoc.getThisFolder(), 'vendor-jsdoc', vendorName); 
 			var stats = null;
 			try
@@ -147,45 +116,42 @@ _(ShortJsDoc.prototype).extend({
 			}
 			if(stats && (stats.isDirectory() || stats.isFile()))
 			{			
-				options.inputDirs.push(f);
+				options.input.push(f);
 			}
 		});
+		// console.log('options.vendor', options.vendor)
 	}
 
 	//@method jsdoc public method meant to be called from user projects build-time code. It will perform all the job of soing the parse and generating a full html output project ready to be used. 
 	//@param {JsDocOptions}options meta information about the project like title, url, license, etc. Hsa the same format as package.json file
 ,	jsdoc: function(options)
 	{
-		//copy html folder
-		try
-		{
-			var del = require('del').sync; 
-			del(options.output); 
-		}
-		catch(ex)
-		{
-			
-		}
-		var htmlFolder = ShortJsDoc.getHtmlFolder();
-		ShortJsDoc.copyRecursiveSync(htmlFolder, options.output); 
-
 		//generate the data.json file
-		var jsdoc = this.execute(options); 
-		var f = path.join(options.output, 'data.json'); 
-		var output = this.dumpJSON(jsdoc);
 
-		if(!options.jsonOuput)
+		var jsdoc = this.execute(options); 
+		var output = this.dumpJSON(jsdoc, options);
+
+		if(!options.jsonOuput && options.output)
 		{			
+			shell.rm('-rf', options.output)
+			var htmlFolder = ShortJsDoc.getHtmlFolder();
+			shell.cp('-rf', htmlFolder, options.output);
+			// ShortJsDoc.copyRecursiveSync(htmlFolder, options.output); 
+			var f = path.join(options.output, 'data.json'); 
 			output = 'window.__shortjsdoc_data = ' + output;
+			fs.writeFileSync(f, output); 
+		}
+		else
+		{
+			console.log(output); // prints on stdout
 		}
 
-		fs.writeFileSync(f, output); 
 	} 
 
 	// @method dumpJSON dump to json string the full ast. configurable through this.projectMetadata.jsdoc.dontMinifyOutput
-,	dumpJSON: function(jsdoc) 
+,	dumpJSON: function(jsdoc, options) 
 	{
-		if(this.projectMetadata.jsdoc && this.projectMetadata.jsdoc.dontMinifyOutput)
+		if(options && options.dontMinifyOutput)
 		{		
 			return JSON.stringify(jsdoc, null, 4); // dump the output indented:
 		}
@@ -259,13 +225,6 @@ _(ShortJsDoc.prototype).extend({
 
 });
 
-//@method isValidMainCall @static
-ShortJsDoc.isValidMainCall = function()
-{
-	// var argNumber = process.argv[0].indexOf('node')===-1 ? 1 : 2; 
-	// return process.argv.length >= argNumber + 1; 
-	return argv.input && argv.input.split(',').length;
-}; 
 
 //@method getHtmlFolder @return {String} this module's html folder path @static
 ShortJsDoc.getHtmlFolder = function()
@@ -288,7 +247,6 @@ ShortJsDoc.getThisFolder = function()
 // @method folderWalk General function for walking a folder recusively and sync @static 
 ShortJsDoc.folderWalk = function (dir, action) 
 {
-	// console.log('folderwalk', dir)
 	if (typeof action !== "function")
 	{
 		action = function (error, file) { };
@@ -312,35 +270,27 @@ ShortJsDoc.folderWalk = function (dir, action)
 	});
 };
 
-// @method copyRecursiveSync copy directories recursively just like cp -r @static
-// @param {String} src The path to the thing to copy.
-// @param {String} dest The path to the new copy. 
-ShortJsDoc.copyRecursiveSync = function(src, dest) 
-{
-	var exists = fs.existsSync(src);
-	var stats = exists && fs.statSync(src);
-	var isDirectory = exists && stats.isDirectory();
-	if (exists && isDirectory) 
-	{
-		fs.mkdirSync(dest);
-		fs.readdirSync(src).forEach(function(childItemName) 
-		{
-			ShortJsDoc.copyRecursiveSync(path.join(src, childItemName), path.join(dest, childItemName));
-		});
-	} 
-	else 
-	{
-		fs.linkSync(src, dest);
-	}
-};
-
-
-
-if(ShortJsDoc.isValidMainCall())
-{	
-	var tool = new ShortJsDoc();
-	tool.main();	
-} 
+// // @method copyRecursiveSync copy directories recursively just like cp -r @static
+// // @param {String} src The path to the thing to copy.
+// // @param {String} dest The path to the new copy. 
+// ShortJsDoc.copyRecursiveSync = function(src, dest) 
+// {
+// 	var exists = fs.existsSync(src);
+// 	var stats = exists && fs.statSync(src);
+// 	var isDirectory = exists && stats.isDirectory();
+// 	if (exists && isDirectory) 
+// 	{
+// 		fs.mkdirSync(dest);
+// 		fs.readdirSync(src).forEach(function(childItemName) 
+// 		{
+// 			ShortJsDoc.copyRecursiveSync(path.join(src, childItemName), path.join(dest, childItemName));
+// 		});
+// 	} 
+// 	else 
+// 	{
+// 		fs.linkSync(src, dest);
+// 	}
+// };
 
 ShortJsDoc.JsDocMaker = JsDocMaker;
 
@@ -350,6 +300,6 @@ module.exports = ShortJsDoc;
 
 // @class JsDocOptions
 // @property {String} output output folder
-// @property {Array<String>} inputDirs the source code folders that will be parsed recursively.
+// @property {Array<String>} input the source code folders that will be parsed recursively.
 // @property {Array<String>} vendor include the jsdoc of libraries supported by short-jsdoc (see vendor-jsdoc folder). Example: vendor: ['javascript', 'html']
 

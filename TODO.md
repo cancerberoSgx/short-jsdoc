@@ -216,11 +216,11 @@ From most important to less:
 
     var ShortJsDoc = require('./src/shortjsdoc.js'); 
     ShortJsDoc.make({
-        inputDirs: ['./src/JsDocMaker.js']
+        input: ['./src/JsDocMaker.js']
     ,   output: 'jsdoc2'
     }); 
     ShortJsDoc.make({
-        inputDirs: ['./html']
+        input: ['./html']
     ,   output: 'jsdochtml'
     }); 
 

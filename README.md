@@ -10,6 +10,37 @@
 
 [This own project jsdocs](http://cancerberosgx.github.io/short-jsdoc/jsdoc)
 
+
+# Command line 
+
+Install it globally with this command: 
+
+    sudo npm install -g short-jsdoc
+
+then use it like this:
+
+     node bin/short-jsdoc-cli.js --input src --output foo --vendor backbone
+
+# nodejs API
+
+    var ShortJsDoc = require('short-jsdoc');
+    ShortJsDoc.make({
+        input: ['./src/folder1', './src/folder2', './src/folder3/file.js']
+    ,   output: 'jsdoc'
+    ,   projectMetadata: './package.json'
+    ,   vendor: ['javascript', 'html', 'backbonejs', 'jquery', 'xml-dom']
+    }); 
+
+
+#Options
+
+ * *input*:  comma separated folders form where consume .js files. Example: --input src/model,third/base
+ * *output*: the output folder which will be generated with a ready to use html document
+ * *projectMetadata*: path to a package.json like file that describe the source project
+ * *vendor*: a comma separated list of vendor names - which jsdoc will also be included. See folder vendor-jsdoc to see which are supported. 
+
+
+
 #Features
 
 ##Short
@@ -61,66 +92,12 @@ Jsdoc generator is usable both in nodejs or in the browser.
 
 The parser generates a json file with all jsdoc meta data that can be consumed and shared easily. By default a a nice html5 single page application is delivered that shows generated jsdocs in a very rich way and easy to customize. Also you can distribute the folder with the jsdocs and others can just open the local html file in the browser without running a server for easy reading.
 
-# Syntax
-
-[Some syntax notes](https://github.com/cancerberoSgx/short-jsdoc/blob/master/doc/SYNTAX.md)
-
 ## License
 
 short-jsdoc is open sourced under the [MIT License](https://github.com/cancerberoSgx/short-jsdoc/blob/master/LICENSE). 
 
 Do what you need with this project, if you can, contribute you enhancements back :)
 
-
-
-
-# Installing 
-
-    cd short-jsdoc
-    npm install
-
-# Using it in nodejs 
-
-    npm install short-jsdoc --save-dev
-
-And then from your build script you can use it like this:
-
-    var ShortJsDoc = require('short-jsdoc');
-    ShortJsDoc.make({
-        inputDirs: ['./src/folder1', './src/folder2', './src/folder3/file.js']
-    ,   output: 'jsdoc'
-    ,   projectMetadata: './package.json'
-    ,   vendor: ['javascript', 'html', 'backbonejs', 'jquery', 'xml-dom']
-    }); 
-
-That will create the folder jsdoc with the jsdoc generated from the src folder.
-
-The optional vendor argument will make the tool to add the jsdoc of javascript reference objects like Array, Object, String, etc. Also we want to include the jsdoc of some libraries like backbonejs and jQuery.
-
-As you can see we are passing a package.json file to extract the target project metainformation like name, version, etc.
-
-
-# Using it from command line
-
-Using node directly:
-
-    cd short-jsdoc
-    node src/shortjsdoc.js --input src/folder1 --project-metadata src/package.json > html/data.json
-    cp html /home/my-js-project/apidocs
-
-or multiple input folders: 
-    
-    node src/shortjsdoc.js --input "src/folder1,src/folder2" --project-metadata src/package.json > html/data.json
-
-Using the command line shortcut (if you installed it)
-
-    shortjsdoc --input /home/my-project1/src/js --project-metadata /home/my-project1/package.json > /home/my-project1/apidocs.json
-
-This will generate the ready to use html application /home/my-js-project/apidocs/index.html showing your project's classes. 
-
-More detailed explanation: What just happened is we first parsed some source folders into a data.json file and. The html application just reads this file and renders all its information in a rich web application.
-
-Feel free to put-copy this full project in your apidocs forlder. And of course feel free to modify to your needs. It is self contained and includes jQuery, bootstrap, underscorejs and backbonejs. In general you will be modifying the markup located in html/src/templates and the styles (very little included and writen in less).
 
 # Running development web demo
 

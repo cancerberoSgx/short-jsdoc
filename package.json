@@ -5,11 +5,11 @@
   "author": "Sebastián Gurin (cancerberoSgx)",
   "dependencies": {
     "esprima": "2.7.1",
+    "shelljs": "^0.7.6",
     "underscore": "1.8.3",
     "yargs": "^1.3.3"
   },
   "devDependencies": {
-    "del": "*",
     "grunt": "*",
     "grunt-browserify": "^3.2.1",
     "grunt-contrib-concat": "*",
@@ -42,6 +42,9 @@
     "code",
     "annotation"
   ],
+  "bin": {
+    "short-jsdoc": "./bin/short-jsdoc-cli.js"
+  },
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/cancerberoSgx/short-jsdoc/issues"
