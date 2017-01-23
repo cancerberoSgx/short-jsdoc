@@ -13,7 +13,9 @@ var AbstractView = Backbone.View.extend({
 	//@method renderIn renders this view in given parent element @param {jQuery} $parent
 ,	renderIn: function($parent)
 	{
-		var template = _.isFunction(this.template) ? this.template : this.application.templates[this.template];		
+		var template = _.isFunction(this.template) ? this.template : this.application.templates[this.template];
+		this.options = this.options || {}; 
+		_.extend(this.options, this.application.config); 	
 		var html = template.apply(this, []); 
 		this.$el.html(html);
 		$parent.append(this.$el); 

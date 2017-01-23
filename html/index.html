@@ -28,7 +28,11 @@
 // {
 // 	Application.startApplication(data); 
 // }); 
-Application.startApplication(window.__shortjsdoc_data); 
+
+var config = {
+	dontShowSources: true
+}
+Application.startApplication(window.__shortjsdoc_data, config); 
 </script>
 </body>
 </html>

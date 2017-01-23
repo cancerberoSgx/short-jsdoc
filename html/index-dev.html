@@ -81,7 +81,10 @@ can be removed if online parser is disabled.-->
 // {
 // 	debugger;
 // }); 
-Application.startApplication(window.__shortjsdoc_data); 
+var config = {
+	dontShowSources: true
+}
+Application.startApplication(window.__shortjsdoc_data, config); 
 </script>
 
 

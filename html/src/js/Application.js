@@ -16,13 +16,14 @@
 	maker.postProccess();
 	var data = maker.data; 
 */
-var Application = function(data)
+var Application = function(data, config)
 {
 	//@property {String} textFormat  can be markdown or html. default: markdown
 	this.textFormat = 'markdown'; 
 	
 	//@property {Object} templates The templates dictionary (given by template-output.js)
-	this.templates = shortjsdoc; 
+	this.templates = shortjsdoc;
+	this.config = config; 
 
 	/*@property {Object} data is the data.json object outputed by running:	
 
@@ -96,9 +97,9 @@ _(Application.prototype).extend({
 
 //@method start an application loading it with given data. @static
 //@param data the output of passing jsindentator JsDocMaker. 
-Application.startApplication = function(data)
+Application.startApplication = function(data, config)
 {
-	var app = new Application(data); 
+	var app = new Application(data, config); 
 	app.start();
 }; 
   
