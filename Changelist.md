@@ -97,3 +97,4 @@
  * better command line tool. cd line tool test
 
 ##0.2.8
+ * html application configuration dontShowSources:boolean
