@@ -130,7 +130,7 @@ module.exports = function (grunt) {
 			files: {
 				'html/all.min.js': uglifyFiles
 			,	'html/libs.min.js': uglifyLibFiles
-			,	'html/data.min.json': 'html/data.min.json'
+			,	'html/data.min.json': 'html/data.json'
 			}
 		}
 	}

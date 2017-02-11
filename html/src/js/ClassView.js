@@ -7,6 +7,10 @@ var ClassView = AbstractView.extend({
 
 ,	template: 'class'
 
+,	events: {
+		'click [data-type="sources-collapse"]': 'sourceCollapseHandler'
+	}
+
 ,	initialize: function(application, className, options) 
 	{
 		var self = this;
@@ -30,13 +34,13 @@ var ClassView = AbstractView.extend({
 		// calculate properties, events and attributes inheritance information
 		this.methods = this.jsdoc.methods || {};
 		this.properties = this.jsdoc.properties || {};
-		this.events = this.jsdoc.events || {};
+		this.events_ = this.jsdoc.events || {}; //heads up, we cannot use this.events because is a backbone view thing
 		this.attributes = this.jsdoc.attributes || {};
 		
 		if(this.options.inherited)
 		{
 			this.properties = _(_(this.properties).clone()).extend(this.jsdoc.inherited.properties); 
-			this.events = _(_(this.events).clone()).extend(this.jsdoc.inherited.events); 
+			this.events_ = _(_(this.events_).clone()).extend(this.jsdoc.inherited.events); 
 			this.attributes = _(_(this.attributes).clone()).extend(this.jsdoc.inherited.attributes); 
 			this.methods = _(_(this.methods).clone()).extend(this.jsdoc.inherited.methods); 
 		}
@@ -46,7 +50,7 @@ var ClassView = AbstractView.extend({
 		{
 			this.properties = _.filter(this.properties, this.propertyIsPublicPredicate);
 			this.methods = _.filter(this.methods, this.propertyIsPublicPredicate);
-			this.events = _.filter(this.events, this.propertyIsPublicPredicate);
+			this.events_ = _.filter(this.events_, this.propertyIsPublicPredicate);
 			this.attributes = _.filter(this.attributes, this.propertyIsPublicPredicate);
 		}
 		this.hierarchy = this.computeHierarchy();
@@ -73,7 +77,7 @@ var ClassView = AbstractView.extend({
 			});
 
 			this.inlineEventViews = [];
-			_(this.events).each(function(node)
+			_(this.events_).each(function(node)
 			{
 				var view = new PropertyView(self.application, node.absoluteName, 'event', true);
 				view.render();
@@ -110,8 +114,22 @@ var ClassView = AbstractView.extend({
 		{
 			self.$('[data-type="inline-attributes"]').append(v.$el);
 		});
+		this.buttonCollapsed = this.options.collapseSources
+		this.sourceCollapseHandler()
 	}
 
+,	sourceCollapseHandler: function()
+	{
+		if(this.buttonCollapsed)
+		{
+			this.$('[data-type="sources"]').hide()
+		}
+		else
+		{
+			this.$('[data-type="sources"]').show()
+		}
+		this.buttonCollapsed = !this.buttonCollapsed
+	}
 
 	//@method makePartialText @param {AST} node @return {String}
 ,	makePartialText: function(node)

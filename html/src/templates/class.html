@@ -122,14 +122,12 @@ var self = this;
 		</ul>
 		<% } %>
 
-
-
-		<% if(this.events && _(this.events).keys().length) {%>
+		<% if(this.events_ && _(this.events_).keys().length) {%>
 		<h3 class='events'>Events</h3>
 		<ul>
 		<% 
 		var self = this; 
-		_(this.events).each(function(p) { 
+		_(this.events_).each(function(p) { 
 			var inherited = !JsDocMaker.classOwnsProperty(self.jsdoc, p); 
 			//TODO: perform this in the view or plugin
 			
@@ -277,7 +275,7 @@ var self = this;
 		<div data-type="inline-attributes" class="inline-attributes"></div>
 		<% } %>
 
-		<% if(_(this.events).keys().length) { %>
+		<% if(_(this.events_).keys().length) { %>
 		<h3>Events</h3>
 		<div data-type="inline-events" class="inline-events"></div>
 		<% } %>
@@ -292,7 +290,10 @@ var self = this;
 
 
 
-		<% if(!self.options.dontShowSources) {%><div data-type="sources"></div><%}%>
+		<% if(!self.options.dontShowSources) {%>
+		<button class="btn btn-info" data-type="sources-collapse">Show/Hide Sources</button>
+		<div data-type="sources" id="class-sources"></div>
+		<%}%>
 
 	</div>
 </div>

@@ -18,9 +18,13 @@ var AbstractView = Backbone.View.extend({
 		_.extend(this.options, this.application.config); 	
 		var html = template.apply(this, []); 
 		this.$el.html(html);
-		$parent.append(this.$el); 
+		$parent.append(this.$el);
 		this.afterRender();
-		return this;
+	}
+
+,	destroy: function()
+	{
+		this.undelegateEvents()
 	}
 
 	//@method render implemented to comply with Backbone View contract
@@ -37,11 +41,11 @@ var AbstractView = Backbone.View.extend({
 ,	setTitle: function(t)
 	{
 		// var self = this;
-		this.title = t;
-		setTimeout(function()
-		{
+		// this.title = t;
+		// setTimeout(function()
+		// {
 			document.title = t; 
-		}, 200);
+		// }, 200);
 	}
 
 	//sources stuff

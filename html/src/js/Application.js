@@ -70,6 +70,10 @@ _(Application.prototype).extend({
 ,	showView: function(view)
 	{
 		this.applicationView = this.applicationView || new ApplicationView(this); 
+		if(this.currentView && this.currentView !== view)
+		{
+			this.currentView.destroy(); 
+		}
 		this.currentView = view;
 		this.$containerEl.empty();
 		this.applicationView.renderIn(this.$containerEl);

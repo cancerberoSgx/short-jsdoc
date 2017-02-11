@@ -215,12 +215,12 @@ __p += '\n\t\t\t</li>\n\t\t';
  }); ;
 __p += '\n\t\t</ul>\n\t\t';
  } ;
-__p += '\n\n\n\n\t\t';
- if(this.events && _(this.events).keys().length) {;
+__p += '\n\n\t\t';
+ if(this.events_ && _(this.events_).keys().length) {;
 __p += '\n\t\t<h3 class=\'events\'>Events</h3>\n\t\t<ul>\n\t\t';
  
 		var self = this; 
-		_(this.events).each(function(p) { 
+		_(this.events_).each(function(p) { 
 			var inherited = !JsDocMaker.classOwnsProperty(self.jsdoc, p); 
 			//TODO: perform this in the view or plugin
 			
@@ -355,7 +355,7 @@ __p += '\n\n\t\t';
 __p += '\n\t\t<h3>Attributes</h3>\n\t\t<div data-type="inline-attributes" class="inline-attributes"></div>\n\t\t';
  } ;
 __p += '\n\n\t\t';
- if(_(this.events).keys().length) { ;
+ if(_(this.events_).keys().length) { ;
 __p += '\n\t\t<h3>Events</h3>\n\t\t<div data-type="inline-events" class="inline-events"></div>\n\t\t';
  } ;
 __p += '\n\n\t\t';
@@ -366,7 +366,7 @@ __p += '\n\n\t\t</div>\n\t\t';
  } ;
 __p += '\n\n\n\n\t\t';
  if(!self.options.dontShowSources) {;
-__p += '<div data-type="sources"></div>';
+__p += '\n\t\t<button class="btn btn-info" data-type="sources-collapse">Show/Hide Sources</button>\n\t\t<div data-type="sources" id="class-sources"></div>\n\t\t';
 };
 __p += '\n\n\t</div>\n</div>\n';
 
