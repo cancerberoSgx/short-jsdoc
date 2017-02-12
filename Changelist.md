@@ -98,3 +98,4 @@
 
 ##0.2.8
  * html application configuration dontShowSources:boolean
+ * spec for node js api

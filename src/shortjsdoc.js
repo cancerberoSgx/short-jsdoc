@@ -199,7 +199,7 @@ _(ShortJsDoc.prototype).extend({
 			console.log('ERROR invalid null input directory'); 
 			return;
 		}
-		if(!fs.statSync(inputDir).isDirectory())
+		if(!shell.test('-d', inputDir))//!fs.statSync(inputDir).isDirectory())
 		{
 			self.readSource(inputDir, map);
 		}

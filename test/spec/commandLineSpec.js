@@ -2,9 +2,9 @@ var shell = require('shelljs')
 
 shell.config.silent=true;
 
-describe('command line', function()
+describe('apis', function()
 {
-	it('1', function()
+	it('command line 1', function()
 	{
 		shell.rm('-rf', 'test_tmp')
 		shell.rm('-rf', 'test_tmp_output')
@@ -20,6 +20,35 @@ describe('command line', function()
 		expect(p.code).toBe(0)
 		var jsdoc = JSON.parse(p.stdout)
 		expect(jsdoc.classes['foo.c'].name).toBe('c')
+		
+		shell.rm('-rf', 'test_tmp')
+		shell.rm('-rf', 'test_tmp_output')
+	})
+
+
+	it('node js api', function()
+	{
+		shell.rm('-rf', 'test_tmp')
+		shell.rm('-rf', 'test_tmp_output')
+
+		shell.mkdir('test_tmp')
+		shell.ShellString('/*@module foo @class c*/').to('test_tmp/index.js')
+
+		var ShortJsdoc = require('../..')
+		var config = {
+			input: ['test_tmp'],
+			output: 'test_tmp_output',
+			projectMetadata: {},
+			vendor: [],
+			dontMinifyOutput: true
+		}
+
+		ShortJsdoc.make(config)
+		
+		var  a = shell.cat('test_tmp_output/data.json').toString()
+		a = a.substring('window.__shortjsdoc_data = '.length, a.length)
+		a = JSON.parse(a)
+		expect(a.classes['foo.c'].name).toBe('c')
 		
 		shell.rm('-rf', 'test_tmp')
 		shell.rm('-rf', 'test_tmp_output')
