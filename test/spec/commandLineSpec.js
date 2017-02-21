@@ -53,4 +53,38 @@ describe('apis', function()
 		shell.rm('-rf', 'test_tmp')
 		shell.rm('-rf', 'test_tmp_output')
 	})
+
+	it('node js api non existent folder', function()
+	{
+		shell.rm('-rf', 'test_tmp')
+		shell.rm('-rf', 'test_tmp_output')
+
+		// shell.mkdir('test_tmp')
+		// shell.ShellString('/*@module foo @class c*/').to('test_tmp/index.js')
+
+		var ShortJsdoc = require('../..')
+		var config = {
+			input: ['nonexxistent'],
+			output: 'test_tmp_output',
+			projectMetadata: {},
+			vendor: [],
+			dontMinifyOutput: true
+		}
+
+		var error = false
+
+		try 
+		{
+			ShortJsdoc.make(config)
+		}
+		catch(ex)
+		{
+			error = true
+		}
+		
+		expect(error).toBe(true)
+		
+		shell.rm('-rf', 'test_tmp')
+		shell.rm('-rf', 'test_tmp_output')
+	})
 })
