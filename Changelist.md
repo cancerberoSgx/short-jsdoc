@@ -99,3 +99,4 @@
 ##0.2.8
  * html application configuration dontShowSources:boolean
  * spec for node js api
+ * html support for loading alternative data.json with datajson url parameter

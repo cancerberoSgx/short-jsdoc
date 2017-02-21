@@ -73,21 +73,37 @@ can be removed if online parser is disabled.-->
 
 <body>
 
-<script src="data.json" type="text/javascript"></script>
+<!-- <script src="data.json" type="text/javascript"></script> -->
 <script>
-// jQuery.getJSON('data.json').done(function(data)
-// {
-// 	Application.startApplication(data); 
-// }).fail(function()
-// {
-// 	debugger;
-// }); 
 
-var config = {
-	//dontShowSources: true
-	collapseSources: true
+function getCurrentParams()
+{
+	try 
+	{
+		var search = location.search.substring(1);
+		var params = {}
+		if(search)
+		{
+			params = JSON.parse('{"' + decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}')
+		}
+		return params
+	}
+	catch(ex)
+	{
+		return {}
+	}
 }
-Application.startApplication(window.__shortjsdoc_data, config); 
+var params = getCurrentParams()
+
+var dataJson = params.datajson || 'data.json'
+jQuery.getScript(dataJson).then(function()
+{
+	var config = {
+		collapseSources: true
+	}
+	Application.startApplication(window.__shortjsdoc_data, config); 
+})
+
 </script>
 
 

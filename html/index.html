@@ -22,19 +22,40 @@
 <script src="all.min.js" type="text/javascript"></script>
 <script src="template-output.js" type="text/javascript"></script>
 
+<!--
 <script src="data.min.json" type="text/javascript"></script>
+-->
 
 <script>
-// jQuery.getJSON('data.json').done(function(data)
-// {
-// 	Application.startApplication(data); 
-// }); 
 
-var config = {
-	//dontShowSources: true
-	collapseSources: true
+function getCurrentParams()
+{
+	try 
+	{
+		var search = location.search.substring(1);
+		var params = {}
+		if(search)
+		{
+			params = JSON.parse('{"' + decodeURI(search).replace(/"/g, '\\"').replace(/&/g, '","').replace(/=/g,'":"') + '"}')
+		}
+		return params
+	}
+	catch(ex)
+	{
+		return {}
+	}
 }
-Application.startApplication(window.__shortjsdoc_data, config); 
+var params = getCurrentParams()
+
+var dataJson = params.datajson || 'data.min.json'
+jQuery.getScript(dataJson).then(function()
+{
+	var config = {
+		collapseSources: true
+	}
+	Application.startApplication(window.__shortjsdoc_data, config); 
+})
+
 </script>
 </body>
 </html>
