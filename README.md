@@ -38,6 +38,7 @@ then use it like this:
  * *output*: the output folder which will be generated with a ready to use html document
  * *projectMetadata*: path to a package.json like file that describe the source project
  * *vendor*: a comma separated list of vendor names - which jsdoc will also be included. See folder vendor-jsdoc to see which are supported. 
+ * *jsonOutput* don't write a project to file system, just dump the output json in stdout
 
 
 
