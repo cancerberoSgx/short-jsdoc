@@ -85,6 +85,11 @@ _(ShortJsDoc.prototype).extend({
 			throw ex;
 		}
 
+		if(options.filterByChildAnnotations && options.filterByChildAnnotations.length)
+		{
+			JsDocMaker.filterByChildAnnotation({jsdocmaker: this.maker, annotations: options.filterByChildAnnotations});
+		}
+
 		var jsdoc = this.maker.data;
 
 		this.projectMetadata = jsdoc.projectMetadata = options.projectMetadata || {name: 'Untitled Project'};
