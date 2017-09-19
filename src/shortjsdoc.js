@@ -140,6 +140,9 @@ _(ShortJsDoc.prototype).extend({
 			var f = path.join(options.output, 'data.json'); 
 			output = 'window.__shortjsdoc_data = ' + output;
 			fs.writeFileSync(f, output); 
+
+			f = path.join(options.output, 'data.min.json'); 
+			fs.writeFileSync(f, output); 
 		}
 		else
 		{
