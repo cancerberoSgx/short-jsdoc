@@ -2845,7 +2845,7 @@ var JsDocMaker = require('./core/main');
 require('./plugin/main.js'); 
 
 module.exports = JsDocMaker;
-},{"./core/main":4,"./plugin/main.js":19}],12:[function(require,module,exports){
+},{"./core/main":4,"./plugin/main.js":20}],12:[function(require,module,exports){
 /*
 
 This is a syntax definition compiled to JavaScript that parses an expression like 
@@ -3774,7 +3774,44 @@ JsDocMaker.prototype.afterTypeBindingRecurseASTPlugins.add(pluginAfter);
 //JsDocMaker.prototype.commentPreprocessorPlugins.add(plugin);
 
 
-},{"../core/class":3,"../core/plugin":6,"./recurse-plugin-containers":23,"underscore":1}],17:[function(require,module,exports){
+},{"../core/class":3,"../core/plugin":6,"./recurse-plugin-containers":24,"underscore":1}],17:[function(require,module,exports){
+// @module shortjsdoc.plugin @class JsDocMaker
+var JsDocMaker = require('../core/class'); 
+var _ = require('underscore'); 
+
+JsDocMaker.filterByChildAnnotation = function(options)
+{
+	var data = options.jsdocmaker.data;
+	var annotations = options.annotations || []
+	var predicate = function(node)
+	{
+		return annotations.indexOf(node.annotation)!=-1
+	}
+	_.each(_.values(data.classes), function(c)
+	{
+		if(!classHasDescendant(c, predicate))
+		{
+			delete data.classes[c.absoluteName]
+		}
+	})
+
+	//TODO: also filter module's functions
+
+	// TODO: should we also remove methods, properties, etc that are not marked from classes ? 
+
+	// TODO: remove modules with no descendats
+}
+
+function classHasDescendant(c, predicate){
+	var has
+	has = has || _.find(c.children, function(node){return predicate(node)})
+	has = has || _.find(c.methods, function(method){return _.find(method.children, function(node){return predicate(node)})})
+	has = has || _.find(c.properties, function(property){return _.find(property.children, function(node){return predicate(node)})})
+	has = has || _.find(c.events, function(event){return _.find(property.children, function(node){return predicate(node)})})
+
+	return has
+}
+},{"../core/class":3,"underscore":1}],18:[function(require,module,exports){
 // @module shortjsdoc.plugin @class JsDocMaker
 var JsDocMaker = require('../core/class'); 
 var _ = require('underscore'); 
@@ -3893,7 +3930,7 @@ JsDocMaker.classOwnsProperty = function(aClass, prop)
 	return result;
 }; 
 
-},{"../core/class":3,"underscore":1}],18:[function(require,module,exports){
+},{"../core/class":3,"underscore":1}],19:[function(require,module,exports){
 // @module shortjsdoc @class JsDocMaker
 var JsDocMaker = require('../core/class'); 
 var _ = require('underscore'); 
@@ -3943,7 +3980,7 @@ JsDocMaker.prototype.literalObjectInstall = function()
 }; 
 
 
-},{"../core/class":3,"underscore":1}],19:[function(require,module,exports){
+},{"../core/class":3,"underscore":1}],20:[function(require,module,exports){
 'strict mode'; 
 
 var JsDocMaker = require('../core/main.js'); 
@@ -3967,14 +4004,14 @@ require('./recurse-plugin-containers.js');
 require('./escape-at.js');
 
 
-// require('./filter-by-child-annotations'); 
+require('./filter-by-child-annotations'); 
 
 
 //tools
 require('./dependencies.js'); //TODO: review, this probably makes compilation slower. 
 
 module.exports = JsDocMaker; 
-},{"../core/main.js":4,"./alias.js":13,"./comment-indentation.js":14,"./dependencies.js":15,"./escape-at.js":16,"./inherited.js":17,"./literal-object.js":18,"./modifiers.js":20,"./module-exports.js":21,"./native-types.js":22,"./recurse-plugin-containers.js":23,"./text-marks-references.js":24,"./text-marks.js":25,"./util.js":26}],20:[function(require,module,exports){
+},{"../core/main.js":4,"./alias.js":13,"./comment-indentation.js":14,"./dependencies.js":15,"./escape-at.js":16,"./filter-by-child-annotations":17,"./inherited.js":18,"./literal-object.js":19,"./modifiers.js":21,"./module-exports.js":22,"./native-types.js":23,"./recurse-plugin-containers.js":24,"./text-marks-references.js":25,"./text-marks.js":26,"./util.js":27}],21:[function(require,module,exports){
 // @module shortjsdoc @class JsDocMaker
 var JsDocMaker = require('../core/class'); 
 var _ = require('underscore'); 
@@ -3996,7 +4033,7 @@ JsDocMaker.prototype.installModifiers = function(node)
 	});
 }; 
  
-},{"../core/class":3,"underscore":1}],21:[function(require,module,exports){
+},{"../core/class":3,"underscore":1}],22:[function(require,module,exports){
 /* @module shortjsdoc.plugin.module-export
 
 #@module @exports
@@ -4042,7 +4079,7 @@ var plugin_beforeTypeBinding = {
 }; 
   
 JsDocMaker.prototype.beforeTypeBindingPlugins.add(plugin_beforeTypeBinding); 
-},{"../core/class":3,"underscore":1}],22:[function(require,module,exports){
+},{"../core/class":3,"underscore":1}],23:[function(require,module,exports){
 // @module shortjsdoc @class JsDocMaker
 var JsDocMaker = require('../core/class'); 
 var _ = require('underscore'); 
@@ -4073,7 +4110,7 @@ JsDocMaker.prototype.getNativeTypeUrl = function(name)
 	return customTypeUrl;
 }; 
 
-},{"../core/class":3,"underscore":1}],23:[function(require,module,exports){
+},{"../core/class":3,"underscore":1}],24:[function(require,module,exports){
 // @module recurse-plugin-containers - a plugin to be used by concrete plugins to iterate on all 
 // nodes after some interesting stages. by calling recurseAST. 
 // The objective is that other concrete plugins register here and so the AST recursion is made 
@@ -4119,7 +4156,7 @@ var plugin = new AfterTypeBindingRecurseASTPluginContainer();
 JsDocMaker.prototype.afterTypeBindingRecurseASTPlugins = plugin; 
 
 JsDocMaker.prototype.afterTypeBindingPlugins.add(plugin); 
-},{"../core/class":3,"../core/plugin":6,"./util":26,"underscore":1}],24:[function(require,module,exports){
+},{"../core/class":3,"../core/plugin":6,"./util":27,"underscore":1}],25:[function(require,module,exports){
 /*
 @module shortjsdoc.plugin.text-marks-references
 
@@ -4284,7 +4321,7 @@ JsDocMaker.prototype.afterTypeBindingPlugins.add(textMarksReferencesPlugin);
 
 
 
-},{"../core/class":3,"underscore":1}],25:[function(require,module,exports){
+},{"../core/class":3,"underscore":1}],26:[function(require,module,exports){
 /*
 @module shortjsdoc.plugin.text-marks
 
@@ -4356,7 +4393,7 @@ JsDocMaker.prototype.beforeTypeBindingPlugins.add(textMarksAfterParseNodePlugin)
 // afterTypeBindingPlugins
 
 
-},{"../core/class":3,"underscore":1}],26:[function(require,module,exports){
+},{"../core/class":3,"underscore":1}],27:[function(require,module,exports){
 //TODO: move this file to core/recurseAST.js
 //@module shortjsdoc @class JsDocMaker
 var JsDocMaker = require('../core/class'); 

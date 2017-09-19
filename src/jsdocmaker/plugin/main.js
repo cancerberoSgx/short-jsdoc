@@ -21,7 +21,7 @@ require('./recurse-plugin-containers.js');
 require('./escape-at.js');
 
 
-// require('./filter-by-child-annotations'); 
+require('./filter-by-child-annotations'); 
 
 
 //tools
