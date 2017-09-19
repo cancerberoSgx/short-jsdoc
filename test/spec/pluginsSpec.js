@@ -395,8 +395,13 @@ describe("filter by child annotation", function()
 			'//@property p1\n'+
 			'//@publicapi\n'+
 
+			'//@property p2\n'+
+
 			'//@interface IComponent'+
 			'//@method do @publicapi'+
+
+			'//@module m2'+
+			'//@class C4'+
 			'';
 		
 		var maker = new JsDocMaker();
@@ -407,11 +412,16 @@ describe("filter by child annotation", function()
 		JsDocMaker.filterByChildAnnotation({jsdocmaker: maker, annotations: ['publicapi']})
 		
 		var jsdoc = maker.data
+
 		expect(!!jsdoc.classes['functionAsTypesModule.C1']).toBe(false)
 		expect(!!jsdoc.classes['functionAsTypesModule.Annotated']).toBe(true)
 		expect(!!jsdoc.classes['functionAsTypesModule.Annotated2']).toBe(true)
+		expect(!!_.find(jsdoc.classes['functionAsTypesModule.Annotated2'].properties, (p)=>p.name=='p1')).toBe(true)
+		expect(!!_.find(jsdoc.classes['functionAsTypesModule.Annotated2'].properties, (p)=>p.name=='p2')).toBe(false)
 		expect(!!jsdoc.classes['functionAsTypesModule.IComponent']).toBe(true)
+		expect(!!jsdoc.modules.m2).toBe(false)
 	});
+
 
 })
 

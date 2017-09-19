@@ -3782,34 +3782,53 @@ var _ = require('underscore');
 JsDocMaker.filterByChildAnnotation = function(options)
 {
 	var data = options.jsdocmaker.data;
-	var annotations = options.annotations || []
+	var annotations = options.annotations || [];
 	var predicate = function(node)
 	{
-		return annotations.indexOf(node.annotation)!=-1
+		return annotations.indexOf(node.annotation)!=-1;
 	}
 	_.each(_.values(data.classes), function(c)
 	{
 		if(!classHasDescendant(c, predicate))
 		{
-			delete data.classes[c.absoluteName]
+			delete data.classes[c.absoluteName];
 		}
 	})
 
-	//TODO: also filter module's functions
+	_.each(_.values(data.modules), function(m)
+	{
+		if(!_.find(_.values(data.classes), function(c)
+		{
+			return c.module && c.module.name==m.name
+		}))
+		{
+			delete data.modules[m.name]
+		}
+	})
 
-	// TODO: should we also remove methods, properties, etc that are not marked from classes ? 
 
-	// TODO: remove modules with no descendats
-}
+	// TODO: remove module's functions
+
+};
 
 function classHasDescendant(c, predicate){
-	var has
-	has = has || _.find(c.children, function(node){return predicate(node)})
-	has = has || _.find(c.methods, function(method){return _.find(method.children, function(node){return predicate(node)})})
-	has = has || _.find(c.properties, function(property){return _.find(property.children, function(node){return predicate(node)})})
-	has = has || _.find(c.events, function(event){return _.find(property.children, function(node){return predicate(node)})})
+	var has;
+	has = has || _.find(c.children, function(node){return predicate(node)});
 
-	return has
+	function doChildNodes(parentNode, childName, predicate)
+	{
+		parentNode[childName] = _.filter(parentNode[childName], function(node)
+		{
+			return _.find(node.children, function(c){return predicate(c)});
+		})
+		return parentNode[childName] && parentNode[childName].length;
+	}
+
+	has = has || doChildNodes(c, 'methods', predicate);
+	has = has || doChildNodes(c, 'properties', predicate);
+	has = has || doChildNodes(c, 'events', predicate);
+
+	return has;
 }
 },{"../core/class":3,"underscore":1}],18:[function(require,module,exports){
 // @module shortjsdoc.plugin @class JsDocMaker
