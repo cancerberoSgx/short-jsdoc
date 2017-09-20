@@ -3786,15 +3786,14 @@ JsDocMaker.filterByChildAnnotation = function(options)
 	var predicate = function(node)
 	{
 		return annotations.indexOf(node.annotation)!=-1;
-	}
+	};
 	_.each(_.values(data.classes), function(c)
 	{
 		if(!classHasDescendant(c, predicate))
 		{
 			delete data.classes[c.absoluteName];
 		}
-	})
-
+	});
 	_.each(_.values(data.modules), function(m)
 	{
 		if(!_.find(_.values(data.classes), function(c)
@@ -3804,8 +3803,7 @@ JsDocMaker.filterByChildAnnotation = function(options)
 		{
 			delete data.modules[m.name]
 		}
-	})
-
+	});
 
 	// TODO: remove module's functions
 
@@ -3817,18 +3815,22 @@ function classHasDescendant(c, predicate){
 
 	function doChildNodes(parentNode, childName, predicate)
 	{
-		parentNode[childName] = _.filter(parentNode[childName], function(node)
+		var found
+		_.each(parentNode[childName], function(node, key)
 		{
-			return _.find(node.children, function(c){return predicate(c)});
-		})
-		return parentNode[childName] && parentNode[childName].length;
+			if(!_.find(node.children, function(c){return predicate(c)}))
+			{
+				delete parentNode[childName][key];
+			}
+			else 
+			{
+				found = true;
+			}
+		});
+		return found;
 	}
 
-	has = has || doChildNodes(c, 'methods', predicate);
-	has = has || doChildNodes(c, 'properties', predicate);
-	has = has || doChildNodes(c, 'events', predicate);
-
-	return has;
+	return doChildNodes(c, 'methods', predicate) || doChildNodes(c, 'properties', predicate) || doChildNodes(c, 'events', predicate);
 }
 },{"../core/class":3,"underscore":1}],18:[function(require,module,exports){
 // @module shortjsdoc.plugin @class JsDocMaker

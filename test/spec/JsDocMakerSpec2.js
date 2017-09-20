@@ -19,6 +19,8 @@ describe("filter by child annotation", function()
 			'//@class Annotated\n'+
 			'//@method m1 @param {F1} fn @param {Boolean} opacity\n'+
 			'//@publicapi\n'+
+			'//@method m2 @param {F2} fn @param {Boolean} ehll\n'+
+			'//@notpulicapi\n'+
 
 
 			'//@class Annotated2\n'+
@@ -43,9 +45,11 @@ describe("filter by child annotation", function()
 		
 		var jsdoc = maker.data
 
-		console.log(jsdoc)
+		// console.log(jsdoc)
 		expect(!!jsdoc.classes['functionAsTypesModule.C1']).toBe(false)
 		expect(!!jsdoc.classes['functionAsTypesModule.Annotated']).toBe(true)
+		expect(!!_.find(jsdoc.classes['functionAsTypesModule.Annotated'].methods, (p)=>p.name=='m1')).toBe(true)
+		expect(!!_.find(jsdoc.classes['functionAsTypesModule.Annotated'].methods, (p)=>p.name=='m2')).toBe(false)
 		expect(!!jsdoc.classes['functionAsTypesModule.Annotated2']).toBe(true)
 		expect(!!_.find(jsdoc.classes['functionAsTypesModule.Annotated2'].properties, (p)=>p.name=='p1')).toBe(true)
 		expect(!!_.find(jsdoc.classes['functionAsTypesModule.Annotated2'].properties, (p)=>p.name=='p2')).toBe(false)
