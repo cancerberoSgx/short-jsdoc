@@ -3809,10 +3809,8 @@ JsDocMaker.filterByChildAnnotation = function(options)
 
 };
 
-function classHasDescendant(c, predicate){
-	var has;
-	has = has || _.find(c.children, function(node){return predicate(node)});
-
+function classHasDescendant(c, predicate)
+{
 	function doChildNodes(parentNode, childName, predicate)
 	{
 		var found
@@ -3830,7 +3828,12 @@ function classHasDescendant(c, predicate){
 		return found;
 	}
 
-	return doChildNodes(c, 'methods', predicate) || doChildNodes(c, 'properties', predicate) || doChildNodes(c, 'events', predicate);
+	var hasDirectChildren = _.find(c.children, function(node){return predicate(node)});
+	var hasMethods = doChildNodes(c, 'methods', predicate);
+	var hasProperties = doChildNodes(c, 'properties', predicate);
+	var hasEvents = doChildNodes(c, 'events', predicate)
+
+	return hasDirectChildren || hasMethods || hasProperties || hasEvents; 
 }
 },{"../core/class":3,"underscore":1}],18:[function(require,module,exports){
 // @module shortjsdoc.plugin @class JsDocMaker

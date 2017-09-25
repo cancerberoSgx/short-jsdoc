@@ -402,6 +402,10 @@ describe("filter by child annotation", function()
 			'//@interface IComponent'+
 			'//@method do @publicapi'+
 
+			'//@class C3 blabla @extends Annotated2 @publicapi'+
+			'//@method notMarked'+
+
+
 			'//@module m2'+
 			'//@class C4'+
 			'';
@@ -415,7 +419,7 @@ describe("filter by child annotation", function()
 		
 		var jsdoc = maker.data
 
-		// console.log(jsdoc)
+		console.log(jsdoc.classes['big-module.C3'])
 		expect(!!jsdoc.classes['big-module.C1']).toBe(false)
 		expect(!!jsdoc.classes['big-module.Annotated']).toBe(true)
 		expect(!!_.find(jsdoc.classes['big-module.Annotated'].methods, (p)=>p.name=='m1')).toBe(true)

@@ -1,6 +1,7 @@
 var JsDocMaker = typeof _ === 'undefined' ? require('../../src/jsdocmaker/main.js') : JsDocMaker; 
 var _ = typeof _ === 'undefined' ? require('underscore') : _; 
 
+
 describe("filter by child annotation", function() 
 {
 	it('fJsDocMaker.filterByChildAnnotation should remove classes that dont have a descendant child with given annotation', function() 
@@ -8,7 +9,7 @@ describe("filter by child annotation", function()
 		// @ public or @ publicapi so we can filter a fragment of a full jsdoc for a particular api / layer / etc
 	{
 		var code = 
-			'//@module functionAsTypesModule\n'+
+			'//@module big-module\n'+
 			'//@function F1 @param {Array<Number>} sortNumbers @return {Array<Number>}\n'+
 			'//@function F2 @param {Array<Number>} sortNumbers @return {Array<Number>}\n'+
 
@@ -32,6 +33,14 @@ describe("filter by child annotation", function()
 			'//@interface IComponent'+
 			'//@method do @publicapi'+
 
+			'//@class C3 blabla @extends Annotated2 @publicapi'+
+			'//@method notMarked'+
+
+
+			'//@class C4 blabla @extends Annotated2 @anotherannotation'+
+			'//@method notMarked'+
+
+
 			'//@module m2'+
 			'//@class C4'+
 			'';
@@ -45,16 +54,19 @@ describe("filter by child annotation", function()
 		
 		var jsdoc = maker.data
 
-		// console.log(jsdoc)
-		expect(!!jsdoc.classes['functionAsTypesModule.C1']).toBe(false)
-		expect(!!jsdoc.classes['functionAsTypesModule.Annotated']).toBe(true)
-		expect(!!_.find(jsdoc.classes['functionAsTypesModule.Annotated'].methods, (p)=>p.name=='m1')).toBe(true)
-		expect(!!_.find(jsdoc.classes['functionAsTypesModule.Annotated'].methods, (p)=>p.name=='m2')).toBe(false)
-		expect(!!jsdoc.classes['functionAsTypesModule.Annotated2']).toBe(true)
-		expect(!!_.find(jsdoc.classes['functionAsTypesModule.Annotated2'].properties, (p)=>p.name=='p1')).toBe(true)
-		expect(!!_.find(jsdoc.classes['functionAsTypesModule.Annotated2'].properties, (p)=>p.name=='p2')).toBe(false)
-		expect(!!jsdoc.classes['functionAsTypesModule.IComponent']).toBe(true)
+		expect(!!jsdoc.classes['big-module.C3']).toBe(true)
+		expect(!!jsdoc.classes['big-module.C4']).toBe(false)
+
+		expect(!!jsdoc.classes['big-module.C1']).toBe(false)
+		expect(!!jsdoc.classes['big-module.Annotated']).toBe(true)
+		expect(!!_.find(jsdoc.classes['big-module.Annotated'].methods, (p)=>p.name=='m1')).toBe(true)
+		expect(!!_.find(jsdoc.classes['big-module.Annotated'].methods, (p)=>p.name=='m2')).toBe(false)
+		expect(!!jsdoc.classes['big-module.Annotated2']).toBe(true)
+		expect(!!_.find(jsdoc.classes['big-module.Annotated2'].properties, (p)=>p.name=='p1')).toBe(true)
+		expect(!!_.find(jsdoc.classes['big-module.Annotated2'].properties, (p)=>p.name=='p2')).toBe(false)
+		expect(!!jsdoc.classes['big-module.IComponent']).toBe(true)
 		expect(!!jsdoc.modules.m2).toBe(false)
+		expect(!!jsdoc.classes['m1.C4']).toBe(false)
 	});
 
 })
