@@ -8,12 +8,12 @@ var PluginContainer = require('./plugin');
 // @property {PluginContainer} beforeTypeBindingPlugins these plugins accept an object like 
 // {node:parsed:jsdocmaker:self} and perform some modification to passed node:parsed instance.
 // This is done just before doing the type binding.
-JsDocMaker.prototype.beforeTypeBindingPlugins = new PluginContainer(); 
+JsDocMaker.prototype.beforeTypeBindingPlugins = new PluginContainer(); // $FlowFixMe
 
 // @property {PluginContainer} afterTypeBindingPlugins these plugins accept an object like 
 // {node:parsed:jsdocmaker:self} and perform some modification to passed node:parsed instance.
 // This is done just after doing the type binding.
-JsDocMaker.prototype.afterTypeBindingPlugins = new PluginContainer(); 
+JsDocMaker.prototype.afterTypeBindingPlugins = new PluginContainer(); // $FlowFixMe
 
 // @method postProccess so the data is already parsed but we want to normalize some 
 // children like @extend and @ module to be properties of the unit instead children.
@@ -22,7 +22,7 @@ JsDocMaker.prototype.afterTypeBindingPlugins = new PluginContainer();
 // is the fullname property that will return an unique full name in the format 
 // '$MODULE.$CLASS.$METHOD'. We assume that a module contains unique named classes and 
 // that classes contain unique named properties and methods. 
-JsDocMaker.prototype.postProccess = function()
+JsDocMaker.prototype.postProccess = function() // $FlowFixMe
 {
 	var self = this;
 	// set params and throws of constructors
@@ -200,12 +200,12 @@ JsDocMaker.prototype._postProccessBinding_methodSetup = function(methods, c, isF
 			child.text = JsDocMaker.stringTrim(child.text||''); 
 			return child.annotation === 'returns' || child.annotation === 'return'; 
 		}); 
-		method.returns = returns.length ? returns[0] : {name:'',type:''};
+		method.returns = returns.length ? returns[0] : {name:'',type:'',text:''};
 
 		//because @returns doesn't have a name it breaks our simple grammar, so we merge the name with its text.
 		method.returns.text = (method.returns.name ? method.returns.name+' ' : '') + (method.returns.text||''); 
 
-		if(_(method.returns.type).isString())
+		if(_.isString(method.returns.type))
 		{
 			method.returns.type = self.parseTypeString(method.returns.type, c) || method.returns.type;						
 		}

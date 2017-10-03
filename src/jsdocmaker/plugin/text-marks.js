@@ -54,7 +54,7 @@ var textMarksAfterParseNodePlugin = {
 		// node.text = node.text.replace(regex, replaceHandler); 
 
 		// and then expressions like this: @?ref foo.bar.Class.method2
-		regex = /@\?([a-zA-Z0-9_\.]+)\s+([^\s]+)/g; 
+		var regex = /@\?([a-zA-Z0-9_\.]+)\s+([^\s]+)/g; 
 		// console.log(regex.exec(node.text))
 		node.text = node.text.replace(regex, replaceHandler); 
 	}

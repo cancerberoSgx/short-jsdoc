@@ -8,7 +8,9 @@
 
 var _ = require('underscore'); 
 
-var JsDocMaker = function(options)
+
+
+var JsDocMaker /*: Function */ = function(options)
 {	
 	//@property {Object<String,String>} customNativeTypes name to url map that the user can modify to register new native types b givin its url.
 	this.customNativeTypes = this.customNativeTypes || {};
@@ -45,6 +47,7 @@ if(typeof(window) !== 'undefined')
 //@method require perform an intelligent require n browser&nodejs, needed for esprima. Ugly :(
 JsDocMaker.require = function(name)
 {
+	// $FlowFixMe
 	return (typeof(window) != 'undefined' && window[name]) ? window[name] : require(name);
 }; 
 

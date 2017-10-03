@@ -10,6 +10,7 @@
     "yargs": "^1.3.3"
   },
   "devDependencies": {
+    "flow-bin": "^0.56.0",
     "grunt": "*",
     "grunt-browserify": "^3.2.1",
     "grunt-contrib-concat": "*",

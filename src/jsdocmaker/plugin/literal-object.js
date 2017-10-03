@@ -18,7 +18,8 @@ JsDocMaker.prototype.literalObjectParse = function(s, baseClass)
 	try
 	{
 		var result  = JsDocMaker.parseLiteralObjectType('{' + s + '}');
-		_(result).each(function(value, key)
+		// $FlowFixMe
+		_.each(result, function(value, key)
 		{
 			var valueBinded = self.bindParsedType(value, baseClass);
 			properties[key] = valueBinded; 

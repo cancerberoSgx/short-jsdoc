@@ -166,7 +166,7 @@ JsDocMaker.prototype.parse = function(comments)
 					//allow classes without modules - asignated to a defulat module
 					if (!currentModule)
 					{
-						currentModule = {name: JsDocMaker.DEFAULT_MODULE};
+						currentModule = {name: JsDocMaker.DEFAULT_MODULE, functions: []};
 					}
 
 					parsed.module = currentModule; 

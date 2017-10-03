@@ -137,6 +137,7 @@ var annotationAliasPlugin = {
 		{
 			alias[newName] = targetName;
 		});
+		// $FlowFixMe
 		_.each(alias, function(targetName, newName)
 		{
 			var newNameRegex = new RegExp('@'+newName, 'gi');

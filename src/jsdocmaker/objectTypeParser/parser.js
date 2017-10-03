@@ -1,3 +1,5 @@
+
+
 /*
 
 This is a syntax definition compiled to JavaScript that parses an expression like 
@@ -57,7 +59,7 @@ module.exports = (function() {
 
   peg$subclass(SyntaxError, Error);
 
-  function parse(input) {
+  function parse(input/*:string*/ )/*:string*/ {
     var options = arguments.length > 1 ? arguments[1] : {},
 
         peg$FAILED = {},

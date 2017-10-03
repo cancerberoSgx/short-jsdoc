@@ -16,6 +16,7 @@ var _ = require('underscore');
 //@method parseTypeString public, do a type binding @return {TypeBinding} the object binding to the original r
 //eferenced AST node. Or null in case the given type cannot be parsed
 //TODO: support multiple generics and generics anidation like in
+
 JsDocMaker.prototype.parseTypeString = function(typeString, baseClass)
 {
 	if(!typeString || !baseClass)
@@ -255,7 +256,8 @@ JsDocMaker.prototype.bindClass = function(name, baseClass)
 	{
 		//TODO: look at native types
 		var nativeType = this.getNativeTypeUrl ? this.getNativeTypeUrl(name) : null;
-		var o = {name:name}; 
+		var o = {}; 
+		o.name = name;
 		if(nativeType)
 		{
 			o.nativeTypeUrl = nativeType; 

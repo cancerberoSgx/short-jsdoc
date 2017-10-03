@@ -1,6 +1,7 @@
 /* jshint evil:true */
 // @module shortjsdoc @class JsDocMaker
 var JsDocMaker = require('./class'); 
+// $FlowFixMe
 var shortjsdocParseLiteralObject = require('../objectTypeParser/parser.js');
 var _ = require('underscore'); 
 

@@ -1,3 +1,4 @@
 /node_modules
 /jsdoc
 /test_tmp*
+/nbproject/private/

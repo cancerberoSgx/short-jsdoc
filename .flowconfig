@@ -1,0 +1,23 @@
+[ignore]
+<PROJECT_ROOT>/html
+<PROJECT_ROOT>/doc
+<PROJECT_ROOT>/lib
+<PROJECT_ROOT>/bin
+<PROJECT_ROOT>/test
+<PROJECT_ROOT>/tools
+<PROJECT_ROOT>/vendor-jsdoc
+<PROJECT_ROOT>/Gruntfile.js
+<PROJECT_ROOT>/generate-apidocs.js
+<PROJECT_ROOT>/node_modules
+<PROJECT_ROOT>/src/jsdocmaker/objectTypeParser/parser.js
+
+[include]
+./src/jsdocmaker/main.js
+
+[libs]
+
+[lints]
+
+[options]
+all=true
+suppress_comment= \\(.\\|\n\\)*\\$FlowFixMe
