@@ -1,18 +1,18 @@
-'strict mode'; 
+'strict mode';
 
-var JsDocMaker = require('./class'); 
+var JsDocMaker = require('./class');
 
-require('./util'); 
+require('./util');
 
-require('./parse'); 
+require('./parse');
 
-require('./preprocess'); 
+require('./preprocess');
 
-require('./type-parsing'); 
+require('./type-parsing');
 
-require('./postprocess'); 
+require('./postprocess');
 
-require('./binding'); 
+require('./binding');
 
 
 module.exports = JsDocMaker;

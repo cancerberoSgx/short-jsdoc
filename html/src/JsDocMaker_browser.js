@@ -1567,6 +1567,7 @@ var _ = require('underscore');
 //@method parseTypeString public, do a type binding @return {TypeBinding} the object binding to the original r
 //eferenced AST node. Or null in case the given type cannot be parsed
 //TODO: support multiple generics and generics anidation like in
+
 JsDocMaker.prototype.parseTypeString = function(typeString, baseClass)
 {
 	if(!typeString || !baseClass)
@@ -1806,7 +1807,8 @@ JsDocMaker.prototype.bindClass = function(name, baseClass)
 	{
 		//TODO: look at native types
 		var nativeType = this.getNativeTypeUrl ? this.getNativeTypeUrl(name) : null;
-		var o = {name:name}; 
+		var o = {}; 
+		o.name = name;
 		if(nativeType)
 		{
 			o.nativeTypeUrl = nativeType; 
@@ -1848,15 +1850,17 @@ JsDocMaker.prototype.simpleName = function(name, prefix)
 // @module shortjsdoc @class JsDocMaker
 // Main jsdoc parser utility. It accepts a valid js source code String and returns a JavaScript object with a jsdoc AST, this is an object
 // with classes and modules array that users can use to easily access jsdocs information, for example, parsed.classes.Apple.methods.getColor
-// use the parseFile method for this! This will return the AST, if you want to perform more enrichment and type binding, then use 
+// use the parseFile method for this! This will return the AST, if you want to perform more enrichment and type binding, then use
 // postProccess and postProccessBinding methods after.
 
 /* jshint evil:true*/
 
-var _ = require('underscore'); 
+var _ = require('underscore');
 
-var JsDocMaker = function(options)
-{	
+
+
+var JsDocMaker /*: Function */ = function(options)
+{
 	//@property {Object<String,String>} customNativeTypes name to url map that the user can modify to register new native types b givin its url.
 	this.customNativeTypes = this.customNativeTypes || {};
 	this.annotationRegexp = /(\s+@\w+)/gi;
@@ -1868,53 +1872,56 @@ var JsDocMaker = function(options)
 	{
 		this.initializePluginContainers();
 	}
-}; 
+};
 
 // @property {String} DEFAULT_CLASS @static
-JsDocMaker.DEFAULT_CLASS = 'Object'; 
+JsDocMaker.DEFAULT_CLASS = 'Object';
 
 // @property {String} DEFAULT_MODULE @static
-JsDocMaker.DEFAULT_MODULE = '__DefaultModule'; 
+JsDocMaker.DEFAULT_MODULE = '__DefaultModule';
 
 // @property {String} ABSOLUTE_NAME_SEPARATOR @static
-JsDocMaker.ABSOLUTE_NAME_SEPARATOR = '.'; 
+JsDocMaker.ABSOLUTE_NAME_SEPARATOR = '.';
 
 // @property {String} MULTIPLE_TEXT_SEPARATOR @static
-JsDocMaker.MULTIPLE_TEXT_SEPARATOR = '\n\n'; 
+JsDocMaker.MULTIPLE_TEXT_SEPARATOR = '\n\n';
 
 //expose
 if(typeof(window) !== 'undefined')
 {
-	window.JsDocMaker = JsDocMaker; 
+	window.JsDocMaker = JsDocMaker;
 }
 
 
 //@method require perform an intelligent require n browser&nodejs, needed for esprima. Ugly :(
 JsDocMaker.require = function(name)
 {
+	// $FlowFixMe
 	return (typeof(window) != 'undefined' && window[name]) ? window[name] : require(name);
-}; 
+};
 
-module.exports = JsDocMaker; 
+module.exports = JsDocMaker;
+
 },{"underscore":1}],4:[function(require,module,exports){
-'strict mode'; 
+'strict mode';
 
-var JsDocMaker = require('./class'); 
+var JsDocMaker = require('./class');
 
-require('./util'); 
+require('./util');
 
-require('./parse'); 
+require('./parse');
 
-require('./preprocess'); 
+require('./preprocess');
 
-require('./type-parsing'); 
+require('./type-parsing');
 
-require('./postprocess'); 
+require('./postprocess');
 
-require('./binding'); 
+require('./binding');
 
 
 module.exports = JsDocMaker;
+
 },{"./binding":2,"./class":3,"./parse":5,"./postprocess":7,"./preprocess":8,"./type-parsing":9,"./util":10}],5:[function(require,module,exports){
 /*
 @module shortjsdoc 
@@ -2084,7 +2091,7 @@ JsDocMaker.prototype.parse = function(comments)
 					//allow classes without modules - asignated to a defulat module
 					if (!currentModule)
 					{
-						currentModule = {name: JsDocMaker.DEFAULT_MODULE};
+						currentModule = {name: JsDocMaker.DEFAULT_MODULE, functions: []};
 					}
 
 					parsed.module = currentModule; 
@@ -2410,12 +2417,12 @@ var PluginContainer = require('./plugin');
 // @property {PluginContainer} beforeTypeBindingPlugins these plugins accept an object like 
 // {node:parsed:jsdocmaker:self} and perform some modification to passed node:parsed instance.
 // This is done just before doing the type binding.
-JsDocMaker.prototype.beforeTypeBindingPlugins = new PluginContainer(); 
+JsDocMaker.prototype.beforeTypeBindingPlugins = new PluginContainer(); // $FlowFixMe
 
 // @property {PluginContainer} afterTypeBindingPlugins these plugins accept an object like 
 // {node:parsed:jsdocmaker:self} and perform some modification to passed node:parsed instance.
 // This is done just after doing the type binding.
-JsDocMaker.prototype.afterTypeBindingPlugins = new PluginContainer(); 
+JsDocMaker.prototype.afterTypeBindingPlugins = new PluginContainer(); // $FlowFixMe
 
 // @method postProccess so the data is already parsed but we want to normalize some 
 // children like @extend and @ module to be properties of the unit instead children.
@@ -2424,7 +2431,7 @@ JsDocMaker.prototype.afterTypeBindingPlugins = new PluginContainer();
 // is the fullname property that will return an unique full name in the format 
 // '$MODULE.$CLASS.$METHOD'. We assume that a module contains unique named classes and 
 // that classes contain unique named properties and methods. 
-JsDocMaker.prototype.postProccess = function()
+JsDocMaker.prototype.postProccess = function() // $FlowFixMe
 {
 	var self = this;
 	// set params and throws of constructors
@@ -2602,12 +2609,12 @@ JsDocMaker.prototype._postProccessBinding_methodSetup = function(methods, c, isF
 			child.text = JsDocMaker.stringTrim(child.text||''); 
 			return child.annotation === 'returns' || child.annotation === 'return'; 
 		}); 
-		method.returns = returns.length ? returns[0] : {name:'',type:''};
+		method.returns = returns.length ? returns[0] : {name:'',type:'',text:''};
 
 		//because @returns doesn't have a name it breaks our simple grammar, so we merge the name with its text.
 		method.returns.text = (method.returns.name ? method.returns.name+' ' : '') + (method.returns.text||''); 
 
-		if(_(method.returns.type).isString())
+		if(_.isString(method.returns.type))
 		{
 			method.returns.type = self.parseTypeString(method.returns.type, c) || method.returns.type;						
 		}
@@ -2623,12 +2630,12 @@ JsDocMaker.prototype._postProccessBinding_methodSetup = function(methods, c, isF
 
 #Comment Preprocessors
 
-The core of comment preprocessing is done ba couple of plugins executed at allCommentPreprocessorPlugins and 
+The core of comment preprocessing is done ba couple of plugins executed at allCommentPreprocessorPlugins and
 ingeneral normalizes the comments text, delete non relevant comments, unify line comments into a single one, etc
 
 */
-var JsDocMaker = require('./class'); 
-var _ = require('underscore'); 
+var JsDocMaker = require('./class');
+var _ = require('underscore');
 
 //COMMENT PREPROCESSORS
 
@@ -2640,10 +2647,10 @@ var preprocessCommentsPlugin1 = {
 	{
 		var comments = options.node;
 		//we do the parsing block by block,
-		for (var i = 0; i < comments.length; i++) 
+		for (var i = 0; i < comments.length; i++)
 		{
-			var node = comments[i];//options.node; 
-			node.value = node.value || ''; 
+			var node = comments[i];//options.node;
+			node.value = node.value || '';
 
 			// fix styled comment blocks with '*' as new line prefix
 			// if(node.type === 'Block')
@@ -2661,13 +2668,13 @@ var preprocessCommentsPlugin1 = {
 			}
 		}
 	}
-} ; 
+} ;
 
 //install it as comment preprocessor plugin!
-JsDocMaker.prototype.allCommentPreprocessorPlugins.add(preprocessCommentsPlugin1);//.push(JsDocMaker.prototype.preprocessComments); 
+JsDocMaker.prototype.allCommentPreprocessorPlugins.add(preprocessCommentsPlugin1);//.push(JsDocMaker.prototype.preprocessComments);
 
 
-//@class FixUnamedAnnotationsPlugin @extends JsDocMakerPlugin This plugin is installed at JsDocMaker.prototype.commentPreprocessorPlugins and and solves the following problem: 
+//@class FixUnamedAnnotationsPlugin @extends JsDocMakerPlugin This plugin is installed at JsDocMaker.prototype.commentPreprocessorPlugins and and solves the following problem:
 //Our regexp format expect an anotation with a name. So for enabling unamed annotations we do this dirty fix, this is add a name to precondition
 var fixUnamedAnnotationsPlugin = {
 	name: 'fixUnamedAnnotationsPlugin'
@@ -2677,16 +2684,16 @@ var fixUnamedAnnotationsPlugin = {
 		var node = options.node;
 		if(node.value)
 		{
-			node.value = node.value.replace(/@constructor/gi, '@constructor n'); 
+			node.value = node.value.replace(/@constructor/gi, '@constructor n');
 			node.value = node.value.replace(/(@\w+)\s*$/gi, '$1 dummy ');
 			node.value = node.value.replace(/(@\w+)\s+(@\w+)/gi, '$1 dummy $2');
 		}
 	}
-}; 
+};
 //install it as comment preprocessor plugin!
-JsDocMaker.prototype.commentPreprocessorPlugins.add(fixUnamedAnnotationsPlugin); 
+JsDocMaker.prototype.commentPreprocessorPlugins.add(fixUnamedAnnotationsPlugin);
 
-//@class UnifyLineCommentsPlugin @extends JsDocMakerPlugin this is a very important plugin for normalize our js input Line comments 
+//@class UnifyLineCommentsPlugin @extends JsDocMakerPlugin this is a very important plugin for normalize our js input Line comments
 // It is executed at JsDocMaker.prototype.allCommentPreprocessorPlugins
 var unifyLineCommentsPlugin = {
 	name: 'unifyLineCommentsPlugin'
@@ -2694,20 +2701,20 @@ var unifyLineCommentsPlugin = {
 	{
 		var i = 0
 		,	comments = options.node
-		,	jsdocMaker = options.jsdocMaker; 
-	
+		,	jsdocMaker = options.jsdocMaker;
+
 		jsdocMaker.lineCommentSeparatorMark = '_lineCommentSeparatorMark_';
 		while(i < comments.length - 1)
 		{
 			var c = comments[i]
-			,	next = comments[i+1]; 
+			,	next = comments[i+1];
 
-			var sss = JsDocMaker.stringFullTrim(options.jsdocMaker.data.source.substring(c.range[1], next.range[0])); 
+			var sss = JsDocMaker.stringFullTrim(options.jsdocMaker.data.source.substring(c.range[1], next.range[0]));
 			if (c.type==='Line' && next.type==='Line' && !sss)
 			{
-				c.value += ' ' + jsdocMaker.lineCommentSeparatorMark + ' ' + next.value; 
-				c.range[1] = next.range[1]; 
-				comments.splice(i+1, 1); 
+				c.value += ' ' + jsdocMaker.lineCommentSeparatorMark + ' ' + next.value;
+				c.range[1] = next.range[1];
+				comments.splice(i+1, 1);
 			}
 			else
 			{
@@ -2715,14 +2722,14 @@ var unifyLineCommentsPlugin = {
 			}
 		}
 	}
-}; 
-JsDocMaker.prototype.allCommentPreprocessorPlugins.add(unifyLineCommentsPlugin); 
-
+};
+JsDocMaker.prototype.allCommentPreprocessorPlugins.add(unifyLineCommentsPlugin);
 
 },{"./class":3,"underscore":1}],9:[function(require,module,exports){
 /* jshint evil:true */
 // @module shortjsdoc @class JsDocMaker
 var JsDocMaker = require('./class'); 
+// $FlowFixMe
 var shortjsdocParseLiteralObject = require('../objectTypeParser/parser.js');
 var _ = require('underscore'); 
 
@@ -2846,6 +2853,8 @@ require('./plugin/main.js');
 
 module.exports = JsDocMaker;
 },{"./core/main":4,"./plugin/main.js":20}],12:[function(require,module,exports){
+
+
 /*
 
 This is a syntax definition compiled to JavaScript that parses an expression like 
@@ -2905,7 +2914,7 @@ module.exports = (function() {
 
   peg$subclass(SyntaxError, Error);
 
-  function parse(input) {
+  function parse(input/*:string*/ )/*:string*/ {
     var options = arguments.length > 1 ? arguments[1] : {},
 
         peg$FAILED = {},
@@ -3394,6 +3403,7 @@ module.exports = (function() {
     parse:       parse
   };
 })();
+
 },{}],13:[function(require,module,exports){
 // @module shortjsdoc.plugin.alias 
 /*
@@ -3534,6 +3544,7 @@ var annotationAliasPlugin = {
 		{
 			alias[newName] = targetName;
 		});
+		// $FlowFixMe
 		_.each(alias, function(targetName, newName)
 		{
 			var newNameRegex = new RegExp('@'+newName, 'gi');
@@ -3975,7 +3986,8 @@ JsDocMaker.prototype.literalObjectParse = function(s, baseClass)
 	try
 	{
 		var result  = JsDocMaker.parseLiteralObjectType('{' + s + '}');
-		_(result).each(function(value, key)
+		// $FlowFixMe
+		_.each(result, function(value, key)
 		{
 			var valueBinded = self.bindParsedType(value, baseClass);
 			properties[key] = valueBinded; 
@@ -4402,7 +4414,7 @@ var textMarksAfterParseNodePlugin = {
 		// node.text = node.text.replace(regex, replaceHandler); 
 
 		// and then expressions like this: @?ref foo.bar.Class.method2
-		regex = /@\?([a-zA-Z0-9_\.]+)\s+([^\s]+)/g; 
+		var regex = /@\?([a-zA-Z0-9_\.]+)\s+([^\s]+)/g; 
 		// console.log(regex.exec(node.text))
 		node.text = node.text.replace(regex, replaceHandler); 
 	}
