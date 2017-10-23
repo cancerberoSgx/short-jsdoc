@@ -1,5 +1,9 @@
 [![Build Status](https://travis-ci.org/cancerberoSgx/short-jsdoc.png?branch=master)](https://travis-ci.org/cancerberoSgx/short-jsdoc)
 [![Greenkeeper badge](https://badges.greenkeeper.io/cancerberoSgx/short-jsdoc.svg)](https://greenkeeper.io/)
+[![Dependencies](https://david-dm.org/cancerberosgx/short-jsdoc.svg)](https://david-dm.org/cancerberosgx/short-jsdoc)
+
+
+# Guide
 
 [Guide](http://cancerberosgx.github.io/short-jsdoc/doc/guide/index.html#)
 
