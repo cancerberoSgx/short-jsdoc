@@ -7,7 +7,7 @@
     "esprima": "4.0.0",
     "shelljs": "^0.7.6",
     "underscore": "1.8.3",
-    "yargs": "^9.0.1"
+    "yargs": "^10.0.3"
   },
   "devDependencies": {
     "flow-bin": "^0.57.3",
