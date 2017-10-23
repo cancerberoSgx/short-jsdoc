@@ -4,15 +4,15 @@
   "description": "short and simple jsdoc Object Oriented syntax format and implementation",
   "author": "Sebastián Gurin (cancerberoSgx)",
   "dependencies": {
-    "esprima": "2.7.1",
+    "esprima": "4.0.0",
     "shelljs": "^0.7.6",
     "underscore": "1.8.3",
-    "yargs": "^1.3.3"
+    "yargs": "^9.0.1"
   },
   "devDependencies": {
-    "flow-bin": "^0.56.0",
+    "flow-bin": "^0.57.3",
     "grunt": "*",
-    "grunt-browserify": "^3.2.1",
+    "grunt-browserify": "^5.2.0",
     "grunt-contrib-concat": "*",
     "grunt-contrib-connect": "*",
     "grunt-contrib-jshint": "*",
