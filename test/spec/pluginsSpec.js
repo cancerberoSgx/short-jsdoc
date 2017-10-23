@@ -419,7 +419,6 @@ describe("filter by child annotation", function()
 		
 		var jsdoc = maker.data
 
-		console.log(jsdoc.classes['big-module.C3'])
 		expect(!!jsdoc.classes['big-module.C1']).toBe(false)
 		expect(!!jsdoc.classes['big-module.Annotated']).toBe(true)
 		expect(!!_.find(jsdoc.classes['big-module.Annotated'].methods, (p)=>p.name=='m1')).toBe(true)

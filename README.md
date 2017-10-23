@@ -1,10 +1,9 @@
 [![Build Status](https://travis-ci.org/cancerberoSgx/short-jsdoc.png?branch=master)](https://travis-ci.org/cancerberoSgx/short-jsdoc)
+[![Greenkeeper badge](https://badges.greenkeeper.io/cancerberoSgx/short-jsdoc.svg)](https://greenkeeper.io/)
 
 [Guide](http://cancerberosgx.github.io/short-jsdoc/doc/guide/index.html#)
 
-#Online HTML5 project demo.  
-
-[![Greenkeeper badge](https://badges.greenkeeper.io/cancerberoSgx/short-jsdoc.svg)](https://greenkeeper.io/)
+# Online HTML5 project demo.  
 
 [Online Example Demo](http://cancerberosgx.github.io/short-jsdoc/html)
 
@@ -34,7 +33,7 @@ then use it like this:
     }); 
 
 
-#Options
+# Options
 
  * *input*:  comma separated folders form where consume .js files. Example: --input src/model,third/base
  * *output*: the output folder which will be generated with a ready to use html document
@@ -44,22 +43,22 @@ then use it like this:
 
 
 
-#Features
+# Features
 
-##Short
+## Short
 
 If you want you can define a whole method signature in one line like this:
 
     //@method add adds a new tool @param {Array<Tool>} tools @return {Promise} solved when all ends
     ToolCollection.prototype.add = function(tool){...}
 
-##Flexible comment syntax and rich text input
+## Flexible comment syntax and rich text input
 
 Support all comment types, like /* /** // . 
 
 Also the jsdoc text can be written in in plain text, html or markdown. This means you are free to choose to be minimalistic (writing single-line comments) or very exhaustive and styled (writing multiple paragraph html or mardown text), or what is best, do both things and choose where to put the big texts !
 
-##Simple annotation syntax
+## Simple annotation syntax
 
 Simple annotation syntax based in a unique pattern:
 
@@ -69,7 +68,7 @@ Also use the concept of primary annotations @module, @class, @method, @property 
 
 The mission is that you can just add @annotations to existing source comments without having to re-write them or change its format. 
 
-##Rich Object Oriented Concepts support
+## Rich Object Oriented Concepts support
 
 short-jsdoc supports a rich set of Object oriented concepts out of the box: module, @class, @property, @method, @event, @constructor, @extend, and many more!
 
@@ -148,7 +147,7 @@ Generate and run a full distro from github:
     firefox http://localhost:8080/html/index-dev.html
 
 
-#Unit test
+# Unit test
 
 Run unit tests in the browser: 
 
@@ -160,7 +159,7 @@ Run unit tests in node:
     node node_modules/jasmine/bin/jasmine.js
 
 
-#Motivation notes
+# Motivation notes
 [These are some notes about my initial motivation when started the project](https://github.com/cancerberoSgx/short-jsdoc/blob/master/doc/MOTIVATION.md)
 
 # TODO
