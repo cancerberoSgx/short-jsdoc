@@ -10,18 +10,17 @@
     "yargs": "^10.0.3"
   },
   "devDependencies": {
-    "flow-bin": "^0.57.3",
-    "grunt": "*",
+    "grunt": "^1.0.1",
     "grunt-browserify": "^5.2.0",
-    "grunt-contrib-concat": "*",
-    "grunt-contrib-connect": "*",
-    "grunt-contrib-jshint": "*",
-    "grunt-contrib-jst": "*",
-    "grunt-contrib-less": "*",
-    "grunt-contrib-uglify": "*",
-    "grunt-contrib-watch": "*",
+    "grunt-contrib-concat": "^1.0.1",
+    "grunt-contrib-connect": "^1.0.2",
+    "grunt-contrib-jshint": "^1.1.0",
+    "grunt-contrib-jst": "^1.0.0",
+    "grunt-contrib-less": "^1.4.1",
+    "grunt-contrib-uglify": "^3.1.0",
+    "grunt-contrib-watch": "^1.0.0",
     "jasmine": "^2.3.2",
-    "matchdep": "*"
+    "matchdep": "^2.0.0"
   },
   "main": "./src/shortjsdoc.js",
   "directories": {
