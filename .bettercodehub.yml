@@ -1,0 +1,14 @@
+component_depth: 1
+languages:
+- js
+
+exclude:
+- /html/lib*
+- /html/data*
+- /html/all*
+- /html/template-output.js
+- /lib
+- /test/lib
+- /test/node-test-project
+- /tools
+- /vendor-jsdoc
