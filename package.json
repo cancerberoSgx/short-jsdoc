@@ -5,7 +5,7 @@
   "author": "Sebastián Gurin (cancerberoSgx)",
   "dependencies": {
     "esprima": "4.0.0",
-    "shelljs": "^0.7.6",
+    "shelljs": "^0.8.0",
     "underscore": "1.8.3",
     "yargs": "^10.0.3"
   },
