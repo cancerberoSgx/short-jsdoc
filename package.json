@@ -6,7 +6,7 @@
   "dependencies": {
     "esprima": "4.0.0",
     "shelljs": "^0.8.0",
-    "underscore": "1.8.3",
+    "underscore": "1.9.0",
     "yargs": "^11.0.0"
   },
   "devDependencies": {
