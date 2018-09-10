@@ -13,7 +13,7 @@
     "grunt": "^1.0.1",
     "grunt-browserify": "^5.2.0",
     "grunt-contrib-concat": "^1.0.1",
-    "grunt-contrib-connect": "^1.0.2",
+    "grunt-contrib-connect": "^2.0.0",
     "grunt-contrib-jshint": "^1.1.0",
     "grunt-contrib-jst": "^1.0.0",
     "grunt-contrib-less": "^2.0.0",
