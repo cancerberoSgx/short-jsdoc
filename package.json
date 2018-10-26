@@ -5,21 +5,21 @@
   "author": "Sebastián Gurin (cancerberoSgx)",
   "dependencies": {
     "esprima": "4.0.1",
-    "shelljs": "^0.8.0",
-    "underscore": "1.9.0",
-    "yargs": "^11.0.0"
+    "shelljs": "^0.8.2",
+    "underscore": "^1.9.1",
+    "yargs": "^12.0.2"
   },
   "devDependencies": {
-    "grunt": "^1.0.1",
-    "grunt-browserify": "^5.2.0",
+    "grunt": "^1.0.3",
+    "grunt-browserify": "^5.3.0",
     "grunt-contrib-concat": "^1.0.1",
-    "grunt-contrib-connect": "^1.0.2",
-    "grunt-contrib-jshint": "^1.1.0",
+    "grunt-contrib-connect": "^2.0.0",
+    "grunt-contrib-jshint": "^2.0.0",
     "grunt-contrib-jst": "^1.0.0",
     "grunt-contrib-less": "^2.0.0",
-    "grunt-contrib-uglify": "^3.1.0",
-    "grunt-contrib-watch": "^1.0.0",
-    "jasmine": "^2.3.2",
+    "grunt-contrib-uglify": "^4.0.0",
+    "grunt-contrib-watch": "^1.1.0",
+    "jasmine": "^3.3.0",
     "matchdep": "^2.0.0"
   },
   "main": "./src/shortjsdoc.js",
